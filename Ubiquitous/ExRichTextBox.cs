@@ -258,13 +258,13 @@ namespace SC2TV.RTFControl {
             else
             {
                 var linesToEnd = scroll(this.Handle, 1);
+                if (linesToEnd > 15)
+                    linesToEnd = scroll(this.Handle, (int)(linesToEnd - 15) );
+
                 while (linesToEnd > 0)
                 {
                     linesToEnd = scroll(this.Handle, 1);
-                    if (linesToEnd > 60 || linesToEnd <= 0)
-                        Thread.Sleep(1);
-                    else
-                        Thread.Sleep(30);
+                    Thread.Sleep(20);
                 }
                 
             }
@@ -1053,5 +1053,21 @@ namespace SC2TV.RTFControl {
         }
 
         #endregion
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // ExRichTextBox
+            // 
+            this.Resize += new System.EventHandler(this.ExRichTextBox_Resize);
+            this.ResumeLayout(false);
+
+        }
+
+        private void ExRichTextBox_Resize(object sender, EventArgs e)
+        {
+            ScrollToEnd();
+        }
     }
 }

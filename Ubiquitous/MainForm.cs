@@ -1607,25 +1607,18 @@ namespace Ubiquitous
         }
         private void switchFullScreenMode()
         {
-            if (panel1.Dock == DockStyle.Fill)
+            if (textMessages.Dock == DockStyle.Fill)
             {
-                panel1.Dock = DockStyle.None;
                 textMessages.Dock = DockStyle.None;
-                panel1.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
                 textMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
-
-                panel1.Width = this.Width - 5;
-                panel1.Height = this.Height - 50;
-
-                textMessages.Width = groupBox1.Left - 3;
-                textMessages.Height = panel1.Height;
-
-                
+                textMessages.Height = textCommand.Top - 5;
+                textMessages.Width = groupBox1.Left - 5;
+                textMessages.ScrollToEnd();
             }
             else
             {
-                panel1.Dock = DockStyle.Fill;
                 textMessages.Dock = DockStyle.Fill;
+                textMessages.ScrollToEnd();
             }
         }
         private void textMessages_DoubleClick(object sender, EventArgs e)
@@ -1817,6 +1810,11 @@ namespace Ubiquitous
         {
             SetTransparency(textMessages.BackColor);
         }
+
+        private void buttonFullscreen_Click_1(object sender, EventArgs e)
+        {
+            switchFullScreenMode();
+        }   
 
     }
 }

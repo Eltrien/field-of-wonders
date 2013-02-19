@@ -88,6 +88,9 @@
     </Compile>
     <Compile Include="StatusImage.cs" />
     <Compile Include="StatusServer.cs" />
+    <EmbeddedResource Include="ExRichTextBox.resx">
+      <DependentUpon>ExRichTextBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
     </EmbeddedResource>
