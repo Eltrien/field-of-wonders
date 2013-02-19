@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace SC2TV.RTFControl {
@@ -101,7 +102,9 @@ namespace SC2TV.RTFControl {
         private const int SB_BOTTOM = 7;
         private const int SB_ENDSCROLL = 8;
 
-        private Timer t = new Timer();        
+        private System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+        
+        delegate void ScrollCB();
 
 		// Ensures that the metafile maintains a 1:1 aspect ratio
 		private const int MM_ISOTROPIC = 7;
@@ -226,8 +229,8 @@ namespace SC2TV.RTFControl {
             
             if (pixelsToEnd <= 0)
             {
-                t.Enabled = false;
-                t.Stop();
+                //t.Enabled = false;
+                //t.Stop();
             }
 /*            else if (pixelsToEnd > 60)
             {
@@ -237,16 +240,47 @@ namespace SC2TV.RTFControl {
                 scroll(this.Handle, (int)pixelsToEnd - 60);
             }*/
         }
+        public void ReplaceSmileCode(String code, Bitmap bmp)
+        {
+
+        }
         public void ScrollToEnd()
         {
-            t.Interval = 10;
-            t.Enabled = true;
-            t.Start();
+            if (InvokeRequired)
+            {
+                ScrollCB d = new ScrollCB(ScrollToEnd);
+                try
+                {
+                    Parent.Invoke(d, new object[] {});
+                }
+                catch { }
+            }
+            else
+            {
+                var linesToEnd = scroll(this.Handle, 1);
+                while (linesToEnd > 0)
+                {
+                    linesToEnd = scroll(this.Handle, 1);
+                    if (linesToEnd > 60 || linesToEnd <= 0)
+                        Thread.Sleep(1);
+                    else
+                        Thread.Sleep(30);
+                }
+                
+            }
+            /*
+            if (!t.Enabled)
+            {
+                t.Interval = 10;
+                t.Enabled = true;
+                t.Start();
+            }*/
             //while (scroll(this.Handle, 1)) ;
             //IntPtr ptrWparam = new IntPtr(SB_BOTTOM);
             //IntPtr ptrLparam = new IntPtr(0);
             //SendMessage(this.Handle, WM_VSCROLL, ptrWparam, ptrLparam);
         } 
+     
 
 		#region Elements required to create an RTF document
 		
@@ -849,22 +883,30 @@ namespace SC2TV.RTFControl {
 
 				// Get a graphics context from the RichTextBox
 				using(_graphics = this.CreateGraphics()) {
-
 					// Get the device context from the graphics context
-					_hdc = _graphics.GetHdc();
+
+                    _hdc = _graphics.GetHdc();
 
 					// Create a new Enhanced Metafile from the device context
 					_metaFile = new Metafile(_stream, _hdc);
-
 					// Release the device context
 					_graphics.ReleaseHdc(_hdc);
 				}
-
+                
 				// Get a graphics context from the Enhanced Metafile
 				using(_graphics = Graphics.FromImage(_metaFile)) {
+                        
+                    Bitmap temp = new Bitmap(_image.Width, _image.Height, PixelFormat.Format24bppRgb);
 
-					// Draw the image on the Enhanced Metafile
-					_graphics.DrawImage(_image, new Rectangle(0, 0, _image.Width, _image.Height));
+                    using (Graphics g = Graphics.FromImage(temp))
+                    {
+                        g.Clear(Color.Black);
+                        g.DrawImage(_image, Point.Empty);
+
+                        // Draw the image on the Enhanced Metafile
+                        _graphics.DrawImage(temp, new Rectangle(0, 0, _image.Width, _image.Height));
+                    }
+                    
 
 				}
 
@@ -875,7 +917,7 @@ namespace SC2TV.RTFControl {
 				// buffer need to store the WMF bits.  Use this to get the buffer
 				// size.
 				uint _bufferSize = GdipEmfToWmfBits(_hEmf, 0, null, MM_ANISOTROPIC,
-					EmfToWmfBitsFlags.EmfToWmfBitsFlagsDefault);
+                    EmfToWmfBitsFlags.EmfToWmfBitsFlagsNoXORClip);
 
 				// Create an array to hold the bits
 				byte[] _buffer = new byte[_bufferSize];
@@ -883,7 +925,7 @@ namespace SC2TV.RTFControl {
 				// A call to EmfToWmfBits with a valid buffer copies the bits into the
 				// buffer an returns the number of bits in the WMF.  
 				uint _convertedSize = GdipEmfToWmfBits(_hEmf, _bufferSize, _buffer, MM_ANISOTROPIC,
-					EmfToWmfBitsFlags.EmfToWmfBitsFlagsDefault);
+                    EmfToWmfBitsFlags.EmfToWmfBitsFlagsNoXORClip);
 
 				// Append the bits to the RTF string
 				for(int i = 0; i < _buffer.Length; ++i) {

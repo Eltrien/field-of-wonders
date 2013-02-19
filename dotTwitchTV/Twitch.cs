@@ -19,6 +19,7 @@ namespace dotTwitchTV
         
         #region Private properties
         private Timer bwDownloader;
+
         private CookieAwareWebClient wc;
         private Channel currentChannel;
         private string currentChannelName;

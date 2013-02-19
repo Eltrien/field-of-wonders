@@ -241,13 +241,17 @@ namespace Ubiquitous
         }
         private void AcceptClient( IAsyncResult asRes)
         {
-            var clientSocket = ((TcpListener)asRes.AsyncState).EndAcceptTcpClient(asRes);
-            var client = new Client(clientSocket);
-            client.OnData += DataReceived;
-            client.OnDisconnect += ClientDisconnected;
-            clientsList.Add(client);
+            try
+            {
+                var clientSocket = ((TcpListener)asRes.AsyncState).EndAcceptTcpClient(asRes);
+                var client = new Client(clientSocket);
+                client.OnData += DataReceived;
+                client.OnDisconnect += ClientDisconnected;
+                clientsList.Add(client);
 
-            tcpClientConnected.Set();
+                tcpClientConnected.Set();
+            }
+            catch { }
         }
         public void ClientDisconnected(object o, EventArgs e)
         {

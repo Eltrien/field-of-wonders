@@ -27,6 +27,8 @@ namespace dotSC2TV
     {
         #region "Private constants and properties"
         private const string channelsUrl = "http://chat.sc2tv.ru/memfs/channels.json?_={0}";
+        private const string channelEditUrl = "http://sc2tv.ru/node/add/userstream";
+        private const string channelEditUrl2 = "http://sc2tv.ru/node/{0}/edit";
         private const string loginUrl = "http://sc2tv.ru/node";
         private const string messagesUrl = "http://chat.sc2tv.ru/memfs/channel-{0}.json?_={1}";
         private const string smilesJSUrl = "http://chat.sc2tv.ru/js/smiles.js";
@@ -35,6 +37,7 @@ namespace dotSC2TV
         private const string chatTokenUrl = "http://chat.sc2tv.ru/gate.php?task=GetUserInfo&ref=http://sc2tv.ru/";
 
         private const string reHiddenFormId = @"^.*hidden.*form_build_id.*id=""(.*?)"".*$";
+        private const string reChannelStatus = @"^.*<input type=""text"".*?id=""edit-field-channel-status.*?"".*?value=""(.*?)"".*$";
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
         private const string cookieForTest = "drupal_uid";
         private const string mainDomain = "http://sc2tv.ru";
@@ -177,20 +180,22 @@ namespace dotSC2TV
         {
             using (CookieAwareWebClient cwc = new CookieAwareWebClient())
             {
+
                 if (currentChannelId != id)
                 {
                     _lastStatus = null;
                     chat.messages = null;
                     currentChannelId = id;
                 }
-                else if (_lastStatus == "ProtocolError")
-                {
-                    return false;
-                }
+
 
                 System.IO.Stream stream = cwc.downloadURL(String.Format(messagesUrl, id, (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds));
 
                 _lastStatus = cwc.LastWebError;
+                if (_lastStatus == "ProtocolError")
+                {
+                    return false;
+                }
 
                 if (stream == null)
                     return false;
@@ -257,8 +262,8 @@ namespace dotSC2TV
                     try
                     {
                         Bitmap srcimage = new Bitmap(cwc.downloadURL(String.Format(smilesImagesUrl, smile.Image)));
-                        srcimage = resizeImage(srcimage,new Size(30,30));
-                        smile.bmp = new Bitmap(30,30);
+                        srcimage = resizeImage(srcimage,new Size(smile.Width,smile.Height));
+                        smile.bmp = new Bitmap(smile.Width, smile.Height);
                         using (Graphics g = Graphics.FromImage(smile.bmp))
                         {
                             g.DrawImage(srcimage,1,1);
@@ -339,6 +344,31 @@ namespace dotSC2TV
                 catch{}
             }
 
+        }    
+        public bool isLive()
+        {
+            var html = wc.DownloadString(channelEditUrl);
+            MatchCollection reChannelStatusValue = Regex.Matches(html, reChannelStatus, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+            if (reChannelStatusValue.Count <= 0)
+                return false;
+            else if (reChannelStatusValue[0].Groups.Count <= 0)
+                return false;
+
+            return reChannelStatusValue[0].Groups[1].Value == "1"?true:false;     
+        } 
+        public void setLiveStatus(bool status)
+        {
+            if (currentChannelId == 0)
+                return;
+            try
+            {
+                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
+                string messageParams = "field_channel_status[0][value]=" + (status==false?"0":"1");
+                
+                wc.UploadString(String.Format(channelEditUrl2, currentChannelId), messageParams);
+            }
+            catch { }
         }
         public bool sendMessage(string message)
         {

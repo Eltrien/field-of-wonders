@@ -40,7 +40,7 @@ namespace dotXSplit
             if (_xsplitprocess == null)
             {
                 Thread.Sleep(500);
-                WaitXSplitProcess();
+                ThreadPool.QueueUserWorkItem( new WaitCallback( u=>WaitXSplitProcess() ) );
             }
         }
         private void dropCheckTimerTick(object o)

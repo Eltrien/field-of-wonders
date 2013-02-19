@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using SC2TV.RTFControl;
 using System.Drawing;
@@ -27,6 +28,7 @@ namespace Ubiquitous
     {
         private ExRichTextBox tb;
         delegate void SetTextCallback(string text, ChatIcon icon);
+        delegate void ReplaceSmileCodeCB(String code, Bitmap bmp);
 
 
         /// <summary>
@@ -38,6 +40,28 @@ namespace Ubiquitous
         {
             tb = logTb;
         }
+        public void ReplaceSmileCode(String code, Bitmap bmp)
+        {
+            if (tb.InvokeRequired)
+            {
+                ReplaceSmileCodeCB d = new ReplaceSmileCodeCB(ReplaceSmileCode);
+                try
+                {
+                    tb.Parent.Invoke(d, new object[] { code,bmp });
+                }
+                catch { }
+            }
+            else
+            {
+                int start = tb.Text.Substring(0).IndexOf(code);
+
+                tb.SelectionStart = start;
+                tb.SelectionLength = code.Length;                
+                //tb.Cut();
+                tb.InsertImage(bmp);
+            }
+        }
+
         /// <summary>
         /// Writes a line to the textbox. Automaticall adds newline character
         /// </summary>
@@ -49,7 +73,7 @@ namespace Ubiquitous
                 SetTextCallback d = new SetTextCallback(WriteLine);
                 try
                 {
-                    tb.Parent.Invoke(d, new object[] { text, icon });
+                    tb.Parent.Invoke(d, new object[] { text, icon});
                 }
                 catch { }
             }
@@ -83,6 +107,7 @@ namespace Ubiquitous
                         chatIcon = null;
                         break;
                 }
+
                 if( tb.Text.Length > 0 )
                     tb.AppendText(Environment.NewLine);
 
@@ -93,7 +118,9 @@ namespace Ubiquitous
                         tb.InsertImage( chatIcon );
                     tb.AppendText(" " + text);
                 }
-                tb.ScrollToEnd();
+                tb.SelectionStart = tb.Text.Length;
+                tb.SelectionLength = 0;
+                var bw = new BGWorker(tb.ScrollToEnd, null);
             }
         }
     }

@@ -121,8 +121,14 @@ namespace dotEmpireTV
         public void UpdateChat( String chatid)
         {
             CurrentChatID = chatid;
-            var result = wc.DownloadString(String.Format(getChatUrl,chatid,unixTimestamp()));
-
+            var result  = "";
+            try
+            {
+              result = wc.DownloadString(String.Format(getChatUrl, chatid, unixTimestamp()));
+            }
+            catch {
+                return;
+            }
             if (String.IsNullOrEmpty(result))
                 return;
 

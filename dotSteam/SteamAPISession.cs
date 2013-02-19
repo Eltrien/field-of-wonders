@@ -745,13 +745,13 @@ namespace dotSteam
             {
                 request.Method = "POST";
                 byte[] postBytes = Encoding.ASCII.GetBytes( post );
+                if (postBytes.Length == 0)
+                    throw new Exception("Request body is null");
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = postBytes.Length;
                 try
                 {
                     Stream requestStream = request.GetRequestStream();
-                    if (postBytes.Length == 0)
-                        throw new Exception("Request body is null");
                     requestStream.Write(postBytes, 0, postBytes.Length);
                     requestStream.Close();
                 }

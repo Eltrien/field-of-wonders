@@ -22,7 +22,7 @@ namespace dotGohaTV
         #region Constants
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
         private const string gohaForumDomain = "http://forums.goha.ru";
-        private const string gohaTVDomain = "http://www.goha.tv";        
+        private const string gohaTVDomain = "http://gohatv.testsite.goha.ru";        
         private const string loginUrl = gohaForumDomain + "/10gin.php?do=login";
         private const string uidgetUrl = gohaForumDomain + "/flcheck2.php";
         private const string authUrl = gohaTVDomain + "/auth/v2/auth.php/{0}";
@@ -135,6 +135,7 @@ namespace dotGohaTV
         {
             if (!LoggedIn)
                 return GohaTVResult.Unknown;
+            while (wc.IsBusy) ;
 
             var result = wc.DownloadString(String.Format(switchUrl, uid));
             if (GetSubString(result, String.Format(@"""({0})""",On), 1) != null)

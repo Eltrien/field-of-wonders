@@ -1,4 +1,5 @@
-﻿using System;
+﻿using WMPLib;
+using System;
 using System.Threading;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,7 +27,10 @@ namespace Ubiquitous
 {
     public partial class MainForm : Form
     {
+        delegate void SetTransparencyCB(Color color);
+        delegate void SetVisibilityCB(Control control, bool state);
         #region Private classes and enums
+
         private enum EndPoint
         {
             Sc2Tv,
@@ -42,6 +46,30 @@ namespace Ubiquitous
             Gohatv,
             Empiretv,
             All
+        }
+        private class ChatUser
+        {
+            public ChatUser(string fullName, string nickName, EndPoint endPoint)
+            {
+                FullName = fullName;
+                NickName = nickName;
+                EndPoint = endPoint;
+            }
+            public String FullName
+            {
+                get;
+                set;
+            }
+            public String NickName
+            {
+                get;
+                set;
+            }
+            public EndPoint EndPoint
+            {
+                get;
+                set;
+            }
         }
         private class ChatAlias
         {
@@ -253,9 +281,12 @@ namespace Ubiquitous
             }
 
         }
+
         #endregion 
 
         #region Private properties
+        private Point cursorPosBeforeMouseDown;
+        private bool isLMBDown = false;
         private Properties.Settings settings;
         private const string twitchIRCDomain = "jtvirc.com";
         private const string gohaIRCDomain = "i.gohanet.ru";
@@ -277,6 +308,7 @@ namespace Ubiquitous
         private BindingSource channelsSC2;
         private BindingSource channelsGG;
         private uint sc2ChannelId = 0;
+        private bool streamIsOnline = false;
         private BGWorker gohaBW, gohaStreamBW, steamBW, sc2BW, twitchBW, skypeBW, twitchTV, goodgameBW, battlelogBW,
                         empireBW;
         private EmpireTV empireTV;
@@ -287,6 +319,9 @@ namespace Ubiquitous
         private XSplit xsplit;
         private StatusServer statusServer;
         private Battlelog battlelog;
+        private List<ChatUser> chatUsers;
+        private bool isDisconnecting = false;
+
         #endregion 
 
         #region Form events and methods
@@ -296,6 +331,9 @@ namespace Ubiquitous
             settings = Properties.Settings.Default;
 
             InitializeComponent();
+            setTopMost();
+            chatUsers = new List<ChatUser>();
+
             currentChat = EndPoint.TwitchTV;
             lastMessageSent = new Message("", EndPoint.Console);
             adminCommands = new List<AdminCommand>();
@@ -313,17 +351,15 @@ namespace Ubiquitous
             chatAliases.Add(new ChatAlias(settings.goodgameChatAlias, EndPoint.Goodgame));
             chatAliases.Add(new ChatAlias("@all", EndPoint.All));
 
+
             sc2tv = new Sc2Chat(settings.sc2LoadHistory);
             sc2tv.Logon += OnSc2TvLogin;
             sc2tv.ChannelList += OnSc2TvChannelList;
             sc2tv.MessageReceived += OnSc2TvMessageReceived;
             sc2tv.channelList = new Channels();
-            sc2ChannelId = 0;
 
-            twitchIrc = new IrcClient();
-            twitchIrc.Connected += OnTwitchConnect;
-            twitchIrc.Registered += OnTwitchRegister;
-            twitchIrc.Disconnected += OnTwitchDisconnect;
+            uint.TryParse(settings.Sc2tvId, out sc2ChannelId);
+
 
             gohaIrc = new IrcClient();
             gohaIrc.Connected += OnGohaConnect;
@@ -376,16 +412,22 @@ namespace Ubiquitous
         }
         private void buttonFullscreen_Click(object sender, EventArgs e)
         {
-            if (buttonFullscreen.ImageIndex == 0)
+            switchFullScreenMode();
+/*            if (buttonFullscreen.ImageIndex == 0)
             {
+
                 buttonFullscreen.ImageIndex = 1;
+                panel1.Dock = DockStyle.Fill;
                 textMessages.Dock = DockStyle.Fill;
             }
             else
             {
+
                 buttonFullscreen.ImageIndex = 0;
+
+                panel1.Dock = DockStyle.Top;
                 textMessages.Dock = DockStyle.None;
-            }
+            }*/
         }
 
         private void buttonSettings_Click_1(object sender, EventArgs e)
@@ -468,11 +510,12 @@ namespace Ubiquitous
                     currentChat = lastMessageSent.FromEndPoint;
                 }
             }
-
-            SendMessage(new Message(
-                String.Format("Replying to {0}...", currentChat.ToString()),
-                EndPoint.Bot, EndPoint.SteamAdmin)
-            );
+            if (settings.steamCurrentChatNotify)
+            {
+                var msg = new Message(String.Format("Replying to {0}...", currentChat.ToString()),EndPoint.Bot, EndPoint.SteamAdmin);
+                if(!isFlood(msg))
+                    SendMessage(msg);
+            }
 
             message.FromEndPoint = EndPoint.SteamAdmin;
             message.ToEndPoint = currentChat;
@@ -561,7 +604,34 @@ namespace Ubiquitous
                     break;
             }
             if (!isFlood(message))
+            {
                 log.WriteLine(message.Text, message.Icon);
+                if (message.Icon == ChatIcon.Sc2Tv)
+                {
+                    if (message.Text.Contains(":s:"))
+                    {
+                        String m = message.Text;
+                        for (int i = 0; i < m.Length; i++)
+                        {
+                            int smilePos = -1;
+                            if (m.Substring(i).IndexOf(":s:") == 0)
+                            {
+                                foreach (Smile smile in sc2tv.smiles)
+                                {
+                                    smilePos = m.Substring(i).IndexOf(":s" + smile.Code);
+                                    if (smilePos == 0)
+                                    {                                                                
+                                        log.ReplaceSmileCode(":s" + smile.Code, smile.bmp );                                        
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        textMessages.ScrollToEnd();
+                    }
+                }
+            }
         }
         private void SendMessageToSc2Tv(Message message)
         {
@@ -628,6 +698,7 @@ namespace Ubiquitous
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            isDisconnecting = true;
             try
             {
 
@@ -748,6 +819,7 @@ namespace Ubiquitous
         #region Twitch channel methods and events
         private void ConnectTwitchChannel()
         {
+
             if (settings.TwitchUser.Length <= 0 ||
                 !settings.twitchEnabled)
                 return;
@@ -774,28 +846,68 @@ namespace Ubiquitous
 
         private void OnGoLive(object sender, EventArgs e)
         {
+            if (!streamIsOnline)
+            {
+                streamIsOnline = false;
+                WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
+                a.URL = "online.mp3";
+                a.controls.play();
+                SendMessage(new Message(String.Format("Twitch: STREAM ONLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                while (a.playState == WMPPlayState.wmppsPlaying)
+                    Thread.Sleep(10);
+
+            }
+
+           
+
             if (settings.gohaStreamControl)
             {                
                 if (gohaTVstream.LoggedIn)
                 {
                     if (gohaTVstream.StreamStatus == "off")
+                    {
+                        if (!streamIsOnline)
+                            SendMessage(new Message(String.Format("Goha: Stream switched on!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+
                         gohaTVstream.SwitchStream();
+                    }
                 }
             }
             streamStatus.SetOn(pictureStream);
+
+            streamIsOnline = true;
         }
         private void OnGoOffline(object sender, EventArgs e)
         {
+            if (streamIsOnline)
+            {
+
+
+                WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
+                a.URL = "offline.mp3";
+                a.controls.play();
+                SendMessage(new Message(String.Format("Twitch: STREAM OFFLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                while (a.playState == WMPPlayState.wmppsPlaying)
+                    Thread.Sleep(10);
+            }
+
+           
             if (settings.gohaStreamControl)
             {
                 if (gohaTVstream.LoggedIn)
                 {
                     if (gohaTVstream.StreamStatus == "on")
+                    {
+                        if (streamIsOnline)
+                            SendMessage(new Message(String.Format("Goha: Stream switched off!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
                         gohaTVstream.SwitchStream();
+                    }
                 }
             }
 
             streamStatus.SetOff(pictureStream);
+            streamIsOnline = false;
+            
         }
         #endregion
 
@@ -806,6 +918,23 @@ namespace Ubiquitous
             if (settings.TwitchUser.Length <= 0 ||
                 !settings.twitchEnabled)
                 return;
+
+            try
+            {
+                if (twitchIrc != null && twitchIrc.IsConnected)
+                {
+                    twitchIrc.Quit("Bye!");
+                    twitchIrc = null;
+                }
+            }
+            catch
+            {
+            }
+
+            twitchIrc = new IrcClient();
+            twitchIrc.Connected += OnTwitchConnect;
+            twitchIrc.Registered += OnTwitchRegister;
+            twitchIrc.Disconnected += OnTwitchDisconnect;
 
             using (var connectedEvent = new ManualResetEventSlim(false))
             {
@@ -830,7 +959,16 @@ namespace Ubiquitous
             if (!settings.twitchEnabled)
                 return;
 
-            twitchIrc.Quit();
+            SendMessage(new Message("Twitch bot disconnecting from the IRC", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+            if (!isDisconnecting)
+            {
+                twitchBW.Stop();
+                twitchBW = new BGWorker(ConnectTwitchIRC, null);
+            }
+            else
+            {
+                twitchIrc.Quit();
+            }
         }
         private void OnTwitchConnect(object sender, EventArgs e)
         {
@@ -899,6 +1037,7 @@ namespace Ubiquitous
                 !settings.sc2tvEnabled)
                 return;
             sc2tv.Login(settings.Sc2tvUser, settings.Sc2tvPassword);
+            sc2tv.updateSmiles();
             bWorkerSc2TvPoll.RunWorkerAsync();
         }
         private void bWorkerSc2TvPoll_DoWork(object sender, DoWorkEventArgs e)
@@ -976,6 +1115,7 @@ namespace Ubiquitous
             if (!sc2tv.updateChat(sc2ChannelId))
             {
                 SendMessage(new Message(String.Format(@"Sc2tv channel #{0} is unavalaible", sc2ChannelId ), EndPoint.Sc2Tv, EndPoint.Console));
+                Thread.Sleep(60000);
             }
             Thread.Sleep(5000);            
         }
@@ -1159,15 +1299,20 @@ namespace Ubiquitous
             if (!settings.goodgameEnabled)
                 return;
 
-            //if (ggChat != null)
-            //    ggChat.Disconnect();
             ggChat = new Goodgame(settings.goodgameUser, settings.goodgamePassword, settings.goodgameLoadHistory);
 
             ggChat.OnMessageReceived += OnGGMessageReceived;
             ggChat.OnConnect += OnGGConnect;
+            ggChat.OnDisconnect += OnGGDisconnect;
             ggChat.OnChannelListReceived += OnGGChannelListReceived;
             ggChat.OnError += OnGGError;
             ggChat.Connect();
+        }
+        public void OnGGDisconnect(object sender, EventArgs e)
+        {
+            goodgameBW.Stop();
+            goodgameBW = new BGWorker(ConnectGoodgame, null);
+            checkMark.SetOff(pictureGoodgame);
         }
         public void OnGGConnect(object sender, EventArgs e)
         {
@@ -1328,13 +1473,22 @@ namespace Ubiquitous
         }
         private void OnGohaChannelJoin(object sender, IrcChannelUserEventArgs e)
         {
+
             if (settings.gohaLeaveJoinMessages)
                 SendMessage(new Message(String.Format("{1}{0} joined ",settings.gohaChatAlias, e.ChannelUser.User.NickName), EndPoint.Gohatv, EndPoint.SteamAdmin));
+
         }
         private void OnGohaChannelLeft(object sender, IrcChannelUserEventArgs e)
         {
+            var nickName = e.ChannelUser.User.NickName;
+            var chatAlias = settings.gohaChatAlias;
+            var endPoint = EndPoint.Gohatv;
+
+            if (!chatUsers.Exists(u => (u.NickName == nickName && u.EndPoint == endPoint)))
+                chatUsers.Add(new ChatUser(null, nickName, endPoint));
+
             if (settings.gohaLeaveJoinMessages)
-                SendMessage(new Message(String.Format("{1}{0} left ", settings.gohaChatAlias, e.ChannelUser.User.NickName), EndPoint.Gohatv, EndPoint.SteamAdmin));
+                SendMessage(new Message(String.Format("{1}{0} left ", chatAlias, nickName), endPoint, EndPoint.SteamAdmin));
         }
         private void OnGohaMessageReceived(object sender, IrcMessageEventArgs e)
         {
@@ -1412,7 +1566,257 @@ namespace Ubiquitous
         }
         #endregion
 
+        private void pictureGohaStream_Click(object sender, EventArgs e)
+        {
+            gohaTVstream.SwitchStream();
+        }
 
+        private void pictureSc2tvStream_Click(object sender, EventArgs e)
+        {
+            sc2tv.setLiveStatus(true);
+            var status = sc2tv.isLive();
+            sc2tv.setLiveStatus(false);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            setTopMost();
+        }
+        private void setTopMost()
+        {
+            if (checkBox1.Checked)
+            {
+                this.TopMost = true;
+            }
+            else
+            {
+                this.TopMost = false;
+            }
+        }
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            }
+            else
+            {
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            }
+
+        }
+        private void switchFullScreenMode()
+        {
+            if (panel1.Dock == DockStyle.Fill)
+            {
+                panel1.Dock = DockStyle.None;
+                textMessages.Dock = DockStyle.None;
+                panel1.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
+                textMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
+
+                panel1.Width = this.Width - 5;
+                panel1.Height = this.Height - 50;
+
+                textMessages.Width = groupBox1.Left - 3;
+                textMessages.Height = panel1.Height;
+
+                
+            }
+            else
+            {
+                panel1.Dock = DockStyle.Fill;
+                textMessages.Dock = DockStyle.Fill;
+            }
+        }
+        private void textMessages_DoubleClick(object sender, EventArgs e)
+        {
+            switchFullScreenMode();
+        }
+
+        private void textMessages_MouseHover(object sender, EventArgs e)
+        {
+        }
+
+        private void textMessages_MouseLeave(object sender, EventArgs e)
+        {
+        }
+
+        private void MainForm_MouseHover(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_MouseLeave(object sender, EventArgs e)
+        {
+        }
+
+        private void checkBox1_MouseHover(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void hideTools()
+        {
+            if (checkBox1.Visible)
+            {
+                SetVisibility(checkBox1, false);
+                SetVisibility(checkBox2, false);
+                SetVisibility(trackBarTransparency, false);
+                if (TransparencyKey != textMessages.BackColor)
+                    SetTransparency(textMessages.BackColor);
+            }           
+            
+        }
+        private void showTools()
+        {
+            if (!checkBox1.Visible)
+            {
+                SetVisibility(checkBox1, true);
+                SetVisibility(checkBox2, true);
+                SetVisibility(trackBarTransparency, true);
+            }
+            if( !trackBarTransparency.Visible )
+                SetVisibility(trackBarTransparency, true);
+
+            SetTransparency(Color.Empty);
+        }
+        private void SetTransparency(Color color)
+        {
+            if (this.InvokeRequired)
+            {
+                SetTransparencyCB d = new SetTransparencyCB(SetTransparency);
+                this.Invoke(d, new object[] { color });
+            }
+            else
+            {
+                if (color == Color.Empty)
+                {
+                    if (this.Opacity != 1)
+                    {
+                        this.AllowTransparency = false;
+                        this.Opacity = 1;
+                    }
+                }
+                else
+                {
+                    if (this.Opacity != settings.globalTransparency / 100.0f)
+                    {
+                        this.AllowTransparency = true;
+                        this.Opacity = settings.globalTransparency / 100.0f;
+                    }
+                }
+            }
+        }
+
+        private void SetVisibility(Control control, bool visibility)
+        {
+            if (control.InvokeRequired)
+            {
+                SetVisibilityCB d = new SetVisibilityCB(SetVisibility);
+                control.Parent.Invoke(d, new object[] { control, visibility});
+            }
+            else
+            {
+                control.Visible = visibility;
+            }
+        }
+
+        private void MainForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private void MainForm_MouseEnter(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void MainForm_Enter(object sender, EventArgs e)
+        {
+        }
+
+        private void MainForm_Activated(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Deactivate(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textMessages_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboGGChannels_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textMessages_MouseDown(object sender, MouseEventArgs e)
+        {
+            cursorPosBeforeMouseDown = Cursor.Position;
+            isLMBDown = true;
+        }
+
+        private void textMessages_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point p = textMessages.PointToClient(Cursor.Position);
+            if (!(p.X <= textMessages.ClientRectangle.Right &&
+                p.X >= textMessages.ClientRectangle.Left &&
+                p.Y <= textMessages.ClientRectangle.Bottom &&
+                p.Y >= textMessages.ClientRectangle.Top))
+            {
+                isLMBDown = false;
+            }
+            if (isLMBDown)
+            {                
+                this.Left += Cursor.Position.X - cursorPosBeforeMouseDown.X;
+                this.Top += Cursor.Position.Y - cursorPosBeforeMouseDown.Y;
+                cursorPosBeforeMouseDown = Cursor.Position;
+            }
+            showTools();
+        }
+
+        private void textMessages_MouseUp(object sender, MouseEventArgs e)
+        {
+            isLMBDown = false;
+        }
+
+        private void timerEverySecond_Tick(object sender, EventArgs e)
+        {
+            if( twitchChannel != null )
+                labelViewers.Text = twitchChannel.Viewers;
+
+            if (trackBarTransparency.ClientRectangle.Contains(trackBarTransparency.PointToClient(Cursor.Position)))
+                return;
+
+            if ((!ClientRectangle.Contains(PointToClient(Cursor.Position))))
+            {
+                hideTools();
+            }
+            else
+            {
+                showTools();
+            }
+        }
+
+        private void trackBarTransparency_MouseMove(object sender, MouseEventArgs e)
+        {
+            SetTransparency(textMessages.BackColor);
+        }
 
     }
 }
