@@ -407,7 +407,18 @@ namespace Ubiquitous
             empireTV = new EmpireTV();
             empireBW = new BGWorker(ConnectEmpireTV, null);
 
-           
+            #region Set tooltips
+            ToolTip fullScreenDblClk = new ToolTip();
+
+            fullScreenDblClk.AutoPopDelay = 2000;
+            fullScreenDblClk.InitialDelay = 100;
+            fullScreenDblClk.ReshowDelay = 100;
+            fullScreenDblClk.ShowAlways = false;
+
+            // Set up the ToolTip text for the Button and Checkbox.
+            fullScreenDblClk.SetToolTip(textMessages , "Double click to switch Full screen mode");
+            #endregion
+
 
         }
         private void buttonFullscreen_Click(object sender, EventArgs e)
