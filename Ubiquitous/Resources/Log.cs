@@ -19,7 +19,8 @@ namespace Ubiquitous
         Steam,
         Admin,
         Battlelog,
-        Goodgame
+        Goodgame,
+        Empire
     }
     /// <summary>
     /// Thread safe writing to textbox
@@ -102,6 +103,9 @@ namespace Ubiquitous
                         break;
                     case ChatIcon.Battlelog:
                         chatIcon = Properties.Resources.bf3icon;
+                        break;
+                    case ChatIcon.Empire:
+                        chatIcon = Properties.Resources.empire;
                         break;
                     default:
                         chatIcon = null;

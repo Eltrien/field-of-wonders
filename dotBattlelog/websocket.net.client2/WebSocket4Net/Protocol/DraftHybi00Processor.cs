@@ -88,8 +88,16 @@ namespace WebSocket4Net.Protocol
             sendBuffer[0] = StartByte;
             int bytesCount = Encoding.UTF8.GetBytes(message, 0, message.Length, sendBuffer, 1);
             sendBuffer[1 + bytesCount] = EndByte;
-
-            websocket.Client.Send(sendBuffer, 0, bytesCount + 2);
+            try
+            {
+                websocket.Client.Send(sendBuffer, 0, bytesCount + 2);
+            }
+            catch
+            {
+                
+                
+            }
+            
         }
 
         public override void SendData(WebSocket websocket, byte[] data, int offset, int length)
@@ -104,7 +112,16 @@ namespace WebSocket4Net.Protocol
 
         public override void SendCloseHandshake(WebSocket websocket, int statusCode, string closeReason)
         {
-            websocket.Client.Send(CloseHandshake, 0, CloseHandshake.Length);
+            try
+            {
+                websocket.Client.Send(CloseHandshake, 0, CloseHandshake.Length);
+            }
+            catch 
+            {
+                
+               
+            }
+            
         }
 
         public override void SendPing(WebSocket websocket, string ping)
@@ -181,7 +198,16 @@ namespace WebSocket4Net.Protocol
 
             byte[] handshakeBuffer = Encoding.UTF8.GetBytes(handshakeBuilder.ToString());
 
-            websocket.Client.Send(handshakeBuffer, 0, handshakeBuffer.Length);
+            try
+            {
+                websocket.Client.Send(handshakeBuffer, 0, handshakeBuffer.Length);
+            }
+            catch
+            {
+                
+              
+            }
+            
         }
 
         private byte[] GetResponseSecurityKey(string secKey1, string secKey2, byte[] secKey3)

@@ -150,7 +150,7 @@ namespace dotSkype
                 try
                 {
                     while (!skypeRunning)
-                        Thread.Sleep(15);
+                        Thread.Sleep(1000);
 
                     skype.Timeout = 1000;
                     skype.Attach(8, true);

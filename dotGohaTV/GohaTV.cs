@@ -24,12 +24,13 @@ namespace dotGohaTV
         private const string gohaForumDomain = "http://forums.goha.ru";
         private const string gohaTVDomain = "http://gohatv.testsite.goha.ru";        
         private const string loginUrl = gohaForumDomain + "/10gin.php?do=login";
-        private const string uidgetUrl = gohaForumDomain + "/flcheck2.php";
-        private const string authUrl = gohaTVDomain + "/auth/v2/auth.php/{0}";
+        private const string uidgetUrl = gohaForumDomain + "/flcheck.php";
+        private const string authUrl = gohaTVDomain + "/auth/v3/auth.php/{0}";
         private const string finalAuth = gohaTVDomain + "/app/tv/data.php/streamer/{0}/ru.js";
         private const string switchUrl = gohaTVDomain + "/app/tv/data.php/streamer/change/{0}/auto/ru.js";
         private const string On = "on";
         private const string Off = "off";
+        private const string OffNull = "null";
 
         #endregion
         #region Private properties
@@ -107,7 +108,8 @@ namespace dotGohaTV
             wc.setCookie("ghfuid", uid, "www.goha.tv");
 
             result = wc.DownloadString(String.Format(finalAuth, userid));
-
+            if ( String.IsNullOrEmpty(result) )
+                return false; 
             StreamStatus = GetSubString(result, @"""status"":""(.*?)""", 1).ToLower();
             
             if (String.IsNullOrEmpty(StreamStatus))
@@ -145,8 +147,7 @@ namespace dotGohaTV
                     OnLive(this, EventArgs.Empty);
                 return GohaTVResult.On;
             }
-
-            if (GetSubString(result, String.Format(@"""({0})""",Off), 1) != null)
+            else
             {
                 StreamStatus = Off;
                 if (OnOffline != null)
@@ -154,7 +155,7 @@ namespace dotGohaTV
                 return GohaTVResult.Off;
             }
 
-            return GohaTVResult.Unknown;
+            //return GohaTVResult.Unknown;
         }
         #endregion
         #region Public properties

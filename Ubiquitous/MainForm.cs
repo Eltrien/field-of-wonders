@@ -274,6 +274,8 @@ namespace Ubiquitous
                             return ChatIcon.Goodgame;
                         case EndPoint.Battlelog:
                             return ChatIcon.Battlelog;
+                        case EndPoint.Empiretv:
+                            return ChatIcon.Empire;
                         default:
                             return ChatIcon.Default;
                     }
@@ -1584,9 +1586,19 @@ namespace Ubiquitous
 
         private void pictureSc2tvStream_Click(object sender, EventArgs e)
         {
-            sc2tv.setLiveStatus(true);
-            var status = sc2tv.isLive();
-            sc2tv.setLiveStatus(false);
+            sc2tv.LoadStreamSettings();
+            if (sc2tv.ChannelIsLive)
+                sc2tv.ChannelIsLive = false;
+            else
+                sc2tv.ChannelIsLive = true;
+            
+            sc2tv.SaveStreamSettings();
+
+            sc2tv.LoadStreamSettings();
+            if (sc2tv.ChannelIsLive)
+                checkMark.SetOn(pictureSc2tv);
+            else
+                checkMark.SetOff(pictureSc2tv);
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)

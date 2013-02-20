@@ -98,8 +98,16 @@ namespace WebSocket4Net.Protocol
             handshakeBuilder.AppendWithCrCf();
 
             byte[] handshakeBuffer = Encoding.UTF8.GetBytes(handshakeBuilder.ToString());
-
-            websocket.Client.Send(handshakeBuffer, 0, handshakeBuffer.Length);
+            try
+            {
+                websocket.Client.Send(handshakeBuffer, 0, handshakeBuffer.Length);
+            }
+            catch
+            {
+                
+                
+            }
+            
         }
 
         public override ReaderBase CreateHandshakeReader(WebSocket websocket)
@@ -166,7 +174,16 @@ namespace WebSocket4Net.Protocol
         private void SendDataFragment(WebSocket websocket, int opCode, byte[] playloadData, int offset, int length)
         {
             byte[] fragment = EncodeDataFrame(opCode, playloadData, offset, length);
-            websocket.Client.Send(fragment, 0, fragment.Length);
+            try
+            {
+                websocket.Client.Send(fragment, 0, fragment.Length);
+            }
+            catch
+            {
+                
+                
+            }
+            
         }
 
         public override void SendData(WebSocket websocket, byte[] data, int offset, int length)
@@ -183,8 +200,16 @@ namespace WebSocket4Net.Protocol
                 var playloadData = segments[i];
                 fragments.Add(new ArraySegment<byte>(EncodeDataFrame(OpCode.Binary, playloadData.Array, 0, playloadData.Count)));
             }
-
-            websocket.Client.Send(fragments);
+            try
+            {
+                websocket.Client.Send(fragments);
+            }
+            catch
+            {
+                
+                
+            }
+            
         }
 
         public override void SendMessage(WebSocket websocket, string message)
