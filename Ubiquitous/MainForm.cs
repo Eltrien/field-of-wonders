@@ -373,11 +373,6 @@ namespace Ubiquitous
             checkMark = new StatusImage(Properties.Resources.checkMarkGreen, Properties.Resources.checkMarkRed);
             streamStatus = new StatusImage(Properties.Resources.streamOnline, Properties.Resources.streamOffline);
 
-            steamBot = new SteamAPISession();
-            steamBot.Logon += OnSteamLogin;
-            steamBot.NewMessage += OnNewSteamMessage;
-            steamBot.FriendStateChange += OnSteamFriendStatusChange;
-            steamBot.Typing += OnSteamTyping;
 
             statusServer = new StatusServer();
             battlelog = new Battlelog();
@@ -409,6 +404,8 @@ namespace Ubiquitous
             empireTV = new EmpireTV();
             empireBW = new BGWorker(ConnectEmpireTV, null);
 
+            settings.PropertyChanged += new PropertyChangedEventHandler(settings_PropertyChanged);
+            settings.SettingsSaving += new SettingsSavingEventHandler(settings_SettingsSaving);
             #region Set tooltips
             ToolTip fullScreenDblClk = new ToolTip();
 
@@ -423,6 +420,37 @@ namespace Ubiquitous
 
 
         }
+
+        void settings_SettingsSaving(object sender, CancelEventArgs e)
+        {
+            if (settings.steamEnabled && (steamBot == null || settings.SteamBotAccessToken == null))
+            {
+                SendMessage(new Message("Starting Steam bot...", EndPoint.Steam, EndPoint.SteamAdmin));
+                steamBW = new BGWorker(ConnectSteamBot, null);
+            }
+        }
+
+        void settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if ((e.PropertyName == "SteamBot" || e.PropertyName == "SteamBotPassword") )
+            {
+                settings.SteamBotAccessToken = null;
+                settings.SteamAdminId = null;
+            }
+            if (e.PropertyName == "steamEnabled")
+            {
+                steamBot = null;
+                if (!settings.steamEnabled)
+                {
+                    SendMessage(new Message("Stopping Steam bot...", EndPoint.Steam, EndPoint.SteamAdmin));
+                    if (bWorkerSteamPoll.IsBusy)
+                        bWorkerSteamPoll.CancelAsync();
+                    checkMark.SetOff(pictureSteamBot);
+                }
+            }
+        }
+
+
         private void buttonFullscreen_Click(object sender, EventArgs e)
         {
             switchFullScreenMode();
@@ -657,7 +685,7 @@ namespace Ubiquitous
         }
         private void SendMessageToSteamAdmin(Message message)
         {
-            if (steamAdmin == null)
+            if (steamAdmin == null || steamBot == null)
                 return;
 
             if (steamBot.loginStatus == SteamAPISession.LoginStatus.LoginSuccessful)
@@ -721,6 +749,12 @@ namespace Ubiquitous
                     gohaTVstream.SwitchStream();
                 }
 
+                if (settings.sc2StreamAutoSwitch && sc2tv.isLive())
+                {
+                    SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                    sc2tv.setLiveStatus(false);
+                }
+
                 if (twitchIrc != null)
                 {
                     if (twitchIrc.IsRegistered)
@@ -779,7 +813,238 @@ namespace Ubiquitous
             else
                 return Result.Failed;
         }
+        private void pictureGohaStream_Click(object sender, EventArgs e)
+        {
+            gohaTVstream.SwitchStream();
+        }
+        private void pictureSc2tvStream_Click(object sender, EventArgs e)
+        {
+            var b = sc2tv.isLive();
+            return;
+            if (sc2tv.isLive())
+                sc2tv.setLiveStatus(false);
+            else
+                sc2tv.setLiveStatus(true);
+
+            if (sc2tv.isLive())
+                checkMark.SetOn(pictureSc2tvStream);
+            else
+                checkMark.SetOff(pictureSc2tvStream);
+
+        }
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            setTopMost();
+        }
+        private void setTopMost()
+        {
+            if (checkBox1.Checked)
+            {
+                this.TopMost = true;
+            }
+            else
+            {
+                this.TopMost = false;
+            }
+        }
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            }
+            else
+            {
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            }
+
+        }
+        private void switchFullScreenMode()
+        {
+            if (textMessages.Dock == DockStyle.Fill)
+            {
+                textMessages.Dock = DockStyle.None;
+                textMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
+                textMessages.Height = textCommand.Top - 5;
+                textMessages.Width = groupBox1.Left - 5;
+                textMessages.ScrollToEnd();
+            }
+            else
+            {
+                textMessages.Dock = DockStyle.Fill;
+                textMessages.ScrollToEnd();
+            }
+        }
+        private void textMessages_DoubleClick(object sender, EventArgs e)
+        {
+            switchFullScreenMode();
+        }
+        private void textMessages_MouseHover(object sender, EventArgs e)
+        {
+        }
+        private void textMessages_MouseLeave(object sender, EventArgs e)
+        {
+        }
+        private void MainForm_MouseHover(object sender, EventArgs e)
+        {
+
+        }
+        private void MainForm_MouseLeave(object sender, EventArgs e)
+        {
+        }
+        private void checkBox1_MouseHover(object sender, EventArgs e)
+        {
+
+        }
+        private void checkBox1_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
+        private void hideTools()
+        {
+            if (checkBox1.Visible)
+            {
+                SetVisibility(checkBox1, false);
+                SetVisibility(checkBox2, false);
+                SetVisibility(trackBarTransparency, false);
+                if (TransparencyKey != textMessages.BackColor)
+                    SetTransparency(textMessages.BackColor);
+            }
+
+        }
+        private void showTools()
+        {
+            if (!checkBox1.Visible)
+            {
+                SetVisibility(checkBox1, true);
+                SetVisibility(checkBox2, true);
+                SetVisibility(trackBarTransparency, true);
+            }
+            if (!trackBarTransparency.Visible)
+                SetVisibility(trackBarTransparency, true);
+
+            SetTransparency(Color.Empty);
+        }
+        private void SetTransparency(Color color)
+        {
+            if (this.InvokeRequired)
+            {
+                SetTransparencyCB d = new SetTransparencyCB(SetTransparency);
+                this.Invoke(d, new object[] { color });
+            }
+            else
+            {
+                if (color == Color.Empty)
+                {
+                    if (this.Opacity != 1)
+                    {
+                        this.AllowTransparency = false;
+                        this.Opacity = 1;
+                    }
+                }
+                else
+                {
+                    if (this.Opacity != settings.globalTransparency / 100.0f)
+                    {
+                        this.AllowTransparency = true;
+                        this.Opacity = settings.globalTransparency / 100.0f;
+                    }
+                }
+            }
+        }
+        private void SetVisibility(Control control, bool visibility)
+        {
+            if (control.InvokeRequired)
+            {
+                SetVisibilityCB d = new SetVisibilityCB(SetVisibility);
+                control.Parent.Invoke(d, new object[] { control, visibility });
+            }
+            else
+            {
+                control.Visible = visibility;
+            }
+        }
+        private void MainForm_MouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
+        private void MainForm_MouseEnter(object sender, EventArgs e)
+        {
+
+        }
+        private void MainForm_Enter(object sender, EventArgs e)
+        {
+        }
+        private void MainForm_Activated(object sender, EventArgs e)
+        {
+
+        }
+        private void MainForm_Deactivate(object sender, EventArgs e)
+        {
+
+        }
+        private void textMessages_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void textMessages_MouseDown(object sender, MouseEventArgs e)
+        {
+            cursorPosBeforeMouseDown = Cursor.Position;
+            isLMBDown = true;
+        }
+        private void textMessages_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point p = textMessages.PointToClient(Cursor.Position);
+            if (!(p.X <= textMessages.ClientRectangle.Right &&
+                p.X >= textMessages.ClientRectangle.Left &&
+                p.Y <= textMessages.ClientRectangle.Bottom &&
+                p.Y >= textMessages.ClientRectangle.Top))
+            {
+                isLMBDown = false;
+            }
+            if (isLMBDown)
+            {
+                this.Left += Cursor.Position.X - cursorPosBeforeMouseDown.X;
+                this.Top += Cursor.Position.Y - cursorPosBeforeMouseDown.Y;
+                cursorPosBeforeMouseDown = Cursor.Position;
+            }
+            showTools();
+        }
+        private void textMessages_MouseUp(object sender, MouseEventArgs e)
+        {
+            isLMBDown = false;
+        }
+        private void timerEverySecond_Tick(object sender, EventArgs e)
+        {
+            if (twitchChannel != null)
+                labelViewers.Text = twitchChannel.Viewers;
+
+            if (trackBarTransparency.ClientRectangle.Contains(trackBarTransparency.PointToClient(Cursor.Position)))
+                return;
+
+            if ((!ClientRectangle.Contains(PointToClient(Cursor.Position))))
+            {
+                hideTools();
+            }
+            else
+            {
+                showTools();
+            }
+        }
+        private void trackBarTransparency_MouseMove(object sender, MouseEventArgs e)
+        {
+            SetTransparency(textMessages.BackColor);
+        }
+        private void buttonFullscreen_Click_1(object sender, EventArgs e)
+        {
+            switchFullScreenMode();
+        }           
         #endregion
+
         #region EmpireTV methods and events
         private void ConnectEmpireTV()
         {
@@ -829,6 +1094,7 @@ namespace Ubiquitous
             streamStatus.SetOff(pictureGohaStream);            
         }
         #endregion
+
         #region Twitch channel methods and events
         private void ConnectTwitchChannel()
         {
@@ -886,6 +1152,17 @@ namespace Ubiquitous
                     }
                 }
             }
+            if (settings.sc2StreamAutoSwitch)
+            {
+                if (sc2tv.LoggedIn)
+                {
+                    if (!sc2tv.isLive() )
+                    {
+                        SendMessage(new Message(String.Format("Sc2Tv: Stream switched on!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                        sc2tv.setLiveStatus(true);
+                    }
+                }
+            }
             streamStatus.SetOn(pictureStream);
 
             streamIsOnline = true;
@@ -917,7 +1194,17 @@ namespace Ubiquitous
                     }
                 }
             }
-
+            if (settings.sc2StreamAutoSwitch)
+            {
+                if (sc2tv.LoggedIn)
+                {
+                    if (sc2tv.isLive())
+                    {
+                        SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                        sc2tv.setLiveStatus(false);
+                    }
+                }
+            }
             streamStatus.SetOff(pictureStream);
             streamIsOnline = false;
             
@@ -1135,9 +1422,13 @@ namespace Ubiquitous
         #endregion
         
         #region Steam bot methods and events
-        private void backgroundWorkerPoll_DoWork(object sender, DoWorkEventArgs e)
+        private void backgroundWorkerSteamPoll_DoWork(object sender, DoWorkEventArgs e)
         {
-            updateList = steamBot.Poll();
+            if (steamBot == null || !settings.steamEnabled)
+                return;
+
+            if( steamBot.loginStatus == SteamAPISession.LoginStatus.LoginSuccessful)
+                updateList = steamBot.Poll();
         }
         private void backgroundWorkerPoll_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -1145,13 +1436,21 @@ namespace Ubiquitous
         }
         private void ConnectSteamBot()
         {
+            
             string user = settings.SteamBot;
             var steamEnabled = settings.steamEnabled;
-            if (user.Length <= 0 || !steamEnabled)
+            if (String.IsNullOrEmpty(user) || !steamEnabled)
                 return;
 
-            string password = settings.SteamBotPassword;
+            steamBot = new SteamAPISession();
+            steamBot.Logon += OnSteamLogin;
+            steamBot.NewMessage += OnNewSteamMessage;
+            steamBot.FriendStateChange += OnSteamFriendStatusChange;
+            steamBot.Typing += OnSteamTyping;
 
+            checkMark.SetOff(pictureSteamBot);
+
+            string password = settings.SteamBotPassword;
 
             // Try to authenticate with token first
             status = steamBot.Authenticate(settings.SteamBotAccessToken);
@@ -1224,7 +1523,8 @@ namespace Ubiquitous
                 SendMessage(new Message(String.Format("Can't find {0} in your friends! Check settings or add that account into friend list for bot!", 
                     settings.SteamAdmin), EndPoint.Steam, EndPoint.Console));
 
-            bWorkerSteamPoll.RunWorkerAsync();
+            if( !bWorkerSteamPoll.IsBusy )
+                bWorkerSteamPoll.RunWorkerAsync();
 
         }
         private void OnNewSteamMessage(object sender, SteamAPISession.SteamEvent e)
@@ -1350,6 +1650,10 @@ namespace Ubiquitous
         private void OnGGError(object sender, Goodgame.TextEventArgs e)
         {
             SendMessage(new Message(String.Format("Goodgame error: {0}", e.Text), EndPoint.Goodgame, EndPoint.SteamAdmin));
+        }
+        private void comboGGChannels_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
         #endregion
 
@@ -1579,265 +1883,10 @@ namespace Ubiquitous
         }
         #endregion
 
-        private void pictureGohaStream_Click(object sender, EventArgs e)
+        private void pictureSteamBot_Click(object sender, EventArgs e)
         {
-            gohaTVstream.SwitchStream();
+            settings.steamEnabled = !settings.steamEnabled;
+            settings.Save();
         }
-
-        private void pictureSc2tvStream_Click(object sender, EventArgs e)
-        {
-            sc2tv.LoadStreamSettings();
-            if (sc2tv.ChannelIsLive)
-                sc2tv.ChannelIsLive = false;
-            else
-                sc2tv.ChannelIsLive = true;
-            
-            sc2tv.SaveStreamSettings();
-
-            sc2tv.LoadStreamSettings();
-            if (sc2tv.ChannelIsLive)
-                checkMark.SetOn(pictureSc2tv);
-            else
-                checkMark.SetOff(pictureSc2tv);
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            setTopMost();
-        }
-        private void setTopMost()
-        {
-            if (checkBox1.Checked)
-            {
-                this.TopMost = true;
-            }
-            else
-            {
-                this.TopMost = false;
-            }
-        }
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox2.Checked)
-            {
-                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            }
-            else
-            {
-                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-            }
-
-        }
-        private void switchFullScreenMode()
-        {
-            if (textMessages.Dock == DockStyle.Fill)
-            {
-                textMessages.Dock = DockStyle.None;
-                textMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
-                textMessages.Height = textCommand.Top - 5;
-                textMessages.Width = groupBox1.Left - 5;
-                textMessages.ScrollToEnd();
-            }
-            else
-            {
-                textMessages.Dock = DockStyle.Fill;
-                textMessages.ScrollToEnd();
-            }
-        }
-        private void textMessages_DoubleClick(object sender, EventArgs e)
-        {
-            switchFullScreenMode();
-        }
-
-        private void textMessages_MouseHover(object sender, EventArgs e)
-        {
-        }
-
-        private void textMessages_MouseLeave(object sender, EventArgs e)
-        {
-        }
-
-        private void MainForm_MouseHover(object sender, EventArgs e)
-        {
-
-        }
-
-        private void MainForm_MouseLeave(object sender, EventArgs e)
-        {
-        }
-
-        private void checkBox1_MouseHover(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBox1_MouseLeave(object sender, EventArgs e)
-        {
-
-        }
-
-        private void hideTools()
-        {
-            if (checkBox1.Visible)
-            {
-                SetVisibility(checkBox1, false);
-                SetVisibility(checkBox2, false);
-                SetVisibility(trackBarTransparency, false);
-                if (TransparencyKey != textMessages.BackColor)
-                    SetTransparency(textMessages.BackColor);
-            }           
-            
-        }
-        private void showTools()
-        {
-            if (!checkBox1.Visible)
-            {
-                SetVisibility(checkBox1, true);
-                SetVisibility(checkBox2, true);
-                SetVisibility(trackBarTransparency, true);
-            }
-            if( !trackBarTransparency.Visible )
-                SetVisibility(trackBarTransparency, true);
-
-            SetTransparency(Color.Empty);
-        }
-        private void SetTransparency(Color color)
-        {
-            if (this.InvokeRequired)
-            {
-                SetTransparencyCB d = new SetTransparencyCB(SetTransparency);
-                this.Invoke(d, new object[] { color });
-            }
-            else
-            {
-                if (color == Color.Empty)
-                {
-                    if (this.Opacity != 1)
-                    {
-                        this.AllowTransparency = false;
-                        this.Opacity = 1;
-                    }
-                }
-                else
-                {
-                    if (this.Opacity != settings.globalTransparency / 100.0f)
-                    {
-                        this.AllowTransparency = true;
-                        this.Opacity = settings.globalTransparency / 100.0f;
-                    }
-                }
-            }
-        }
-
-        private void SetVisibility(Control control, bool visibility)
-        {
-            if (control.InvokeRequired)
-            {
-                SetVisibilityCB d = new SetVisibilityCB(SetVisibility);
-                control.Parent.Invoke(d, new object[] { control, visibility});
-            }
-            else
-            {
-                control.Visible = visibility;
-            }
-        }
-
-        private void MainForm_MouseMove(object sender, MouseEventArgs e)
-        {
-            
-        }
-
-        private void MainForm_MouseEnter(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void MainForm_Enter(object sender, EventArgs e)
-        {
-        }
-
-        private void MainForm_Activated(object sender, EventArgs e)
-        {
-
-        }
-
-        private void MainForm_Deactivate(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textMessages_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboGGChannels_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textMessages_MouseDown(object sender, MouseEventArgs e)
-        {
-            cursorPosBeforeMouseDown = Cursor.Position;
-            isLMBDown = true;
-        }
-
-        private void textMessages_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point p = textMessages.PointToClient(Cursor.Position);
-            if (!(p.X <= textMessages.ClientRectangle.Right &&
-                p.X >= textMessages.ClientRectangle.Left &&
-                p.Y <= textMessages.ClientRectangle.Bottom &&
-                p.Y >= textMessages.ClientRectangle.Top))
-            {
-                isLMBDown = false;
-            }
-            if (isLMBDown)
-            {                
-                this.Left += Cursor.Position.X - cursorPosBeforeMouseDown.X;
-                this.Top += Cursor.Position.Y - cursorPosBeforeMouseDown.Y;
-                cursorPosBeforeMouseDown = Cursor.Position;
-            }
-            showTools();
-        }
-
-        private void textMessages_MouseUp(object sender, MouseEventArgs e)
-        {
-            isLMBDown = false;
-        }
-
-        private void timerEverySecond_Tick(object sender, EventArgs e)
-        {
-            if( twitchChannel != null )
-                labelViewers.Text = twitchChannel.Viewers;
-
-            if (trackBarTransparency.ClientRectangle.Contains(trackBarTransparency.PointToClient(Cursor.Position)))
-                return;
-
-            if ((!ClientRectangle.Contains(PointToClient(Cursor.Position))))
-            {
-                hideTools();
-            }
-            else
-            {
-                showTools();
-            }
-        }
-
-        private void trackBarTransparency_MouseMove(object sender, MouseEventArgs e)
-        {
-            SetTransparency(textMessages.BackColor);
-        }
-
-        private void buttonFullscreen_Click_1(object sender, EventArgs e)
-        {
-            switchFullScreenMode();
-        }   
-
     }
 }

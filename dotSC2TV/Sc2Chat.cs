@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using dotWebClient;
 using System.Text;
@@ -40,7 +41,7 @@ namespace dotSC2TV
         private const string reHiddenFormId = @".*hidden.*form_build_id.*id=""(.*?)"".*$";
 
         //<input type="text" maxlength="10" name="field_channel_status[0][value]" id="edit-field-channel-status-0-value" size="12" value="0" class="form-text number">
-        private const string reChannelIsLive = @"<input type=""text"".*?id=""edit-field-channel-status\[0]\[value\]""[^>]*?value=""(.*?)""";
+        private const string reChannelIsLive = @"<input type=""text""[^>]*?id=""edit-field-channel-status.*?""[^>]*?value=""(.*?)""";
         
         //<input type="text" maxlength="255" name="title" id="edit-title" size="60" value="War Thunder - РБ" class="form-text required">
         private const string reChannelTitle = @"<input type=""text"".*?id=""edit-title""[^>]*?value=""(.*?)""";
@@ -396,15 +397,12 @@ namespace dotSC2TV
         }    
         public bool isLive()
         {
-            var html = wc.DownloadString(channelEditUrl);
-            MatchCollection reChannelStatusValue = Regex.Matches(html, reChannelIsLive, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            if (reChannelStatusValue.Count <= 0)
+            LoadStreamSettings();
+            if (ChannelIsLive)
+                return true;
+            else
                 return false;
-            else if (reChannelStatusValue[0].Groups.Count <= 0)
-                return false;
-
-            return reChannelStatusValue[0].Groups[1].Value == "1"?true:false;     
+ 
         }
         public String ChannelTitle
         {
@@ -484,7 +482,8 @@ namespace dotSC2TV
             String html = null;
             try
             {
-                html = wc.DownloadString(channelEditUrl);
+                var randomNumber = (new DateTime(1970, 1, 1)).Ticks;
+                html = wc.DownloadString(String.Format("{0}?_={1}",channelEditUrl, randomNumber));
             }
             catch
             {
@@ -501,7 +500,7 @@ namespace dotSC2TV
             ChannelName = GetSubString( html, reChannelName, 1 );
             ChannelAutoUpdate = GetSubString( html, reChannelAutoUpdate, 1 ) == "1";
             ChannelWithoutComments = GetSubString( html, reChannelWithoutComments, 1 ) == "1";
-            ChannelIsLive = GetSubString( html, reChannelIsLive, 1 ) == "1";
+            ChannelIsLive = GetSubString( html, reChannelIsLive, 1 ) != "0";
             ChannelGame = GetSubString( html, reChannelGame, 1 );
             ChannelLongInfo = GetSubString( html, reChannelLongInfo, 1 );
             ChannelShortInfo = GetSubString( html, reChannelShortInfo, 1 );
@@ -542,19 +541,18 @@ namespace dotSC2TV
             
             wc.PostMultipart(String.Format(channelEditUrl2, currentChannelId), postData.GetPostData(), postData.Boundary);
 
+            if (wc.LastWebError == "ProtocolError")
+                throw new Exception("Can't save SC2TV settings. Do it manually!");
+
         }
         public void setLiveStatus(bool status)
         {
-            if (currentChannelId == 0)
-                return;
-            try
-            {
-                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
-                string messageParams = "field_channel_status[0][value]=" + (status==false?"0":"1");
-                
-                wc.UploadString(String.Format(channelEditUrl2, currentChannelId), messageParams);
-            }
-            catch { }
+            ChannelIsLive = status;
+            SaveStreamSettings();
+
+            LoadStreamSettings();
+            if (ChannelIsLive != status)
+                throw new Exception("SC2TV stream wasn't switched! Do it manually!");
         }
         public bool sendMessage(string message)
         {
@@ -631,7 +629,7 @@ namespace dotSC2TV
             return b;
         }
         private string GetSubString(string input, string re, int index)
-        {
+        {            
             var match = Regex.Match(input, re, RegexOptions.Singleline | RegexOptions.IgnoreCase);
             if (!match.Success)
                 return null;
@@ -642,7 +640,13 @@ namespace dotSC2TV
             var result = match.Groups[index].Value;
 
             if (String.IsNullOrEmpty(result))
+            {
+                Debug.Print( String.Format("RE: {0}. Result = NULL", re ));
                 return null;
+            }
+            
+            
+            Debug.Print( String.Format("RE: {0}. Result = {1}", re, result ));
 
             return result;
 

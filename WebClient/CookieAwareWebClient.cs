@@ -5,7 +5,7 @@ using System.Text;
 using System.Net;
 using System.Net.Cache;
 using System.Configuration;
-
+using System.Diagnostics;
 
 namespace dotWebClient
 {
@@ -81,12 +81,12 @@ namespace dotWebClient
                 request.UserAgent = userAgent;
                 request.CookieContainer = m_container;
                 request.ContentLength = data.Length;
-                request.Referer = url;
+                //request.Referer = url;
                 request.KeepAlive = true;
-                request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-                request.Headers["Origin"] = "http://sc2tv.ru";
-                request.Headers["Accept-Charset"] = "windows-1251,utf-8;q=0.7,*;q=0.3";
-                request.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
+                //request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+                //request.Headers["Origin"] = "http://sc2tv.ru";
+                //request.Headers["Accept-Charset"] = "windows-1251,utf-8;q=0.7,*;q=0.3";
+                //request.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
 
 
                 

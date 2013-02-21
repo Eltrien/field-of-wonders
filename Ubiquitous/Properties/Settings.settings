@@ -206,5 +206,8 @@
     <Setting Name="globalTransparency" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">80</Value>
     </Setting>
+    <Setting Name="sc2StreamAutoSwitch" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

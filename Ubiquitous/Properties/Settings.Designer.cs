@@ -838,5 +838,17 @@ namespace Ubiquitous.Properties {
                 this["globalTransparency"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool sc2StreamAutoSwitch {
+            get {
+                return ((bool)(this["sc2StreamAutoSwitch"]));
+            }
+            set {
+                this["sc2StreamAutoSwitch"] = value;
+            }
+        }
     }
 }
