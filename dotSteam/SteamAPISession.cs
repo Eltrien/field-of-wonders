@@ -771,7 +771,7 @@ namespace dotSteam
                 response.Close();
                 return src;
             }
-            catch ( WebException e )
+            catch
             {
                 return null;
             }

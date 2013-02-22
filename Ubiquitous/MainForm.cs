@@ -354,13 +354,14 @@ namespace Ubiquitous
             chatAliases.Add(new ChatAlias("@all", EndPoint.All));
 
 
+            uint.TryParse(settings.Sc2tvId, out sc2ChannelId);
+
             sc2tv = new Sc2Chat(settings.sc2LoadHistory);
             sc2tv.Logon += OnSc2TvLogin;
             sc2tv.ChannelList += OnSc2TvChannelList;
             sc2tv.MessageReceived += OnSc2TvMessageReceived;
             sc2tv.channelList = new Channels();
-
-            uint.TryParse(settings.Sc2tvId, out sc2ChannelId);
+            
 
 
             gohaIrc = new IrcClient();
@@ -820,16 +821,22 @@ namespace Ubiquitous
         private void pictureSc2tvStream_Click(object sender, EventArgs e)
         {
             var b = sc2tv.isLive();
-            return;
+            
             if (sc2tv.isLive())
                 sc2tv.setLiveStatus(false);
             else
                 sc2tv.setLiveStatus(true);
 
-            if (sc2tv.isLive())
-                checkMark.SetOn(pictureSc2tvStream);
+            if (sc2tv.isLive() && b != sc2tv.isLive())
+            {
+                streamStatus.SetOn(pictureSc2tvStream);
+                SendMessage(new Message(String.Format("Sc2Tv: Stream switched on!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+            }
             else
-                checkMark.SetOff(pictureSc2tvStream);
+            {
+                SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                streamStatus.SetOff(pictureSc2tvStream);
+            }
 
         }
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -1160,6 +1167,10 @@ namespace Ubiquitous
                     {
                         SendMessage(new Message(String.Format("Sc2Tv: Stream switched on!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                         sc2tv.setLiveStatus(true);
+                        if (sc2tv.isLive())
+                            streamStatus.SetOn(pictureSc2tvStream);
+                        else
+                            streamStatus.SetOff(pictureSc2tvStream);
                     }
                 }
             }
@@ -1202,6 +1213,10 @@ namespace Ubiquitous
                     {
                         SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                         sc2tv.setLiveStatus(false);
+                        if (!sc2tv.isLive())
+                            streamStatus.SetOff(pictureSc2tvStream);
+                        else
+                            throw new Exception("Sc2tv stream wasn't switched! Do it manually!");
                     }
                 }
             }
@@ -1356,6 +1371,7 @@ namespace Ubiquitous
                 SendMessage(new Message(String.Format("Sc2tv: logged in!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                 sc2tv.updateStreamList();
                 checkMark.SetOn(pictureSc2tv);
+                sc2tv.LoadStreamSettings();
             }
             else
             {

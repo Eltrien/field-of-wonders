@@ -12,6 +12,7 @@ using System.Web;
 using System.Text.RegularExpressions;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Threading;
 
 
 namespace dotSC2TV
@@ -397,7 +398,6 @@ namespace dotSC2TV
         }    
         public bool isLive()
         {
-            LoadStreamSettings();
             if (ChannelIsLive)
                 return true;
             else
@@ -549,8 +549,14 @@ namespace dotSC2TV
         {
             ChannelIsLive = status;
             SaveStreamSettings();
-
-            LoadStreamSettings();
+            var i = 0;
+            while (ChannelIsLive != status)
+            {
+                LoadStreamSettings();
+                Thread.Sleep(30);
+                i++;
+                if (i > 100) break;
+            }
             if (ChannelIsLive != status)
                 throw new Exception("SC2TV stream wasn't switched! Do it manually!");
         }
