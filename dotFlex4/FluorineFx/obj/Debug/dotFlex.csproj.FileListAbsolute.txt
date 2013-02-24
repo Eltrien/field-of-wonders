@@ -33,3 +33,14 @@ C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\Gener
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\GenerateResource.write.1.tlog
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.dll
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.pdb
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\Bin\dotFlex.dll
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\Bin\dotFlex.pdb
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\Bin\antlr.runtime.dll
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\Bin\log4net.dll
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\Bin\log4net.xml
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\ResolveAssemblyReference.cache
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.Resources.Resource.resources
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\GenerateResource.read.1.tlog
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\GenerateResource.write.1.tlog
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.dll
+D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.pdb

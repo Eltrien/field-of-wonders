@@ -276,6 +276,8 @@ namespace Ubiquitous
                             return ChatIcon.Battlelog;
                         case EndPoint.Empiretv:
                             return ChatIcon.Empire;
+                        case EndPoint.Gohatv:
+                            return ChatIcon.Goha;
                         default:
                             return ChatIcon.Default;
                     }
@@ -444,8 +446,8 @@ namespace Ubiquitous
                 if (!settings.steamEnabled)
                 {
                     SendMessage(new Message("Stopping Steam bot...", EndPoint.Steam, EndPoint.SteamAdmin));
-                    if (bWorkerSteamPoll.IsBusy)
-                        bWorkerSteamPoll.CancelAsync();
+                    bWorkerSteamPoll.CancelAsync();
+                    while (bWorkerSteamPoll.CancellationPending) ;
                     checkMark.SetOff(pictureSteamBot);
                 }
             }
@@ -741,6 +743,9 @@ namespace Ubiquitous
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             isDisconnecting = true;
+            e.Cancel = true;
+            SendMessage(new Message(String.Format("Leaving chats..."), EndPoint.Steam, EndPoint.Console));
+            timerEverySecond.Enabled = false;
             try
             {
 
@@ -752,45 +757,92 @@ namespace Ubiquitous
 
                 if (settings.sc2StreamAutoSwitch && sc2tv.isLive())
                 {
-                    SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                    SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.Console));
                     sc2tv.setLiveStatus(false);
+                    streamStatus.SetOff(pictureSc2tvStream);
                 }
 
-                if (twitchIrc != null)
-                {
-                    if (twitchIrc.IsRegistered)
-                    {
-                        twitchIrc.Quit(1000, "Bye!");
-                        twitchBW.Stop();
-                    }
-                }
-
-                if (gohaIrc != null)
-                {
-                    if (gohaIrc.IsRegistered)
-                    {
-                        gohaIrc.Quit(1000, "Bye!");
-                        gohaBW.Stop();
-                    }
-                }
-
-                ggChat.Disconnect();
-                steamBW.Stop();
-                sc2BW.Stop();
-                twitchBW.Stop();
-                twitchTV.Stop();
-                skypeBW.Stop();
-                goodgameBW.Stop();
-
-
-
+                var b1 = new BGWorker( StopTwitchIRC, null );
+                var b2 = new BGWorker( StopGohaIRC, null );
+                var b3 = new BGWorker( StopSteamBot, null );
+                var b4 = new BGWorker(StopSc2Chat, null);
+                var b5 = new BGWorker(StopGoodgame, null);
+             
                 // FlourineFx causing crash on exit if NetConnection object was connected to a server. 
                 // So I using this dirty workaround until I'll find something better.
+                //MessageBox.Show("test");
+                Thread.Sleep(5000);
                 Process.GetCurrentProcess().Kill();
             }
             catch
             {
                
+            }
+        }
+        private void StopTwitchIRC()
+        {
+            if (twitchIrc != null)
+            {
+                if (twitchIrc.IsRegistered)
+                {
+
+                    twitchIrc.Quit();
+                    SendMessage(new Message(String.Format("TwitchTV: disconnected!"), EndPoint.TwitchTV, EndPoint.Console));
+                    checkMark.SetOff(pictureTwitch);
+                }
+            }
+        }
+        private void StopGohaIRC()
+        {
+            if (gohaIrc != null)
+            {
+                if (gohaIrc.IsRegistered)
+                {
+                    gohaIrc.Disconnect(); //.Quit();
+                    SendMessage(new Message(String.Format("GohaTV: disconnected."), EndPoint.Gohatv, EndPoint.Console));
+                    checkMark.SetOff(pictureGoha);
+                }
+            }
+        }
+        private void StopGoodgame()
+        {
+            ggChat.Disconnect();
+            SendMessage(new Message(String.Format("Goodgame: disconnected."), EndPoint.Goodgame, EndPoint.Console));
+            checkMark.SetOff(pictureGoodgame);
+        }
+        private void StopSteamBot()
+        { 
+                bWorkerSteamPoll.CancelAsync();
+                while (bWorkerSteamPoll.CancellationPending) Thread.Sleep(10);
+                SendMessage(new Message(String.Format("Steam: disconnected."), EndPoint.Steam, EndPoint.Console));
+                checkMark.SetOff(pictureSteamBot);
+        }
+        private void StopSc2Chat()
+        {
+            if (settings.sc2tvEnabled)
+            {
+                bWorkerSc2TvPoll.CancelAsync();
+                while (bWorkerSc2TvPoll.CancellationPending) Thread.Sleep(10);
+                SendMessage(new Message(String.Format("Sc2tv: disconnected."), EndPoint.Sc2Tv, EndPoint.Console));
+                checkMark.SetOff(pictureSc2tv);
+
+            }  
+        }
+
+        private void RunWithTimeout(ParameterizedThreadStart start, int timeoutSec)
+        {
+            Thread t = new Thread(start);
+            t.Start();
+            if (!t.Join(TimeSpan.FromSeconds(timeoutSec)))
+            {
+                try
+                {
+                    t.Abort();
+                }
+                catch
+                {
+
+                }
             }
         }
         private void textMessages_SizeChanged(object sender, EventArgs e)
@@ -820,22 +872,31 @@ namespace Ubiquitous
         }
         private void pictureSc2tvStream_Click(object sender, EventArgs e)
         {
-            var b = sc2tv.isLive();
+            sc2tv.LoadStreamSettings();
+
+            var prevLiveStatus = sc2tv.isLive();
             
-            if (sc2tv.isLive())
+            if (prevLiveStatus)
                 sc2tv.setLiveStatus(false);
             else
                 sc2tv.setLiveStatus(true);
 
-            if (sc2tv.isLive() && b != sc2tv.isLive())
+            if (prevLiveStatus != sc2tv.isLive())
             {
-                streamStatus.SetOn(pictureSc2tvStream);
-                SendMessage(new Message(String.Format("Sc2Tv: Stream switched on!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                if (prevLiveStatus)
+                {
+                    SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                    streamStatus.SetOff(pictureSc2tvStream);
+                }
+                else
+                {
+                    streamStatus.SetOn(pictureSc2tvStream);
+                    SendMessage(new Message(String.Format("Sc2Tv: Stream switched on!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                }
             }
             else
             {
-                SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
-                streamStatus.SetOff(pictureSc2tvStream);
+                SendMessage(new Message(String.Format("Sc2Tv: Stream wasn't switched! Please try again!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
             }
 
         }
@@ -1163,14 +1224,19 @@ namespace Ubiquitous
             {
                 if (sc2tv.LoggedIn)
                 {
+                    sc2tv.LoadStreamSettings();
                     if (!sc2tv.isLive() )
                     {
-                        SendMessage(new Message(String.Format("Sc2Tv: Stream switched on!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                         sc2tv.setLiveStatus(true);
                         if (sc2tv.isLive())
+                        {
+                            SendMessage(new Message(String.Format("Sc2Tv: Stream switched on (Twitch stream went online)!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                             streamStatus.SetOn(pictureSc2tvStream);
+                        }
                         else
+                        {
                             streamStatus.SetOff(pictureSc2tvStream);
+                        }
                     }
                 }
             }
@@ -1209,14 +1275,19 @@ namespace Ubiquitous
             {
                 if (sc2tv.LoggedIn)
                 {
+                    sc2tv.LoadStreamSettings();
                     if (sc2tv.isLive())
                     {
-                        SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                         sc2tv.setLiveStatus(false);
                         if (!sc2tv.isLive())
+                        {
+                            SendMessage(new Message(String.Format("Sc2Tv: Stream switched off (Twitch stream went offline)!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                             streamStatus.SetOff(pictureSc2tvStream);
+                        }
                         else
+                        {
                             throw new Exception("Sc2tv stream wasn't switched! Do it manually!");
+                        }
                     }
                 }
             }
@@ -1352,16 +1423,26 @@ namespace Ubiquitous
                 !settings.sc2tvEnabled)
                 return;
             sc2tv.Login(settings.Sc2tvUser, settings.Sc2tvPassword);
-            sc2tv.updateSmiles();
+            sc2tv.updateSmiles();            
+            if ( sc2ChannelId != 0 )
+            {
+                sc2tv.ChannelId = sc2ChannelId;
+            }
+
             bWorkerSc2TvPoll.RunWorkerAsync();
         }
         private void bWorkerSc2TvPoll_DoWork(object sender, DoWorkEventArgs e)
         {
+            if ((bWorkerSc2TvPoll.CancellationPending == true))
+            {
+                e.Cancel = true;
+                return;
+            }
             UpdateSc2TvMessages();
         }
         private void bWorkerSc2TvPoll_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            bWorkerSc2TvPoll.RunWorkerAsync();
+           bWorkerSc2TvPoll.RunWorkerAsync();
         }
 
         private void OnSc2TvLogin(object sender, Sc2Chat.Sc2Event e)
@@ -1372,6 +1453,10 @@ namespace Ubiquitous
                 sc2tv.updateStreamList();
                 checkMark.SetOn(pictureSc2tv);
                 sc2tv.LoadStreamSettings();
+                if (sc2tv.ChannelIsLive)
+                    streamStatus.SetOn(pictureSc2tvStream);
+                else
+                    streamStatus.SetOff(pictureSc2tvStream);
             }
             else
             {
@@ -1427,7 +1512,7 @@ namespace Ubiquitous
             }
         }
         private void UpdateSc2TvMessages()
-        {
+        {            
             if (!sc2tv.updateChat(sc2ChannelId))
             {
                 SendMessage(new Message(String.Format(@"Sc2tv channel #{0} is unavalaible", sc2ChannelId ), EndPoint.Sc2Tv, EndPoint.Console));
@@ -1440,10 +1525,16 @@ namespace Ubiquitous
         #region Steam bot methods and events
         private void backgroundWorkerSteamPoll_DoWork(object sender, DoWorkEventArgs e)
         {
+            if ((bWorkerSteamPoll.CancellationPending == true))
+            {
+                e.Cancel = true;
+                return;
+            }
             if (steamBot == null || !settings.steamEnabled)
                 return;
 
-            if( steamBot.loginStatus == SteamAPISession.LoginStatus.LoginSuccessful)
+
+            if (steamBot.loginStatus == SteamAPISession.LoginStatus.LoginSuccessful)
                 updateList = steamBot.Poll();
         }
         private void backgroundWorkerPoll_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

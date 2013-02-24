@@ -227,6 +227,11 @@ namespace dotSC2TV
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        public UInt32 ChannelId
+        {
+            get { return currentChannelId; }
+            set {currentChannelId = value; updateChat( currentChannelId ); }
+        }
         public bool updateChat(UInt32 id)
         {
             using (CookieAwareWebClient cwc = new CookieAwareWebClient())
