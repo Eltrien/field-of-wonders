@@ -742,6 +742,7 @@ namespace Ubiquitous
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            this.Visible = false;
             isDisconnecting = true;
             e.Cancel = true;
             SendMessage(new Message(String.Format("Leaving chats..."), EndPoint.Steam, EndPoint.Console));
@@ -806,16 +807,22 @@ namespace Ubiquitous
         }
         private void StopGoodgame()
         {
+            if (ggChat == null || !settings.goodgameEnabled)
+                return;
+
             ggChat.Disconnect();
             SendMessage(new Message(String.Format("Goodgame: disconnected."), EndPoint.Goodgame, EndPoint.Console));
             checkMark.SetOff(pictureGoodgame);
         }
         private void StopSteamBot()
-        { 
-                bWorkerSteamPoll.CancelAsync();
-                while (bWorkerSteamPoll.CancellationPending) Thread.Sleep(10);
-                SendMessage(new Message(String.Format("Steam: disconnected."), EndPoint.Steam, EndPoint.Console));
-                checkMark.SetOff(pictureSteamBot);
+        {
+            if (!settings.steamEnabled)
+                return;
+
+            bWorkerSteamPoll.CancelAsync();
+            while (bWorkerSteamPoll.CancellationPending) Thread.Sleep(10);
+            SendMessage(new Message(String.Format("Steam: disconnected."), EndPoint.Steam, EndPoint.Console));
+            checkMark.SetOff(pictureSteamBot);
         }
         private void StopSc2Chat()
         {

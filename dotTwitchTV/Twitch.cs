@@ -64,7 +64,7 @@ namespace dotTwitchTV
         {
             if( currentChannelName == null || currentChannelName == "")
                 return;
-            prevOnlineState = isAlive();
+            
             try
             {
                 wc.Headers["Cache-Control"] = "no-cache";
@@ -79,15 +79,20 @@ namespace dotTwitchTV
 
                 if (isAlive() && tempChannel == null)
                 {
-                    if (prevOnlineState != isAlive()) 
+                    if (prevOnlineState != isAlive())
+                    {
+                        prevOnlineState = isAlive();
                         OnOffline(new EventArgs());
+                    }
                 }
                 else if (!isAlive() && tempChannel != null)
                 {
-                    if(prevOnlineState != isAlive())
+                    if (prevOnlineState != isAlive())
+                    {
+                        prevOnlineState = isAlive();
                         OnLive(new EventArgs());
+                    }
                 }
-                prevOnlineState = isAlive();
                 currentChannel = tempChannel;
 
 
