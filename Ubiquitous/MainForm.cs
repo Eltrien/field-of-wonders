@@ -434,6 +434,17 @@ namespace Ubiquitous
                 steamBW = new BGWorker(ConnectSteamBot, null);
             }
 
+            if (settings.twitchEnabled)
+            {
+                if (twitchIrc != null && twitchIrc.IsRegistered)
+                {
+                    twitchIrc.Quit(1000);
+                    twitchBW.Stop();
+                }
+
+                twitchBW = new BGWorker(ConnectTwitchIRC, null);
+            }
+
         }
 
         void settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -706,8 +717,10 @@ namespace Ubiquitous
         }
         private void SendMessageToTwitchIRC(Message message)
         {
-            if (settings.twitchEnabled &&
-                twitchIrc.IsRegistered &&
+            if (!settings.twitchEnabled || twitchIrc == null)
+                return;
+            
+            if( twitchIrc.IsRegistered &&
                 (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
             {
                 var channelName = "#" + settings.TwitchUser;
@@ -987,6 +1000,8 @@ namespace Ubiquitous
             {
                 SetVisibility(checkBox1, false);
                 SetVisibility(checkBox2, false);
+                SetVisibility(buttonCommercial, false);
+
                 SetVisibility(trackBarTransparency, false);
                 if (TransparencyKey != textMessages.BackColor)
                     SetTransparency(textMessages.BackColor);
@@ -1000,6 +1015,7 @@ namespace Ubiquitous
                 SetVisibility(checkBox1, true);
                 SetVisibility(checkBox2, true);
                 SetVisibility(trackBarTransparency, true);
+                SetVisibility(buttonCommercial, true);
             }
             if (!trackBarTransparency.Visible)
                 SetVisibility(trackBarTransparency, true);
@@ -2032,6 +2048,11 @@ namespace Ubiquitous
                 {
                     return Assembly.GetExecutingAssembly().GetName().Version;
                 }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SendMessage(new Message("/commercial", EndPoint.Console, EndPoint.TwitchTV));
         }
     }
 }
