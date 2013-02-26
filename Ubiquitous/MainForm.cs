@@ -433,6 +433,7 @@ namespace Ubiquitous
                 SendMessage(new Message("Starting Steam bot...", EndPoint.Steam, EndPoint.SteamAdmin));
                 steamBW = new BGWorker(ConnectSteamBot, null);
             }
+
         }
 
         void settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -1205,13 +1206,17 @@ namespace Ubiquitous
             if (!streamIsOnline)
             {
                 streamIsOnline = false;
-                WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
-                a.URL = "online.mp3";
-                a.controls.play();
-                SendMessage(new Message(String.Format("Twitch: STREAM ONLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
-                while (a.playState == WMPPlayState.wmppsPlaying)
-                    Thread.Sleep(10);
-
+                try
+                {
+                    WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
+                
+                    a.URL = "online.mp3";
+                    a.controls.play();
+                    SendMessage(new Message(String.Format("Twitch: STREAM ONLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                    while (a.playState == WMPPlayState.wmppsPlaying)
+                        Thread.Sleep(10);
+                }
+                catch{}                
             }
 
            
@@ -1258,13 +1263,16 @@ namespace Ubiquitous
             if (streamIsOnline)
             {
 
-
-                WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
-                a.URL = "offline.mp3";
-                a.controls.play();
-                SendMessage(new Message(String.Format("Twitch: STREAM OFFLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
-                while (a.playState == WMPPlayState.wmppsPlaying)
-                    Thread.Sleep(10);
+                try
+                {
+                    WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
+                    a.URL = "offline.mp3";
+                    a.controls.play();
+                    SendMessage(new Message(String.Format("Twitch: STREAM OFFLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                    while (a.playState == WMPPlayState.wmppsPlaying)
+                        Thread.Sleep(10);
+                }
+                catch { }
             }
 
            
@@ -1428,17 +1436,23 @@ namespace Ubiquitous
         #region Sc2Tv methods and events
         private void ConnectSc2tv()
         {
-            if (settings.Sc2tvUser.Length <= 0 ||
-                !settings.sc2tvEnabled)
+            if (!settings.sc2tvEnabled)
                 return;
-            sc2tv.Login(settings.Sc2tvUser, settings.Sc2tvPassword);
-            sc2tv.updateSmiles();            
-            if ( sc2ChannelId != 0 )
+
+            sc2tv.updateStreamList();
+            sc2tv.updateSmiles();
+            if (sc2ChannelId != 0)
             {
                 sc2tv.ChannelId = sc2ChannelId;
             }
 
             bWorkerSc2TvPoll.RunWorkerAsync();
+
+            if (String.IsNullOrEmpty(settings.Sc2tvUser) || String.IsNullOrEmpty(settings.Sc2tvPassword))
+                return;
+
+            sc2tv.Login(settings.Sc2tvUser, settings.Sc2tvPassword);
+
         }
         private void bWorkerSc2TvPoll_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -1459,7 +1473,6 @@ namespace Ubiquitous
             if (sc2tv.LoggedIn)
             {
                 SendMessage(new Message(String.Format("Sc2tv: logged in!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
-                sc2tv.updateStreamList();
                 checkMark.SetOn(pictureSc2tv);
                 sc2tv.LoadStreamSettings();
                 if (sc2tv.ChannelIsLive)
@@ -1507,18 +1520,15 @@ namespace Ubiquitous
 
         private void comboSc2Channels_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (sc2tv.LoggedIn)
+            if (comboSc2Channels.Items.Count <= 0)
+                return;
+            try
             {
-                if (comboSc2Channels.Items.Count <= 0 )
-                    return;
-                try
-                {                    
-                    var channel = (dotSC2TV.Channel)comboSc2Channels.SelectedValue;
-                    SendMessage(new Message(String.Format("Switching sc2tv channel to: {0}", channel.Title), EndPoint.Console, EndPoint.Console));
-                    sc2ChannelId = channel.Id;
-                }
-                catch { return; }
+                var channel = (dotSC2TV.Channel)comboSc2Channels.SelectedValue;
+                SendMessage(new Message(String.Format("Switching sc2tv channel to: {0}", channel.Title), EndPoint.Console, EndPoint.Console));
+                sc2ChannelId = channel.Id;
             }
+            catch { }
         }
         private void UpdateSc2TvMessages()
         {            
