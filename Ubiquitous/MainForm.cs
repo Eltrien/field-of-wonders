@@ -434,7 +434,7 @@ namespace Ubiquitous
                 steamBW = new BGWorker(ConnectSteamBot, null);
             }
 
-            if (settings.twitchEnabled)
+            /*if (settings.twitchEnabled)
             {
                 if (twitchIrc != null && twitchIrc.IsRegistered)
                 {
@@ -443,7 +443,7 @@ namespace Ubiquitous
                 }
 
                 twitchBW = new BGWorker(ConnectTwitchIRC, null);
-            }
+            }*/
 
         }
 
