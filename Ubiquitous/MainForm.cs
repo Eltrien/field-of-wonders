@@ -882,6 +882,9 @@ namespace Ubiquitous
         }
         private void pictureSc2tvStream_Click(object sender, EventArgs e)
         {
+            if (!sc2tv.LoggedIn)
+                return;
+
             sc2tv.LoadStreamSettings();
 
             var prevLiveStatus = sc2tv.isLive();
