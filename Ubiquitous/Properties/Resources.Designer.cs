@@ -95,6 +95,13 @@ namespace Ubiquitous.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap coins {
+            get {
+                object obj = ResourceManager.GetObject("coins", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap empire {
             get {
                 object obj = ResourceManager.GetObject("empire", resourceCulture);
