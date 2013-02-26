@@ -308,7 +308,7 @@ namespace dotIRC
         [MessageProcessor("002")]
         protected void ProcessMessageReplyYourHost(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             this.YourHostMessage = message.Parameters[1];
@@ -321,7 +321,7 @@ namespace dotIRC
         [MessageProcessor("003")]
         protected void ProcessMessageReplyCreated(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             this.ServerCreatedMessage = message.Parameters[1];
@@ -334,7 +334,7 @@ namespace dotIRC
         [MessageProcessor("004")]
         protected void ProcessMessageReplyMyInfo(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             this.ServerName = message.Parameters[1];
@@ -356,7 +356,7 @@ namespace dotIRC
         [MessageProcessor("005")]
         protected void ProcessMessageReplyBounceOrISupport(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             // Check if message is RPL_BOUNCE or RPL_ISUPPORT.
             Debug.Assert(message.Parameters[1] != null);
@@ -397,7 +397,7 @@ namespace dotIRC
         [MessageProcessor("211")]
         protected void ProcessMessageStatsLinkInfo(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.Connection, message);
         }
@@ -409,7 +409,7 @@ namespace dotIRC
         [MessageProcessor("212")]
         protected void ProcessMessageStatsCommands(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.Command, message);
         }
@@ -421,7 +421,7 @@ namespace dotIRC
         [MessageProcessor("213")]
         protected void ProcessMessageStatsCLine(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.AllowedServerConnect, message);
         }
@@ -433,7 +433,7 @@ namespace dotIRC
         [MessageProcessor("214")]
         protected void ProcessMessageStatsNLine(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.AllowedServerAccept, message);
         }
@@ -445,7 +445,7 @@ namespace dotIRC
         [MessageProcessor("215")]
         protected void ProcessMessageStatsILine(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
             
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.AllowedClient, message);
         }
@@ -457,7 +457,7 @@ namespace dotIRC
         [MessageProcessor("216")]
         protected void ProcessMessageStatsKLine(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.BannedClient, message);
         }
@@ -469,7 +469,7 @@ namespace dotIRC
         [MessageProcessor("218")]
         protected void ProcessMessageStatsYLine(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.ConnectionClass, message);
         }
@@ -481,7 +481,7 @@ namespace dotIRC
         [MessageProcessor("219")]
         protected void ProcessMessageEndOfStats(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             OnServerStatsReceived(new IrcServerStatsReceivedEventArgs(this.listedStatsEntries));
             this.listedStatsEntries = new List<IrcServerStatisticalEntry>();
@@ -494,7 +494,7 @@ namespace dotIRC
         [MessageProcessor("241")]
         protected void ProcessMessageStatsLLine(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.LeafDepth, message);
         }
@@ -506,7 +506,7 @@ namespace dotIRC
         [MessageProcessor("242")]
         protected void ProcessMessageStatsUpTime(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.Uptime, message);
         }
@@ -518,7 +518,7 @@ namespace dotIRC
         [MessageProcessor("243")]
         protected void ProcessMessageStatsOLine(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.AllowedOperator, message);
         }
@@ -530,7 +530,7 @@ namespace dotIRC
         [MessageProcessor("244")]
         protected void ProcessMessageStatsHLine(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             HandleStatsEntryReceived((int)IrcServerStatisticalEntryCommonType.HubServer, message);
         }
@@ -542,7 +542,7 @@ namespace dotIRC
         [MessageProcessor("251")]
         protected void ProcessMessageLUserClient(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             // Extract network information from text.
             Debug.Assert(message.Parameters[1] != null);
@@ -562,7 +562,7 @@ namespace dotIRC
         [MessageProcessor("252")]
         protected void ProcessMessageLUserOp(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             // Extract network information from text.
             Debug.Assert(message.Parameters[1] != null);
@@ -578,7 +578,7 @@ namespace dotIRC
         [MessageProcessor("253")]
         protected void ProcessMessageLUserUnknown(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             // Extract network information from text.
             Debug.Assert(message.Parameters[1] != null);
@@ -594,7 +594,7 @@ namespace dotIRC
         [MessageProcessor("254")]
         protected void ProcessMessageLUserChannels(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             // Extract network information from text.
             Debug.Assert(message.Parameters[1] != null);
@@ -610,7 +610,7 @@ namespace dotIRC
         [MessageProcessor("255")]
         protected void ProcessMessageLUserMe(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             // Extract network information from text.
             Debug.Assert(message.Parameters[1] != null);
@@ -631,7 +631,7 @@ namespace dotIRC
         [MessageProcessor("301")]
         protected void ProcessMessageReplyAway(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var user = GetUserFromNickName(message.Parameters[1]);
@@ -647,7 +647,7 @@ namespace dotIRC
         [MessageProcessor("303")]
         protected void ProcessMessageReplyIsOn(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             // Set each user listed in reply as online.
             Debug.Assert(message.Parameters[1] != null);
@@ -662,7 +662,7 @@ namespace dotIRC
         [MessageProcessor("305")]
         protected void ProcessMessageReplyUnAway(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             this.localUser.IsAway = false;
         }
@@ -674,7 +674,7 @@ namespace dotIRC
         [MessageProcessor("306")]
         protected void ProcessMessageReplyNowAway(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             this.localUser.IsAway = true;
         }
@@ -686,7 +686,7 @@ namespace dotIRC
         [MessageProcessor("311")]
         protected void ProcessMessageReplyWhoIsUser(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var user = GetUserFromNickName(message.Parameters[1]);
@@ -706,7 +706,7 @@ namespace dotIRC
         [MessageProcessor("312")]
         protected void ProcessMessageReplyWhoIsServer(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var user = GetUserFromNickName(message.Parameters[1]);
@@ -723,7 +723,7 @@ namespace dotIRC
         [MessageProcessor("313")]
         protected void ProcessMessageReplyWhoIsOperator(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var user = GetUserFromNickName(message.Parameters[1]);
@@ -737,7 +737,7 @@ namespace dotIRC
         [MessageProcessor("314")]
         protected void ProcessMessageReplyWhoWasUser(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var user = GetUserFromNickName(message.Parameters[1], false);
@@ -757,7 +757,7 @@ namespace dotIRC
         [MessageProcessor("315")]
         protected void ProcessMessageReplyEndOfWho(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var mask = message.Parameters[1];
@@ -771,7 +771,7 @@ namespace dotIRC
         [MessageProcessor("317")]
         protected void ProcessMessageReplyWhoIsIdle(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var user = GetUserFromNickName(message.Parameters[1]);
@@ -786,7 +786,7 @@ namespace dotIRC
         [MessageProcessor("318")]
         protected void ProcessMessageReplyEndOfWhoIs(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var user = GetUserFromNickName(message.Parameters[1]);
@@ -800,7 +800,7 @@ namespace dotIRC
         [MessageProcessor("319")]
         protected void ProcessMessageReplyWhoIsChannels(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var user = GetUserFromNickName(message.Parameters[1]);
@@ -826,7 +826,7 @@ namespace dotIRC
         [MessageProcessor("322")]
         protected void ProcessMessageReplyList(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var channelName = message.Parameters[1];
@@ -846,7 +846,7 @@ namespace dotIRC
         [MessageProcessor("323")]
         protected void ProcessMessageReplyListEnd(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             OnChannelListReceived(new IrcChannelListReceivedEventArgs(this.listedChannels));
             this.listedChannels = new List<IrcChannelInfo>();
@@ -859,7 +859,7 @@ namespace dotIRC
         [MessageProcessor("331")]
         protected void ProcessMessageReplyNoTopic(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var channel = GetChannelFromName(message.Parameters[1]);
@@ -873,7 +873,7 @@ namespace dotIRC
         [MessageProcessor("332")]
         protected void ProcessMessageReplyTopic(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var channel = GetChannelFromName(message.Parameters[1]);
@@ -888,7 +888,7 @@ namespace dotIRC
         [MessageProcessor("341")]
         protected void ProcessMessageReplyInviting(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var invitedUser = GetUserFromNickName(message.Parameters[1]);
@@ -905,7 +905,7 @@ namespace dotIRC
         [MessageProcessor("351")]
         protected void ProcessMessageReplyVersion(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var versionInfo = message.Parameters[1];
@@ -927,7 +927,7 @@ namespace dotIRC
         [MessageProcessor("352")]
         protected void ProcessMessageReplyWhoReply(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var channel = message.Parameters[1] == "*" ? null : GetChannelFromName(message.Parameters[1]);
@@ -985,7 +985,7 @@ namespace dotIRC
         [MessageProcessor("353")]
         protected void ProcessMessageReplyNameReply(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[2] != null);
             var channel = GetChannelFromName(message.Parameters[2]);
@@ -1016,7 +1016,7 @@ namespace dotIRC
         [MessageProcessor("364")]
         protected void ProcessMessageReplyLinks(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var hostName = message.Parameters[1];
@@ -1040,7 +1040,7 @@ namespace dotIRC
         [MessageProcessor("365")]
         protected void ProcessMessageReplyEndOfLinks(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var mask = message.Parameters[1];
@@ -1056,7 +1056,7 @@ namespace dotIRC
         [MessageProcessor("366")]
         protected void ProcessMessageReplyEndOfNames(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var channel = GetChannelFromName(message.Parameters[1]);
@@ -1070,7 +1070,7 @@ namespace dotIRC
         [MessageProcessor("369")]
         protected void ProcessMessageReplyEndOfWhoWas(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             var user = GetUserFromNickName(message.Parameters[1], false);
@@ -1084,7 +1084,7 @@ namespace dotIRC
         [MessageProcessor("372")]
         protected void ProcessMessageReplyMotd(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             this.motdBuilder.AppendLine(message.Parameters[1]);
@@ -1097,7 +1097,7 @@ namespace dotIRC
         [MessageProcessor("375")]
         protected void ProcessMessageReplyMotdStart(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             this.motdBuilder.Clear();
@@ -1111,7 +1111,7 @@ namespace dotIRC
         [MessageProcessor("376")]
         protected void ProcessMessageReplyMotdEnd(IrcMessage message)
         {
-            Debug.Assert(message.Parameters[0] == this.localUser.NickName);
+            //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
             Debug.Assert(message.Parameters[1] != null);
             this.motdBuilder.AppendLine(message.Parameters[1]);
