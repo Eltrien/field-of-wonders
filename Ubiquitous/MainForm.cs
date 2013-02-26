@@ -1467,9 +1467,6 @@ namespace Ubiquitous
 
             sc2tv.Login(settings.Sc2tvUser, settings.Sc2tvPassword);
 
-            sc2tv.updateStreamList();
-            sc2tv.updateSmiles();
-            bWorkerSc2TvPoll.RunWorkerAsync();
 
         }
         private void bWorkerSc2TvPoll_DoWork(object sender, DoWorkEventArgs e)
@@ -1492,6 +1489,10 @@ namespace Ubiquitous
             {
                 SendMessage(new Message(String.Format("Sc2tv: logged in!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                 checkMark.SetOn(pictureSc2tv);
+                sc2tv.updateStreamList();
+                sc2tv.updateSmiles();
+                bWorkerSc2TvPoll.RunWorkerAsync();
+
                 sc2tv.LoadStreamSettings();
                 if (sc2tv.ChannelIsLive)
                     streamStatus.SetOn(pictureSc2tvStream);
