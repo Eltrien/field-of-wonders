@@ -176,12 +176,11 @@
             this.panel1.ForeColor = System.Drawing.SystemColors.Window;
             this.panel1.Location = new System.Drawing.Point(-3, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(745, 631);
+            this.panel1.Size = new System.Drawing.Size(644, 493);
             this.panel1.TabIndex = 21;
             // 
             // buttonCommercial
             // 
-            this.buttonCommercial.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCommercial.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonCommercial.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonCommercial.Font = new System.Drawing.Font("Chiller", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -273,7 +272,7 @@
             this.textMessages.Location = new System.Drawing.Point(0, 3);
             this.textMessages.Name = "textMessages";
             this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
-            this.textMessages.Size = new System.Drawing.Size(596, 605);
+            this.textMessages.Size = new System.Drawing.Size(495, 467);
             this.textMessages.TabIndex = 23;
             this.textMessages.Text = "";
             this.textMessages.TextColor = SC2TV.RTFControl.RtfColor.Aqua;
@@ -293,7 +292,7 @@
             this.pictureCurrentChat.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.pictureCurrentChat.ContextMenuStrip = this.contextMenuChat;
             this.pictureCurrentChat.Image = global::Ubiquitous.Properties.Resources.twitchicon;
-            this.pictureCurrentChat.Location = new System.Drawing.Point(2, 611);
+            this.pictureCurrentChat.Location = new System.Drawing.Point(2, 473);
             this.pictureCurrentChat.Name = "pictureCurrentChat";
             this.pictureCurrentChat.Size = new System.Drawing.Size(17, 18);
             this.pictureCurrentChat.TabIndex = 34;
@@ -305,7 +304,7 @@
             this.buttonFullscreen.BackColor = System.Drawing.SystemColors.Window;
             this.buttonFullscreen.ImageIndex = 0;
             this.buttonFullscreen.ImageList = this.imageListChatSize;
-            this.buttonFullscreen.Location = new System.Drawing.Point(720, 609);
+            this.buttonFullscreen.Location = new System.Drawing.Point(619, 471);
             this.buttonFullscreen.Name = "buttonFullscreen";
             this.buttonFullscreen.Size = new System.Drawing.Size(23, 21);
             this.buttonFullscreen.TabIndex = 35;
@@ -325,9 +324,9 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textCommand.BackColor = System.Drawing.Color.Black;
             this.textCommand.ForeColor = System.Drawing.Color.LightYellow;
-            this.textCommand.Location = new System.Drawing.Point(21, 611);
+            this.textCommand.Location = new System.Drawing.Point(21, 473);
             this.textCommand.Name = "textCommand";
-            this.textCommand.Size = new System.Drawing.Size(696, 20);
+            this.textCommand.Size = new System.Drawing.Size(595, 20);
             this.textCommand.TabIndex = 33;
             this.textCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textCommand_KeyUp);
             // 
@@ -335,7 +334,7 @@
             // 
             this.buttonInvisible.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonInvisible.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonInvisible.Location = new System.Drawing.Point(679, 388);
+            this.buttonInvisible.Location = new System.Drawing.Point(578, 388);
             this.buttonInvisible.Name = "buttonInvisible";
             this.buttonInvisible.Size = new System.Drawing.Size(62, 23);
             this.buttonInvisible.TabIndex = 28;
@@ -350,7 +349,7 @@
             this.comboSc2Channels.DropDownWidth = 300;
             this.comboSc2Channels.ForeColor = System.Drawing.SystemColors.Window;
             this.comboSc2Channels.FormattingEnabled = true;
-            this.comboSc2Channels.Location = new System.Drawing.Point(600, 438);
+            this.comboSc2Channels.Location = new System.Drawing.Point(499, 438);
             this.comboSc2Channels.Name = "comboSc2Channels";
             this.comboSc2Channels.Size = new System.Drawing.Size(86, 21);
             this.comboSc2Channels.TabIndex = 27;
@@ -364,7 +363,7 @@
             this.comboGGChannels.DropDownWidth = 300;
             this.comboGGChannels.ForeColor = System.Drawing.SystemColors.Window;
             this.comboGGChannels.FormattingEnabled = true;
-            this.comboGGChannels.Location = new System.Drawing.Point(599, 481);
+            this.comboGGChannels.Location = new System.Drawing.Point(498, 481);
             this.comboGGChannels.Name = "comboGGChannels";
             this.comboGGChannels.Size = new System.Drawing.Size(121, 21);
             this.comboGGChannels.TabIndex = 26;
@@ -395,7 +394,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.pictureTwitch);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.groupBox1.Location = new System.Drawing.Point(599, 3);
+            this.groupBox1.Location = new System.Drawing.Point(498, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(143, 262);
             this.groupBox1.TabIndex = 21;
@@ -602,7 +601,7 @@
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.pictureStream);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.groupBox2.Location = new System.Drawing.Point(599, 271);
+            this.groupBox2.Location = new System.Drawing.Point(498, 271);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(143, 111);
             this.groupBox2.TabIndex = 22;
@@ -674,7 +673,7 @@
             // buttonSettings
             // 
             this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSettings.Location = new System.Drawing.Point(599, 388);
+            this.buttonSettings.Location = new System.Drawing.Point(498, 388);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(75, 23);
             this.buttonSettings.TabIndex = 20;
@@ -686,7 +685,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(599, 465);
+            this.label7.Location = new System.Drawing.Point(498, 465);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 13);
             this.label7.TabIndex = 25;
@@ -698,7 +697,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(599, 422);
+            this.label6.Location = new System.Drawing.Point(498, 422);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(42, 13);
             this.label6.TabIndex = 24;
@@ -716,7 +715,7 @@
             this.AcceptButton = this.buttonInvisible;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(740, 629);
+            this.ClientSize = new System.Drawing.Size(639, 491);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
