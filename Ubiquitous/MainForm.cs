@@ -2002,5 +2002,10 @@ namespace Ubiquitous
             settings.steamEnabled = !settings.steamEnabled;
             settings.Save();
         }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            this.Text = String.Format("{0} {1}", this.Text, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+        }
     }
 }
