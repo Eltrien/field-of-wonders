@@ -364,9 +364,7 @@ namespace Ubiquitous
             sc2tv.Logon += OnSc2TvLogin;
             sc2tv.ChannelList += OnSc2TvChannelList;
             sc2tv.MessageReceived += OnSc2TvMessageReceived;
-            sc2tv.channelList = new Channels();
-            
-
+            sc2tv.channelList = new Channels();           
 
             gohaIrc = new IrcClient();
             gohaIrc.Connected += OnGohaConnect;
@@ -1458,19 +1456,20 @@ namespace Ubiquitous
             if (!settings.sc2tvEnabled)
                 return;
 
-            sc2tv.updateStreamList();
-            sc2tv.updateSmiles();
             if (sc2ChannelId != 0)
             {
                 sc2tv.ChannelId = sc2ChannelId;
             }
 
-            bWorkerSc2TvPoll.RunWorkerAsync();
 
             if (String.IsNullOrEmpty(settings.Sc2tvUser) || String.IsNullOrEmpty(settings.Sc2tvPassword))
                 return;
 
             sc2tv.Login(settings.Sc2tvUser, settings.Sc2tvPassword);
+
+            sc2tv.updateStreamList();
+            sc2tv.updateSmiles();
+            bWorkerSc2TvPoll.RunWorkerAsync();
 
         }
         private void bWorkerSc2TvPoll_DoWork(object sender, DoWorkEventArgs e)
@@ -1633,7 +1632,7 @@ namespace Ubiquitous
             checkMark.SetOn(pictureSteamBot);
 
             //Get Steam Admin ID
-            if (settings.SteamAdminId.Length <= 0)
+            if (String.IsNullOrEmpty(settings.SteamAdminId))
             {
                 List<SteamAPISession.Friend> friends = steamBot.GetFriends();
                 foreach (SteamAPISession.Friend f in friends)
