@@ -177,7 +177,7 @@
             this.panel1.Location = new System.Drawing.Point(-3, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(649, 485);
-            this.panel1.TabIndex = 21;
+            this.panel1.TabIndex = 0;
             // 
             // buttonCommercial
             // 
@@ -185,11 +185,11 @@
             this.buttonCommercial.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonCommercial.Font = new System.Drawing.Font("Chiller", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonCommercial.Image = global::Ubiquitous.Properties.Resources.coins;
-            this.buttonCommercial.Location = new System.Drawing.Point(326, 2);
+            this.buttonCommercial.Location = new System.Drawing.Point(283, 2);
             this.buttonCommercial.Margin = new System.Windows.Forms.Padding(0);
             this.buttonCommercial.Name = "buttonCommercial";
             this.buttonCommercial.Size = new System.Drawing.Size(17, 17);
-            this.buttonCommercial.TabIndex = 28;
+            this.buttonCommercial.TabIndex = 4;
             this.buttonCommercial.Text = "Ads";
             this.buttonCommercial.UseVisualStyleBackColor = true;
             this.buttonCommercial.Click += new System.EventHandler(this.button1_Click);
@@ -208,10 +208,10 @@
             // 
             this.labelViewers.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.labelViewers.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelViewers.Location = new System.Drawing.Point(3, 2);
+            this.labelViewers.Location = new System.Drawing.Point(3, 1);
             this.labelViewers.Name = "labelViewers";
             this.labelViewers.Size = new System.Drawing.Size(45, 17);
-            this.labelViewers.TabIndex = 32;
+            this.labelViewers.TabIndex = 0;
             this.labelViewers.Text = "0";
             this.labelViewers.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -220,11 +220,11 @@
             this.trackBarTransparency.AutoSize = false;
             this.trackBarTransparency.BackColor = System.Drawing.Color.Black;
             this.trackBarTransparency.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Ubiquitous.Properties.Settings.Default, "globalTransparency", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.trackBarTransparency.Location = new System.Drawing.Point(222, 2);
+            this.trackBarTransparency.Location = new System.Drawing.Point(176, 2);
             this.trackBarTransparency.Maximum = 100;
             this.trackBarTransparency.Name = "trackBarTransparency";
             this.trackBarTransparency.Size = new System.Drawing.Size(104, 17);
-            this.trackBarTransparency.TabIndex = 30;
+            this.trackBarTransparency.TabIndex = 3;
             this.trackBarTransparency.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarTransparency.Value = global::Ubiquitous.Properties.Settings.Default.globalTransparency;
             this.trackBarTransparency.MouseMove += new System.Windows.Forms.MouseEventHandler(this.trackBarTransparency_MouseMove);
@@ -235,11 +235,11 @@
             this.checkBox2.BackColor = System.Drawing.Color.Black;
             this.checkBox2.Checked = global::Ubiquitous.Properties.Settings.Default.globalHideBorder;
             this.checkBox2.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalHideBorder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox2.Location = new System.Drawing.Point(141, 2);
+            this.checkBox2.Location = new System.Drawing.Point(118, 1);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(81, 17);
-            this.checkBox2.TabIndex = 29;
-            this.checkBox2.Text = "Hide border";
+            this.checkBox2.Size = new System.Drawing.Size(57, 17);
+            this.checkBox2.TabIndex = 2;
+            this.checkBox2.Text = "Border";
             this.checkBox2.UseVisualStyleBackColor = false;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
@@ -249,11 +249,11 @@
             this.checkBox1.BackColor = System.Drawing.Color.Black;
             this.checkBox1.Checked = global::Ubiquitous.Properties.Settings.Default.globalOnTop;
             this.checkBox1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalOnTop", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox1.Location = new System.Drawing.Point(50, 2);
+            this.checkBox1.Location = new System.Drawing.Point(50, 1);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(92, 17);
-            this.checkBox1.TabIndex = 29;
-            this.checkBox1.Text = "Always on top";
+            this.checkBox1.Size = new System.Drawing.Size(62, 17);
+            this.checkBox1.TabIndex = 1;
+            this.checkBox1.Text = "On Top";
             this.checkBox1.UseVisualStyleBackColor = false;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             this.checkBox1.MouseLeave += new System.EventHandler(this.checkBox1_MouseLeave);
@@ -271,7 +271,7 @@
             this.textMessages.HiglightColor = SC2TV.RTFControl.RtfColor.Black;
             this.textMessages.Location = new System.Drawing.Point(0, 3);
             this.textMessages.Name = "textMessages";
-            this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
+            this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.textMessages.Size = new System.Drawing.Size(500, 459);
             this.textMessages.TabIndex = 23;
             this.textMessages.Text = "";
@@ -307,7 +307,7 @@
             this.buttonFullscreen.Location = new System.Drawing.Point(624, 463);
             this.buttonFullscreen.Name = "buttonFullscreen";
             this.buttonFullscreen.Size = new System.Drawing.Size(23, 21);
-            this.buttonFullscreen.TabIndex = 35;
+            this.buttonFullscreen.TabIndex = 9;
             this.buttonFullscreen.UseVisualStyleBackColor = false;
             this.buttonFullscreen.Click += new System.EventHandler(this.buttonFullscreen_Click_1);
             // 
@@ -337,7 +337,7 @@
             this.buttonInvisible.Location = new System.Drawing.Point(583, 388);
             this.buttonInvisible.Name = "buttonInvisible";
             this.buttonInvisible.Size = new System.Drawing.Size(62, 23);
-            this.buttonInvisible.TabIndex = 28;
+            this.buttonInvisible.TabIndex = 6;
             this.buttonInvisible.Text = "Invisible";
             this.buttonInvisible.UseVisualStyleBackColor = true;
             this.buttonInvisible.Visible = false;
@@ -352,7 +352,7 @@
             this.comboSc2Channels.Location = new System.Drawing.Point(504, 438);
             this.comboSc2Channels.Name = "comboSc2Channels";
             this.comboSc2Channels.Size = new System.Drawing.Size(86, 21);
-            this.comboSc2Channels.TabIndex = 27;
+            this.comboSc2Channels.TabIndex = 7;
             this.comboSc2Channels.DropDown += new System.EventHandler(this.comboSc2Channels_DropDown);
             this.comboSc2Channels.SelectionChangeCommitted += new System.EventHandler(this.comboSc2Channels_SelectionChangeCommitted);
             // 
@@ -676,7 +676,7 @@
             this.buttonSettings.Location = new System.Drawing.Point(503, 388);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(75, 23);
-            this.buttonSettings.TabIndex = 20;
+            this.buttonSettings.TabIndex = 5;
             this.buttonSettings.Text = "Settings";
             this.buttonSettings.UseVisualStyleBackColor = false;
             this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click_1);
@@ -688,7 +688,7 @@
             this.label7.Location = new System.Drawing.Point(503, 465);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 13);
-            this.label7.TabIndex = 25;
+            this.label7.TabIndex = 8;
             this.label7.Text = "Goodgame.ru";
             this.label7.Visible = false;
             this.label7.Click += new System.EventHandler(this.label7_Click);

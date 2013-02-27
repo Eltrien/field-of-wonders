@@ -1491,6 +1491,11 @@ namespace Ubiquitous
                 checkMark.SetOn(pictureSc2tv);
                 sc2tv.updateStreamList();
                 sc2tv.updateSmiles();
+                if ( !sc2tv.updateChat(sc2ChannelId) )
+                    SendMessageToSc2Tv(new Message(".",EndPoint.SteamAdmin, EndPoint.Sc2Tv));
+
+                settings.Sc2tvId = sc2tv.GetStreamID();
+
                 bWorkerSc2TvPoll.RunWorkerAsync();
 
                 sc2tv.LoadStreamSettings();
@@ -1553,7 +1558,7 @@ namespace Ubiquitous
         {            
             if (!sc2tv.updateChat(sc2ChannelId))
             {
-                SendMessage(new Message(String.Format(@"Sc2tv channel #{0} is unavalaible", sc2ChannelId ), EndPoint.Sc2Tv, EndPoint.Console));
+                SendMessage(new Message(String.Format(@"Sc2tv channel #{0} is unavailable", sc2ChannelId ), EndPoint.Sc2Tv, EndPoint.Console));
                 Thread.Sleep(60000);
             }
             Thread.Sleep(5000);            
@@ -2054,5 +2059,6 @@ namespace Ubiquitous
         {
             SendMessage(new Message("/commercial", EndPoint.Console, EndPoint.TwitchTV));
         }
+
     }
 }

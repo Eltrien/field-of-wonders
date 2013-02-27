@@ -84,7 +84,8 @@ namespace dotSC2TV
         private const string reChannelFormBuildId = @"<input type=""hidden"".*?id=""form-................................""[^>]*?value=""(.*?)""";
         private const string reChannelFormToken = @"<input type=""hidden"".*?id=""edit-userstream-node-form-form-token""[^>]*?value=""(.*?)""";
         private const string reChannelFormId = @"<input type=""hidden"".*?id=""edit-userstream-node-form""[^>]*?value=""(.*?)""";
-        
+
+        private const string reStreamId = @"http://sc2tv.ru/node/(\d+)?/edit";
         
         //<input type="submit" name="op" id="edit-submit" value="Сохранить" class="form-submit">
 
@@ -358,6 +359,20 @@ namespace dotSC2TV
             }
 
             return true;
+        }
+        public String GetStreamID()
+        {
+            if (!LoggedIn)
+                return String.Empty;
+
+            var content = wc.DownloadString("http://sc2tv.ru/node/add/userstream");
+
+            String streamId = GetSubString(content, reStreamId, 1);
+
+            if (String.IsNullOrEmpty(streamId))
+                return String.Empty;
+
+            return streamId;
         }
         public void Login(string login, string password )
         {
