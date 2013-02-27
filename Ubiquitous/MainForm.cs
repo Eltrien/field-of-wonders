@@ -426,11 +426,13 @@ namespace Ubiquitous
 
         void settings_SettingsSaving(object sender, CancelEventArgs e)
         {
+            isDisconnecting = false;
             if (settings.steamEnabled && (steamBot == null || settings.SteamBotAccessToken == null))
             {
                 SendMessage(new Message("Starting Steam bot...", EndPoint.Steam, EndPoint.SteamAdmin));
                 steamBW = new BGWorker(ConnectSteamBot, null);
             }
+            
 
             /*if (settings.twitchEnabled)
             {
@@ -774,6 +776,14 @@ namespace Ubiquitous
                 {
                     SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.Console));
                     sc2tv.setLiveStatus(false);
+                    sc2tv.LoadStreamSettings();
+                    if (sc2tv.isLive())
+                    {
+                        this.Visible = true;
+                        MessageBox.Show("Stream wasn't switched automatically! Do it manually!");
+                        e.Cancel = true;
+                        return;
+                    }
                     streamStatus.SetOff(pictureSc2tvStream);
                 }
 
@@ -1355,7 +1365,7 @@ namespace Ubiquitous
             twitchIrc.Connected += OnTwitchConnect;
             twitchIrc.Registered += OnTwitchRegister;
             twitchIrc.Disconnected += OnTwitchDisconnect;
-
+            twitchIrc.RawMessageReceived += new EventHandler<IrcRawMessageEventArgs>(twitchIrc_RawMessageReceived);
             using (var connectedEvent = new ManualResetEventSlim(false))
             {
                 twitchIrc.Connected += (sender2, e2) => connectedEvent.Set();
@@ -1374,11 +1384,21 @@ namespace Ubiquitous
                 
                 }
             }
+
+        void twitchIrc_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
+        {
+            if (e.RawContent.Contains("Login failed"))
+            {
+                SendMessage(new Message("Twitch login failed! Check settings!", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                isDisconnecting = true;
+            }
+        }
+
         private void OnTwitchDisconnect(object sender, EventArgs e)
         {
             if (!settings.twitchEnabled)
                 return;
-
+            
             SendMessage(new Message("Twitch bot disconnecting from the IRC", EndPoint.TwitchTV, EndPoint.SteamAdmin));
             if (!isDisconnecting)
             {
@@ -1402,7 +1422,7 @@ namespace Ubiquitous
             e.Channel.MessageReceived += OnTwitchMessageReceived;
             e.Channel.UserJoined += OnTwitchChannelJoin;
             e.Channel.UserLeft += OnTwitchChannelLeft;
-            SendMessage(new Message(String.Format("Twitch: bot joined!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+            SendMessage(new Message(String.Format("Twitch IRC: logged in!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
             checkMark.SetOn(pictureTwitch);
         }
         private void OnTwitchChannelLeftLocal(object sender, IrcChannelEventArgs e)
@@ -1412,6 +1432,11 @@ namespace Ubiquitous
         }
         private void OnTwitchMessageReceivedLocal(object sender, IrcMessageEventArgs e)
         {
+            if (e.Text.Contains("HISTORYEND") || 
+                e.Text.Contains("USERCOLOR") ||
+                e.Text.Contains("EMOTESET")) 
+                return;
+
             SendMessage(new Message(String.Format("{1} ({0}{2})", e.Source, e.Text, "@twitch.tv"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
         }
         private void OnTwitchNoticeReceivedLocal(object sender, IrcMessageEventArgs e)
@@ -1442,7 +1467,6 @@ namespace Ubiquitous
         private void OnTwitchRegister(object sender, EventArgs e)
         {
             twitchIrc.Channels.Join("#" + settings.TwitchUser);
-
             twitchIrc.LocalUser.NoticeReceived += OnTwitchNoticeReceivedLocal;
             twitchIrc.LocalUser.MessageReceived += OnTwitchMessageReceivedLocal;
             twitchIrc.LocalUser.JoinedChannel += OnTwitchChannelJoinLocal;
@@ -1882,6 +1906,7 @@ namespace Ubiquitous
             using (var connectedEvent = new ManualResetEventSlim(false))
             {
                 gohaIrc.Connected += (sender2, e2) => connectedEvent.Set();
+                gohaIrc.RawMessageReceived += new EventHandler<IrcRawMessageEventArgs>(gohaIrc_RawMessageReceived);
                 gohaIrc.Connect(gohaIRCDomain, false, new IrcUserRegistrationInfo()
                 {
                     NickName = settings.GohaUser,
@@ -1898,6 +1923,12 @@ namespace Ubiquitous
 
             }
         }
+
+        void gohaIrc_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
+        {
+            if( e.RawContent.Contains("Invalid password") )
+                SendMessage(new Message("Goha login failed! Check settings!", EndPoint.Gohatv, EndPoint.SteamAdmin));
+        }
         private void OnGohaDisconnect(object sender, EventArgs e)
         {
             if (!settings.gohaEnabled)
@@ -1907,7 +1938,7 @@ namespace Ubiquitous
         }
         private void OnGohaConnect(object sender, EventArgs e)
         {
-            SendMessage( new Message(String.Format("Goha: joining to the channel"),EndPoint.Gohatv, EndPoint.SteamAdmin));
+            //SendMessage( new Message(String.Format("Goha: joining to the channel"),EndPoint.Gohatv, EndPoint.SteamAdmin));
         }
         private void OnGohaChannelList(object sender, IrcChannelListReceivedEventArgs e)
         {
@@ -1918,7 +1949,7 @@ namespace Ubiquitous
             e.Channel.MessageReceived += OnGohaMessageReceived;
             e.Channel.UserJoined += OnGohaChannelJoin;
             e.Channel.UserLeft += OnGohaChannelLeft;
-            SendMessage(new Message(String.Format("Goha: bot joined!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
+            SendMessage(new Message(String.Format("Goha IRC: logged in!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
 
             //gohaIrc.SendRawMessage("NICK " + settings.GohaUser);
             checkMark.SetOn(pictureGoha);
@@ -1927,16 +1958,16 @@ namespace Ubiquitous
         }
         private void OnGohaChannelLeftLocal(object sender, IrcChannelEventArgs e)
         {
-            SendMessage(new Message(String.Format("Goha: bot left!"), EndPoint.Gohatv,
-                EndPoint.SteamAdmin));
+            //SendMessage(new Message(String.Format("Goha: logged in!"), EndPoint.Gohatv,EndPoint.SteamAdmin));
         }
         private void OnGohaMessageReceivedLocal(object sender, IrcMessageEventArgs e)
-        {
+        {      
             SendMessage(new Message(String.Format("{1} ({0}{2})", e.Source, e.Text, "@goha.tv"), EndPoint.Gohatv, EndPoint.SteamAdmin));
         }
         private void OnGohaNoticeReceivedLocal(object sender, IrcMessageEventArgs e)
         {
-            SendMessage(new Message(String.Format("{1} ({0}{2})", e.Source, e.Text, "@goha.tv"), EndPoint.Gohatv, EndPoint.SteamAdmin));
+            
+            //SendMessage(new Message(String.Format("{1} ({0}{2})", e.Source, e.Text, "@goha.tv"), EndPoint.Gohatv, EndPoint.SteamAdmin));
         }
         private void OnGohaChannelJoin(object sender, IrcChannelUserEventArgs e)
         {
