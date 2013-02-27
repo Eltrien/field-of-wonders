@@ -27,10 +27,7 @@ C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\Bin\dotFlex.pdb
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\Bin\antlr.runtime.dll
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\Bin\log4net.dll
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\Bin\log4net.xml
-C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.Resources.Resource.resources
-C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\GenerateResource.read.1.tlog
-C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\GenerateResource.write.1.tlog
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.dll
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.pdb
 D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\Bin\dotFlex.dll
@@ -44,3 +41,5 @@ D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\GenerateResource.re
 D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\GenerateResource.write.1.tlog
 D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.dll
 D:\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.pdb
+C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.csprojResolveAssemblyReference.cache
+C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotFlex4\FluorineFx\obj\Debug\dotFlex.csproj.GenerateResource.Cache
