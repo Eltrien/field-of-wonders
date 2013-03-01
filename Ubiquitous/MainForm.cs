@@ -478,13 +478,14 @@ namespace Ubiquitous
 
         void settings_SettingsSaving(object sender, CancelEventArgs e)
         {
+            /*
             isDisconnecting = false;
             if (settings.steamEnabled && (steamBot == null || settings.SteamBotAccessToken == null))
             {
                 SendMessage(new Message("Starting Steam bot...", EndPoint.Steam, EndPoint.SteamAdmin));
                 steamBW = new BGWorker(ConnectSteamBot, null);
             }
-            
+            */
 
             /*if (settings.twitchEnabled)
             {
@@ -501,6 +502,7 @@ namespace Ubiquitous
 
         void settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            /*
             if ((e.PropertyName == "SteamBot" || e.PropertyName == "SteamBotPassword") )
             {
                 settings.SteamBotAccessToken = null;
@@ -517,6 +519,7 @@ namespace Ubiquitous
                     checkMark.SetOff(pictureSteamBot);
                 }
             }
+             */
         }
 
 
