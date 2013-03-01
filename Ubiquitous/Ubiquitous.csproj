@@ -31,7 +31,7 @@
     <PublisherName>Ubiquitous</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>14</ApplicationRevision>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -181,6 +181,10 @@
     <ProjectReference Include="..\dotIRC\dotIRC.csproj">
       <Project>{47D551DA-96ED-4EF6-96BF-4832059D4700}</Project>
       <Name>dotIRC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dotOBS\dotOBS.csproj">
+      <Project>{C7B9B6CB-EDB0-4EC5-AD59-7643B11CC8BF}</Project>
+      <Name>dotOBS</Name>
     </ProjectReference>
     <ProjectReference Include="..\dotSC2TV\dotSC2TV.csproj">
       <Project>{E8F80B04-F23F-49F3-8749-781972C19FF2}</Project>

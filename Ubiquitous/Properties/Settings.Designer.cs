@@ -910,5 +910,29 @@ namespace Ubiquitous.Properties {
                 this["cyberPassword"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool obsRemoteEnable {
+            get {
+                return ((bool)(this["obsRemoteEnable"]));
+            }
+            set {
+                this["obsRemoteEnable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        public string obsHost {
+            get {
+                return ((string)(this["obsHost"]));
+            }
+            set {
+                this["obsHost"] = value;
+            }
+        }
     }
 }

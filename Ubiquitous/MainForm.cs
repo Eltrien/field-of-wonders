@@ -25,6 +25,7 @@ using dotGohaTV;
 using dotEmpireTV;
 using dotCybergame;
 using System.Configuration;
+using dotOBS;
 
 namespace Ubiquitous
 {
@@ -295,6 +296,7 @@ namespace Ubiquitous
         #endregion 
 
         #region Private properties
+        private string formTitle;
         private Point cursorPosBeforeMouseDown;
         private bool isLMBDown = false;
         private Properties.Settings settings;
@@ -320,12 +322,13 @@ namespace Ubiquitous
         private uint sc2ChannelId = 0;
         private bool streamIsOnline = false;
         private BGWorker gohaBW, gohaStreamBW, steamBW, sc2BW, twitchBW, skypeBW, twitchTV, goodgameBW, battlelogBW,
-                        empireBW, cyberBW;
+                        empireBW, cyberBW, obsremoteBW;
         private EmpireTV empireTV;
         private GohaTV gohaTVstream;
         private Twitch twitchChannel;
         private EndPoint currentChat;
         private Goodgame ggChat;
+        private OBSRemote obsRemote;
         private XSplit xsplit;
         private StatusServer statusServer;
         private Battlelog battlelog;
@@ -392,6 +395,7 @@ namespace Ubiquitous
             twitchTV = new BGWorker(ConnectTwitchChannel, null);
             skypeBW = new BGWorker(ConnectSkype, null);
             cyberBW = new BGWorker(ConnectCybergame, null);
+            obsremoteBW = new BGWorker(ConnectOBSRemote, null);
  
             goodgameBW = new BGWorker(ConnectGoodgame, null);
             battlelogBW = new BGWorker(ConnectBattlelog, null);
@@ -415,6 +419,8 @@ namespace Ubiquitous
 
             settings.PropertyChanged += new PropertyChangedEventHandler(settings_PropertyChanged);
             settings.SettingsSaving += new SettingsSavingEventHandler(settings_SettingsSaving);
+
+            Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
             #region Set tooltips
             ToolTip fullScreenDblClk = new ToolTip();
 
@@ -450,7 +456,8 @@ namespace Ubiquitous
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            this.Text = String.Format("{0} {1}", this.Text, GetRunningVersion());
+            formTitle = String.Format("{0} {1}", this.Text, GetRunningVersion());
+            this.Text = formTitle;
         }
         private Version GetRunningVersion()
         {
@@ -1216,6 +1223,16 @@ namespace Ubiquitous
             else
             {
                 showTools();
+            }
+
+            if (settings.obsRemoteEnable && textMessages.Dock != DockStyle.Fill)
+            {
+                var stats = String.Format(
+                    " FPS: {0} RATE: {1}K DROPS: {2}",
+                    obsRemote.Status.fps,
+                    obsRemote.Status.bitrate / 1024 * 8,
+                    obsRemote.Status.framesDropped);
+                this.Text = formTitle + stats;
             }
         }
         private void trackBarTransparency_MouseMove(object sender, MouseEventArgs e)
@@ -2187,6 +2204,17 @@ namespace Ubiquitous
             {
             }
         }
+        #endregion
+
+        #region OBS Remote methods and events
+        public void ConnectOBSRemote()
+        {
+            obsRemote = new OBSRemote();           
+            obsRemote.Connect(settings.obsHost);
+
+            //obsRemote.SendTestRequest();
+        }
+
         #endregion
 
     }

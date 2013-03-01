@@ -29,21 +29,21 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Cybergame.tv");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Sc2Tv.ru");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Steam");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Twitch.tv");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Sc2Tv.ru");
             System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Skype");
             System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Goodgame.ru");
             System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Battlelog");
             System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Goha.tv");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Status monitor");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Stream control/monitor");
             System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Empire.tv");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsDialog));
             this.settingsTree1 = new mycontrol.SettingsTree();
-            this.settingsPage3 = new mycontrol.SettingsPage();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.settingsPage10 = new mycontrol.SettingsPage();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
             this.settingsPage1 = new mycontrol.SettingsPage();
             this.label9 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -54,6 +54,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.settingsPage3 = new mycontrol.SettingsPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.settingsPage4 = new mycontrol.SettingsPage();
             this.label12 = new System.Windows.Forms.Label();
             this.settingsPage5 = new mycontrol.SettingsPage();
@@ -75,14 +79,12 @@
             this.label25 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
-            this.settingsPage10 = new mycontrol.SettingsPage();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label28 = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
-            this.textBox24 = new System.Windows.Forms.TextBox();
-            this.checkBox34 = new System.Windows.Forms.CheckBox();
-            this.textBox28 = new System.Windows.Forms.TextBox();
-            this.textBox29 = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.checkBox36 = new System.Windows.Forms.CheckBox();
+            this.checkBox25 = new System.Windows.Forms.CheckBox();
+            this.checkBox23 = new System.Windows.Forms.CheckBox();
             this.checkBox28 = new System.Windows.Forms.CheckBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.checkBox9 = new System.Windows.Forms.CheckBox();
@@ -134,8 +136,6 @@
             this.checkBox24 = new System.Windows.Forms.CheckBox();
             this.textBox22 = new System.Windows.Forms.TextBox();
             this.textBox23 = new System.Windows.Forms.TextBox();
-            this.checkBox25 = new System.Windows.Forms.CheckBox();
-            this.checkBox23 = new System.Windows.Forms.CheckBox();
             this.checkBox27 = new System.Windows.Forms.CheckBox();
             this.checkBox29 = new System.Windows.Forms.CheckBox();
             this.textBox25 = new System.Windows.Forms.TextBox();
@@ -144,18 +144,26 @@
             this.checkBox32 = new System.Windows.Forms.CheckBox();
             this.textBox26 = new System.Windows.Forms.TextBox();
             this.textBox27 = new System.Windows.Forms.TextBox();
+            this.textBox24 = new System.Windows.Forms.TextBox();
+            this.checkBox34 = new System.Windows.Forms.CheckBox();
+            this.textBox28 = new System.Windows.Forms.TextBox();
+            this.textBox29 = new System.Windows.Forms.TextBox();
+            this.textBox30 = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.settingsTree1.SplitContainer)).BeginInit();
             this.settingsTree1.SplitContainer.Panel2.SuspendLayout();
-            this.settingsPage3.SuspendLayout();
+            this.settingsPage10.SuspendLayout();
             this.settingsPage1.SuspendLayout();
             this.settingsPage2.SuspendLayout();
+            this.settingsPage3.SuspendLayout();
             this.settingsPage4.SuspendLayout();
             this.settingsPage5.SuspendLayout();
             this.settingsPage6.SuspendLayout();
             this.settingsPage7.SuspendLayout();
             this.settingsPage8.SuspendLayout();
             this.settingsPage9.SuspendLayout();
-            this.settingsPage10.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // settingsTree1
@@ -216,59 +224,52 @@
             this.settingsTree1.TreeView.TabIndex = 0;
             this.settingsTree1.Load += new System.EventHandler(this.settingsTree1_Load);
             // 
-            // settingsPage3
+            // settingsPage10
             // 
-            this.settingsPage3.Controls.Add(this.checkBox33);
-            this.settingsPage3.Controls.Add(this.label11);
-            this.settingsPage3.Controls.Add(this.label7);
-            this.settingsPage3.Controls.Add(this.label5);
-            this.settingsPage3.Controls.Add(this.checkBox17);
-            this.settingsPage3.Controls.Add(this.textBox11);
-            this.settingsPage3.Controls.Add(this.checkBox8);
-            this.settingsPage3.Controls.Add(this.checkBox2);
-            this.settingsPage3.Controls.Add(this.showSmileImages);
-            this.settingsPage3.Controls.Add(this.checkBox1);
-            this.settingsPage3.Controls.Add(this.textBox6);
-            this.settingsPage3.Controls.Add(this.textBox5);
-            this.settingsPage3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsPage3.isActive = true;
-            this.settingsPage3.Location = new System.Drawing.Point(0, 0);
-            this.settingsPage3.Name = "settingsPage3";
-            treeNode4.Name = "";
-            treeNode4.Text = "Sc2Tv.ru";
-            this.settingsPage3.ParentNode = treeNode4;
-            this.settingsPage3.Size = new System.Drawing.Size(315, 316);
-            this.settingsPage3.TabIndex = 0;
+            this.settingsPage10.Controls.Add(this.label24);
+            this.settingsPage10.Controls.Add(this.label28);
+            this.settingsPage10.Controls.Add(this.label29);
+            this.settingsPage10.Controls.Add(this.textBox24);
+            this.settingsPage10.Controls.Add(this.checkBox34);
+            this.settingsPage10.Controls.Add(this.textBox28);
+            this.settingsPage10.Controls.Add(this.textBox29);
+            this.settingsPage10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsPage10.isActive = true;
+            this.settingsPage10.Location = new System.Drawing.Point(0, 0);
+            this.settingsPage10.Name = "settingsPage10";
+            this.settingsPage10.ParentNode = treeNode1;
+            this.settingsPage10.Size = new System.Drawing.Size(315, 316);
+            this.settingsPage10.TabIndex = 9;
             // 
-            // label11
+            // label24
             // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label11.Location = new System.Drawing.Point(40, 42);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(53, 13);
-            this.label11.TabIndex = 35;
-            this.label11.Text = "Chat alias";
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label24.Location = new System.Drawing.Point(24, 48);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(53, 13);
+            this.label24.TabIndex = 60;
+            this.label24.Text = "Chat alias";
             // 
-            // label7
+            // label28
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label7.Location = new System.Drawing.Point(37, 96);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(56, 13);
-            this.label7.TabIndex = 34;
-            this.label7.Text = "Password:";
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label28.Location = new System.Drawing.Point(18, 99);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(56, 13);
+            this.label28.TabIndex = 59;
+            this.label28.Text = "Password:";
             // 
-            // label5
+            // label29
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(57, 70);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(36, 13);
-            this.label5.TabIndex = 29;
-            this.label5.Text = "Login:";
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label29.Location = new System.Drawing.Point(38, 73);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(36, 13);
+            this.label29.TabIndex = 58;
+            this.label29.Text = "Login:";
             // 
             // settingsPage1
             // 
@@ -396,6 +397,60 @@
             this.label4.Size = new System.Drawing.Size(36, 13);
             this.label4.TabIndex = 18;
             this.label4.Text = "Login:";
+            // 
+            // settingsPage3
+            // 
+            this.settingsPage3.Controls.Add(this.checkBox33);
+            this.settingsPage3.Controls.Add(this.label11);
+            this.settingsPage3.Controls.Add(this.label7);
+            this.settingsPage3.Controls.Add(this.label5);
+            this.settingsPage3.Controls.Add(this.checkBox17);
+            this.settingsPage3.Controls.Add(this.textBox11);
+            this.settingsPage3.Controls.Add(this.checkBox8);
+            this.settingsPage3.Controls.Add(this.checkBox2);
+            this.settingsPage3.Controls.Add(this.showSmileImages);
+            this.settingsPage3.Controls.Add(this.checkBox1);
+            this.settingsPage3.Controls.Add(this.textBox6);
+            this.settingsPage3.Controls.Add(this.textBox5);
+            this.settingsPage3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsPage3.isActive = true;
+            this.settingsPage3.Location = new System.Drawing.Point(0, 0);
+            this.settingsPage3.Name = "settingsPage3";
+            treeNode4.Name = "";
+            treeNode4.Text = "Sc2Tv.ru";
+            this.settingsPage3.ParentNode = treeNode4;
+            this.settingsPage3.Size = new System.Drawing.Size(315, 316);
+            this.settingsPage3.TabIndex = 0;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label11.Location = new System.Drawing.Point(40, 42);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 13);
+            this.label11.TabIndex = 35;
+            this.label11.Text = "Chat alias";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label7.Location = new System.Drawing.Point(37, 96);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(56, 13);
+            this.label7.TabIndex = 34;
+            this.label7.Text = "Password:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label5.Location = new System.Drawing.Point(57, 70);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(36, 13);
+            this.label5.TabIndex = 29;
+            this.label5.Text = "Login:";
             // 
             // settingsPage4
             // 
@@ -606,14 +661,14 @@
             // 
             // settingsPage8
             // 
-            this.settingsPage8.Controls.Add(this.checkBox25);
-            this.settingsPage8.Controls.Add(this.checkBox23);
+            this.settingsPage8.Controls.Add(this.groupBox1);
+            this.settingsPage8.Controls.Add(this.groupBox2);
             this.settingsPage8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.settingsPage8.isActive = true;
             this.settingsPage8.Location = new System.Drawing.Point(0, 0);
             this.settingsPage8.Name = "settingsPage8";
             treeNode9.Name = "";
-            treeNode9.Text = "Status monitor";
+            treeNode9.Text = "Stream control/monitor";
             this.settingsPage8.ParentNode = treeNode9;
             this.settingsPage8.Size = new System.Drawing.Size(315, 316);
             this.settingsPage8.TabIndex = 0;
@@ -672,96 +727,76 @@
             this.label27.TabIndex = 48;
             this.label27.Text = "Login:";
             // 
-            // settingsPage10
+            // groupBox1
             // 
-            this.settingsPage10.Controls.Add(this.label24);
-            this.settingsPage10.Controls.Add(this.label28);
-            this.settingsPage10.Controls.Add(this.textBox24);
-            this.settingsPage10.Controls.Add(this.label29);
-            this.settingsPage10.Controls.Add(this.checkBox34);
-            this.settingsPage10.Controls.Add(this.textBox28);
-            this.settingsPage10.Controls.Add(this.textBox29);
-            this.settingsPage10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsPage10.isActive = true;
-            this.settingsPage10.Location = new System.Drawing.Point(0, 0);
-            this.settingsPage10.Name = "settingsPage10";
-            this.settingsPage10.ParentNode = treeNode1;
-            this.settingsPage10.Size = new System.Drawing.Size(315, 316);
-            this.settingsPage10.TabIndex = 9;
+            this.groupBox1.Controls.Add(this.checkBox25);
+            this.groupBox1.Controls.Add(this.checkBox23);
+            this.groupBox1.Location = new System.Drawing.Point(12, 118);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(300, 78);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "XSplit";
             // 
-            // label24
+            // groupBox2
             // 
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label24.Location = new System.Drawing.Point(24, 48);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(53, 13);
-            this.label24.TabIndex = 60;
-            this.label24.Text = "Chat alias";
+            this.groupBox2.Controls.Add(this.label30);
+            this.groupBox2.Controls.Add(this.textBox30);
+            this.groupBox2.Controls.Add(this.linkLabel1);
+            this.groupBox2.Controls.Add(this.checkBox36);
+            this.groupBox2.Location = new System.Drawing.Point(12, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(300, 84);
+            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "OBS";
             // 
-            // label28
+            // linkLabel1
             // 
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label28.Location = new System.Drawing.Point(18, 99);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(56, 13);
-            this.label28.TabIndex = 59;
-            this.label28.Text = "Password:";
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(119, 25);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(78, 13);
+            this.linkLabel1.TabIndex = 2;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "get OBS plugin";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
-            // label29
+            // checkBox36
             // 
-            this.label29.AutoSize = true;
-            this.label29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label29.Location = new System.Drawing.Point(38, 73);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(36, 13);
-            this.label29.TabIndex = 58;
-            this.label29.Text = "Login:";
+            this.checkBox36.AutoSize = true;
+            this.checkBox36.Checked = global::Ubiquitous.Properties.Settings.Default.obsRemoteEnable;
+            this.checkBox36.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "obsRemoteEnable", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox36.Location = new System.Drawing.Point(6, 24);
+            this.checkBox36.Name = "checkBox36";
+            this.checkBox36.Size = new System.Drawing.Size(107, 17);
+            this.checkBox36.TabIndex = 0;
+            this.checkBox36.Text = "Use OBSRemote";
+            this.checkBox36.UseVisualStyleBackColor = true;
             // 
-            // textBox24
+            // checkBox25
             // 
-            this.textBox24.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberAlias", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox24.Location = new System.Drawing.Point(89, 45);
-            this.textBox24.Name = "textBox24";
-            this.textBox24.Size = new System.Drawing.Size(154, 20);
-            this.textBox24.TabIndex = 5;
-            this.textBox24.Text = global::Ubiquitous.Properties.Settings.Default.cyberAlias;
+            this.checkBox25.AutoSize = true;
+            this.checkBox25.Checked = global::Ubiquitous.Properties.Settings.Default.enableStatusServer;
+            this.checkBox25.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "enableStatusServer", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox25.Location = new System.Drawing.Point(6, 47);
+            this.checkBox25.Name = "checkBox25";
+            this.checkBox25.Size = new System.Drawing.Size(217, 17);
+            this.checkBox25.TabIndex = 1;
+            this.checkBox25.Text = "Enable Stream Status server (TCP 3003)";
+            this.checkBox25.UseVisualStyleBackColor = true;
             // 
-            // checkBox34
+            // checkBox23
             // 
-            this.checkBox34.AutoSize = true;
-            this.checkBox34.Checked = global::Ubiquitous.Properties.Settings.Default.cyberEnabled;
-            this.checkBox34.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "cyberEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox34.Location = new System.Drawing.Point(27, 19);
-            this.checkBox34.Name = "checkBox34";
-            this.checkBox34.Size = new System.Drawing.Size(65, 17);
-            this.checkBox34.TabIndex = 4;
-            this.checkBox34.Text = "Enabled";
-            this.checkBox34.UseVisualStyleBackColor = true;
-            // 
-            // textBox28
-            // 
-            this.textBox28.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox28.Location = new System.Drawing.Point(89, 71);
-            this.textBox28.Name = "textBox28";
-            this.textBox28.Size = new System.Drawing.Size(154, 20);
-            this.textBox28.TabIndex = 6;
-            this.textBox28.Text = global::Ubiquitous.Properties.Settings.Default.cyberUser;
-            // 
-            // textBox29
-            // 
-            this.textBox29.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberPassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox29.Location = new System.Drawing.Point(89, 97);
-            this.textBox29.Name = "textBox29";
-            this.textBox29.Size = new System.Drawing.Size(154, 20);
-            this.textBox29.TabIndex = 7;
-            this.textBox29.Text = global::Ubiquitous.Properties.Settings.Default.cyberPassword;
-            this.textBox29.UseSystemPasswordChar = true;
+            this.checkBox23.AutoSize = true;
+            this.checkBox23.Checked = global::Ubiquitous.Properties.Settings.Default.enableXSplitStats;
+            this.checkBox23.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "enableXSplitStats", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox23.Location = new System.Drawing.Point(6, 24);
+            this.checkBox23.Name = "checkBox23";
+            this.checkBox23.Size = new System.Drawing.Size(233, 17);
+            this.checkBox23.TabIndex = 0;
+            this.checkBox23.Text = "Monitor XSplit stats (warn about framedrops)";
+            this.checkBox23.UseVisualStyleBackColor = true;
             // 
             // checkBox28
             // 
@@ -1371,30 +1406,6 @@
             this.textBox23.Text = global::Ubiquitous.Properties.Settings.Default.GohaPassword;
             this.textBox23.UseSystemPasswordChar = true;
             // 
-            // checkBox25
-            // 
-            this.checkBox25.AutoSize = true;
-            this.checkBox25.Checked = global::Ubiquitous.Properties.Settings.Default.enableStatusServer;
-            this.checkBox25.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "enableStatusServer", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox25.Location = new System.Drawing.Point(13, 35);
-            this.checkBox25.Name = "checkBox25";
-            this.checkBox25.Size = new System.Drawing.Size(217, 17);
-            this.checkBox25.TabIndex = 1;
-            this.checkBox25.Text = "Enable Stream Status server (TCP 3003)";
-            this.checkBox25.UseVisualStyleBackColor = true;
-            // 
-            // checkBox23
-            // 
-            this.checkBox23.AutoSize = true;
-            this.checkBox23.Checked = global::Ubiquitous.Properties.Settings.Default.enableXSplitStats;
-            this.checkBox23.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "enableXSplitStats", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox23.Location = new System.Drawing.Point(13, 12);
-            this.checkBox23.Name = "checkBox23";
-            this.checkBox23.Size = new System.Drawing.Size(233, 17);
-            this.checkBox23.TabIndex = 0;
-            this.checkBox23.Text = "Monitor XSplit stats (warn about framedrops)";
-            this.checkBox23.UseVisualStyleBackColor = true;
-            // 
             // checkBox27
             // 
             this.checkBox27.AutoSize = true;
@@ -1493,6 +1504,68 @@
             this.textBox27.Text = global::Ubiquitous.Properties.Settings.Default.empirePassword;
             this.textBox27.UseSystemPasswordChar = true;
             // 
+            // textBox24
+            // 
+            this.textBox24.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberAlias", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox24.Location = new System.Drawing.Point(89, 45);
+            this.textBox24.Name = "textBox24";
+            this.textBox24.Size = new System.Drawing.Size(154, 20);
+            this.textBox24.TabIndex = 5;
+            this.textBox24.Text = global::Ubiquitous.Properties.Settings.Default.cyberAlias;
+            // 
+            // checkBox34
+            // 
+            this.checkBox34.AutoSize = true;
+            this.checkBox34.Checked = global::Ubiquitous.Properties.Settings.Default.cyberEnabled;
+            this.checkBox34.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "cyberEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.checkBox34.Location = new System.Drawing.Point(27, 19);
+            this.checkBox34.Name = "checkBox34";
+            this.checkBox34.Size = new System.Drawing.Size(65, 17);
+            this.checkBox34.TabIndex = 4;
+            this.checkBox34.Text = "Enabled";
+            this.checkBox34.UseVisualStyleBackColor = true;
+            // 
+            // textBox28
+            // 
+            this.textBox28.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox28.Location = new System.Drawing.Point(89, 71);
+            this.textBox28.Name = "textBox28";
+            this.textBox28.Size = new System.Drawing.Size(154, 20);
+            this.textBox28.TabIndex = 6;
+            this.textBox28.Text = global::Ubiquitous.Properties.Settings.Default.cyberUser;
+            // 
+            // textBox29
+            // 
+            this.textBox29.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberPassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox29.Location = new System.Drawing.Point(89, 97);
+            this.textBox29.Name = "textBox29";
+            this.textBox29.Size = new System.Drawing.Size(154, 20);
+            this.textBox29.TabIndex = 7;
+            this.textBox29.Text = global::Ubiquitous.Properties.Settings.Default.cyberPassword;
+            this.textBox29.UseSystemPasswordChar = true;
+            // 
+            // textBox30
+            // 
+            this.textBox30.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "obsHost", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox30.Location = new System.Drawing.Point(66, 50);
+            this.textBox30.Name = "textBox30";
+            this.textBox30.Size = new System.Drawing.Size(165, 20);
+            this.textBox30.TabIndex = 3;
+            this.textBox30.Text = global::Ubiquitous.Properties.Settings.Default.obsHost;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(8, 54);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(55, 13);
+            this.label30.TabIndex = 4;
+            this.label30.Text = "OBS host:";
+            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1505,12 +1578,14 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsDialog_FormClosing);
             this.settingsTree1.SplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.settingsTree1.SplitContainer)).EndInit();
-            this.settingsPage3.ResumeLayout(false);
-            this.settingsPage3.PerformLayout();
+            this.settingsPage10.ResumeLayout(false);
+            this.settingsPage10.PerformLayout();
             this.settingsPage1.ResumeLayout(false);
             this.settingsPage1.PerformLayout();
             this.settingsPage2.ResumeLayout(false);
             this.settingsPage2.PerformLayout();
+            this.settingsPage3.ResumeLayout(false);
+            this.settingsPage3.PerformLayout();
             this.settingsPage4.ResumeLayout(false);
             this.settingsPage4.PerformLayout();
             this.settingsPage5.ResumeLayout(false);
@@ -1520,11 +1595,12 @@
             this.settingsPage7.ResumeLayout(false);
             this.settingsPage7.PerformLayout();
             this.settingsPage8.ResumeLayout(false);
-            this.settingsPage8.PerformLayout();
             this.settingsPage9.ResumeLayout(false);
             this.settingsPage9.PerformLayout();
-            this.settingsPage10.ResumeLayout(false);
-            this.settingsPage10.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1636,5 +1712,11 @@
         private System.Windows.Forms.CheckBox checkBox34;
         private System.Windows.Forms.TextBox textBox28;
         private System.Windows.Forms.TextBox textBox29;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.CheckBox checkBox36;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox textBox30;
     }
 }

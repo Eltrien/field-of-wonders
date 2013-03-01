@@ -233,9 +233,6 @@
             <setting name="obsRemoteEnable" serializeAs="String">
                 <value>False</value>
             </setting>
-            <setting name="obsHost" serializeAs="String">
-                <value>localhost</value>
-            </setting>
         </Ubiquitous.Properties.Settings>
     </userSettings>
 </configuration>
