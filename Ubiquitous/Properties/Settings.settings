@@ -212,5 +212,17 @@
     <Setting Name="NeedSettingsUpgrade" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="cyberEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="cyberAlias" Type="System.String" Scope="User">
+      <Value Profile="(Default)">@cyb</Value>
+    </Setting>
+    <Setting Name="cyberUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="cyberPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

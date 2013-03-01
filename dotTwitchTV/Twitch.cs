@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Net;
+using System.Diagnostics;
 using System.Threading;
 
 namespace dotTwitchTV
@@ -53,7 +54,9 @@ namespace dotTwitchTV
 
             wc = new CookieAwareWebClient();
             wc.Headers["User-Agent"] = userAgent;
-            CrawlTwitchChannel(currentChannelName);
+        }
+        public void Start()
+        {
             bwDownloader = new Timer(new TimerCallback(bwDownloader_Tick), null, 0, 20000);
         }
         private void bwDownloader_Tick(object o)
@@ -62,7 +65,7 @@ namespace dotTwitchTV
         }
         private void CrawlTwitchChannel( string channel )
         {
-            if( currentChannelName == null || currentChannelName == "")
+            if( String.IsNullOrEmpty(currentChannelName) )
                 return;
             
             try
@@ -70,9 +73,16 @@ namespace dotTwitchTV
                 wc.Headers["Cache-Control"] = "no-cache";
                 var stream = wc.downloadURL(String.Format(channelJsonUrl, channel,(DateTime.UtcNow - new DateTime(1970,1,1,0,0,0)).TotalSeconds) );
                 if (stream == null)
+                {
+                    Debug.Print("Can't download channel info of {0} result stream is null. Url: {1}", currentChannelName, channelJsonUrl);
                     return;
+                }
 
                 var tempChannel = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
+
+                                
+                if (tempChannel == null)
+                    Debug.Print("Can't parse json of {0}. Url: {1}", currentChannelName, channelJsonUrl);
 
                 stream.Close();
                 stream.Dispose();

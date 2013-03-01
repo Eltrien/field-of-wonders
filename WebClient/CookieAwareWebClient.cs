@@ -6,7 +6,9 @@ using System.Net;
 using System.Net.Cache;
 using System.Configuration;
 using System.Diagnostics;
-
+using System.Reflection;
+using System.Collections;
+using System.IO;
 namespace dotWebClient
 {
 
@@ -35,14 +37,29 @@ namespace dotWebClient
         {
             get { return _lastWebError.ToString(); }
         }
+        public bool KeepAlive
+        {
+            get;
+            set;
 
+        }
         protected override WebRequest GetWebRequest(Uri address)
         {
             WebRequest request = base.GetWebRequest(address);
+
             HttpWebRequest webRequest = request as HttpWebRequest;
             if (webRequest != null)
             {
+                if (KeepAlive)
+                {
+                    webRequest.ProtocolVersion = HttpVersion.Version11;
+                    webRequest.KeepAlive = true;
+                    var sp = webRequest.ServicePoint;
+                    var prop = sp.GetType().GetProperty("HttpBehaviour", BindingFlags.Instance | BindingFlags.NonPublic);
+                    prop.SetValue(sp, (byte)0, null);
+                }
                 webRequest.CookieContainer = m_container;
+
                 webRequest.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
             }
             return request;
@@ -69,6 +86,42 @@ namespace dotWebClient
         public string CookieValue(string name, string url)
         {
             return m_container.GetCookies(new Uri(url))[name].Value;
+        }
+        public string PostUrlEncoded( string url, string param )
+        {
+            byte[] requestData = Encoding.UTF8.GetBytes(param);
+            string result = string.Empty;
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)GetWebRequest(new Uri(url));
+                request.Method = "POST";
+                request.UserAgent = userAgent;
+                request.ContentType = "application/x-www-form-urlencoded";
+                //request.CookieContainer = m_container;
+                request.ContentLength = requestData.Length;
+                request.KeepAlive = true;
+                request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+
+                using (Stream stream = request.GetRequestStream())
+                    stream.Write(requestData, 0, requestData.Length);
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                      //foreach (Cookie c in response.Cookies)
+                      //Debug.Print(c.Name + " = " + c.Value);
+
+                    var reader = new StreamReader(response.GetResponseStream(), System.Text.Encoding.GetEncoding("utf-8"));
+                    result = reader.ReadToEnd();
+                    //Debug.Print(result);
+                }
+
+            }
+            catch
+            {
+
+
+            }
+            return result;
         }
         public void PostMultipart(string url, string sData, string boundary)
         {
@@ -105,6 +158,7 @@ namespace dotWebClient
             }
             catch (WebException e)
             {
+                Debug.Print("Exception while downloading from url: {0}", url);
                 _lastWebError = e.Status;
             }
         }
@@ -117,6 +171,7 @@ namespace dotWebClient
             }
             catch (WebException e)
             {
+                Debug.Print("Exception while downloading from url: {0}", url);
                 _lastWebError = e.Status;
             }
             return null;

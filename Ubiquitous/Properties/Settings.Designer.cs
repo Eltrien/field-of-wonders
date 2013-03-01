@@ -862,5 +862,53 @@ namespace Ubiquitous.Properties {
                 this["NeedSettingsUpgrade"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool cyberEnabled {
+            get {
+                return ((bool)(this["cyberEnabled"]));
+            }
+            set {
+                this["cyberEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("@cyb")]
+        public string cyberAlias {
+            get {
+                return ((string)(this["cyberAlias"]));
+            }
+            set {
+                this["cyberAlias"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string cyberUser {
+            get {
+                return ((string)(this["cyberUser"]));
+            }
+            set {
+                this["cyberUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string cyberPassword {
+            get {
+                return ((string)(this["cyberPassword"]));
+            }
+            set {
+                this["cyberPassword"] = value;
+            }
+        }
     }
 }

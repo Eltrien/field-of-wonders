@@ -21,6 +21,7 @@ namespace Ubiquitous
         Battlelog,
         Goodgame,
         Empire,
+        Cybergame,
         Goha
     }
     /// <summary>
@@ -110,6 +111,9 @@ namespace Ubiquitous
                         break;
                     case ChatIcon.Goha:
                         chatIcon = Properties.Resources.goha;
+                        break;
+                    case ChatIcon.Cybergame:
+                        chatIcon = Properties.Resources.cybergame;
                         break;
                     default:
                         chatIcon = null;

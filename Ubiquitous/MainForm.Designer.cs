@@ -41,17 +41,11 @@
             this.buttonCommercial = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelViewers = new System.Windows.Forms.Label();
-            this.trackBarTransparency = new System.Windows.Forms.TrackBar();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.textMessages = new SC2TV.RTFControl.ExRichTextBox();
             this.pictureCurrentChat = new System.Windows.Forms.PictureBox();
             this.buttonFullscreen = new System.Windows.Forms.Button();
             this.imageListChatSize = new System.Windows.Forms.ImageList(this.components);
             this.textCommand = new System.Windows.Forms.TextBox();
             this.buttonInvisible = new System.Windows.Forms.Button();
-            this.comboSc2Channels = new Ubiquitous.ComboBoxWithId();
-            this.comboGGChannels = new Ubiquitous.ComboBoxWithId();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
             this.pictureEmpire = new System.Windows.Forms.PictureBox();
@@ -82,10 +76,19 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.timerEverySecond = new System.Windows.Forms.Timer(this.components);
+            this.textMessages = new SC2TV.RTFControl.ExRichTextBox();
+            this.comboSc2Channels = new Ubiquitous.ComboBoxWithId();
+            this.comboGGChannels = new Ubiquitous.ComboBoxWithId();
+            this.trackBarTransparency = new System.Windows.Forms.TrackBar();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.pictureCybergame = new System.Windows.Forms.PictureBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.pictureCybergameStream = new System.Windows.Forms.PictureBox();
             this.contextMenuChat.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarTransparency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureCurrentChat)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEmpire)).BeginInit();
@@ -101,6 +104,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureSc2tvStream)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureGohaStream)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureStream)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTransparency)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureCybergame)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureCybergameStream)).BeginInit();
             this.SuspendLayout();
             // 
             // bWorkerSteamPoll
@@ -176,7 +182,7 @@
             this.panel1.ForeColor = System.Drawing.SystemColors.Window;
             this.panel1.Location = new System.Drawing.Point(-3, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(649, 485);
+            this.panel1.Size = new System.Drawing.Size(729, 587);
             this.panel1.TabIndex = 0;
             // 
             // buttonCommercial
@@ -215,84 +221,13 @@
             this.labelViewers.Text = "0";
             this.labelViewers.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // trackBarTransparency
-            // 
-            this.trackBarTransparency.AutoSize = false;
-            this.trackBarTransparency.BackColor = System.Drawing.Color.Black;
-            this.trackBarTransparency.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Ubiquitous.Properties.Settings.Default, "globalTransparency", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.trackBarTransparency.Location = new System.Drawing.Point(176, 2);
-            this.trackBarTransparency.Maximum = 100;
-            this.trackBarTransparency.Name = "trackBarTransparency";
-            this.trackBarTransparency.Size = new System.Drawing.Size(104, 17);
-            this.trackBarTransparency.TabIndex = 3;
-            this.trackBarTransparency.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarTransparency.Value = global::Ubiquitous.Properties.Settings.Default.globalTransparency;
-            this.trackBarTransparency.MouseMove += new System.Windows.Forms.MouseEventHandler(this.trackBarTransparency_MouseMove);
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.BackColor = System.Drawing.Color.Black;
-            this.checkBox2.Checked = global::Ubiquitous.Properties.Settings.Default.globalHideBorder;
-            this.checkBox2.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalHideBorder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox2.Location = new System.Drawing.Point(118, 1);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(57, 17);
-            this.checkBox2.TabIndex = 2;
-            this.checkBox2.Text = "Border";
-            this.checkBox2.UseVisualStyleBackColor = false;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.BackColor = System.Drawing.Color.Black;
-            this.checkBox1.Checked = global::Ubiquitous.Properties.Settings.Default.globalOnTop;
-            this.checkBox1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalOnTop", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox1.Location = new System.Drawing.Point(50, 1);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(62, 17);
-            this.checkBox1.TabIndex = 1;
-            this.checkBox1.Text = "On Top";
-            this.checkBox1.UseVisualStyleBackColor = false;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            this.checkBox1.MouseLeave += new System.EventHandler(this.checkBox1_MouseLeave);
-            this.checkBox1.MouseHover += new System.EventHandler(this.checkBox1_MouseHover);
-            // 
-            // textMessages
-            // 
-            this.textMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textMessages.BackColor = System.Drawing.Color.Black;
-            this.textMessages.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textMessages.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textMessages.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.textMessages.HiglightColor = SC2TV.RTFControl.RtfColor.Black;
-            this.textMessages.Location = new System.Drawing.Point(0, 3);
-            this.textMessages.Name = "textMessages";
-            this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.textMessages.Size = new System.Drawing.Size(500, 459);
-            this.textMessages.TabIndex = 23;
-            this.textMessages.Text = "";
-            this.textMessages.TextColor = SC2TV.RTFControl.RtfColor.Aqua;
-            this.textMessages.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textMessages_LinkClicked);
-            this.textMessages.Click += new System.EventHandler(this.textMessages_Click);
-            this.textMessages.SizeChanged += new System.EventHandler(this.textMessages_SizeChanged);
-            this.textMessages.DoubleClick += new System.EventHandler(this.textMessages_DoubleClick);
-            this.textMessages.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseDown);
-            this.textMessages.MouseLeave += new System.EventHandler(this.textMessages_MouseLeave);
-            this.textMessages.MouseHover += new System.EventHandler(this.textMessages_MouseHover);
-            this.textMessages.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseMove);
-            this.textMessages.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseUp);
-            // 
             // pictureCurrentChat
             // 
             this.pictureCurrentChat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pictureCurrentChat.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.pictureCurrentChat.ContextMenuStrip = this.contextMenuChat;
             this.pictureCurrentChat.Image = global::Ubiquitous.Properties.Resources.twitchicon;
-            this.pictureCurrentChat.Location = new System.Drawing.Point(2, 465);
+            this.pictureCurrentChat.Location = new System.Drawing.Point(2, 567);
             this.pictureCurrentChat.Name = "pictureCurrentChat";
             this.pictureCurrentChat.Size = new System.Drawing.Size(17, 18);
             this.pictureCurrentChat.TabIndex = 34;
@@ -304,7 +239,7 @@
             this.buttonFullscreen.BackColor = System.Drawing.SystemColors.Window;
             this.buttonFullscreen.ImageIndex = 0;
             this.buttonFullscreen.ImageList = this.imageListChatSize;
-            this.buttonFullscreen.Location = new System.Drawing.Point(624, 463);
+            this.buttonFullscreen.Location = new System.Drawing.Point(704, 565);
             this.buttonFullscreen.Name = "buttonFullscreen";
             this.buttonFullscreen.Size = new System.Drawing.Size(23, 21);
             this.buttonFullscreen.TabIndex = 9;
@@ -324,9 +259,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textCommand.BackColor = System.Drawing.Color.Black;
             this.textCommand.ForeColor = System.Drawing.Color.LightYellow;
-            this.textCommand.Location = new System.Drawing.Point(21, 465);
+            this.textCommand.Location = new System.Drawing.Point(21, 567);
             this.textCommand.Name = "textCommand";
-            this.textCommand.Size = new System.Drawing.Size(600, 20);
+            this.textCommand.Size = new System.Drawing.Size(680, 20);
             this.textCommand.TabIndex = 33;
             this.textCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textCommand_KeyUp);
             // 
@@ -334,7 +269,7 @@
             // 
             this.buttonInvisible.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonInvisible.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonInvisible.Location = new System.Drawing.Point(583, 388);
+            this.buttonInvisible.Location = new System.Drawing.Point(664, 435);
             this.buttonInvisible.Name = "buttonInvisible";
             this.buttonInvisible.Size = new System.Drawing.Size(62, 23);
             this.buttonInvisible.TabIndex = 6;
@@ -342,39 +277,11 @@
             this.buttonInvisible.UseVisualStyleBackColor = true;
             this.buttonInvisible.Visible = false;
             // 
-            // comboSc2Channels
-            // 
-            this.comboSc2Channels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboSc2Channels.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.comboSc2Channels.DropDownWidth = 300;
-            this.comboSc2Channels.ForeColor = System.Drawing.SystemColors.Window;
-            this.comboSc2Channels.FormattingEnabled = true;
-            this.comboSc2Channels.Location = new System.Drawing.Point(504, 438);
-            this.comboSc2Channels.Name = "comboSc2Channels";
-            this.comboSc2Channels.Size = new System.Drawing.Size(86, 21);
-            this.comboSc2Channels.TabIndex = 7;
-            this.comboSc2Channels.DropDown += new System.EventHandler(this.comboSc2Channels_DropDown);
-            this.comboSc2Channels.SelectionChangeCommitted += new System.EventHandler(this.comboSc2Channels_SelectionChangeCommitted);
-            // 
-            // comboGGChannels
-            // 
-            this.comboGGChannels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboGGChannels.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.comboGGChannels.DropDownWidth = 300;
-            this.comboGGChannels.ForeColor = System.Drawing.SystemColors.Window;
-            this.comboGGChannels.FormattingEnabled = true;
-            this.comboGGChannels.Location = new System.Drawing.Point(503, 481);
-            this.comboGGChannels.Name = "comboGGChannels";
-            this.comboGGChannels.Size = new System.Drawing.Size(121, 21);
-            this.comboGGChannels.TabIndex = 26;
-            this.comboGGChannels.Visible = false;
-            this.comboGGChannels.DropDown += new System.EventHandler(this.comboGGChannels_DropDown);
-            this.comboGGChannels.SelectedIndexChanged += new System.EventHandler(this.comboGGChannels_SelectedIndexChanged);
-            this.comboGGChannels.SelectionChangeCommitted += new System.EventHandler(this.comboGGChannels_SelectionChangeCommitted);
-            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label15);
+            this.groupBox1.Controls.Add(this.pictureCybergame);
             this.groupBox1.Controls.Add(this.label13);
             this.groupBox1.Controls.Add(this.pictureEmpire);
             this.groupBox1.Controls.Add(this.label10);
@@ -394,9 +301,9 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.pictureTwitch);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.groupBox1.Location = new System.Drawing.Point(503, 3);
+            this.groupBox1.Location = new System.Drawing.Point(583, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(143, 262);
+            this.groupBox1.Size = new System.Drawing.Size(143, 282);
             this.groupBox1.TabIndex = 21;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Chat login status";
@@ -594,6 +501,8 @@
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.label16);
+            this.groupBox2.Controls.Add(this.pictureCybergameStream);
             this.groupBox2.Controls.Add(this.label14);
             this.groupBox2.Controls.Add(this.pictureSc2tvStream);
             this.groupBox2.Controls.Add(this.label12);
@@ -601,9 +510,9 @@
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.pictureStream);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.groupBox2.Location = new System.Drawing.Point(503, 271);
+            this.groupBox2.Location = new System.Drawing.Point(583, 291);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(143, 111);
+            this.groupBox2.Size = new System.Drawing.Size(143, 138);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Stream status";
@@ -673,7 +582,7 @@
             // buttonSettings
             // 
             this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSettings.Location = new System.Drawing.Point(503, 388);
+            this.buttonSettings.Location = new System.Drawing.Point(584, 435);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(75, 23);
             this.buttonSettings.TabIndex = 5;
@@ -685,7 +594,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(503, 465);
+            this.label7.Location = new System.Drawing.Point(584, 512);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 13);
             this.label7.TabIndex = 8;
@@ -697,7 +606,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(503, 422);
+            this.label6.Location = new System.Drawing.Point(584, 469);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(42, 13);
             this.label6.TabIndex = 24;
@@ -710,12 +619,155 @@
             this.timerEverySecond.Interval = 1000;
             this.timerEverySecond.Tick += new System.EventHandler(this.timerEverySecond_Tick);
             // 
+            // textMessages
+            // 
+            this.textMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textMessages.BackColor = System.Drawing.Color.Black;
+            this.textMessages.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textMessages.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textMessages.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.textMessages.HiglightColor = SC2TV.RTFControl.RtfColor.Black;
+            this.textMessages.Location = new System.Drawing.Point(0, 3);
+            this.textMessages.Name = "textMessages";
+            this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.textMessages.Size = new System.Drawing.Size(580, 561);
+            this.textMessages.TabIndex = 23;
+            this.textMessages.Text = "";
+            this.textMessages.TextColor = SC2TV.RTFControl.RtfColor.Aqua;
+            this.textMessages.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textMessages_LinkClicked);
+            this.textMessages.Click += new System.EventHandler(this.textMessages_Click);
+            this.textMessages.SizeChanged += new System.EventHandler(this.textMessages_SizeChanged);
+            this.textMessages.DoubleClick += new System.EventHandler(this.textMessages_DoubleClick);
+            this.textMessages.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseDown);
+            this.textMessages.MouseLeave += new System.EventHandler(this.textMessages_MouseLeave);
+            this.textMessages.MouseHover += new System.EventHandler(this.textMessages_MouseHover);
+            this.textMessages.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseMove);
+            this.textMessages.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseUp);
+            // 
+            // comboSc2Channels
+            // 
+            this.comboSc2Channels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboSc2Channels.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.comboSc2Channels.DropDownWidth = 300;
+            this.comboSc2Channels.ForeColor = System.Drawing.SystemColors.Window;
+            this.comboSc2Channels.FormattingEnabled = true;
+            this.comboSc2Channels.Location = new System.Drawing.Point(585, 485);
+            this.comboSc2Channels.Name = "comboSc2Channels";
+            this.comboSc2Channels.Size = new System.Drawing.Size(86, 21);
+            this.comboSc2Channels.TabIndex = 7;
+            this.comboSc2Channels.Visible = false;
+            this.comboSc2Channels.DropDown += new System.EventHandler(this.comboSc2Channels_DropDown);
+            this.comboSc2Channels.SelectionChangeCommitted += new System.EventHandler(this.comboSc2Channels_SelectionChangeCommitted);
+            // 
+            // comboGGChannels
+            // 
+            this.comboGGChannels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboGGChannels.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.comboGGChannels.DropDownWidth = 300;
+            this.comboGGChannels.ForeColor = System.Drawing.SystemColors.Window;
+            this.comboGGChannels.FormattingEnabled = true;
+            this.comboGGChannels.Location = new System.Drawing.Point(584, 528);
+            this.comboGGChannels.Name = "comboGGChannels";
+            this.comboGGChannels.Size = new System.Drawing.Size(121, 21);
+            this.comboGGChannels.TabIndex = 26;
+            this.comboGGChannels.Visible = false;
+            this.comboGGChannels.DropDown += new System.EventHandler(this.comboGGChannels_DropDown);
+            this.comboGGChannels.SelectedIndexChanged += new System.EventHandler(this.comboGGChannels_SelectedIndexChanged);
+            this.comboGGChannels.SelectionChangeCommitted += new System.EventHandler(this.comboGGChannels_SelectionChangeCommitted);
+            // 
+            // trackBarTransparency
+            // 
+            this.trackBarTransparency.AutoSize = false;
+            this.trackBarTransparency.BackColor = System.Drawing.Color.Black;
+            this.trackBarTransparency.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Ubiquitous.Properties.Settings.Default, "globalTransparency", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.trackBarTransparency.Location = new System.Drawing.Point(176, 2);
+            this.trackBarTransparency.Maximum = 100;
+            this.trackBarTransparency.Name = "trackBarTransparency";
+            this.trackBarTransparency.Size = new System.Drawing.Size(104, 17);
+            this.trackBarTransparency.TabIndex = 3;
+            this.trackBarTransparency.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarTransparency.Value = global::Ubiquitous.Properties.Settings.Default.globalTransparency;
+            this.trackBarTransparency.MouseMove += new System.Windows.Forms.MouseEventHandler(this.trackBarTransparency_MouseMove);
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.BackColor = System.Drawing.Color.Black;
+            this.checkBox2.Checked = global::Ubiquitous.Properties.Settings.Default.globalHideBorder;
+            this.checkBox2.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalHideBorder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox2.Location = new System.Drawing.Point(118, 1);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(57, 17);
+            this.checkBox2.TabIndex = 2;
+            this.checkBox2.Text = "Border";
+            this.checkBox2.UseVisualStyleBackColor = false;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.BackColor = System.Drawing.Color.Black;
+            this.checkBox1.Checked = global::Ubiquitous.Properties.Settings.Default.globalOnTop;
+            this.checkBox1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalOnTop", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox1.Location = new System.Drawing.Point(50, 1);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(62, 17);
+            this.checkBox1.TabIndex = 1;
+            this.checkBox1.Text = "On Top";
+            this.checkBox1.UseVisualStyleBackColor = false;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBox1.MouseLeave += new System.EventHandler(this.checkBox1_MouseLeave);
+            this.checkBox1.MouseHover += new System.EventHandler(this.checkBox1_MouseHover);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label15.Location = new System.Drawing.Point(34, 255);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(99, 18);
+            this.label15.TabIndex = 20;
+            this.label15.Text = "Cybergame.tv";
+            // 
+            // pictureCybergame
+            // 
+            this.pictureCybergame.Image = ((System.Drawing.Image)(resources.GetObject("pictureCybergame.Image")));
+            this.pictureCybergame.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureCybergame.InitialImage")));
+            this.pictureCybergame.Location = new System.Drawing.Point(6, 253);
+            this.pictureCybergame.Name = "pictureCybergame";
+            this.pictureCybergame.Size = new System.Drawing.Size(20, 20);
+            this.pictureCybergame.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureCybergame.TabIndex = 19;
+            this.pictureCybergame.TabStop = false;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label16.Location = new System.Drawing.Point(31, 113);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(72, 13);
+            this.label16.TabIndex = 7;
+            this.label16.Text = "Cybergame.tv";
+            // 
+            // pictureCybergameStream
+            // 
+            this.pictureCybergameStream.Image = ((System.Drawing.Image)(resources.GetObject("pictureCybergameStream.Image")));
+            this.pictureCybergameStream.Location = new System.Drawing.Point(6, 107);
+            this.pictureCybergameStream.Name = "pictureCybergameStream";
+            this.pictureCybergameStream.Size = new System.Drawing.Size(21, 24);
+            this.pictureCybergameStream.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureCybergameStream.TabIndex = 6;
+            this.pictureCybergameStream.TabStop = false;
+            // 
             // MainForm
             // 
             this.AcceptButton = this.buttonInvisible;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(644, 483);
+            this.ClientSize = new System.Drawing.Size(724, 585);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
@@ -733,7 +785,6 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarTransparency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureCurrentChat)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -751,6 +802,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureSc2tvStream)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureGohaStream)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureStream)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTransparency)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureCybergame)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureCybergameStream)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -809,6 +863,10 @@
         private System.Windows.Forms.Button buttonFullscreen;
         private System.Windows.Forms.TextBox textCommand;
         private System.Windows.Forms.Button buttonCommercial;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.PictureBox pictureCybergame;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.PictureBox pictureCybergameStream;
     }
 }
 

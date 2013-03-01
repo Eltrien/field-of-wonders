@@ -31,7 +31,7 @@
     <PublisherName>Ubiquitous</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>13</ApplicationRevision>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -161,6 +161,10 @@
     <ProjectReference Include="..\dotBattlelog\dotBattlelog.csproj">
       <Project>{AC4CCB95-2F7F-44BE-BCA8-6516EDA2FC38}</Project>
       <Name>dotBattlelog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dotCybergame\dotCybergame.csproj">
+      <Project>{CDFFDB59-8542-4DD3-A8AC-47CDF5E4E012}</Project>
+      <Name>dotCybergame</Name>
     </ProjectReference>
     <ProjectReference Include="..\dotEmpireTV\dotEmpireTV.csproj">
       <Project>{B17F3733-0E27-4604-AD64-62F7A6B56948}</Project>
@@ -296,6 +300,7 @@
   <ItemGroup>
     <Content Include="offline.mp3" />
     <Content Include="online.mp3" />
+    <None Include="Resources\cybergame.bmp" />
     <None Include="Resources\coins.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -395,7 +395,7 @@ namespace dotSteam
 
                 return avatar;
             }
-            catch ( Exception e )
+            catch 
             {
                 return null;
             }
