@@ -629,14 +629,16 @@ namespace Ubiquitous
         }
         private bool isFlood( Message message)
         {
-            
-            if (lastMessagePerEndpoint.FirstOrDefault(m => (m.Text == message.Text && m.ToEndPoint == m.ToEndPoint ) ) != null)
-                return true;
-            else
-                lastMessagePerEndpoint.RemoveAll(m => m.ToEndPoint == message.ToEndPoint);
+            try
+            {
+                if (lastMessagePerEndpoint.FirstOrDefault(m => (m.Text == message.Text && m.ToEndPoint == m.ToEndPoint)) != null)
+                    return true;
+                else
+                    lastMessagePerEndpoint.RemoveAll(m => m.ToEndPoint == message.ToEndPoint);
 
-            lastMessagePerEndpoint.Add(message);
-
+                lastMessagePerEndpoint.Add(message);
+            }
+            catch { }
             return false;
 
         }
