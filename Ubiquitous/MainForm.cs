@@ -79,22 +79,26 @@ namespace Ubiquitous
         }
         private class ChatAlias
         {
-            EndPoint _endpoint;
-            string _alias;
-            public ChatAlias(string alias, EndPoint endpoint)
+            public ChatAlias(string alias, EndPoint endpoint, ChatIcon icon = ChatIcon.Default)
             {
-                _alias = alias;
-                _endpoint = endpoint;
+                Alias = alias;
+                Endpoint = endpoint;
+                Icon = icon;
+            }
+            public ChatIcon Icon
+            {
+                get;
+                set;
             }
             public EndPoint Endpoint
             {
-                get { return _endpoint; }
-                set { _endpoint = value; }
+                get;
+                set;
             }
             public string Alias
             {
-                get { return _alias; }
-                set { _alias = value; }
+                get;
+                set;
             }
 
         }
@@ -355,15 +359,16 @@ namespace Ubiquitous
             lastMessagePerEndpoint = new List<Message>();
             adminCommands.Add(new AdminCommand(@"^/r\s*([^\s]*)\s*(.*)", ReplyCommand));
 
-            chatAliases.Add(new ChatAlias(settings.twitchChatAlias, EndPoint.TwitchTV));
-            chatAliases.Add(new ChatAlias(settings.sc2tvChatAlias, EndPoint.Sc2Tv));
-            chatAliases.Add(new ChatAlias(settings.steamChatAlias, EndPoint.Steam));
-            chatAliases.Add(new ChatAlias(settings.skypeChatAlias, EndPoint.Skype));
-            chatAliases.Add(new ChatAlias(settings.battlelogChatAlias, EndPoint.Battlelog));
-            chatAliases.Add(new ChatAlias(settings.gohaChatAlias, EndPoint.Gohatv));
-            chatAliases.Add(new ChatAlias(settings.empireAlias, EndPoint.Empiretv));
-            chatAliases.Add(new ChatAlias(settings.goodgameChatAlias, EndPoint.Goodgame));
-            chatAliases.Add(new ChatAlias("@all", EndPoint.All));
+            chatAliases.Add(new ChatAlias(settings.twitchChatAlias, EndPoint.TwitchTV, ChatIcon.TwitchTv));
+            chatAliases.Add(new ChatAlias(settings.sc2tvChatAlias, EndPoint.Sc2Tv, ChatIcon.Sc2Tv));
+            chatAliases.Add(new ChatAlias(settings.steamChatAlias, EndPoint.Steam, ChatIcon.Steam));
+            chatAliases.Add(new ChatAlias(settings.skypeChatAlias, EndPoint.Skype, ChatIcon.Skype));
+            chatAliases.Add(new ChatAlias(settings.battlelogChatAlias, EndPoint.Battlelog, ChatIcon.Battlelog));
+            chatAliases.Add(new ChatAlias(settings.gohaChatAlias, EndPoint.Gohatv, ChatIcon.Goha));
+            chatAliases.Add(new ChatAlias(settings.empireAlias, EndPoint.Empiretv, ChatIcon.Empire));
+            chatAliases.Add(new ChatAlias(settings.goodgameChatAlias, EndPoint.Goodgame, ChatIcon.Goodgame));
+            chatAliases.Add(new ChatAlias(settings.cyberAlias, EndPoint.Cybergame, ChatIcon.Cybergame));
+            chatAliases.Add(new ChatAlias("@all", EndPoint.All, ChatIcon.Default));
 
 
             uint.TryParse(settings.Sc2tvId, out sc2ChannelId);
@@ -443,6 +448,12 @@ namespace Ubiquitous
             // Set up the ToolTip text for the Button and Checkbox.
             fullScreenDblClk.SetToolTip(textMessages, "Double click to switch Full screen mode");
 
+            var tooltip = new ToolTip();
+            tooltip.AutoPopDelay = 2000;
+            tooltip.InitialDelay = 0;
+            tooltip.ReshowDelay = 0;
+            tooltip.ShowAlways = false;
+            tooltip.SetToolTip(buttonStreamStartStop, "Click to start/stop streaming in OBS");
             
             #endregion
 
@@ -458,6 +469,11 @@ namespace Ubiquitous
         {
             formTitle = String.Format("{0} {1}", this.Text, GetRunningVersion());
             this.Text = formTitle;
+            contextMenuChat.Items.Clear();
+            foreach (ChatAlias chatAlias in chatAliases)
+            {
+                contextMenuChat.Items.Add(String.Format("{0} ({1})",chatAlias.Endpoint.ToString(), chatAlias.Alias),log.GetChatBitmap(chatAlias.Icon));
+            }
         }
         private Version GetRunningVersion()
         {
@@ -585,30 +601,50 @@ namespace Ubiquitous
         {
             textMessages.LinkClick(e.LinkText);
         }
-        private Result ReplyCommand( string switchto, Message message)
+        private bool SwitchToChat(string alias)
         {
-
-            //TODO Switch chat using given chat alias/user name
-            if (switchto.Length > 0)
+            if (!String.IsNullOrEmpty(alias))
             {
-                var chatAlias = chatAliases.Where(ca => ca.Alias.Trim().ToLower() == switchto.Trim().ToLower()).FirstOrDefault();
+                var chatAlias = chatAliases.Where(ca => ca.Alias.Trim().ToLower() == alias.Trim().ToLower()).FirstOrDefault();
                 if (chatAlias == null)
                 {
                     var knownAliases = "";
                     chatAliases.ForEach(ca => knownAliases += ca.Alias += " ");
                     knownAliases = knownAliases.Trim();
                     SendMessage(new Message(
-                        String.Format("\"{0}\" is unknown chat alias. Use one of: {1}", switchto, knownAliases),
+                        String.Format("\"{0}\" is unknown chat alias. Use one of: {1}", alias, knownAliases),
                         EndPoint.Bot, EndPoint.SteamAdmin)
                     );
-                    return Result.Failed;
+                    return false;
                 }
                 else
                 {
                     currentChat = chatAlias.Endpoint;
+                    if (settings.steamCurrentChatNotify && settings.steamEnabled)
+                    {
+                        var msg = new Message(String.Format("Switching to {0}...", currentChat.ToString()), EndPoint.Bot, EndPoint.SteamAdmin);
+                        if (!isFlood(msg))
+                            SendMessage(msg);
+                    }
+                    else
+                    {
+                        var msg = new Message(String.Format("Switching to {0}...", currentChat.ToString()), chatAlias.Endpoint, EndPoint.Console);
+                        if (!isFlood(msg))
+                            SendMessage(msg);
+                    }
+                    return true;
                 }
             }
-            else if (currentChat != lastMessageSent.FromEndPoint)
+            return false;
+        }
+        private Result ReplyCommand( string switchto, Message message)
+        {
+
+            //TODO Switch chat using given chat alias/user name
+            if (!SwitchToChat(switchto))
+                return Result.Failed;
+
+            if (currentChat != lastMessageSent.FromEndPoint)
             {
                 var chatAlias = chatAliases.Where(ca => ca.Endpoint == lastMessageSent.FromEndPoint).FirstOrDefault();
                 if (chatAlias == null)
@@ -622,12 +658,6 @@ namespace Ubiquitous
                 {
                     currentChat = lastMessageSent.FromEndPoint;
                 }
-            }
-            if (settings.steamCurrentChatNotify)
-            {
-                var msg = new Message(String.Format("Replying to {0}...", currentChat.ToString()),EndPoint.Bot, EndPoint.SteamAdmin);
-                if(!isFlood(msg))
-                    SendMessage(msg);
             }
 
             message.FromEndPoint = EndPoint.SteamAdmin;
@@ -717,6 +747,12 @@ namespace Ubiquitous
                     break;
                 case EndPoint.Empiretv:
                     SendMessageToEmpireTV(message);
+                    break;
+                case EndPoint.Console:
+                    log.WriteLine(message.Text);
+                    break;
+                default:
+                    log.WriteLine("Can't send a message. Chat is readonly!");
                     break;
             }
             if (!isFlood(message))
@@ -998,7 +1034,7 @@ namespace Ubiquitous
         }
         private void setTopMost()
         {
-            if (checkBox1.Checked)
+            if (checkBoxOnTop.Checked)
             {
                 this.TopMost = true;
             }
@@ -1009,7 +1045,7 @@ namespace Ubiquitous
         }
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox2.Checked)
+            if (checkBoxBorder.Checked)
             {
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             }
@@ -1062,13 +1098,9 @@ namespace Ubiquitous
         }
         private void hideTools()
         {
-            if (checkBox1.Visible)
+            if (checkBoxOnTop.Visible)
             {
-                SetVisibility(checkBox1, false);
-                SetVisibility(checkBox2, false);
-                SetVisibility(buttonCommercial, false);
-
-                SetVisibility(trackBarTransparency, false);
+                SetVisibility(panelTools, false);
                 if (TransparencyKey != textMessages.BackColor)
                     SetTransparency(textMessages.BackColor);
             }
@@ -1076,12 +1108,9 @@ namespace Ubiquitous
         }
         private void showTools()
         {
-            if (!checkBox1.Visible)
+            if (!checkBoxOnTop.Visible)
             {
-                SetVisibility(checkBox1, true);
-                SetVisibility(checkBox2, true);
-                SetVisibility(trackBarTransparency, true);
-                SetVisibility(buttonCommercial, true);
+                SetVisibility(panelTools, true);
             }
             if (!trackBarTransparency.Visible)
                 SetVisibility(trackBarTransparency, true);
@@ -2212,13 +2241,64 @@ namespace Ubiquitous
         #region OBS Remote methods and events
         public void ConnectOBSRemote()
         {
-            obsRemote = new OBSRemote();           
+            obsRemote = new OBSRemote();
+            obsRemote.OnLive += new EventHandler<EventArgs>(obsRemote_OnLive);
+            obsRemote.OnOffline += new EventHandler<EventArgs>(obsRemote_OnOffline);
             obsRemote.Connect(settings.obsHost);
 
             //obsRemote.SendTestRequest();
         }
 
+        void obsRemote_OnOffline(object sender, EventArgs e)
+        {
+            buttonStreamStartStop.Image = Properties.Resources.play;
+        }
+
+        void obsRemote_OnLive(object sender, EventArgs e)
+        {
+            buttonStreamStartStop.Image = Properties.Resources.stop;
+        }
+
         #endregion
+
+        private void twitchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //ReplyCommand(
+        }
+
+        private void contextMenuChat_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            SwitchToChat(chatAliases[contextMenuChat.Items.IndexOf(e.ClickedItem)].Alias);
+        }
+
+        private void pictureCurrentChat_Click_1(object sender, EventArgs e)
+        {
+            contextMenuChat.Show(Cursor.Position);
+        }
+
+        private void panelTools_MouseDown(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void buttonStreamStartStop_Click(object sender, EventArgs e)
+        {
+            if (settings.obsRemoteEnable)
+            {
+                if (obsRemote.Opened)
+                {
+                    obsRemote.StartStopStream();
+                }
+                else
+                {
+                    SendMessage(new Message("No connection to OBS plugin!", EndPoint.Bot, EndPoint.SteamAdmin));
+                }
+            }
+            else
+            {
+                SendMessage(new Message("OBS control is not enabled. Check your settings!", EndPoint.Bot, EndPoint.SteamAdmin));
+            }
+        }
 
     }
 }

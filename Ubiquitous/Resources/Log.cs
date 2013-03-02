@@ -64,7 +64,36 @@ namespace Ubiquitous
                 tb.InsertImage(bmp);
             }
         }
-
+        public Bitmap GetChatBitmap( ChatIcon icon)
+        {            
+            switch (icon)
+            {
+                case ChatIcon.Sc2Tv:
+                    return Properties.Resources.sc2icon;
+                case ChatIcon.TwitchTv:
+                    return Properties.Resources.twitchicon;
+                case ChatIcon.Steam:
+                    return Properties.Resources.steamicon;
+                case ChatIcon.Skype:
+                    return Properties.Resources.skypeicon;
+                case ChatIcon.Admin:
+                    return Properties.Resources.adminicon;
+                case ChatIcon.Goodgame:
+                    return Properties.Resources.goodgameicon;
+                case ChatIcon.Battlelog:
+                    return Properties.Resources.bf3icon;
+                case ChatIcon.Empire:
+                    return Properties.Resources.empire;
+                case ChatIcon.Goha:
+                    return Properties.Resources.goha;
+                case ChatIcon.Cybergame:
+                    return Properties.Resources.cybergame;
+                case ChatIcon.Default:
+                    return Properties.Resources.adminicon;
+                default:
+                    return null;
+            }
+        }
         /// <summary>
         /// Writes a line to the textbox. Automaticall adds newline character
         /// </summary>
@@ -82,43 +111,8 @@ namespace Ubiquitous
             }
             else
             {
-                Bitmap chatIcon = null;
-                switch (icon)
-                {
-                    case ChatIcon.Sc2Tv:
-                        chatIcon = Properties.Resources.sc2icon;
-                        break;
-                    case ChatIcon.TwitchTv:
-                        chatIcon = Properties.Resources.twitchicon;
-                        break;
-                    case ChatIcon.Steam:
-                        chatIcon = Properties.Resources.steamicon;
-                        break;
-                    case ChatIcon.Skype:
-                        chatIcon = Properties.Resources.skypeicon;
-                        break;
-                    case ChatIcon.Admin:
-                        chatIcon = Properties.Resources.adminicon;
-                        break;
-                    case ChatIcon.Goodgame:
-                        chatIcon = Properties.Resources.goodgameicon;
-                        break;
-                    case ChatIcon.Battlelog:
-                        chatIcon = Properties.Resources.bf3icon;
-                        break;
-                    case ChatIcon.Empire:
-                        chatIcon = Properties.Resources.empire;
-                        break;
-                    case ChatIcon.Goha:
-                        chatIcon = Properties.Resources.goha;
-                        break;
-                    case ChatIcon.Cybergame:
-                        chatIcon = Properties.Resources.cybergame;
-                        break;
-                    default:
-                        chatIcon = null;
-                        break;
-                }
+                Bitmap chatIcon = GetChatBitmap(icon);
+
 
                 if( tb.Text.Length > 0 )
                     tb.AppendText(Environment.NewLine);

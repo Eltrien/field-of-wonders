@@ -13,6 +13,8 @@ namespace dotOBS
     public class OBSRemote
     {
         public event EventHandler<OBSMessageEventArgs> OnMessage;
+        public event EventHandler<EventArgs> OnLive;
+        public event EventHandler<EventArgs> OnOffline;
 
         WebSocket socket;
         string _host;
@@ -71,12 +73,52 @@ namespace dotOBS
             if( string.IsNullOrEmpty(e.Message ))
                 return;
 
-            if( e.Message.Contains("StreamStatus") )
+            if (e.Message.Contains("StreamStatus"))
             {
                 var streamStatus = JsonGenerics.ParseJson<StreamStatus>.ReadObject(e.Message);
+                if (Status != null)
+                {
+                    if (Status.streaming != streamStatus.streaming)
+                    {
+                        if (streamStatus.streaming)
+                        {
+                            if (OnLive != null)
+                                OnLive(this, EventArgs.Empty);
+                        }
+                        else
+                        {
+                            if (OnOffline != null)
+                                OnOffline(this, EventArgs.Empty);
+                        }
+                    }
+                }
                 if (streamStatus != null)
                     Status = streamStatus;
+
             }
+            else if (e.Message.Contains("StreamStopping"))
+            {
+                if (OnOffline != null)
+                    OnOffline(this, EventArgs.Empty);
+
+                Status.fps = 0;
+                Status.bitrate = 0;
+                Status.framesDropped = 0;
+                Status.framesTotal = 0;
+                Status.strain = 0;
+                Status.streaming = false;
+
+            }
+            else if (e.Message.Contains("StreamStarting"))
+            {
+                if (OnLive != null)
+                    OnLive(this, EventArgs.Empty);
+            }
+            else
+            {
+                Debug.Print(e.Message);
+            }
+            
             if( OnMessage != null )
                 OnMessage(this, new OBSMessageEventArgs(e.Message));
             //throw new NotImplementedException();
