@@ -484,6 +484,7 @@ namespace Ubiquitous
             SwitchBorder();
             Size = new System.Drawing.Size(settings.mainformWidth, settings.mainformHeight);
 
+
             TopMost = settings.globalOnTop;
             StartPosition = settings.mainformStartPos;
             Location = settings.mainFormPosition;
@@ -575,7 +576,7 @@ namespace Ubiquitous
 
         private void buttonSettings_Click_1(object sender, EventArgs e)
         {
-            var lastOnTopState = this.TopMost;
+            var lastOnTopState = this.TopMost;  
             this.TopMost = false;
             SettingsDialog settingsForm = new SettingsDialog();
             settingsForm.ShowDialog();
@@ -867,6 +868,87 @@ namespace Ubiquitous
         {
             pictureCurrentChat.ContextMenuStrip.Show();
         }
+        private void SwitchPlayersOn(bool switchGoha, bool switchSc2tv)
+        {
+            if (switchGoha && gohaTVstream != null)
+            {
+                if (gohaTVstream.LoggedIn && gohaTVstream.StreamStatus == "off")
+                {
+                    gohaTVstream.SwitchStream();
+                    if (gohaTVstream.StreamStatus == "off")
+                    {
+                        streamStatus.SetOff(pictureGohaStream);
+                        MessageBox.Show("Goha Live Stream Player wasn't switched on! Do it manually!");
+                    }
+                    else
+                    {
+                        SendMessage(new Message(String.Format("Goha: Live Stream Player switched on!"), EndPoint.Gohatv, EndPoint.Console));
+                        streamStatus.SetOn(pictureGohaStream);
+                    }
+                }
+            }
+
+            if (switchSc2tv && sc2tv != null)
+            {
+                sc2tv.LoadStreamSettings();
+                if (sc2tv.LoggedIn && !sc2tv.isLive())
+                {
+                    sc2tv.setLiveStatus(false);
+                    sc2tv.LoadStreamSettings();
+                    if (!sc2tv.isLive())
+                    {
+                        streamStatus.SetOff(pictureSc2tvStream);
+                        MessageBox.Show("Sc2tv Live Stream Player wasn't switched on! Do it manually!");                        
+                    }
+                    else
+                    {
+                        SendMessage(new Message(String.Format("Sc2Tv: Live Stream Player switched on!"), EndPoint.Sc2Tv, EndPoint.Console));
+                        streamStatus.SetOn(pictureSc2tvStream);
+                    }
+                }
+            }
+
+        }
+        private void SwitchPlayersOff( bool switchGoha, bool switchSc2tv)
+        {
+            
+            if( switchGoha && gohaTVstream != null )
+            {
+                if (gohaTVstream.LoggedIn && gohaTVstream.StreamStatus == "on")
+                {
+                    gohaTVstream.SwitchStream();
+                    if (gohaTVstream.StreamStatus == "on")
+                    {
+                        MessageBox.Show("Goha Live Stream Player wasn't switched off! Do it manually!");
+                    }
+                    else
+                    {
+                        SendMessage(new Message(String.Format("Goha: Live Stream Player switched off!"), EndPoint.Gohatv, EndPoint.Console));
+                        streamStatus.SetOff(pictureGohaStream);
+                    }
+                }
+            }
+
+            if (switchSc2tv && sc2tv != null)
+            {
+                sc2tv.LoadStreamSettings();
+                if( sc2tv.LoggedIn && sc2tv.isLive() )
+                {
+                    sc2tv.setLiveStatus(false);
+                    sc2tv.LoadStreamSettings();
+                    if (sc2tv.isLive())
+                    {
+                        MessageBox.Show("Sc2tv Live Stream Player wasn't switched off! Do it manually!");
+                    }
+                    else
+                    {
+                        SendMessage(new Message(String.Format("Sc2Tv: Live Stream Player switched off!"), EndPoint.Sc2Tv, EndPoint.Console));
+                        streamStatus.SetOff(pictureSc2tvStream);
+                    }
+                }
+            }
+
+        }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             settings.mainformWidth = Size.Width;
@@ -880,26 +962,7 @@ namespace Ubiquitous
             try
             {
 
-                if ( (settings.gohaStreamControl || settings.gohaStreamControlOnStartExit)
-                    && gohaTVstream.StreamStatus == "on")
-                {
-                    gohaTVstream.SwitchStream();
-                }
-
-                if (settings.sc2StreamAutoSwitch && sc2tv.isLive())
-                {
-                    SendMessage(new Message(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.Console));
-                    sc2tv.setLiveStatus(false);
-                    sc2tv.LoadStreamSettings();
-                    if (sc2tv.isLive())
-                    {
-                        this.Visible = true;
-                        MessageBox.Show("Stream wasn't switched automatically! Do it manually!");
-                        e.Cancel = true;
-                        return;
-                    }
-                    streamStatus.SetOff(pictureSc2tvStream);
-                }
+                SwitchPlayersOff( true, true );
 
                 var b1 = new BGWorker( StopTwitchIRC, null );
                 var b2 = new BGWorker( StopGohaIRC, null );
@@ -1056,11 +1119,16 @@ namespace Ubiquitous
         {
             if (checkBoxOnTop.Checked)
             {
-                this.TopMost = true;
+                Debug.Print("set on top");
+                TopMost = true;
+
+                settings.globalOnTop = true;
             }
             else
             {
-                this.TopMost = false;
+                Debug.Print("disable on top");
+                TopMost = false;
+                settings.globalOnTop = false;
             }
         }
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
@@ -1273,6 +1341,8 @@ namespace Ubiquitous
         }
         private void timerEverySecond_Tick(object sender, EventArgs e)
         {
+            if( settings.globalOnTop != TopMost )
+                TopMost = settings.globalOnTop;
             UInt32 twitchViewers = 0, cybergameViewers = 0;
             if (twitchChannel != null)
                 UInt32.TryParse( twitchChannel.Viewers, out twitchViewers);
@@ -1705,6 +1775,7 @@ namespace Ubiquitous
                 e.Cancel = true;
                 return;
             }
+            
             UpdateSc2TvMessages();
         }
         private void bWorkerSc2TvPoll_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -1726,7 +1797,7 @@ namespace Ubiquitous
                 if (sc2ChannelId != 0 )
                 {
                     if (!sc2tv.updateChat(sc2ChannelId))
-                        SendMessageToSc2Tv(new Message(".", EndPoint.SteamAdmin, EndPoint.Sc2Tv));
+                        SendMessageToSc2Tv(new Message("Revive!", EndPoint.SteamAdmin, EndPoint.Sc2Tv));
                     
                     sc2tv.LoadStreamSettings();
                     if (sc2tv.ChannelIsLive)
@@ -1791,10 +1862,14 @@ namespace Ubiquitous
             catch { }
         }
         private void UpdateSc2TvMessages()
-        {            
+        {
+            if (!sc2tv.LoggedIn)
+                return;
             if (!sc2tv.updateChat(sc2ChannelId))
             {
                 SendMessage(new Message(String.Format(@"Sc2tv channel #{0} is unavailable", sc2ChannelId ), EndPoint.Sc2Tv, EndPoint.Console));
+                SendMessageToSc2Tv(new Message("Revive!", EndPoint.SteamAdmin, EndPoint.Sc2Tv));
+
             }
             Thread.Sleep(5000);            
         }
@@ -2378,11 +2453,14 @@ namespace Ubiquitous
         void obsRemote_OnOffline(object sender, EventArgs e)
         {
             buttonStreamStartStop.Image = Properties.Resources.play;
+            SwitchPlayersOff(true,true);
         }
+
 
         void obsRemote_OnLive(object sender, EventArgs e)
         {
             buttonStreamStartStop.Image = Properties.Resources.stop;
+            SwitchPlayersOn(true,true);
         }
 
         #endregion
@@ -2424,6 +2502,7 @@ namespace Ubiquitous
             {
                 SendMessage(new Message("OBS control is not enabled. Check your settings!", EndPoint.Bot, EndPoint.SteamAdmin));
             }
+
         }
 
         private void contextSceneSwitch_Closing(object sender, ToolStripDropDownClosingEventArgs e)

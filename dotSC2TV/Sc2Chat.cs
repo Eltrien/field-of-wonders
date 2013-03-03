@@ -384,9 +384,10 @@ namespace dotSC2TV
                 return;
             }
             string formBuildId = getLoginFormId();
-
-            if (formBuildId == "")
+            
+            if (String.IsNullOrEmpty(formBuildId))
             {
+                Debug.Print("Can't find Form Build ID. Check RE");
                 return;
             }
             else if (formBuildId != null)
@@ -602,7 +603,6 @@ namespace dotSC2TV
         #region "Private methods"
         private string getLoginFormId( string html = "" )
         {
-            
             if (html == "")
             {
                 try
