@@ -15,6 +15,10 @@ namespace dotOBS
         public event EventHandler<OBSMessageEventArgs> OnMessage;
         public event EventHandler<EventArgs> OnLive;
         public event EventHandler<EventArgs> OnOffline;
+        public event EventHandler<EventArgs> OnError;
+        public event EventHandler<OBSSceneStatusEventArgs> OnSceneList;
+        public event EventHandler<OBSMessageEventArgs> OnSceneSet;
+        public event EventHandler<OBSSourceEventArgs> OnSourceChange;
 
         WebSocket socket;
         string _host;
@@ -41,6 +45,16 @@ namespace dotOBS
             socket.Open();
             
         }
+        public void SetCurrentScene(string sceneName)
+        {
+            var msg = "{\"request-type\":\"SetCurrentScene\",\"scene-name\":\"" + sceneName + "\",\"message-id\":\"" + MessageId + "\"}";
+            socket.Send(msg);
+        }
+        public void SetSourceRenderer(String sourceName, bool enable)
+        {
+            var msg = "{\"request-type\":\"SetSourceRender\",\"source\":\"" + sourceName + "\",\"render\":" + enable.ToString().ToLower() +",\"message-id\":\"" + MessageId + "\"}";
+            socket.Send(msg);
+        }
         public bool Opened
         {
             get { return socket.State == WebSocketState.Open; }
@@ -63,9 +77,8 @@ namespace dotOBS
 
         void socket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
-            Thread.Sleep(1000);
-            Connect(_host);
-            //throw new NotImplementedException();
+            if (OnError != null)
+                OnError(this, EventArgs.Empty);
         }
 
         void socket_MessageReceived(object sender, MessageReceivedEventArgs e)
@@ -113,6 +126,37 @@ namespace dotOBS
             {
                 if (OnLive != null)
                     OnLive(this, EventArgs.Empty);
+            }
+            else if (e.Message.Contains("\"current-scene\":"))
+            {
+                var sceneStatus = JsonGenerics.ParseJson<SceneStatus>.ReadObject(e.Message);
+                if (sceneStatus != null)
+                {
+                    if (OnSceneList != null)
+                        OnSceneList(this, new OBSSceneStatusEventArgs(sceneStatus));
+                }
+            }
+            else if (e.Message.Contains("\"SwitchScenes\","))
+            {
+                var sceneSwitch = JsonGenerics.ParseJson<SwitchScenes>.ReadObject(e.Message);
+                if (sceneSwitch == null)
+                    return;
+
+                if (OnSceneSet != null)
+                {
+                    OnSceneSet(this, new OBSMessageEventArgs(sceneSwitch.sceneName));
+                }
+            }
+            else if (e.Message.Contains("\"SourceChanged\","))
+            {
+                var sourceChange = JsonGenerics.ParseJson<SourceChange>.ReadObject(e.Message);
+                if (sourceChange == null)
+                    return;
+
+                if (OnSourceChange != null)
+                {
+                    OnSourceChange(this, new OBSSourceEventArgs(sourceChange.source));
+                }
             }
             else
             {
@@ -175,5 +219,23 @@ namespace dotOBS
         }
 
         public string Message { get; private set; }
+    }
+    public class OBSSceneStatusEventArgs : EventArgs
+    {
+        public OBSSceneStatusEventArgs(SceneStatus status)
+        {
+            Status = status;
+        }
+
+        public SceneStatus Status { get; private set; }
+    }
+    public class OBSSourceEventArgs : EventArgs
+    {
+        public OBSSourceEventArgs (Source source)
+        {
+            Source = source;
+        }
+
+        public Source Source { get; private set; }
     }
 }

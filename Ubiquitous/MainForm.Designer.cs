@@ -41,6 +41,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panelTools = new System.Windows.Forms.Panel();
             this.buttonStreamStartStop = new System.Windows.Forms.Button();
+            this.contextSceneSwitch = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.asdfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxBorder = new System.Windows.Forms.CheckBox();
             this.buttonCommercial = new System.Windows.Forms.Button();
             this.checkBoxOnTop = new System.Windows.Forms.CheckBox();
@@ -92,6 +94,7 @@
             this.contextMenuChat.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panelTools.SuspendLayout();
+            this.contextSceneSwitch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTransparency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureCurrentChat)).BeginInit();
@@ -205,23 +208,40 @@
             this.panelTools.Controls.Add(this.trackBarTransparency);
             this.panelTools.Location = new System.Drawing.Point(51, 1);
             this.panelTools.Name = "panelTools";
-            this.panelTools.Size = new System.Drawing.Size(264, 17);
+            this.panelTools.Size = new System.Drawing.Size(283, 17);
             this.panelTools.TabIndex = 35;
             this.panelTools.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTools_MouseDown);
             // 
             // buttonStreamStartStop
             // 
+            this.buttonStreamStartStop.ContextMenuStrip = this.contextSceneSwitch;
             this.buttonStreamStartStop.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonStreamStartStop.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonStreamStartStop.Font = new System.Drawing.Font("Chiller", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStreamStartStop.Image = global::Ubiquitous.Properties.Resources.play;
-            this.buttonStreamStartStop.Location = new System.Drawing.Point(245, 0);
+            this.buttonStreamStartStop.Location = new System.Drawing.Point(262, 0);
             this.buttonStreamStartStop.Margin = new System.Windows.Forms.Padding(0);
             this.buttonStreamStartStop.Name = "buttonStreamStartStop";
-            this.buttonStreamStartStop.Size = new System.Drawing.Size(17, 17);
+            this.buttonStreamStartStop.Size = new System.Drawing.Size(20, 17);
             this.buttonStreamStartStop.TabIndex = 5;
             this.buttonStreamStartStop.UseVisualStyleBackColor = true;
             this.buttonStreamStartStop.Click += new System.EventHandler(this.buttonStreamStartStop_Click);
+            // 
+            // contextSceneSwitch
+            // 
+            this.contextSceneSwitch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.asdfToolStripMenuItem});
+            this.contextSceneSwitch.Name = "contextSceneSwitch";
+            this.contextSceneSwitch.Size = new System.Drawing.Size(129, 26);
+            this.contextSceneSwitch.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextSceneSwitch_Closing);
+            this.contextSceneSwitch.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextSceneSwitch_ItemClicked);
+            // 
+            // asdfToolStripMenuItem
+            // 
+            this.asdfToolStripMenuItem.CheckOnClick = true;
+            this.asdfToolStripMenuItem.Name = "asdfToolStripMenuItem";
+            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.asdfToolStripMenuItem.Text = "No scenes";
             // 
             // checkBoxBorder
             // 
@@ -231,9 +251,9 @@
             this.checkBoxBorder.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalHideBorder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxBorder.Location = new System.Drawing.Point(63, 0);
             this.checkBoxBorder.Name = "checkBoxBorder";
-            this.checkBoxBorder.Size = new System.Drawing.Size(57, 17);
+            this.checkBoxBorder.Size = new System.Drawing.Size(74, 17);
             this.checkBoxBorder.TabIndex = 2;
-            this.checkBoxBorder.Text = "Border";
+            this.checkBoxBorder.Text = "No Border";
             this.checkBoxBorder.UseVisualStyleBackColor = false;
             this.checkBoxBorder.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
@@ -243,10 +263,10 @@
             this.buttonCommercial.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonCommercial.Font = new System.Drawing.Font("Chiller", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonCommercial.Image = global::Ubiquitous.Properties.Resources.coins;
-            this.buttonCommercial.Location = new System.Drawing.Point(224, 0);
+            this.buttonCommercial.Location = new System.Drawing.Point(238, 0);
             this.buttonCommercial.Margin = new System.Windows.Forms.Padding(0);
             this.buttonCommercial.Name = "buttonCommercial";
-            this.buttonCommercial.Size = new System.Drawing.Size(17, 17);
+            this.buttonCommercial.Size = new System.Drawing.Size(22, 17);
             this.buttonCommercial.TabIndex = 4;
             this.buttonCommercial.UseVisualStyleBackColor = true;
             this.buttonCommercial.Click += new System.EventHandler(this.button1_Click);
@@ -272,7 +292,7 @@
             this.trackBarTransparency.AutoSize = false;
             this.trackBarTransparency.BackColor = System.Drawing.Color.Black;
             this.trackBarTransparency.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Ubiquitous.Properties.Settings.Default, "globalTransparency", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.trackBarTransparency.Location = new System.Drawing.Point(120, 0);
+            this.trackBarTransparency.Location = new System.Drawing.Point(138, 0);
             this.trackBarTransparency.Maximum = 100;
             this.trackBarTransparency.Minimum = 20;
             this.trackBarTransparency.Name = "trackBarTransparency";
@@ -313,16 +333,17 @@
             this.textMessages.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textMessages.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.textMessages.HiglightColor = SC2TV.RTFControl.RtfColor.Black;
-            this.textMessages.Location = new System.Drawing.Point(0, 3);
+            this.textMessages.Location = new System.Drawing.Point(0, -1);
             this.textMessages.Name = "textMessages";
             this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.textMessages.Size = new System.Drawing.Size(580, 561);
+            this.textMessages.Size = new System.Drawing.Size(580, 567);
             this.textMessages.TabIndex = 23;
             this.textMessages.Text = "";
             this.textMessages.TextColor = SC2TV.RTFControl.RtfColor.Aqua;
             this.textMessages.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textMessages_LinkClicked);
             this.textMessages.Click += new System.EventHandler(this.textMessages_Click);
             this.textMessages.SizeChanged += new System.EventHandler(this.textMessages_SizeChanged);
+            this.textMessages.TextChanged += new System.EventHandler(this.textMessages_TextChanged);
             this.textMessages.DoubleClick += new System.EventHandler(this.textMessages_DoubleClick);
             this.textMessages.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseDown);
             this.textMessages.MouseLeave += new System.EventHandler(this.textMessages_MouseLeave);
@@ -808,9 +829,15 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(724, 585);
             this.Controls.Add(this.panel1);
+            this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "mainFormPosition", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.DataBindings.Add(new System.Windows.Forms.Binding("TopMost", global::Ubiquitous.Properties.Settings.Default, "mainformTopMost", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.DataBindings.Add(new System.Windows.Forms.Binding("StartPosition", global::Ubiquitous.Properties.Settings.Default, "mainformStartPos", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Location = global::Ubiquitous.Properties.Settings.Default.mainFormPosition;
             this.Name = "MainForm";
+            this.StartPosition = global::Ubiquitous.Properties.Settings.Default.mainformStartPos;
             this.Text = "Ubiquitous - MultiChat";
+            this.TopMost = global::Ubiquitous.Properties.Settings.Default.mainformTopMost;
             this.Activated += new System.EventHandler(this.MainForm_Activated);
             this.Deactivate += new System.EventHandler(this.MainForm_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -825,6 +852,7 @@
             this.panel1.PerformLayout();
             this.panelTools.ResumeLayout(false);
             this.panelTools.PerformLayout();
+            this.contextSceneSwitch.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTransparency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureCurrentChat)).EndInit();
@@ -911,6 +939,8 @@
         private System.Windows.Forms.ToolStripMenuItem allToolStripMenuItem;
         private System.Windows.Forms.Panel panelTools;
         private System.Windows.Forms.Button buttonStreamStartStop;
+        private System.Windows.Forms.ContextMenuStrip contextSceneSwitch;
+        private System.Windows.Forms.ToolStripMenuItem asdfToolStripMenuItem;
     }
 }
 

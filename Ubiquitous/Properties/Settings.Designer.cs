@@ -934,5 +934,77 @@ namespace Ubiquitous.Properties {
                 this["obsHost"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isFullscreenMode {
+            get {
+                return ((bool)(this["isFullscreenMode"]));
+            }
+            set {
+                this["isFullscreenMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point mainFormPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["mainFormPosition"]));
+            }
+            set {
+                this["mainFormPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool mainformTopMost {
+            get {
+                return ((bool)(this["mainformTopMost"]));
+            }
+            set {
+                this["mainformTopMost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("CenterScreen")]
+        public global::System.Windows.Forms.FormStartPosition mainformStartPos {
+            get {
+                return ((global::System.Windows.Forms.FormStartPosition)(this["mainformStartPos"]));
+            }
+            set {
+                this["mainformStartPos"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("740")]
+        public int mainformWidth {
+            get {
+                return ((int)(this["mainformWidth"]));
+            }
+            set {
+                this["mainformWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("620")]
+        public int mainformHeight {
+            get {
+                return ((int)(this["mainformHeight"]));
+            }
+            set {
+                this["mainformHeight"] = value;
+            }
+        }
     }
 }

@@ -35,6 +35,7 @@ namespace Ubiquitous
         delegate void SetVisibilityCB(Control control, bool state);
         delegate void SetComboValueCB(ComboBox combo, object value);
         delegate void SetTooltipCB(ToolTip tooltip, Control control, string value);
+        delegate void SetCheckedToolTipCB(ToolStripMenuItem item, bool state);
         #region Private classes and enums
         private enum EndPoint
         {
@@ -340,6 +341,7 @@ namespace Ubiquitous
         private List<ChatUser> chatUsers;
         private bool isDisconnecting = false;
         private ToolTip viewersTooltip;
+        private bool btnClose = true;
         #endregion 
 
         #region Form events and methods
@@ -425,6 +427,8 @@ namespace Ubiquitous
             settings.PropertyChanged += new PropertyChangedEventHandler(settings_PropertyChanged);
             settings.SettingsSaving += new SettingsSavingEventHandler(settings_SettingsSaving);
 
+
+
             Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
             #region Set tooltips
             ToolTip fullScreenDblClk = new ToolTip();
@@ -467,6 +471,7 @@ namespace Ubiquitous
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
+
             formTitle = String.Format("{0} {1}", this.Text, GetRunningVersion());
             this.Text = formTitle;
             contextMenuChat.Items.Clear();
@@ -474,6 +479,15 @@ namespace Ubiquitous
             {
                 contextMenuChat.Items.Add(String.Format("{0} ({1})",chatAlias.Endpoint.ToString(), chatAlias.Alias),log.GetChatBitmap(chatAlias.Icon));
             }
+            if (settings.isFullscreenMode)
+                switchFullScreenMode();
+            SwitchBorder();
+            Size = new System.Drawing.Size(settings.mainformWidth, settings.mainformHeight);
+
+            TopMost = settings.globalOnTop;
+            StartPosition = settings.mainformStartPos;
+            Location = settings.mainFormPosition;
+
         }
         private Version GetRunningVersion()
         {
@@ -561,9 +575,12 @@ namespace Ubiquitous
 
         private void buttonSettings_Click_1(object sender, EventArgs e)
         {
+            var lastOnTopState = this.TopMost;
+            this.TopMost = false;
             SettingsDialog settingsForm = new SettingsDialog();
             settingsForm.ShowDialog();
             ProtectConfig();
+            this.TopMost = lastOnTopState;
 
         }
         private void comboSc2Channels_DropDown(object sender, EventArgs e)
@@ -852,6 +869,9 @@ namespace Ubiquitous
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            settings.mainformWidth = Size.Width;
+            settings.mainformHeight = Size.Height;
+            settings.Save();
             this.Visible = false;
             isDisconnecting = true;
             e.Cancel = true;
@@ -1045,6 +1065,10 @@ namespace Ubiquitous
         }
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
+            SwitchBorder();
+        }
+        private void SwitchBorder()
+        {
             if (checkBoxBorder.Checked)
             {
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -1053,20 +1077,21 @@ namespace Ubiquitous
             {
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             }
-
         }
         private void switchFullScreenMode()
         {
             if (textMessages.Dock == DockStyle.Fill)
             {
+                settings.isFullscreenMode = false;
                 textMessages.Dock = DockStyle.None;
                 textMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
-                textMessages.Height = textCommand.Top - 5;
+                textMessages.Height = textCommand.Top;
                 textMessages.Width = groupBox1.Left - 5;
                 textMessages.ScrollToEnd();
             }
             else
             {
+                settings.isFullscreenMode = true;
                 textMessages.Dock = DockStyle.Fill;
                 textMessages.ScrollToEnd();
             }
@@ -1127,6 +1152,18 @@ namespace Ubiquitous
             else
             {
                 tooltip.SetToolTip(control, value);
+            }
+        }
+        private void SetCheckedToolTip(ToolStripMenuItem item, bool state)
+        {
+            if (item.GetCurrentParent().InvokeRequired)
+            {
+                SetCheckedToolTipCB d = new SetCheckedToolTipCB(SetCheckedToolTip);
+                item.GetCurrentParent().Invoke(d, new object[] { item, state });
+            }
+            else
+            {
+                item.Checked = state;
             }
         }
         private void SetTransparency(Color color)
@@ -2244,9 +2281,98 @@ namespace Ubiquitous
             obsRemote = new OBSRemote();
             obsRemote.OnLive += new EventHandler<EventArgs>(obsRemote_OnLive);
             obsRemote.OnOffline += new EventHandler<EventArgs>(obsRemote_OnOffline);
+            obsRemote.OnError += new EventHandler<EventArgs>(obsRemote_OnError);
+            obsRemote.OnSceneList += new EventHandler<OBSSceneStatusEventArgs>(obsRemote_OnSceneList);
+            obsRemote.OnSceneSet += new EventHandler<OBSMessageEventArgs>(obsRemote_OnSceneSet);
+            obsRemote.OnSourceChange += new EventHandler<OBSSourceEventArgs>(obsRemote_OnSourceChange);
             obsRemote.Connect(settings.obsHost);
+        }
 
-            //obsRemote.SendTestRequest();
+        void obsRemote_OnSourceChange(object sender, OBSSourceEventArgs e)
+        {
+            foreach (ToolStripMenuItem item in contextSceneSwitch.Items)
+            {
+                if (item.Checked)
+                {
+                    foreach (ToolStripMenuItem subitem in item.DropDownItems)
+                    {
+                        if (subitem.Text == e.Source.name)
+                        {
+                            SetCheckedToolTip(subitem, e.Source.render);
+                        }
+                    }
+                }
+            }
+            
+        }
+
+        void obsRemote_OnSceneSet(object sender, OBSMessageEventArgs e)
+        {
+            var sceneName = e.Message;
+            if (String.IsNullOrEmpty(sceneName))
+                return;
+
+            foreach (ToolStripMenuItem item in contextSceneSwitch.Items)
+            {
+                if (item.Text == sceneName)
+                {
+                    SetCheckedToolTip(item, true);
+                }
+                else
+                {
+                    SetCheckedToolTip(item, false);
+                }
+            }
+        }
+
+        void obsRemote_OnSceneList(object sender, OBSSceneStatusEventArgs e)
+        {
+            contextSceneSwitch.Items.Clear();
+            if (e.Status.scenes.Count <= 0)
+            {
+                contextSceneSwitch.Items.Add("No scenes");
+                return;
+            }
+
+            foreach (Scene scene in e.Status.scenes)
+            {
+                ToolStripMenuItem item = (ToolStripMenuItem)contextSceneSwitch.Items.Add(scene.name);
+                if (e.Status.currentScene == scene.name)
+                    item.Checked = true;
+
+                foreach (Source source in scene.sources)
+                {
+                    ToolStripMenuItem subitem = (ToolStripMenuItem)item.DropDownItems.Add(source.name,null, contextSceneSwitch_onClick);
+                    subitem.MouseDown += new MouseEventHandler(subitem_MouseDown);                    
+                    if (source.render)
+                        subitem.Checked = true;
+                }
+            }
+        }
+
+        void subitem_MouseDown(object sender, MouseEventArgs e)
+        {
+            btnClose = false;
+        }
+
+        void contextSceneSwitch_onClick(object sender, EventArgs e)
+        {
+            ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+            obsRemote.SetSourceRenderer(clickedItem.Text, !clickedItem.Checked);
+        }
+        private void contextSceneSwitch_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if( !settings.obsRemoteEnable )
+                return;
+
+            var menuItem = (ToolStripMenuItem)e.ClickedItem;
+            obsRemote.SetCurrentScene(menuItem.Text);
+        }
+
+        void obsRemote_OnError(object sender, EventArgs e)
+        {
+            Thread.Sleep(3000);
+            ConnectOBSRemote();
         }
 
         void obsRemote_OnOffline(object sender, EventArgs e)
@@ -2299,6 +2425,19 @@ namespace Ubiquitous
                 SendMessage(new Message("OBS control is not enabled. Check your settings!", EndPoint.Bot, EndPoint.SteamAdmin));
             }
         }
+
+        private void contextSceneSwitch_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        {
+            //e.Cancel = !btnClose;
+            //btnClose = true;
+        }
+
+        private void textMessages_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
 
     }
 }

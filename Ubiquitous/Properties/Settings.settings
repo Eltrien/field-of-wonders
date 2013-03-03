@@ -230,5 +230,23 @@
     <Setting Name="obsHost" Type="System.String" Scope="User">
       <Value Profile="(Default)">localhost</Value>
     </Setting>
+    <Setting Name="isFullscreenMode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="mainFormPosition" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="mainformTopMost" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="mainformStartPos" Type="System.Windows.Forms.FormStartPosition" Scope="User">
+      <Value Profile="(Default)">CenterScreen</Value>
+    </Setting>
+    <Setting Name="mainformWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">740</Value>
+    </Setting>
+    <Setting Name="mainformHeight" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">620</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

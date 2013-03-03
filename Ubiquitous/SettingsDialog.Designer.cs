@@ -28,26 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Steam");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Cybergame.tv");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Twitch.tv");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Sc2Tv.ru");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Skype");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Goodgame.ru");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Battlelog");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Goha.tv");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Stream control/monitor");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Empire.tv");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Cybergame.tv");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Steam");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Twitch.tv");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Sc2Tv.ru");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Skype");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Goodgame.ru");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Battlelog");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Goha.tv");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Stream control/monitor");
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Empire.tv");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsDialog));
             this.settingsTree1 = new mycontrol.SettingsTree();
-            this.settingsPage10 = new mycontrol.SettingsPage();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label28 = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
-            this.textBox24 = new System.Windows.Forms.TextBox();
-            this.checkBox34 = new System.Windows.Forms.CheckBox();
-            this.textBox28 = new System.Windows.Forms.TextBox();
-            this.textBox29 = new System.Windows.Forms.TextBox();
             this.settingsPage1 = new mycontrol.SettingsPage();
             this.checkBox28 = new System.Windows.Forms.CheckBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
@@ -150,9 +142,15 @@
             this.checkBox32 = new System.Windows.Forms.CheckBox();
             this.textBox26 = new System.Windows.Forms.TextBox();
             this.textBox27 = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.settingsTree1.SplitContainer)).BeginInit();
+            this.settingsPage10 = new mycontrol.SettingsPage();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.textBox24 = new System.Windows.Forms.TextBox();
+            this.checkBox34 = new System.Windows.Forms.CheckBox();
+            this.textBox28 = new System.Windows.Forms.TextBox();
+            this.textBox29 = new System.Windows.Forms.TextBox();
             this.settingsTree1.SplitContainer.Panel2.SuspendLayout();
-            this.settingsPage10.SuspendLayout();
             this.settingsPage1.SuspendLayout();
             this.settingsPage2.SuspendLayout();
             this.settingsPage3.SuspendLayout();
@@ -164,14 +162,15 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.settingsPage9.SuspendLayout();
+            this.settingsPage10.SuspendLayout();
             this.SuspendLayout();
             // 
             // settingsTree1
             // 
             treeNode1.Name = "";
-            treeNode1.Text = "Steam";
+            treeNode1.Text = "Cybergame.tv";
             this.settingsTree1.CurrentNode = treeNode1;
-            this.settingsTree1.CurrentPage = this.settingsPage1;
+            this.settingsTree1.CurrentPage = this.settingsPage10;
             this.settingsTree1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.settingsTree1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.settingsTree1.LabelEdit = false;
@@ -210,7 +209,6 @@
             this.settingsTree1.TreeView.Location = new System.Drawing.Point(0, 0);
             this.settingsTree1.TreeView.Name = "treeSettings";
             this.settingsTree1.TreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
             treeNode2,
             treeNode3,
             treeNode4,
@@ -219,103 +217,11 @@
             treeNode7,
             treeNode8,
             treeNode9,
-            treeNode10});
+            treeNode10,
+            treeNode1});
             this.settingsTree1.TreeView.Size = new System.Drawing.Size(164, 316);
             this.settingsTree1.TreeView.TabIndex = 0;
             this.settingsTree1.Load += new System.EventHandler(this.settingsTree1_Load);
-            // 
-            // settingsPage10
-            // 
-            this.settingsPage10.Controls.Add(this.label24);
-            this.settingsPage10.Controls.Add(this.label28);
-            this.settingsPage10.Controls.Add(this.label29);
-            this.settingsPage10.Controls.Add(this.textBox24);
-            this.settingsPage10.Controls.Add(this.checkBox34);
-            this.settingsPage10.Controls.Add(this.textBox28);
-            this.settingsPage10.Controls.Add(this.textBox29);
-            this.settingsPage10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsPage10.isActive = true;
-            this.settingsPage10.Location = new System.Drawing.Point(0, 0);
-            this.settingsPage10.Name = "settingsPage10";
-            treeNode10.Name = "";
-            treeNode10.Text = "Cybergame.tv";
-            this.settingsPage10.ParentNode = treeNode10;
-            this.settingsPage10.Size = new System.Drawing.Size(315, 316);
-            this.settingsPage10.TabIndex = 9;
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label24.Location = new System.Drawing.Point(24, 48);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(53, 13);
-            this.label24.TabIndex = 60;
-            this.label24.Text = "Chat alias";
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label28.Location = new System.Drawing.Point(18, 99);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(56, 13);
-            this.label28.TabIndex = 59;
-            this.label28.Text = "Password:";
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label29.Location = new System.Drawing.Point(38, 73);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(36, 13);
-            this.label29.TabIndex = 58;
-            this.label29.Text = "Login:";
-            // 
-            // textBox24
-            // 
-            this.textBox24.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberAlias", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox24.Location = new System.Drawing.Point(89, 45);
-            this.textBox24.Name = "textBox24";
-            this.textBox24.Size = new System.Drawing.Size(154, 20);
-            this.textBox24.TabIndex = 5;
-            this.textBox24.Text = global::Ubiquitous.Properties.Settings.Default.cyberAlias;
-            // 
-            // checkBox34
-            // 
-            this.checkBox34.AutoSize = true;
-            this.checkBox34.Checked = global::Ubiquitous.Properties.Settings.Default.cyberEnabled;
-            this.checkBox34.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "cyberEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox34.Location = new System.Drawing.Point(27, 19);
-            this.checkBox34.Name = "checkBox34";
-            this.checkBox34.Size = new System.Drawing.Size(65, 17);
-            this.checkBox34.TabIndex = 4;
-            this.checkBox34.Text = "Enabled";
-            this.checkBox34.UseVisualStyleBackColor = true;
-            // 
-            // textBox28
-            // 
-            this.textBox28.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox28.Location = new System.Drawing.Point(89, 71);
-            this.textBox28.Name = "textBox28";
-            this.textBox28.Size = new System.Drawing.Size(154, 20);
-            this.textBox28.TabIndex = 6;
-            this.textBox28.Text = global::Ubiquitous.Properties.Settings.Default.cyberUser;
-            // 
-            // textBox29
-            // 
-            this.textBox29.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberPassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox29.Location = new System.Drawing.Point(89, 97);
-            this.textBox29.Name = "textBox29";
-            this.textBox29.Size = new System.Drawing.Size(154, 20);
-            this.textBox29.TabIndex = 7;
-            this.textBox29.Text = global::Ubiquitous.Properties.Settings.Default.cyberPassword;
-            this.textBox29.UseSystemPasswordChar = true;
             // 
             // settingsPage1
             // 
@@ -333,7 +239,9 @@
             this.settingsPage1.isActive = true;
             this.settingsPage1.Location = new System.Drawing.Point(0, 0);
             this.settingsPage1.Name = "settingsPage1";
-            this.settingsPage1.ParentNode = treeNode1;
+            treeNode2.Name = "";
+            treeNode2.Text = "Steam";
+            this.settingsPage1.ParentNode = treeNode2;
             this.settingsPage1.Size = new System.Drawing.Size(315, 316);
             this.settingsPage1.TabIndex = 0;
             // 
@@ -463,9 +371,9 @@
             this.settingsPage2.isActive = true;
             this.settingsPage2.Location = new System.Drawing.Point(0, 0);
             this.settingsPage2.Name = "settingsPage2";
-            treeNode2.Name = "";
-            treeNode2.Text = "Twitch.tv";
-            this.settingsPage2.ParentNode = treeNode2;
+            treeNode3.Name = "";
+            treeNode3.Text = "Twitch.tv";
+            this.settingsPage2.ParentNode = treeNode3;
             this.settingsPage2.Size = new System.Drawing.Size(315, 316);
             this.settingsPage2.TabIndex = 0;
             // 
@@ -636,9 +544,9 @@
             this.settingsPage3.isActive = true;
             this.settingsPage3.Location = new System.Drawing.Point(0, 0);
             this.settingsPage3.Name = "settingsPage3";
-            treeNode3.Name = "";
-            treeNode3.Text = "Sc2Tv.ru";
-            this.settingsPage3.ParentNode = treeNode3;
+            treeNode4.Name = "";
+            treeNode4.Text = "Sc2Tv.ru";
+            this.settingsPage3.ParentNode = treeNode4;
             this.settingsPage3.Size = new System.Drawing.Size(315, 316);
             this.settingsPage3.TabIndex = 0;
             // 
@@ -792,9 +700,9 @@
             this.settingsPage4.isActive = true;
             this.settingsPage4.Location = new System.Drawing.Point(0, 0);
             this.settingsPage4.Name = "settingsPage4";
-            treeNode4.Name = "";
-            treeNode4.Text = "Skype";
-            this.settingsPage4.ParentNode = treeNode4;
+            treeNode5.Name = "";
+            treeNode5.Text = "Skype";
+            this.settingsPage4.ParentNode = treeNode5;
             this.settingsPage4.Size = new System.Drawing.Size(315, 316);
             this.settingsPage4.TabIndex = 0;
             // 
@@ -861,9 +769,9 @@
             this.settingsPage5.isActive = true;
             this.settingsPage5.Location = new System.Drawing.Point(0, 0);
             this.settingsPage5.Name = "settingsPage5";
-            treeNode5.Name = "";
-            treeNode5.Text = "Goodgame.ru";
-            this.settingsPage5.ParentNode = treeNode5;
+            treeNode6.Name = "";
+            treeNode6.Text = "Goodgame.ru";
+            this.settingsPage5.ParentNode = treeNode6;
             this.settingsPage5.Size = new System.Drawing.Size(315, 316);
             this.settingsPage5.TabIndex = 0;
             // 
@@ -1011,9 +919,9 @@
             this.settingsPage6.isActive = true;
             this.settingsPage6.Location = new System.Drawing.Point(0, 0);
             this.settingsPage6.Name = "settingsPage6";
-            treeNode6.Name = "";
-            treeNode6.Text = "Battlelog";
-            this.settingsPage6.ParentNode = treeNode6;
+            treeNode7.Name = "";
+            treeNode7.Text = "Battlelog";
+            this.settingsPage6.ParentNode = treeNode7;
             this.settingsPage6.Size = new System.Drawing.Size(315, 316);
             this.settingsPage6.TabIndex = 0;
             // 
@@ -1146,9 +1054,9 @@
             this.settingsPage7.isActive = true;
             this.settingsPage7.Location = new System.Drawing.Point(0, 0);
             this.settingsPage7.Name = "settingsPage7";
-            treeNode7.Name = "";
-            treeNode7.Text = "Goha.tv";
-            this.settingsPage7.ParentNode = treeNode7;
+            treeNode8.Name = "";
+            treeNode8.Text = "Goha.tv";
+            this.settingsPage7.ParentNode = treeNode8;
             this.settingsPage7.Size = new System.Drawing.Size(315, 316);
             this.settingsPage7.TabIndex = 0;
             // 
@@ -1319,9 +1227,9 @@
             this.settingsPage8.isActive = true;
             this.settingsPage8.Location = new System.Drawing.Point(0, 0);
             this.settingsPage8.Name = "settingsPage8";
-            treeNode8.Name = "";
-            treeNode8.Text = "Stream control/monitor";
-            this.settingsPage8.ParentNode = treeNode8;
+            treeNode9.Name = "";
+            treeNode9.Text = "Stream control/monitor";
+            this.settingsPage8.ParentNode = treeNode9;
             this.settingsPage8.Size = new System.Drawing.Size(315, 316);
             this.settingsPage8.TabIndex = 0;
             // 
@@ -1431,9 +1339,9 @@
             this.settingsPage9.isActive = true;
             this.settingsPage9.Location = new System.Drawing.Point(0, 0);
             this.settingsPage9.Name = "settingsPage9";
-            treeNode9.Name = "";
-            treeNode9.Text = "Empire.tv";
-            this.settingsPage9.ParentNode = treeNode9;
+            treeNode10.Name = "";
+            treeNode10.Text = "Empire.tv";
+            this.settingsPage9.ParentNode = treeNode10;
             this.settingsPage9.Size = new System.Drawing.Size(315, 316);
             this.settingsPage9.TabIndex = 8;
             this.settingsPage9.Paint += new System.Windows.Forms.PaintEventHandler(this.settingsPage9_Paint);
@@ -1566,6 +1474,97 @@
             this.textBox27.Text = global::Ubiquitous.Properties.Settings.Default.empirePassword;
             this.textBox27.UseSystemPasswordChar = true;
             // 
+            // settingsPage10
+            // 
+            this.settingsPage10.Controls.Add(this.label24);
+            this.settingsPage10.Controls.Add(this.label28);
+            this.settingsPage10.Controls.Add(this.label29);
+            this.settingsPage10.Controls.Add(this.textBox24);
+            this.settingsPage10.Controls.Add(this.checkBox34);
+            this.settingsPage10.Controls.Add(this.textBox28);
+            this.settingsPage10.Controls.Add(this.textBox29);
+            this.settingsPage10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsPage10.isActive = true;
+            this.settingsPage10.Location = new System.Drawing.Point(0, 0);
+            this.settingsPage10.Name = "settingsPage10";
+            this.settingsPage10.ParentNode = treeNode1;
+            this.settingsPage10.Size = new System.Drawing.Size(315, 316);
+            this.settingsPage10.TabIndex = 9;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label24.Location = new System.Drawing.Point(24, 48);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(53, 13);
+            this.label24.TabIndex = 60;
+            this.label24.Text = "Chat alias";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label28.Location = new System.Drawing.Point(18, 99);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(56, 13);
+            this.label28.TabIndex = 59;
+            this.label28.Text = "Password:";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label29.Location = new System.Drawing.Point(38, 73);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(36, 13);
+            this.label29.TabIndex = 58;
+            this.label29.Text = "Login:";
+            // 
+            // textBox24
+            // 
+            this.textBox24.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberAlias", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox24.Location = new System.Drawing.Point(89, 45);
+            this.textBox24.Name = "textBox24";
+            this.textBox24.Size = new System.Drawing.Size(154, 20);
+            this.textBox24.TabIndex = 5;
+            this.textBox24.Text = global::Ubiquitous.Properties.Settings.Default.cyberAlias;
+            // 
+            // checkBox34
+            // 
+            this.checkBox34.AutoSize = true;
+            this.checkBox34.Checked = global::Ubiquitous.Properties.Settings.Default.cyberEnabled;
+            this.checkBox34.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "cyberEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.checkBox34.Location = new System.Drawing.Point(27, 19);
+            this.checkBox34.Name = "checkBox34";
+            this.checkBox34.Size = new System.Drawing.Size(65, 17);
+            this.checkBox34.TabIndex = 4;
+            this.checkBox34.Text = "Enabled";
+            this.checkBox34.UseVisualStyleBackColor = true;
+            // 
+            // textBox28
+            // 
+            this.textBox28.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox28.Location = new System.Drawing.Point(89, 71);
+            this.textBox28.Name = "textBox28";
+            this.textBox28.Size = new System.Drawing.Size(154, 20);
+            this.textBox28.TabIndex = 6;
+            this.textBox28.Text = global::Ubiquitous.Properties.Settings.Default.cyberUser;
+            // 
+            // textBox29
+            // 
+            this.textBox29.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "cyberPassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox29.Location = new System.Drawing.Point(89, 97);
+            this.textBox29.Name = "textBox29";
+            this.textBox29.Size = new System.Drawing.Size(154, 20);
+            this.textBox29.TabIndex = 7;
+            this.textBox29.Text = global::Ubiquitous.Properties.Settings.Default.cyberPassword;
+            this.textBox29.UseSystemPasswordChar = true;
+            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1577,9 +1576,6 @@
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsDialog_FormClosing);
             this.settingsTree1.SplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.settingsTree1.SplitContainer)).EndInit();
-            this.settingsPage10.ResumeLayout(false);
-            this.settingsPage10.PerformLayout();
             this.settingsPage1.ResumeLayout(false);
             this.settingsPage1.PerformLayout();
             this.settingsPage2.ResumeLayout(false);
@@ -1601,6 +1597,8 @@
             this.groupBox2.PerformLayout();
             this.settingsPage9.ResumeLayout(false);
             this.settingsPage9.PerformLayout();
+            this.settingsPage10.ResumeLayout(false);
+            this.settingsPage10.PerformLayout();
             this.ResumeLayout(false);
 
         }
