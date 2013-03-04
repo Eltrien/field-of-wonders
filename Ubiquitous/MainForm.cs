@@ -893,7 +893,7 @@ namespace Ubiquitous
                 sc2tv.LoadStreamSettings();
                 if (sc2tv.LoggedIn && !sc2tv.isLive())
                 {
-                    sc2tv.setLiveStatus(false);
+                    sc2tv.setLiveStatus(true);
                     sc2tv.LoadStreamSettings();
                     if (!sc2tv.isLive())
                     {
