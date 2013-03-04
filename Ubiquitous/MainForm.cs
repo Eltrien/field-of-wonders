@@ -208,9 +208,9 @@ namespace Ubiquitous
 
             public bool isCommand(string command)
             {
-                if (Regex.IsMatch(command, _re))
+                if (Regex.IsMatch(command, _re,RegexOptions.IgnoreCase))
                 {
-                    Match reCommand = Regex.Match(command, _re);
+                    Match reCommand = Regex.Match(command, _re, RegexOptions.IgnoreCase);
                     switch (_type)
                     {
                         case CommandType.BoolCmd:
@@ -396,7 +396,8 @@ namespace Ubiquitous
                 settings.SteamBotPassword,
                 settings.TwitchPassword
             };
-            Debug.Listeners.Add(new TextWriterTraceListener(new LogStreamWriter(log, maskPasswords)));
+            if( settings.globalDebug )
+                Debug.Listeners.Add(new TextWriterTraceListener(new LogStreamWriter(log, maskPasswords)));
 
             setTopMost();
             chatUsers = new List<ChatUser>();
@@ -407,6 +408,7 @@ namespace Ubiquitous
             chatAliases = new List<ChatAlias>();
             lastMessagePerEndpoint = new List<Message>();
             adminCommands.Add(new AdminCommand(@"^/r\s*([^\s]*)\s*(.*)", ReplyCommand));
+            adminCommands.Add(new AdminCommand(@"^/stream$", StartStopStreamsCommand));
 
             chatAliases.Add(new ChatAlias(settings.twitchChatAlias, EndPoint.TwitchTV, ChatIcon.TwitchTv));
             chatAliases.Add(new ChatAlias(settings.sc2tvChatAlias, EndPoint.Sc2Tv, ChatIcon.Sc2Tv));
@@ -528,7 +530,14 @@ namespace Ubiquitous
                 contextMenuChat.Items.Add(String.Format("{0} ({1})",chatAlias.Endpoint.ToString(), chatAlias.Alias),log.GetChatBitmap(chatAlias.Icon));
             }
             if (settings.isFullscreenMode)
+            {
                 switchFullScreenMode();
+                Size = settings.globalCompactSize;
+            }
+            else
+            {
+                Size = settings.globalFullSize;
+            }
             SwitchBorder();
             Size = new System.Drawing.Size(settings.mainformWidth, settings.mainformHeight);
 
@@ -557,25 +566,6 @@ namespace Ubiquitous
 
         void settings_SettingsSaving(object sender, CancelEventArgs e)
         {
-            /*
-            isDisconnecting = false;
-            if (settings.steamEnabled && (steamBot == null || settings.SteamBotAccessToken == null))
-            {
-                SendMessage(new Message("Starting Steam bot...", EndPoint.Steam, EndPoint.SteamAdmin));
-                steamBW = new BGWorker(ConnectSteamBot, null);
-            }
-            */
-
-            /*if (settings.twitchEnabled)
-            {
-                if (twitchIrc != null && twitchIrc.IsRegistered)
-                {
-                    twitchIrc.Quit(1000);
-                    twitchBW.Stop();
-                }
-
-                twitchBW = new BGWorker(ConnectTwitchIRC, null);
-            }*/
 
         }
         void RefreshChatProperties()
@@ -597,7 +587,9 @@ namespace Ubiquitous
             switch (propertyName)
             {
                 case "globalChatFont":
-                    textMessages.Font = settings.globalChatFont;
+                    {
+                        textMessages.Font = settings.globalChatFont;
+                    }
                     break;
                 case "globalToolBoxBack":
                     {
@@ -621,6 +613,9 @@ namespace Ubiquitous
                     }
                     break;
                 default:
+                    {
+                        textMessages.TextColor = settings.globalChatTextColor;
+                    }
                     break;
             }
         }
@@ -716,6 +711,11 @@ namespace Ubiquitous
                 }
             }
             return false;
+        }
+        private Result StartStopStreamsCommand()
+        {
+            StartStopOBSStream();
+            return Result.Successful;
         }
         private Result ReplyCommand( string switchto, Message message)
         {
@@ -1211,6 +1211,7 @@ namespace Ubiquitous
         {
             if (panelMessages.Dock == DockStyle.Fill)
             {
+                Size = settings.globalFullSize;
                 settings.isFullscreenMode = false;
                 panelMessages.Dock = DockStyle.None;
                 panelMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
@@ -1220,10 +1221,12 @@ namespace Ubiquitous
             }
             else
             {
+                Size = settings.globalCompactSize;
                 settings.isFullscreenMode = true;
                 panelMessages.Dock = DockStyle.Fill;
                 textMessages.ScrollToEnd();
             }
+
         }
         private void textMessages_DoubleClick(object sender, EventArgs e)
         {
@@ -1400,6 +1403,7 @@ namespace Ubiquitous
         {
             if( settings.globalOnTop != TopMost )
                 TopMost = settings.globalOnTop;
+
             UInt32 twitchViewers = 0, cybergameViewers = 0;
             if (twitchChannel != null)
                 UInt32.TryParse( twitchChannel.Viewers, out twitchViewers);
@@ -2565,6 +2569,11 @@ namespace Ubiquitous
 
         private void buttonStreamStartStop_Click(object sender, EventArgs e)
         {
+
+            StartStopOBSStream();
+        }
+        private void StartStopOBSStream()
+        {
             if (settings.obsRemoteEnable)
             {
                 if (obsRemote.Opened)
@@ -2580,9 +2589,7 @@ namespace Ubiquitous
             {
                 SendMessage(new Message("OBS control is not enabled. Check your settings!", EndPoint.Bot, EndPoint.SteamAdmin));
             }
-
         }
-
         private void contextSceneSwitch_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             //e.Cancel = !btnClose;
@@ -2597,6 +2604,23 @@ namespace Ubiquitous
         {
             Debug.Print("Screen capture");
             Control2Image.RtbToBitmap(textMessages, @"c:\test.jpeg");
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_ResizeEnd(object sender, EventArgs e)
+        {
+            if (settings.isFullscreenMode)
+            {
+                settings.globalCompactSize = Size;
+            }
+            else
+            {
+                settings.globalFullSize = Size;
+            }
         }
 
     }

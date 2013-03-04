@@ -281,17 +281,7 @@ namespace SC2TV.RTFControl {
                 ToImage();
                 
             }
-            /*
-            if (!t.Enabled)
-            {
-                t.Interval = 10;
-                t.Enabled = true;
-                t.Start();
-            }*/
-            //while (scroll(this.Handle, 1)) ;
-            //IntPtr ptrWparam = new IntPtr(SB_BOTTOM);
-            //IntPtr ptrLparam = new IntPtr(0);
-            //SendMessage(this.Handle, WM_VSCROLL, ptrWparam, ptrLparam);
+
         }
         private void ToImage()
         {

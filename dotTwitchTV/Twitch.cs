@@ -86,23 +86,21 @@ namespace dotTwitchTV
                     if (tempChannel == null)
                         Debug.Print("Can't parse twitch stats of {0}. Url: {1}", currentChannelName, url);
 
-                    if (isAlive() && tempChannel == null)
+                    currentChannel = tempChannel;
+
+                    var liveStatus = isAlive();
+                    if (prevOnlineState != liveStatus)
                     {
-                        if (prevOnlineState != isAlive())
+                        if (!liveStatus)
                         {
-                            prevOnlineState = isAlive();
                             OnOffline(new EventArgs());
                         }
-                    }
-                    else if (!isAlive() && tempChannel != null)
-                    {
-                        if (prevOnlineState != isAlive())
+                        else if (liveStatus)
                         {
-                            prevOnlineState = isAlive();
                             OnLive(new EventArgs());
                         }
+                        prevOnlineState = liveStatus;
                     }
-                    currentChannel = tempChannel;
                 }
 
 

@@ -39,7 +39,7 @@ namespace Ubiquitous
         public static void RtbToBitmap(SC2TV.RTFControl.ExRichTextBox rtb, string fileName) 
         {
             //Rectangle rectangle = rtb.;            
-            Bitmap bmp = new Bitmap(rtb.ClientRectangle.Width + 20,rtb.ClientRectangle.Height+10);
+            Bitmap bmp = new Bitmap(rtb.ClientRectangle.Width,rtb.ClientRectangle.Height+20);
             using (Graphics gr = Graphics.FromImage(bmp)) 
             {
                 IntPtr hDC = gr.GetHdc();

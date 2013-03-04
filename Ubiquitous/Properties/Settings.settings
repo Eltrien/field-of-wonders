@@ -284,5 +284,11 @@
     <Setting Name="globalChatImageFilename" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="globalFullSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">740, 620</Value>
+    </Setting>
+    <Setting Name="globalCompactSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">740, 620</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
