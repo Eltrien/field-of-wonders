@@ -475,7 +475,7 @@ namespace Ubiquitous
 
             fontDialog = new FontDialog();
 
-            Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
+            //Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
             #region Set tooltips
             ToolTip fullScreenDblClk = new ToolTip();
 
