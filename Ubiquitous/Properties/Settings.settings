@@ -278,5 +278,11 @@
     <Setting Name="globalTimestampFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Tahoma, 9.75pt, style=Bold</Value>
     </Setting>
+    <Setting Name="globalChat2Image" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="globalChatImageFilename" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

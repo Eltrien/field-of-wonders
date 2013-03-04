@@ -144,6 +144,21 @@ namespace Ubiquitous
             settings.globalTimestampFont = fontDialogTime.Font;
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            SaveFileDialog openFileDialog = new SaveFileDialog();
+            openFileDialog.FileName = "ubiquitouschat";
+            openFileDialog.DefaultExt = "jpg";
+            openFileDialog.Filter = "JPEG Image(*.jpg)|*.jpg";
+            openFileDialog.ValidateNames = true;
+            
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.globalChatImageFilename = openFileDialog.FileName;
+            }
+        }
+
 
 
     }

@@ -475,7 +475,7 @@ namespace Ubiquitous
 
             fontDialog = new FontDialog();
 
-            //Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
+            //@Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
             #region Set tooltips
             ToolTip fullScreenDblClk = new ToolTip();
 
@@ -1265,6 +1265,10 @@ namespace Ubiquitous
         }
         private void SetCheckedToolTip(ToolStripMenuItem item, bool state)
         {
+            if (item == null)
+                return;
+            if (item.GetCurrentParent() == null)
+                return;
             if (item.GetCurrentParent().InvokeRequired)
             {
                 SetCheckedToolTipCB d = new SetCheckedToolTipCB(SetCheckedToolTip);
@@ -2588,6 +2592,11 @@ namespace Ubiquitous
         private void textMessages_TextChanged(object sender, EventArgs e)
         {
 
+        }
+        private void Chat2Image()
+        {
+            Debug.Print("Screen capture");
+            Control2Image.RtbToBitmap(textMessages, @"c:\test.jpeg");
         }
 
     }

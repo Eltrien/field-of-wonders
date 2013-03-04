@@ -96,6 +96,9 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
+            this.textBox31 = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.checkBox40 = new System.Windows.Forms.CheckBox();
             this.checkBox39 = new System.Windows.Forms.CheckBox();
             this.buttonTimeColor = new System.Windows.Forms.Button();
             this.buttonBackColor = new System.Windows.Forms.Button();
@@ -251,6 +254,9 @@
             // 
             // settingsPage11
             // 
+            this.settingsPage11.Controls.Add(this.button2);
+            this.settingsPage11.Controls.Add(this.textBox31);
+            this.settingsPage11.Controls.Add(this.checkBox40);
             this.settingsPage11.Controls.Add(this.groupBox3);
             this.settingsPage11.Controls.Add(this.groupChatAppearance);
             this.settingsPage11.Controls.Add(this.checkBox38);
@@ -928,6 +934,39 @@
             this.label29.TabIndex = 58;
             this.label29.Text = "Login:";
             // 
+            // textBox31
+            // 
+            this.textBox31.BackColor = System.Drawing.Color.White;
+            this.textBox31.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "globalChatImageFilename", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox31.Location = new System.Drawing.Point(13, 229);
+            this.textBox31.Name = "textBox31";
+            this.textBox31.ReadOnly = true;
+            this.textBox31.Size = new System.Drawing.Size(252, 20);
+            this.textBox31.TabIndex = 10;
+            this.textBox31.Text = global::Ubiquitous.Properties.Settings.Default.globalChatImageFilename;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(271, 227);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(26, 23);
+            this.button2.TabIndex = 12;
+            this.button2.Text = "...";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // checkBox40
+            // 
+            this.checkBox40.AutoSize = true;
+            this.checkBox40.Checked = global::Ubiquitous.Properties.Settings.Default.globalChat2Image;
+            this.checkBox40.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalChat2Image", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox40.Location = new System.Drawing.Point(13, 206);
+            this.checkBox40.Name = "checkBox40";
+            this.checkBox40.Size = new System.Drawing.Size(164, 17);
+            this.checkBox40.TabIndex = 9;
+            this.checkBox40.Text = "Save chat to image (for OBS)";
+            this.checkBox40.UseVisualStyleBackColor = true;
+            // 
             // checkBox39
             // 
             this.checkBox39.AutoSize = true;
@@ -981,7 +1020,7 @@
             this.checkBox38.AutoSize = true;
             this.checkBox38.Checked = global::Ubiquitous.Properties.Settings.Default.globalDebug;
             this.checkBox38.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalDebug", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox38.Location = new System.Drawing.Point(13, 205);
+            this.checkBox38.Location = new System.Drawing.Point(13, 267);
             this.checkBox38.Name = "checkBox38";
             this.checkBox38.Size = new System.Drawing.Size(127, 17);
             this.checkBox38.TabIndex = 0;
@@ -1986,5 +2025,8 @@
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textFontTimestamp;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox textBox31;
+        private System.Windows.Forms.CheckBox checkBox40;
     }
 }

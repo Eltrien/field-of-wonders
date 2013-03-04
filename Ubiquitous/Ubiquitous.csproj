@@ -91,6 +91,7 @@
     <Compile Include="ComboBoxWithId.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Control2Image.cs" />
     <Compile Include="ExRichTextBox.cs">
       <SubType>Component</SubType>
     </Compile>

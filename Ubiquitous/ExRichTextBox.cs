@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Ubiquitous;
 
 namespace SC2TV.RTFControl {
 
@@ -244,6 +245,16 @@ namespace SC2TV.RTFControl {
         {
 
         }
+        public bool SaveToImage
+        {
+            get;
+            set;
+        }
+        public string SaveToImageFileName
+        {
+            get;
+            set;
+        }
         public void ScrollToEnd()
         {
             if (InvokeRequired)
@@ -266,6 +277,8 @@ namespace SC2TV.RTFControl {
                     linesToEnd = scroll(this.Handle, 1);
                     Thread.Sleep(20);
                 }
+                this.Update();
+                ToImage();
                 
             }
             /*
@@ -279,8 +292,12 @@ namespace SC2TV.RTFControl {
             //IntPtr ptrWparam = new IntPtr(SB_BOTTOM);
             //IntPtr ptrLparam = new IntPtr(0);
             //SendMessage(this.Handle, WM_VSCROLL, ptrWparam, ptrLparam);
-        } 
-     
+        }
+        private void ToImage()
+        {
+            if( SaveToImage && !String.IsNullOrEmpty(SaveToImageFileName))
+                Control2Image.RtbToBitmap(this, SaveToImageFileName);
+        }
 
 		#region Elements required to create an RTF document
 		

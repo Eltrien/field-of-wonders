@@ -94,6 +94,7 @@ namespace Ubiquitous
                     return null;
             }
         }
+
         /// <summary>
         /// Writes a line to the textbox. Automaticall adds newline character
         /// </summary>
@@ -132,7 +133,9 @@ namespace Ubiquitous
                 }
                 tb.SelectionStart = tb.Text.Length;
                 tb.SelectionLength = 0;
-                var bw = new BGWorker(tb.ScrollToEnd, null);
+                //                var bw = new BGWorker(tb.ScrollToEnd, null);
+                tb.ScrollToEnd();
+                
             }
         }
     }

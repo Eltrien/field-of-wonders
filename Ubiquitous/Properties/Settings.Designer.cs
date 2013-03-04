@@ -1126,5 +1126,29 @@ namespace Ubiquitous.Properties {
                 this["globalTimestampFont"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool globalChat2Image {
+            get {
+                return ((bool)(this["globalChat2Image"]));
+            }
+            set {
+                this["globalChat2Image"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string globalChatImageFilename {
+            get {
+                return ((string)(this["globalChatImageFilename"]));
+            }
+            set {
+                this["globalChatImageFilename"] = value;
+            }
+        }
     }
 }
