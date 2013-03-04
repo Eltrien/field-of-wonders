@@ -38,56 +38,26 @@ namespace dotSC2TV
         private const string smilesImagesUrl = "http://chat.sc2tv.ru/img/{0}";
         private const string sendMessageUrl = "http://chat.sc2tv.ru/gate.php";
         private const string chatTokenUrl = "http://chat.sc2tv.ru/gate.php?task=GetUserInfo&ref=http://sc2tv.ru/";
+        private const string urlUserStream = "http://sc2tv.ru/node/add/userstream";
+
 
         private const string reHiddenFormId = @".*hidden.*form_build_id.*id=""(.*?)"".*$";
-
-        //<input type="text" maxlength="10" name="field_channel_status[0][value]" id="edit-field-channel-status-0-value" size="12" value="0" class="form-text number">
         private const string reChannelIsLive = @"<input type=""text""[^>]*?id=""edit-field-channel-status.*?""[^>]*?value=""(.*?)""";
-        
-        //<input type="text" maxlength="255" name="title" id="edit-title" size="60" value="War Thunder - РБ" class="form-text required">
         private const string reChannelTitle = @"<input type=""text"".*?id=""edit-title""[^>]*?value=""(.*?)""";
-        
-        //<select name="field_channel_type[value]" class="form-select required" id="edit-field-channel-type-value"><option value="Livestream">Livestream</option><option value="Justin.tv" selected="selected">Justin.tv</option><option value="ЯTV">ЯTV</option><option value="Own3d">Own3d</option><option value="Sc-streams">Regame</option><option value="Rambler">Rambler</option><option value="Cybergame">Cybergame</option><option value="Eagle">Eagle</option><option value="UstreamTv">UstreamTv</option><option value="MotionCreds">MotionCreds</option><option value="GoodGame">GoodGame</option></select>
         private const string reChannelType = @"<select .*?id=""edit-field-channel-type-value"".*?<option value=""([^>]*?)"" selected=""selected"".*?</select>";
-
-        //<input type="text" name="field_channel_name[0][value]" id="edit-field-channel-name-0-value" size="100" value="xedoc" class="form-text required text">
         private const string reChannelName = @"<input type=""text"".*?id=""edit-field-channel-name-0-value""[^>]*?value=""(.*?)""";
-
-        //<input type="checkbox" name="field_channel_autoupdate[value]" id="edit-field-channel-autoupdate-value" value="1" class="form-checkbox">
         private const string reChannelAutoUpdate = @"<input type=""checkbox"".*?id=""edit-field-channel-autoupdate-value""[^>]*?value=""(.*?)""[^>]*?checked=""checked"".*?/>";
-
-        //<input type="checkbox" name="field_channel_without_comments[value]" id="edit-field-channel-without-comments-value" value="1" class="form-checkbox">
         private const string reChannelWithoutComments = @"<input type=""checkbox"".*?id=""edit-field-channel-without-comments-value""[^>]*?value=""(.*?)""[^>]*?checked=""checked""";
-
-        //<select name="taxonomy[1][]" multiple="multiple" class="form-select" id="edit-taxonomy-1" size="9"><option value="">- Нет -</option><option value="3645">ARMA 2</option><option value="990" selected="selected">Battlefield</option><option value="3299">Call of Duty</option><option value="2957">DayZ</option><option value="2715">Diablo 3</option><option value="1472">FIFA</option><option value="1230">Fighting</option><option value="1319">Heroes 6</option><option value="1266">League of Legends</option><option value="3300">Medal of Honor</option><option value="1856">Minecraft</option><option value="3564">Osu!</option><option value="1590" selected="selected">Other games</option><option value="3334">Racing</option><option value="3675">War Thunder</option><option value="3502">World of Tanks</option><option value="3273">World of Warcraft</option><option value="15">Counter Strike</option><option value="10">Dota</option><option value="1052">Eve Online</option><option value="4">Heroes 3</option><option value="738">Heroes 5</option><option value="962">HoN</option><option value="16">Old games</option><option value="14">Quake 1, 2, 3, live, promode </option><option value="2">StarCraft</option><option value="1">StarCraft 2</option><option value="3">WarCraft 3</option></select>
         private const string reChannelGame = @"<select .*?id=""edit-taxonomy-1"".*<option value=""([^>]*?)"" selected=""selected"".*?</select>";
-
-        //<textarea cols="60" rows="20" name="body" id="edit-body" class="xinha_textarea" spellcheck="false" style="height: 335px; width: 1165px;">&lt;h3&gt;Самолеты BF3, War Thunder и др.&lt;/h3&gt; 
-        //&lt;p&gt;Летаю с джойстиком и трекиром.&lt;/p&gt; 
-        //&lt;h4&gt;Текущий трек и подробное описание железа:&amp;nbsp;&lt;a href="http://www.twitch.tv/xedoc"&gt;http://www.twitch.tv/xedoc&lt;/a&gt; &lt;/h4&gt;</textarea>
         private const string reChannelLongInfo = @"<textarea .*?id=""edit-body"".*?>(.*?)</textarea>";
-
-        //<textarea cols="60" rows="20" name="teaser" id="edit-teaser" class="form-textarea">&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;&lt;p&gt;Аэрошоу&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;</textarea>
         private const string reChannelShortInfo = @"<textarea .*?id=""edit-teaser"".*?>(.*?)</textarea>";
-
-        //<input type="checkbox" name="pathauto_perform_alias" id="edit-pathauto-perform-alias" value="1" class="form-checkbox">
         private const string reChannelURLAlias = @"<input type=""checkbox"".*?id=""edit-pathauto-perform-alias"".*?value=""(.*?)""[^>]*?checked=""checked""";
-
-        //<input type="text" maxlength="128" name="path" id="edit-path" size="60" value="codex" class="form-text">
         private const string reChannelURLPath = @"<input type=""text"".*?id=""edit-path""[^>]*?value=""(.*?)""";
-
-        //<input type="hidden" name="changed" id="edit-changed" value="1361367838"  />
-        //<input type="hidden" name="form_build_id" id="form-179d153e005972a3c9a3eecb95f5cffd" value="form-179d153e005972a3c9a3eecb95f5cffd"  />
-        //<input type="hidden" name="form_token" id="edit-userstream-node-form-form-token" value="10b772eec652f41037bcdb71e2db02e0"  />
-        //<input type="hidden" name="form_id" id="edit-userstream-node-form" value="userstream_node_form"  />
         private const string reChannelChanged = @"<input type=""hidden"".*?id=""edit-changed""[^>]*?value=""(.*?)""";
         private const string reChannelFormBuildId = @"<input type=""hidden"".*?id=""form-................................""[^>]*?value=""(.*?)""";
         private const string reChannelFormToken = @"<input type=""hidden"".*?id=""edit-userstream-node-form-form-token""[^>]*?value=""(.*?)""";
         private const string reChannelFormId = @"<input type=""hidden"".*?id=""edit-userstream-node-form""[^>]*?value=""(.*?)""";
-
         private const string reStreamId = @"http://sc2tv.ru/node/(\d+)?/edit";
-        
-        //<input type="submit" name="op" id="edit-submit" value="Сохранить" class="form-submit">
 
 
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
@@ -335,6 +305,7 @@ namespace dotSC2TV
                             g.DrawRectangle(new Pen(Color.Black), new Rectangle(0,0,28,28));
                             g.DrawString(smile.Code, new Font("Microsoft Sans Serif", 7), Brushes.Black, new RectangleF(0, 0, 28, 28));
                         }
+                        Debug.Print("Exception in updateSmiles()");
                     }
                     smiles.Add(smile);
                 }
@@ -365,7 +336,7 @@ namespace dotSC2TV
             if (!LoggedIn)
                 return String.Empty;
 
-            var content = wc.DownloadString("http://sc2tv.ru/node/add/userstream");
+            var content = wc.DownloadString(urlUserStream);
 
             String streamId = GetSubString(content, reStreamId, 1);
 
@@ -413,7 +384,9 @@ namespace dotSC2TV
                     }
 
                 }
-                catch{}
+                catch{
+                    Debug.Print("Exception in Sc2 Login()");
+                }
             }
 
         }    
@@ -500,14 +473,18 @@ namespace dotSC2TV
         }
         public void LoadStreamSettings()
         {
+            if (!LoggedIn)
+                return;
+
             String html = null;
+            var url = String.Format("{0}?_={1}",channelEditUrl, (new DateTime(1970, 1, 1)).Ticks);
             try
             {
-                var randomNumber = (new DateTime(1970, 1, 1)).Ticks;
-                html = wc.DownloadString(String.Format("{0}?_={1}",channelEditUrl, randomNumber));
+                html = wc.DownloadString(url);
             }
-            catch
+            catch( WebException e)
             {
+                Debug.Print(String.Format("Exception in LoadStreamSettings() {0} {1}", e.Message, url));
                 return;
             }
             MatchCollection reChannelStatusValue = Regex.Matches(html, reChannelIsLive, RegexOptions.IgnoreCase | RegexOptions.Multiline);
@@ -594,7 +571,9 @@ namespace dotSC2TV
                 string messageParams = "task=WriteMessage&message=" + utf8msg + "&channel_id=" + currentChannelId + "&token=" + wc.CookieValue("chat_token",chatDomain);
                 wc.UploadString(String.Format(sendMessageUrl, currentChannelId), messageParams);
             }
-            catch { }
+            catch {
+                Debug.Print("Exception in Sc2 sendMessage()");
+            }
             
             return true;
         }
@@ -611,6 +590,7 @@ namespace dotSC2TV
                 }
                 catch
                 {
+                    Debug.Print("Exception in Sc2 getLoginFormId()");
                     return null;
                 }
             }
@@ -670,10 +650,7 @@ namespace dotSC2TV
                 Debug.Print( String.Format("RE: {0}. Result = NULL", re ));
                 return null;
             }
-            
-            
-            Debug.Print( String.Format("RE: {0}. Result = {1}", re, result ));
-
+                       
             return result;
 
         }

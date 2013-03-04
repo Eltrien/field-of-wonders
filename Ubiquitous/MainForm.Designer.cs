@@ -39,6 +39,8 @@
             this.gohatvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.allToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panelMessages = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelTools = new System.Windows.Forms.Panel();
             this.buttonStreamStartStop = new System.Windows.Forms.Button();
             this.contextSceneSwitch = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -47,16 +49,12 @@
             this.buttonCommercial = new System.Windows.Forms.Button();
             this.checkBoxOnTop = new System.Windows.Forms.CheckBox();
             this.trackBarTransparency = new System.Windows.Forms.TrackBar();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelViewers = new System.Windows.Forms.Label();
-            this.textMessages = new SC2TV.RTFControl.ExRichTextBox();
             this.pictureCurrentChat = new System.Windows.Forms.PictureBox();
             this.buttonFullscreen = new System.Windows.Forms.Button();
             this.imageListChatSize = new System.Windows.Forms.ImageList(this.components);
             this.textCommand = new System.Windows.Forms.TextBox();
             this.buttonInvisible = new System.Windows.Forms.Button();
-            this.comboSc2Channels = new Ubiquitous.ComboBoxWithId();
-            this.comboGGChannels = new Ubiquitous.ComboBoxWithId();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label15 = new System.Windows.Forms.Label();
             this.pictureCybergame = new System.Windows.Forms.PictureBox();
@@ -91,12 +89,16 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.timerEverySecond = new System.Windows.Forms.Timer(this.components);
+            this.textMessages = new SC2TV.RTFControl.ExRichTextBox();
+            this.comboSc2Channels = new Ubiquitous.ComboBoxWithId();
+            this.comboGGChannels = new Ubiquitous.ComboBoxWithId();
             this.contextMenuChat.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.panelMessages.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelTools.SuspendLayout();
             this.contextSceneSwitch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTransparency)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureCurrentChat)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureCybergame)).BeginInit();
@@ -137,50 +139,47 @@
             this.gohatvToolStripMenuItem,
             this.allToolStripMenuItem});
             this.contextMenuChat.Name = "contextMenuChat";
-            this.contextMenuChat.Size = new System.Drawing.Size(125, 114);
+            this.contextMenuChat.Size = new System.Drawing.Size(121, 114);
             this.contextMenuChat.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuChat_ItemClicked);
             // 
             // twitchToolStripMenuItem
             // 
             this.twitchToolStripMenuItem.Name = "twitchToolStripMenuItem";
-            this.twitchToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.twitchToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.twitchToolStripMenuItem.Text = "Twitch.tv";
             this.twitchToolStripMenuItem.Click += new System.EventHandler(this.twitchToolStripMenuItem_Click);
             // 
             // sc2TvruToolStripMenuItem
             // 
             this.sc2TvruToolStripMenuItem.Name = "sc2TvruToolStripMenuItem";
-            this.sc2TvruToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.sc2TvruToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.sc2TvruToolStripMenuItem.Text = "Sc2tv.ru";
             // 
             // empiretvToolStripMenuItem
             // 
             this.empiretvToolStripMenuItem.Name = "empiretvToolStripMenuItem";
-            this.empiretvToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.empiretvToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.empiretvToolStripMenuItem.Text = "Empire.tv";
             // 
             // gohatvToolStripMenuItem
             // 
             this.gohatvToolStripMenuItem.Name = "gohatvToolStripMenuItem";
-            this.gohatvToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.gohatvToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.gohatvToolStripMenuItem.Text = "Goha.tv";
             // 
             // allToolStripMenuItem
             // 
             this.allToolStripMenuItem.Name = "allToolStripMenuItem";
-            this.allToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.allToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.allToolStripMenuItem.Text = "All";
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.panel1.Controls.Add(this.panelTools);
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.labelViewers);
-            this.panel1.Controls.Add(this.textMessages);
+            this.panel1.Controls.Add(this.panelMessages);
             this.panel1.Controls.Add(this.pictureCurrentChat);
             this.panel1.Controls.Add(this.buttonFullscreen);
             this.panel1.Controls.Add(this.textCommand);
@@ -198,33 +197,65 @@
             this.panel1.Size = new System.Drawing.Size(729, 587);
             this.panel1.TabIndex = 0;
             // 
+            // panelMessages
+            // 
+            this.panelMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelMessages.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
+            this.panelMessages.Controls.Add(this.pictureBox1);
+            this.panelMessages.Controls.Add(this.panelTools);
+            this.panelMessages.Controls.Add(this.labelViewers);
+            this.panelMessages.Controls.Add(this.textMessages);
+            this.panelMessages.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.panelMessages.Location = new System.Drawing.Point(3, 0);
+            this.panelMessages.Name = "panelMessages";
+            this.panelMessages.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.panelMessages.Size = new System.Drawing.Size(574, 565);
+            this.panelMessages.TabIndex = 36;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pictureBox1.Image = global::Ubiquitous.Properties.Resources.eye;
+            this.pictureBox1.Location = new System.Drawing.Point(2, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox1.TabIndex = 31;
+            this.pictureBox1.TabStop = false;
+            // 
             // panelTools
             // 
-            this.panelTools.BackColor = System.Drawing.Color.Black;
+            this.panelTools.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.panelTools.Controls.Add(this.buttonStreamStartStop);
             this.panelTools.Controls.Add(this.checkBoxBorder);
             this.panelTools.Controls.Add(this.buttonCommercial);
             this.panelTools.Controls.Add(this.checkBoxOnTop);
             this.panelTools.Controls.Add(this.trackBarTransparency);
-            this.panelTools.Location = new System.Drawing.Point(51, 1);
+            this.panelTools.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.panelTools.Location = new System.Drawing.Point(49, 0);
+            this.panelTools.Margin = new System.Windows.Forms.Padding(0);
             this.panelTools.Name = "panelTools";
-            this.panelTools.Size = new System.Drawing.Size(283, 17);
+            this.panelTools.Size = new System.Drawing.Size(292, 18);
             this.panelTools.TabIndex = 35;
             this.panelTools.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTools_MouseDown);
             // 
             // buttonStreamStartStop
             // 
+            this.buttonStreamStartStop.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.buttonStreamStartStop.ContextMenuStrip = this.contextSceneSwitch;
+            this.buttonStreamStartStop.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.buttonStreamStartStop.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonStreamStartStop.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonStreamStartStop.FlatAppearance.BorderSize = 0;
+            this.buttonStreamStartStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonStreamStartStop.Font = new System.Drawing.Font("Chiller", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStreamStartStop.Image = global::Ubiquitous.Properties.Resources.play;
-            this.buttonStreamStartStop.Location = new System.Drawing.Point(262, 0);
+            this.buttonStreamStartStop.Location = new System.Drawing.Point(269, -1);
             this.buttonStreamStartStop.Margin = new System.Windows.Forms.Padding(0);
             this.buttonStreamStartStop.Name = "buttonStreamStartStop";
-            this.buttonStreamStartStop.Size = new System.Drawing.Size(20, 17);
+            this.buttonStreamStartStop.Size = new System.Drawing.Size(18, 18);
             this.buttonStreamStartStop.TabIndex = 5;
-            this.buttonStreamStartStop.UseVisualStyleBackColor = true;
+            this.buttonStreamStartStop.UseVisualStyleBackColor = false;
             this.buttonStreamStartStop.Click += new System.EventHandler(this.buttonStreamStartStop_Click);
             // 
             // contextSceneSwitch
@@ -232,7 +263,7 @@
             this.contextSceneSwitch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.asdfToolStripMenuItem});
             this.contextSceneSwitch.Name = "contextSceneSwitch";
-            this.contextSceneSwitch.Size = new System.Drawing.Size(129, 26);
+            this.contextSceneSwitch.Size = new System.Drawing.Size(124, 26);
             this.contextSceneSwitch.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextSceneSwitch_Closing);
             this.contextSceneSwitch.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextSceneSwitch_ItemClicked);
             // 
@@ -240,15 +271,16 @@
             // 
             this.asdfToolStripMenuItem.CheckOnClick = true;
             this.asdfToolStripMenuItem.Name = "asdfToolStripMenuItem";
-            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.asdfToolStripMenuItem.Text = "No scenes";
             // 
             // checkBoxBorder
             // 
             this.checkBoxBorder.AutoSize = true;
-            this.checkBoxBorder.BackColor = System.Drawing.Color.Black;
+            this.checkBoxBorder.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.checkBoxBorder.Checked = global::Ubiquitous.Properties.Settings.Default.globalHideBorder;
             this.checkBoxBorder.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalHideBorder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxBorder.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxBorder.Location = new System.Drawing.Point(63, 0);
             this.checkBoxBorder.Name = "checkBoxBorder";
             this.checkBoxBorder.Size = new System.Drawing.Size(74, 17);
@@ -259,24 +291,28 @@
             // 
             // buttonCommercial
             // 
+            this.buttonCommercial.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
+            this.buttonCommercial.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.buttonCommercial.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonCommercial.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonCommercial.FlatAppearance.BorderSize = 0;
+            this.buttonCommercial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCommercial.Font = new System.Drawing.Font("Chiller", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonCommercial.Image = global::Ubiquitous.Properties.Resources.coins;
-            this.buttonCommercial.Location = new System.Drawing.Point(238, 0);
+            this.buttonCommercial.Image = ((System.Drawing.Image)(resources.GetObject("buttonCommercial.Image")));
+            this.buttonCommercial.Location = new System.Drawing.Point(243, -1);
             this.buttonCommercial.Margin = new System.Windows.Forms.Padding(0);
             this.buttonCommercial.Name = "buttonCommercial";
-            this.buttonCommercial.Size = new System.Drawing.Size(22, 17);
+            this.buttonCommercial.Size = new System.Drawing.Size(18, 18);
             this.buttonCommercial.TabIndex = 4;
-            this.buttonCommercial.UseVisualStyleBackColor = true;
+            this.buttonCommercial.UseVisualStyleBackColor = false;
             this.buttonCommercial.Click += new System.EventHandler(this.button1_Click);
             // 
             // checkBoxOnTop
             // 
             this.checkBoxOnTop.AutoSize = true;
-            this.checkBoxOnTop.BackColor = System.Drawing.Color.Black;
+            this.checkBoxOnTop.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.checkBoxOnTop.Checked = global::Ubiquitous.Properties.Settings.Default.globalOnTop;
             this.checkBoxOnTop.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalOnTop", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxOnTop.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxOnTop.Location = new System.Drawing.Point(1, 0);
             this.checkBoxOnTop.Name = "checkBoxOnTop";
             this.checkBoxOnTop.Size = new System.Drawing.Size(62, 17);
@@ -284,14 +320,13 @@
             this.checkBoxOnTop.Text = "On Top";
             this.checkBoxOnTop.UseVisualStyleBackColor = false;
             this.checkBoxOnTop.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            this.checkBoxOnTop.MouseLeave += new System.EventHandler(this.checkBox1_MouseLeave);
-            this.checkBoxOnTop.MouseHover += new System.EventHandler(this.checkBox1_MouseHover);
             // 
             // trackBarTransparency
             // 
             this.trackBarTransparency.AutoSize = false;
-            this.trackBarTransparency.BackColor = System.Drawing.Color.Black;
+            this.trackBarTransparency.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.trackBarTransparency.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Ubiquitous.Properties.Settings.Default, "globalTransparency", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.trackBarTransparency.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.trackBarTransparency.Location = new System.Drawing.Point(138, 0);
             this.trackBarTransparency.Maximum = 100;
             this.trackBarTransparency.Minimum = 20;
@@ -302,54 +337,16 @@
             this.trackBarTransparency.Value = global::Ubiquitous.Properties.Settings.Default.globalTransparency;
             this.trackBarTransparency.MouseMove += new System.Windows.Forms.MouseEventHandler(this.trackBarTransparency_MouseMove);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pictureBox1.Image = global::Ubiquitous.Properties.Resources.eye;
-            this.pictureBox1.Location = new System.Drawing.Point(5, 2);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(16, 16);
-            this.pictureBox1.TabIndex = 31;
-            this.pictureBox1.TabStop = false;
-            // 
             // labelViewers
             // 
             this.labelViewers.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.labelViewers.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelViewers.Location = new System.Drawing.Point(3, 1);
+            this.labelViewers.Location = new System.Drawing.Point(1, -1);
             this.labelViewers.Name = "labelViewers";
             this.labelViewers.Size = new System.Drawing.Size(45, 17);
             this.labelViewers.TabIndex = 0;
             this.labelViewers.Text = "0";
             this.labelViewers.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // textMessages
-            // 
-            this.textMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textMessages.BackColor = System.Drawing.Color.Black;
-            this.textMessages.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textMessages.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textMessages.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.textMessages.HiglightColor = SC2TV.RTFControl.RtfColor.Black;
-            this.textMessages.Location = new System.Drawing.Point(0, -1);
-            this.textMessages.Name = "textMessages";
-            this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.textMessages.Size = new System.Drawing.Size(580, 567);
-            this.textMessages.TabIndex = 23;
-            this.textMessages.Text = "";
-            this.textMessages.TextColor = SC2TV.RTFControl.RtfColor.Aqua;
-            this.textMessages.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textMessages_LinkClicked);
-            this.textMessages.Click += new System.EventHandler(this.textMessages_Click);
-            this.textMessages.SizeChanged += new System.EventHandler(this.textMessages_SizeChanged);
-            this.textMessages.TextChanged += new System.EventHandler(this.textMessages_TextChanged);
-            this.textMessages.DoubleClick += new System.EventHandler(this.textMessages_DoubleClick);
-            this.textMessages.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseDown);
-            this.textMessages.MouseLeave += new System.EventHandler(this.textMessages_MouseLeave);
-            this.textMessages.MouseHover += new System.EventHandler(this.textMessages_MouseHover);
-            this.textMessages.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseMove);
-            this.textMessages.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseUp);
             // 
             // pictureCurrentChat
             // 
@@ -386,8 +383,8 @@
             // 
             // textCommand
             // 
-            this.textCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textCommand.BackColor = System.Drawing.Color.Black;
             this.textCommand.ForeColor = System.Drawing.Color.LightYellow;
             this.textCommand.Location = new System.Drawing.Point(21, 567);
@@ -407,37 +404,6 @@
             this.buttonInvisible.Text = "Invisible";
             this.buttonInvisible.UseVisualStyleBackColor = true;
             this.buttonInvisible.Visible = false;
-            // 
-            // comboSc2Channels
-            // 
-            this.comboSc2Channels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboSc2Channels.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.comboSc2Channels.DropDownWidth = 300;
-            this.comboSc2Channels.ForeColor = System.Drawing.SystemColors.Window;
-            this.comboSc2Channels.FormattingEnabled = true;
-            this.comboSc2Channels.Location = new System.Drawing.Point(585, 485);
-            this.comboSc2Channels.Name = "comboSc2Channels";
-            this.comboSc2Channels.Size = new System.Drawing.Size(86, 21);
-            this.comboSc2Channels.TabIndex = 7;
-            this.comboSc2Channels.Visible = false;
-            this.comboSc2Channels.DropDown += new System.EventHandler(this.comboSc2Channels_DropDown);
-            this.comboSc2Channels.SelectionChangeCommitted += new System.EventHandler(this.comboSc2Channels_SelectionChangeCommitted);
-            // 
-            // comboGGChannels
-            // 
-            this.comboGGChannels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboGGChannels.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.comboGGChannels.DropDownWidth = 300;
-            this.comboGGChannels.ForeColor = System.Drawing.SystemColors.Window;
-            this.comboGGChannels.FormattingEnabled = true;
-            this.comboGGChannels.Location = new System.Drawing.Point(584, 528);
-            this.comboGGChannels.Name = "comboGGChannels";
-            this.comboGGChannels.Size = new System.Drawing.Size(121, 21);
-            this.comboGGChannels.TabIndex = 26;
-            this.comboGGChannels.Visible = false;
-            this.comboGGChannels.DropDown += new System.EventHandler(this.comboGGChannels_DropDown);
-            this.comboGGChannels.SelectedIndexChanged += new System.EventHandler(this.comboGGChannels_SelectedIndexChanged);
-            this.comboGGChannels.SelectionChangeCommitted += new System.EventHandler(this.comboGGChannels_SelectionChangeCommitted);
             // 
             // groupBox1
             // 
@@ -822,6 +788,68 @@
             this.timerEverySecond.Interval = 1000;
             this.timerEverySecond.Tick += new System.EventHandler(this.timerEverySecond_Tick);
             // 
+            // textMessages
+            // 
+            this.textMessages.BackColor = System.Drawing.Color.Black;
+            this.textMessages.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalChatFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("TimeColor", global::Ubiquitous.Properties.Settings.Default, "globalTimestampForeground", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("HiglightColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textMessages.Font = global::Ubiquitous.Properties.Settings.Default.globalChatFont;
+            this.textMessages.ForeColor = System.Drawing.Color.Gray;
+            this.textMessages.HiglightColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
+            this.textMessages.Location = new System.Drawing.Point(5, 0);
+            this.textMessages.Margin = new System.Windows.Forms.Padding(10);
+            this.textMessages.Name = "textMessages";
+            this.textMessages.RawTextColor = null;
+            this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.textMessages.Size = new System.Drawing.Size(569, 565);
+            this.textMessages.TabIndex = 23;
+            this.textMessages.Text = "";
+            this.textMessages.TextColor = System.Drawing.Color.Red;
+            this.textMessages.TimeColor = global::Ubiquitous.Properties.Settings.Default.globalTimestampForeground;
+            this.textMessages.TimeStamp = false;
+            this.textMessages.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textMessages_LinkClicked);
+            this.textMessages.Click += new System.EventHandler(this.textMessages_Click);
+            this.textMessages.SizeChanged += new System.EventHandler(this.textMessages_SizeChanged);
+            this.textMessages.TextChanged += new System.EventHandler(this.textMessages_TextChanged);
+            this.textMessages.DoubleClick += new System.EventHandler(this.textMessages_DoubleClick);
+            this.textMessages.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseDown);
+            this.textMessages.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseMove);
+            this.textMessages.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseUp);
+            // 
+            // comboSc2Channels
+            // 
+            this.comboSc2Channels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboSc2Channels.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.comboSc2Channels.DropDownWidth = 300;
+            this.comboSc2Channels.ForeColor = System.Drawing.SystemColors.Window;
+            this.comboSc2Channels.FormattingEnabled = true;
+            this.comboSc2Channels.Location = new System.Drawing.Point(585, 485);
+            this.comboSc2Channels.Name = "comboSc2Channels";
+            this.comboSc2Channels.Size = new System.Drawing.Size(86, 21);
+            this.comboSc2Channels.TabIndex = 7;
+            this.comboSc2Channels.Visible = false;
+            this.comboSc2Channels.DropDown += new System.EventHandler(this.comboSc2Channels_DropDown);
+            this.comboSc2Channels.SelectionChangeCommitted += new System.EventHandler(this.comboSc2Channels_SelectionChangeCommitted);
+            // 
+            // comboGGChannels
+            // 
+            this.comboGGChannels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboGGChannels.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.comboGGChannels.DropDownWidth = 300;
+            this.comboGGChannels.ForeColor = System.Drawing.SystemColors.Window;
+            this.comboGGChannels.FormattingEnabled = true;
+            this.comboGGChannels.Location = new System.Drawing.Point(584, 528);
+            this.comboGGChannels.Name = "comboGGChannels";
+            this.comboGGChannels.Size = new System.Drawing.Size(121, 21);
+            this.comboGGChannels.TabIndex = 26;
+            this.comboGGChannels.Visible = false;
+            this.comboGGChannels.DropDown += new System.EventHandler(this.comboGGChannels_DropDown);
+            this.comboGGChannels.SelectedIndexChanged += new System.EventHandler(this.comboGGChannels_SelectedIndexChanged);
+            this.comboGGChannels.SelectionChangeCommitted += new System.EventHandler(this.comboGGChannels_SelectionChangeCommitted);
+            // 
             // MainForm
             // 
             this.AcceptButton = this.buttonInvisible;
@@ -844,17 +872,16 @@
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.Enter += new System.EventHandler(this.MainForm_Enter);
             this.MouseEnter += new System.EventHandler(this.MainForm_MouseEnter);
-            this.MouseLeave += new System.EventHandler(this.MainForm_MouseLeave);
-            this.MouseHover += new System.EventHandler(this.MainForm_MouseHover);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseMove);
             this.contextMenuChat.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panelMessages.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelTools.ResumeLayout(false);
             this.panelTools.PerformLayout();
             this.contextSceneSwitch.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTransparency)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureCurrentChat)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -941,6 +968,7 @@
         private System.Windows.Forms.Button buttonStreamStartStop;
         private System.Windows.Forms.ContextMenuStrip contextSceneSwitch;
         private System.Windows.Forms.ToolStripMenuItem asdfToolStripMenuItem;
+        private System.Windows.Forms.Panel panelMessages;
     }
 }
 

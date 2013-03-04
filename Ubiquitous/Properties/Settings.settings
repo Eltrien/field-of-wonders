@@ -248,5 +248,35 @@
     <Setting Name="mainformHeight" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">620</Value>
     </Setting>
+    <Setting Name="twitchDebugMessages" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="gohaDebugMessages" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="globalDebug" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="globalChatFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Tahoma, 9.75pt, style=Bold</Value>
+    </Setting>
+    <Setting Name="globalChatBackground" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="globalToolBoxBack" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="globalChatTextColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">White</Value>
+    </Setting>
+    <Setting Name="globalChatEnableTimestamps" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="globalTimestampForeground" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Gray</Value>
+    </Setting>
+    <Setting Name="globalTimestampFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Tahoma, 9.75pt, style=Bold</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

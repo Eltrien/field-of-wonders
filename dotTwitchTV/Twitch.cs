@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Diagnostics;
 using System.Threading;
+using dotWebClient;
 
 namespace dotTwitchTV
 {
@@ -71,44 +72,44 @@ namespace dotTwitchTV
             try
             {
                 wc.Headers["Cache-Control"] = "no-cache";
-                var stream = wc.downloadURL(String.Format(channelJsonUrl, channel,(DateTime.UtcNow - new DateTime(1970,1,1,0,0,0)).TotalSeconds) );
-                if (stream == null)
+                var url = String.Format(channelJsonUrl, channel, (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds);
+                using (var stream = wc.downloadURL(url))
                 {
-                    Debug.Print("Can't download channel info of {0} result stream is null. Url: {1}", currentChannelName, channelJsonUrl);
-                    return;
-                }
-
-                var tempChannel = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
-
-                                
-                if (tempChannel == null)
-                    Debug.Print("Can't parse json of {0}. Url: {1}", currentChannelName, channelJsonUrl);
-
-                stream.Close();
-                stream.Dispose();
-
-                if (isAlive() && tempChannel == null)
-                {
-                    if (prevOnlineState != isAlive())
+                    if (stream == null)
                     {
-                        prevOnlineState = isAlive();
-                        OnOffline(new EventArgs());
+                        Debug.Print("Can't download channel info of {0} result stream is null. Url: {1}", currentChannelName, channelJsonUrl);
+                        return;
                     }
-                }
-                else if (!isAlive() && tempChannel != null)
-                {
-                    if (prevOnlineState != isAlive())
+
+                    var tempChannel = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
+
+                    if (tempChannel == null)
+                        Debug.Print("Can't parse twitch stats of {0}. Url: {1}", currentChannelName, url);
+
+                    if (isAlive() && tempChannel == null)
                     {
-                        prevOnlineState = isAlive();
-                        OnLive(new EventArgs());
+                        if (prevOnlineState != isAlive())
+                        {
+                            prevOnlineState = isAlive();
+                            OnOffline(new EventArgs());
+                        }
                     }
+                    else if (!isAlive() && tempChannel != null)
+                    {
+                        if (prevOnlineState != isAlive())
+                        {
+                            prevOnlineState = isAlive();
+                            OnLive(new EventArgs());
+                        }
+                    }
+                    currentChannel = tempChannel;
                 }
-                currentChannel = tempChannel;
 
 
             }
             catch 
-            { 
+            {
+                Debug.Print("Exception in CrawlTwitchChannel");
             }            
         }
         private bool isAlive()

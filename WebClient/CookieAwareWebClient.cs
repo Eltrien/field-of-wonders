@@ -32,6 +32,7 @@ namespace dotWebClient
             contentTypes = new Dictionary<ContentType, string>();
             contentTypes.Add(ContentType.UrlEncoded, "application/x-www-form-urlencoded");
             contentTypes.Add(ContentType.Multipart, "multipart/form-data");
+            
         }
         public string LastWebError
         {
@@ -59,7 +60,7 @@ namespace dotWebClient
                     prop.SetValue(sp, (byte)0, null);
                 }
                 webRequest.CookieContainer = m_container;
-
+                webRequest.UserAgent = userAgent;
                 webRequest.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
             }
             return request;
@@ -118,7 +119,7 @@ namespace dotWebClient
             }
             catch
             {
-
+                Debug.Print(String.Format("WebClient exception in PostUrlEncoded() url: {0}",url));
 
             }
             return result;

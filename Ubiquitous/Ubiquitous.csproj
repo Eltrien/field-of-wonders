@@ -31,7 +31,7 @@
     <PublisherName>Ubiquitous</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>22</ApplicationRevision>
+    <ApplicationRevision>23</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -202,6 +202,10 @@
       <Project>{C1B0A91F-BE05-48AB-9D94-BEF81D3174A2}</Project>
       <Name>dotTwitchTV</Name>
     </ProjectReference>
+    <ProjectReference Include="..\dotUtilities\dotUtilities.csproj">
+      <Project>{ED6C0B9C-608A-4325-8F98-5E23C7DC52CD}</Project>
+      <Name>dotUtilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotXSplit\dotXSplit\dotXSplit.csproj">
       <Project>{75B0D174-732F-4A64-82FB-21016CD8DAA7}</Project>
       <Name>dotXSplit</Name>
@@ -304,6 +308,7 @@
   <ItemGroup>
     <Content Include="offline.mp3" />
     <Content Include="online.mp3" />
+    <None Include="Resources\coins.gif" />
     <None Include="Resources\play1.gif" />
     <None Include="Resources\play.gif" />
     <None Include="Resources\stop.gif" />

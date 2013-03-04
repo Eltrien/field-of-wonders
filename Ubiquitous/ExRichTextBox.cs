@@ -129,10 +129,10 @@ namespace SC2TV.RTFControl {
 		#region My Privates
 
 		// The default text color
-		private RtfColor textColor;
+		private Color textColor;
 
 		// The default text background color
-		private RtfColor highlightColor;
+		private Color highlightColor;
 
 		// Dictionary that maps color enums to RTF color codes
 		private HybridDictionary rtfColor;
@@ -328,14 +328,31 @@ namespace SC2TV.RTFControl {
 			set {base.Rtf = value;}
 		}
 
+        public bool TimeStamp
+        {
+            get;
+            set;
+        }
+
+        public Color TimeColor
+        {
+            get;
+            set;
+        }
 		// The color of the text
-		public RtfColor TextColor {
+		public Color TextColor {
 			get {return textColor;}
 			set {textColor = value;}
 		}
 
+        public String RawTextColor
+        {
+            get;
+            set;
+        }
+
 		// The color of the highlight
-		public RtfColor HiglightColor {
+		public Color HiglightColor {
 			get {return highlightColor;}
 			set {highlightColor = value;}
 		}
@@ -352,8 +369,8 @@ namespace SC2TV.RTFControl {
 		public ExRichTextBox() : base() {
 
 			// Initialize default text and background colors
-			textColor = RtfColor.Black;
-			highlightColor = RtfColor.White;
+			textColor = Color.Black;
+			highlightColor = Color.White;
 
 			// Initialize the dictionary mapping color codes to definitions
 			rtfColor = new HybridDictionary();
@@ -397,7 +414,7 @@ namespace SC2TV.RTFControl {
 		/// Calls the default constructor then sets the text color.
 		/// </summary>
 		/// <param name="_textColor"></param>
-		public ExRichTextBox(RtfColor _textColor) : this() {
+		public ExRichTextBox(Color _textColor) : this() {
 			textColor = _textColor;
 		}
 
@@ -406,7 +423,7 @@ namespace SC2TV.RTFControl {
 		/// </summary>
 		/// <param name="_textColor"></param>
 		/// <param name="_highlightColor"></param>
-		public ExRichTextBox(RtfColor _textColor, RtfColor _highlightColor) : this() {
+		public ExRichTextBox(Color _textColor, Color _highlightColor) : this() {
 			textColor = _textColor;
 			highlightColor = _highlightColor;
 		}
@@ -469,7 +486,7 @@ namespace SC2TV.RTFControl {
 		/// <param name="_text"></param>
 		/// <param name="_font"></param>
 		/// <param name="_color"></param>
-		public void AppendTextAsRtf(string _text, Font _font, RtfColor _textColor) {
+		public void AppendTextAsRtf(string _text, Font _font, Color _textColor) {
 			AppendTextAsRtf(_text, _font, _textColor, highlightColor);
 		}
 
@@ -482,7 +499,7 @@ namespace SC2TV.RTFControl {
 		/// <param name="_font"></param>
 		/// <param name="_textColor"></param>
 		/// <param name="_backColor"></param>
-		public void AppendTextAsRtf(string _text, Font _font, RtfColor _textColor, RtfColor _backColor) {
+		public void AppendTextAsRtf(string _text, Font _font, Color _textColor, Color _backColor) {
 			// Move carret to the end of the text
 			this.Select(this.TextLength, 0);
 
@@ -519,7 +536,7 @@ namespace SC2TV.RTFControl {
 		/// <param name="_text"></param>
 		/// <param name="_font"></param>
 		/// <param name="_color"></param>
-		public void InsertTextAsRtf(string _text, Font _font, RtfColor _textColor) {
+		public void InsertTextAsRtf(string _text, Font _font, Color _textColor) {
 			InsertTextAsRtf(_text, _font, _textColor, highlightColor);
 		}
 
@@ -541,7 +558,7 @@ namespace SC2TV.RTFControl {
 		/// <param name="_font"></param>
 		/// <param name="_color"></param>
 		/// <param name="_color"></param>
-		public void InsertTextAsRtf(string _text, Font _font, RtfColor _textColor, RtfColor _backColor) {
+		public void InsertTextAsRtf(string _text, Font _font, Color _textColor, Color _backColor) {
 
 			StringBuilder _rtf = new StringBuilder();
 
@@ -959,6 +976,7 @@ namespace SC2TV.RTFControl {
 		/// </summary>
 		/// <param name="_font"></param>
 		/// <returns></returns>
+        /// 
 		private string GetFontTable(Font _font) {
 
 			StringBuilder _fontTable = new StringBuilder();
@@ -1003,24 +1021,28 @@ namespace SC2TV.RTFControl {
 		/// <param name="_textColor"></param>
 		/// <param name="_backColor"></param>
 		/// <returns></returns>
-		private string GetColorTable(RtfColor _textColor, RtfColor _backColor) {
+		private string GetColorTable(Color _textColor, Color _backColor) {
 
 			StringBuilder _colorTable = new StringBuilder();
 
 			// Append color table control string and default font (;)
 			_colorTable.Append(@"{\colortbl ;");
+            _colorTable.Append(GetRtfColor(_textColor));
+            _colorTable.Append(@";");
 
-			// Append the text color
-			_colorTable.Append(rtfColor[_textColor]);
-			_colorTable.Append(@";");
+
 
 			// Append the highlight color
-			_colorTable.Append(rtfColor[_backColor]);
+			_colorTable.Append(GetRtfColor(_backColor));
 			_colorTable.Append(@";}\n");
 					
 			return _colorTable.ToString();
 		}
-
+        public static String GetRtfColor(Color color)
+        {
+            string mask = @"\red{0}\green{1}\blue{2}";
+            return String.Format(mask, color.R, color.G, color.B);
+        }
 		/// <summary>
 		/// Called by overrided RichTextBox.Rtf accessor.
 		/// Removes the null character from the RTF.  This is residue from developing

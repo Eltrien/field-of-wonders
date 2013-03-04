@@ -100,6 +100,8 @@ namespace Ubiquitous
         /// <param name="text"></param>
         public void WriteLine(string text, ChatIcon icon = ChatIcon.Default)
         {
+            if (tb == null)
+                return;
             if (tb.InvokeRequired)
             {
                 SetTextCallback d = new SetTextCallback(WriteLine);
@@ -117,12 +119,16 @@ namespace Ubiquitous
                 if( tb.Text.Length > 0 )
                     tb.AppendText(Environment.NewLine);
 
+
                 if (text != null)
                 {
-                    tb.AppendText(DateTime.Now.GetDateTimeFormats('T')[0] + " ");
+                    if (tb.TimeStamp)
+                        tb.AppendTextAsRtf(DateTime.Now.GetDateTimeFormats('T')[0] + " ", tb.Font, tb.TimeColor);
+
                     if(chatIcon != null)
                         tb.InsertImage( chatIcon );
-                    tb.AppendText(" " + text);
+
+                    tb.AppendTextAsRtf(" " + text,tb.Font,tb.TextColor);
                 }
                 tb.SelectionStart = tb.Text.Length;
                 tb.SelectionLength = 0;

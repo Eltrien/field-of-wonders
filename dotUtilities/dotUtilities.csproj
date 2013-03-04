@@ -34,6 +34,7 @@
     <Reference Include="Microsoft.JScript" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
@@ -44,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorUtils.cs" />
     <Compile Include="JScript.cs" />
     <Compile Include="JsonGenerics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

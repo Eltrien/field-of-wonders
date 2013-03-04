@@ -149,6 +149,7 @@ namespace dotSkype
             {
                 try
                 {
+                    Debug.Print("Waiting for Skype permission...");
                     while (!skypeRunning)
                         Thread.Sleep(1000);
 

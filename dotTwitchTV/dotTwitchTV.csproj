@@ -43,12 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CookieAwareWebClient.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="JSon.cs" />
     <Compile Include="Twitch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebClient\dotWebClient.csproj">
+      <Project>{E7DD099E-384E-4EDB-B217-D4850ACE32BC}</Project>
+      <Name>dotWebClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

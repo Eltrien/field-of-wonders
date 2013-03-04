@@ -33,10 +33,41 @@ namespace Ubiquitous
     {
         delegate void SetTransparencyCB(Color color);
         delegate void SetVisibilityCB(Control control, bool state);
+        delegate void SetTopMostCB(Form control, bool topmost);
         delegate void SetComboValueCB(ComboBox combo, object value);
         delegate void SetTooltipCB(ToolTip tooltip, Control control, string value);
         delegate void SetCheckedToolTipCB(ToolStripMenuItem item, bool state);
         #region Private classes and enums
+        private class LogStreamWriter : System.IO.TextWriter
+        {
+            Log _output = null;
+            String[] _maskPasswords;
+            public LogStreamWriter(Log _log, String[] maskPasswords)
+            {
+                _output = _log;
+                _maskPasswords = maskPasswords;
+            }
+            public override void WriteLine(string value)
+            {
+                if (_maskPasswords != null && !String.IsNullOrEmpty(value))
+                {
+                    foreach (var pass in _maskPasswords)
+                    {
+                        if( !String.IsNullOrEmpty(pass ))
+                        {
+                            value = value.Replace(pass, new String('*', pass.Length));
+                        }
+                    }
+                }
+
+                base.WriteLine(value);
+                _output.WriteLine(value.ToString());
+            }
+            public override Encoding Encoding
+            {
+                get { return System.Text.Encoding.UTF8; }
+            }
+        }
         private enum EndPoint
         {
             Sc2Tv,
@@ -341,16 +372,32 @@ namespace Ubiquitous
         private List<ChatUser> chatUsers;
         private bool isDisconnecting = false;
         private ToolTip viewersTooltip;
-        private bool btnClose = true;
+        private FontDialog fontDialog;
         #endregion 
 
         #region Form events and methods
         public MainForm()
         {
+
             //UnprotectConfig();
             settings = Properties.Settings.Default;
 
             InitializeComponent();
+
+            RefreshChatProperties();
+            log = new Log(textMessages);
+            var maskPasswords = new String[]{
+                settings.battlelogPassword,
+                settings.cyberPassword,
+                settings.empirePassword,
+                settings.GohaPassword,
+                settings.goodgamePassword,
+                settings.Sc2tvPassword,
+                settings.SteamBotPassword,
+                settings.TwitchPassword
+            };
+            Debug.Listeners.Add(new TextWriterTraceListener(new LogStreamWriter(log, maskPasswords)));
+
             setTopMost();
             chatUsers = new List<ChatUser>();
 
@@ -386,7 +433,6 @@ namespace Ubiquitous
             gohaIrc.Registered += OnGohaRegister;
             gohaIrc.Disconnected += OnGohaDisconnect;
 
-            log = new Log(textMessages);
 
             checkMark = new StatusImage(Properties.Resources.checkMarkGreen, Properties.Resources.checkMarkRed);
             streamStatus = new StatusImage(Properties.Resources.streamOnline, Properties.Resources.streamOffline);
@@ -427,7 +473,7 @@ namespace Ubiquitous
             settings.PropertyChanged += new PropertyChangedEventHandler(settings_PropertyChanged);
             settings.SettingsSaving += new SettingsSavingEventHandler(settings_SettingsSaving);
 
-
+            fontDialog = new FontDialog();
 
             Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
             #region Set tooltips
@@ -472,6 +518,8 @@ namespace Ubiquitous
         private void MainForm_Shown(object sender, EventArgs e)
         {
 
+            RefreshChatProperties();
+
             formTitle = String.Format("{0} {1}", this.Text, GetRunningVersion());
             this.Text = formTitle;
             contextMenuChat.Items.Clear();
@@ -485,7 +533,7 @@ namespace Ubiquitous
             Size = new System.Drawing.Size(settings.mainformWidth, settings.mainformHeight);
 
 
-            TopMost = settings.globalOnTop;
+            SetTopMost(this, settings.globalOnTop);
             StartPosition = settings.mainformStartPos;
             Location = settings.mainFormPosition;
 
@@ -530,58 +578,72 @@ namespace Ubiquitous
             }*/
 
         }
+        void RefreshChatProperties()
+        {
+            String[] refreshProperties = {
+                "globalChatFont",
+                "globalToolBoxBack",
+                "globalChatEnableTimestamps",
+                "globalChatTextColor",
+                "globalTimestampForeground"};
 
+            foreach (var p in refreshProperties)
+                SetChatProperties(p);
+
+
+        }
+        void SetChatProperties(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case "globalChatFont":
+                    textMessages.Font = settings.globalChatFont;
+                    break;
+                case "globalToolBoxBack":
+                    {
+                        textMessages.BackColor = settings.globalToolBoxBack;
+                        panelTools.BackColor = settings.globalToolBoxBack;
+                    }
+                    break;
+                case "globalChatTextColor":
+                    {
+                        textMessages.TextColor = settings.globalChatTextColor;
+                    }
+                    break;
+                case "globalTimestampForeground":
+                    {
+                        textMessages.TimeColor = settings.globalTimestampForeground;
+                    }
+                    break;
+                case "globalChatEnableTimestamps":
+                    {
+                        textMessages.TimeStamp = settings.globalChatEnableTimestamps;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
         void settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            /*
-            if ((e.PropertyName == "SteamBot" || e.PropertyName == "SteamBotPassword") )
-            {
-                settings.SteamBotAccessToken = null;
-                settings.SteamAdminId = null;
-            }
-            if (e.PropertyName == "steamEnabled")
-            {
-                steamBot = null;
-                if (!settings.steamEnabled)
-                {
-                    SendMessage(new Message("Stopping Steam bot...", EndPoint.Steam, EndPoint.SteamAdmin));
-                    bWorkerSteamPoll.CancelAsync();
-                    while (bWorkerSteamPoll.CancellationPending) ;
-                    checkMark.SetOff(pictureSteamBot);
-                }
-            }
-             */
+            SetChatProperties(e.PropertyName);
         }
 
 
         private void buttonFullscreen_Click(object sender, EventArgs e)
         {
             switchFullScreenMode();
-/*            if (buttonFullscreen.ImageIndex == 0)
-            {
 
-                buttonFullscreen.ImageIndex = 1;
-                panel1.Dock = DockStyle.Fill;
-                textMessages.Dock = DockStyle.Fill;
-            }
-            else
-            {
-
-                buttonFullscreen.ImageIndex = 0;
-
-                panel1.Dock = DockStyle.Top;
-                textMessages.Dock = DockStyle.None;
-            }*/
         }
 
         private void buttonSettings_Click_1(object sender, EventArgs e)
         {
             var lastOnTopState = this.TopMost;  
-            this.TopMost = false;
+            SetTopMost(this, false);
             SettingsDialog settingsForm = new SettingsDialog();
             settingsForm.ShowDialog();
             ProtectConfig();
-            this.TopMost = lastOnTopState;
+            SetTopMost(this, lastOnTopState);
 
         }
         private void comboSc2Channels_DropDown(object sender, EventArgs e)
@@ -611,7 +673,7 @@ namespace Ubiquitous
             if (settings.goodgameEnabled)
             {
                 var selItem = (Goodgame.GGChannel)comboGGChannels.SelectedItem;
-                SendMessage(new Message(String.Format("Switching Goodgame channel to: {0}", selItem.Title), EndPoint.Console, EndPoint.Console));
+                SendMessage(new Message(String.Format("Switching Goodgame channel to: {0}", selItem.Title), EndPoint.Console, EndPoint.SteamAdmin));
                 ggChat.ChatId = selItem.Id.ToString();
             }
         }
@@ -646,7 +708,7 @@ namespace Ubiquitous
                     }
                     else
                     {
-                        var msg = new Message(String.Format("Switching to {0}...", currentChat.ToString()), chatAlias.Endpoint, EndPoint.Console);
+                        var msg = new Message(String.Format("Switching to {0}...", currentChat.ToString()), chatAlias.Endpoint, EndPoint.SteamAdmin);
                         if (!isFlood(msg))
                             SendMessage(msg);
                     }
@@ -696,7 +758,9 @@ namespace Ubiquitous
 
                 lastMessagePerEndpoint.Add(message);
             }
-            catch { }
+            catch {
+                Debug.Print("Exception in isFlood()");
+            }
             return false;
 
         }
@@ -924,7 +988,7 @@ namespace Ubiquitous
                     }
                     else
                     {
-                        SendMessage(new Message(String.Format("Goha: Live Stream Player switched off!"), EndPoint.Gohatv, EndPoint.Console));
+                        SendMessage(new Message(String.Format("Goha: Live Stream Player switched off!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
                         streamStatus.SetOff(pictureGohaStream);
                     }
                 }
@@ -944,7 +1008,7 @@ namespace Ubiquitous
                     }
                     else
                     {
-                        SendMessage(new Message(String.Format("Sc2Tv: Live Stream Player switched off!"), EndPoint.Sc2Tv, EndPoint.Console));
+                        SendMessage(new Message(String.Format("Sc2Tv: Live Stream Player switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                         streamStatus.SetOff(pictureSc2tvStream);
                     }
                 }
@@ -959,7 +1023,7 @@ namespace Ubiquitous
             this.Visible = false;
             isDisconnecting = true;
             e.Cancel = true;
-            SendMessage(new Message(String.Format("Leaving chats..."), EndPoint.Steam, EndPoint.Console));
+            SendMessage(new Message(String.Format("Leaving chats..."), EndPoint.Steam, EndPoint.SteamAdmin));
             timerEverySecond.Enabled = false;
             try
             {
@@ -991,7 +1055,7 @@ namespace Ubiquitous
                 {
 
                     twitchIrc.Quit();
-                    SendMessage(new Message(String.Format("TwitchTV: disconnected!"), EndPoint.TwitchTV, EndPoint.Console));
+                    SendMessage(new Message(String.Format("TwitchTV: disconnected!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
                     checkMark.SetOff(pictureTwitch);
                 }
             }
@@ -1003,7 +1067,7 @@ namespace Ubiquitous
                 if (gohaIrc.IsRegistered)
                 {
                     gohaIrc.Disconnect(); //.Quit();
-                    SendMessage(new Message(String.Format("GohaTV: disconnected."), EndPoint.Gohatv, EndPoint.Console));
+                    SendMessage(new Message(String.Format("GohaTV: disconnected."), EndPoint.Gohatv, EndPoint.SteamAdmin));
                     checkMark.SetOff(pictureGoha);
                 }
             }
@@ -1014,7 +1078,7 @@ namespace Ubiquitous
                 return;
 
             ggChat.Disconnect();
-            SendMessage(new Message(String.Format("Goodgame: disconnected."), EndPoint.Goodgame, EndPoint.Console));
+            SendMessage(new Message(String.Format("Goodgame: disconnected."), EndPoint.Goodgame, EndPoint.SteamAdmin));
             checkMark.SetOff(pictureGoodgame);
         }
         private void StopSteamBot()
@@ -1024,7 +1088,7 @@ namespace Ubiquitous
 
             bWorkerSteamPoll.CancelAsync();
             while (bWorkerSteamPoll.CancellationPending) Thread.Sleep(10);
-            SendMessage(new Message(String.Format("Steam: disconnected."), EndPoint.Steam, EndPoint.Console));
+            SendMessage(new Message(String.Format("Steam: disconnected."), EndPoint.Steam, EndPoint.SteamAdmin));
             checkMark.SetOff(pictureSteamBot);
         }
         private void StopSc2Chat()
@@ -1033,7 +1097,7 @@ namespace Ubiquitous
             {
                 bWorkerSc2TvPoll.CancelAsync();
                 while (bWorkerSc2TvPoll.CancellationPending) Thread.Sleep(10);
-                SendMessage(new Message(String.Format("Sc2tv: disconnected."), EndPoint.Sc2Tv, EndPoint.Console));
+                SendMessage(new Message(String.Format("Sc2tv: disconnected."), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                 checkMark.SetOff(pictureSc2tv);
 
             }  
@@ -1121,16 +1185,11 @@ namespace Ubiquitous
         {
             if (checkBoxOnTop.Checked)
             {
-                Debug.Print("set on top");
-                TopMost = true;
-
-                settings.globalOnTop = true;
+                SetTopMost(this, true);
             }
             else
             {
-                Debug.Print("disable on top");
-                TopMost = false;
-                settings.globalOnTop = false;
+                SetTopMost( this, false);
             }
         }
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
@@ -1150,19 +1209,19 @@ namespace Ubiquitous
         }
         private void switchFullScreenMode()
         {
-            if (textMessages.Dock == DockStyle.Fill)
+            if (panelMessages.Dock == DockStyle.Fill)
             {
                 settings.isFullscreenMode = false;
-                textMessages.Dock = DockStyle.None;
-                textMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
-                textMessages.Height = textCommand.Top;
-                textMessages.Width = groupBox1.Left - 5;
+                panelMessages.Dock = DockStyle.None;
+                panelMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
+                panelMessages.Height = textCommand.Top;
+                panelMessages.Width = groupBox1.Left - 5;
                 textMessages.ScrollToEnd();
             }
             else
             {
                 settings.isFullscreenMode = true;
-                textMessages.Dock = DockStyle.Fill;
+                panelMessages.Dock = DockStyle.Fill;
                 textMessages.ScrollToEnd();
             }
         }
@@ -1170,27 +1229,7 @@ namespace Ubiquitous
         {
             switchFullScreenMode();
         }
-        private void textMessages_MouseHover(object sender, EventArgs e)
-        {
-        }
-        private void textMessages_MouseLeave(object sender, EventArgs e)
-        {
-        }
-        private void MainForm_MouseHover(object sender, EventArgs e)
-        {
 
-        }
-        private void MainForm_MouseLeave(object sender, EventArgs e)
-        {
-        }
-        private void checkBox1_MouseHover(object sender, EventArgs e)
-        {
-
-        }
-        private void checkBox1_MouseLeave(object sender, EventArgs e)
-        {
-
-        }
         private void hideTools()
         {
             if (checkBoxOnTop.Visible)
@@ -1273,6 +1312,18 @@ namespace Ubiquitous
             else
             {
                 control.Visible = visibility;
+            }
+        }
+        private void SetTopMost(Form form, bool topmost)
+        {
+            if (form.InvokeRequired)
+            {
+                SetTopMostCB cb = new SetTopMostCB(SetTopMost);
+                form.Invoke(cb, new object[] { form, topmost });
+            }
+            else
+            {
+                form.TopMost = topmost;
             }
         }
         private void SetComboValue(ComboBox combo, object value)
@@ -1366,7 +1417,7 @@ namespace Ubiquitous
                 showTools();
             }
 
-            if (settings.obsRemoteEnable && textMessages.Dock != DockStyle.Fill)
+            if (settings.obsRemoteEnable && panelMessages.Dock != DockStyle.Fill)
             {
                 var stats = String.Format(
                     " FPS: {0} RATE: {1}K DROPS: {2}",
@@ -1520,7 +1571,9 @@ namespace Ubiquitous
                     while (a.playState == WMPPlayState.wmppsPlaying)
                         Thread.Sleep(10);
                 }
-                catch{}                
+                catch{
+                    Debug.Print("Exception in OnGoLive()");
+                }                
             }
 
            
@@ -1576,7 +1629,9 @@ namespace Ubiquitous
                     while (a.playState == WMPPlayState.wmppsPlaying)
                         Thread.Sleep(10);
                 }
-                catch { }
+                catch {
+                    Debug.Print("Exception in OnGoOffline()");
+                }
             }
 
            
@@ -1636,12 +1691,14 @@ namespace Ubiquitous
             }
             catch
             {
+                Debug.Print("Exception in ConnectTwitchIRC()");
             }
 
             twitchIrc = new IrcClient();
             twitchIrc.Connected += OnTwitchConnect;
             twitchIrc.Registered += OnTwitchRegister;
             twitchIrc.Disconnected += OnTwitchDisconnect;
+            twitchIrc.Error += new EventHandler<IrcErrorEventArgs>(twitchIrc_Error);
             twitchIrc.RawMessageReceived += new EventHandler<IrcRawMessageEventArgs>(twitchIrc_RawMessageReceived);
             using (var connectedEvent = new ManualResetEventSlim(false))
             {
@@ -1662,12 +1719,22 @@ namespace Ubiquitous
                 }
             }
 
+        void twitchIrc_Error(object sender, IrcErrorEventArgs e)
+        {
+            SendMessage( new Message( String.Format( "Twitch IRC error: {0}", e.Error.Message), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+        }
+
         void twitchIrc_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
         {
+
             if (e.RawContent.Contains("Login failed"))
             {
                 SendMessage(new Message("Twitch login failed! Check settings!", EndPoint.TwitchTV, EndPoint.SteamAdmin));
                 isDisconnecting = true;
+            }
+            else if (settings.twitchDebugMessages)
+            {
+                SendMessage(new Message(e.RawContent, EndPoint.TwitchTV, EndPoint.SteamAdmin));
             }
         }
 
@@ -1858,7 +1925,7 @@ namespace Ubiquitous
             try
             {
                 var channel = (dotSC2TV.Channel)comboSc2Channels.SelectedValue;
-                SendMessage(new Message(String.Format("Switching sc2tv channel to: {0}", channel.Title), EndPoint.Console, EndPoint.Console));
+                SendMessage(new Message(String.Format("Switching sc2tv channel to: {0}", channel.Title), EndPoint.Console, EndPoint.SteamAdmin));
                 sc2ChannelId = channel.Id;
             }
             catch { }
@@ -1869,7 +1936,7 @@ namespace Ubiquitous
                 return;
             if (!sc2tv.updateChat(sc2ChannelId))
             {
-                SendMessage(new Message(String.Format(@"Sc2tv channel #{0} is unavailable", sc2ChannelId ), EndPoint.Sc2Tv, EndPoint.Console));
+                SendMessage(new Message(String.Format(@"Sc2tv channel #{0} is unavailable", sc2ChannelId ), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                 SendMessageToSc2Tv(new Message("Revive!", EndPoint.SteamAdmin, EndPoint.Sc2Tv));
 
             }
@@ -1937,7 +2004,7 @@ namespace Ubiquitous
             }
             else
             {
-                SendMessage(new Message(String.Format("Steam: login failed"), EndPoint.Steam, EndPoint.Console));
+                SendMessage(new Message(String.Format("Steam: login failed"), EndPoint.Steam, EndPoint.SteamAdmin));
             }
             settings.Save();
         }
@@ -1983,7 +2050,7 @@ namespace Ubiquitous
             }
             else
                 SendMessage(new Message(String.Format("Can't find {0} in your friends! Check settings or add that account into friend list for bot!", 
-                    settings.SteamAdmin), EndPoint.Steam, EndPoint.Console));
+                    settings.SteamAdmin), EndPoint.Steam, EndPoint.SteamAdmin));
 
             if( !bWorkerSteamPoll.IsBusy )
                 bWorkerSteamPoll.RunWorkerAsync();
@@ -2164,13 +2231,13 @@ namespace Ubiquitous
         public void OnBattlelogConnect(object sender, EventArgs e)
         {
             checkMark.SetOn(pictureBattlelog);
-            SendMessage(new Message(String.Format("Connected to the Battlelog!"), EndPoint.Battlelog, EndPoint.Console));          
+            SendMessage(new Message(String.Format("Connected to the Battlelog!"), EndPoint.Battlelog, EndPoint.SteamAdmin));          
         }
         public void OnBattlelogJson(object sender, StringEventArgs e)
         {
             if( String.IsNullOrEmpty(e.Message))
                 return;
-            SendMessage(new Message(String.Format("Unknown JSON from the Battlelog: {0}", e.Message), EndPoint.Battlelog, EndPoint.Console));
+            SendMessage(new Message(String.Format("Unknown JSON from the Battlelog: {0}", e.Message), EndPoint.Battlelog, EndPoint.SteamAdmin));
         }
         public void OnBattlelogMessage(object sender, BattleChatMessageArgs e)
         {
@@ -2195,6 +2262,7 @@ namespace Ubiquitous
             {
                 gohaIrc.Connected += (sender2, e2) => connectedEvent.Set();
                 gohaIrc.RawMessageReceived += new EventHandler<IrcRawMessageEventArgs>(gohaIrc_RawMessageReceived);
+                gohaIrc.Error += new EventHandler<IrcErrorEventArgs>(gohaIrc_Error);
                 gohaIrc.Connect(gohaIRCDomain, false, new IrcUserRegistrationInfo()
                 {
                     NickName = settings.GohaUser,
@@ -2212,10 +2280,19 @@ namespace Ubiquitous
             }
         }
 
+        void gohaIrc_Error(object sender, IrcErrorEventArgs e)
+        {            
+            SendMessage(new Message(String.Format("Goha IRC error: {0}",e.Error.Message), EndPoint.Gohatv, EndPoint.SteamAdmin));            
+        }
+
         void gohaIrc_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
         {
             if( e.RawContent.Contains("Invalid password") )
                 SendMessage(new Message("Goha login failed! Check settings!", EndPoint.Gohatv, EndPoint.SteamAdmin));
+            else if (settings.gohaDebugMessages)
+            {
+                SendMessage(new Message(e.RawContent, EndPoint.Gohatv, EndPoint.SteamAdmin));
+            }
         }
         private void OnGohaDisconnect(object sender, EventArgs e)
         {
@@ -2419,18 +2496,13 @@ namespace Ubiquitous
 
                 foreach (Source source in scene.sources)
                 {
-                    ToolStripMenuItem subitem = (ToolStripMenuItem)item.DropDownItems.Add(source.name,null, contextSceneSwitch_onClick);
-                    subitem.MouseDown += new MouseEventHandler(subitem_MouseDown);                    
+                    ToolStripMenuItem subitem = (ToolStripMenuItem)item.DropDownItems.Add(source.name,null, contextSceneSwitch_onClick);                    
                     if (source.render)
                         subitem.Checked = true;
                 }
             }
         }
 
-        void subitem_MouseDown(object sender, MouseEventArgs e)
-        {
-            btnClose = false;
-        }
 
         void contextSceneSwitch_onClick(object sender, EventArgs e)
         {
@@ -2518,7 +2590,6 @@ namespace Ubiquitous
 
         }
 
-
-
     }
+
 }
