@@ -882,7 +882,7 @@ namespace Ubiquitous
                     }
                     else
                     {
-                        SendMessage(new Message(String.Format("Goha: Live Stream Player switched on!"), EndPoint.Gohatv, EndPoint.Console));
+                        SendMessage(new Message(String.Format("Goha: Live Stream Player switched on!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
                         streamStatus.SetOn(pictureGohaStream);
                     }
                 }
@@ -894,6 +894,7 @@ namespace Ubiquitous
                 if (sc2tv.LoggedIn && !sc2tv.isLive())
                 {
                     sc2tv.setLiveStatus(true);
+                    Thread.Sleep(2000);
                     sc2tv.LoadStreamSettings();
                     if (!sc2tv.isLive())
                     {
@@ -902,7 +903,7 @@ namespace Ubiquitous
                     }
                     else
                     {
-                        SendMessage(new Message(String.Format("Sc2Tv: Live Stream Player switched on!"), EndPoint.Sc2Tv, EndPoint.Console));
+                        SendMessage(new Message(String.Format("Sc2Tv: Live Stream Player switched on!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                         streamStatus.SetOn(pictureSc2tvStream);
                     }
                 }
@@ -935,6 +936,7 @@ namespace Ubiquitous
                 if( sc2tv.LoggedIn && sc2tv.isLive() )
                 {
                     sc2tv.setLiveStatus(false);
+                    Thread.Sleep(2000);
                     sc2tv.LoadStreamSettings();
                     if (sc2tv.isLive())
                     {
