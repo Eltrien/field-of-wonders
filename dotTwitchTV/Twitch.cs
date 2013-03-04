@@ -84,7 +84,11 @@ namespace dotTwitchTV
                     var tempChannel = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
 
                     if (tempChannel == null)
+                    {
                         Debug.Print("Can't parse twitch stats of {0}. Url: {1}", currentChannelName, url);
+                        return;
+                    }
+
 
                     currentChannel = tempChannel;
 

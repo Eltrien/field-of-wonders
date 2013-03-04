@@ -396,8 +396,10 @@ namespace Ubiquitous
                 settings.SteamBotPassword,
                 settings.TwitchPassword
             };
-            if( settings.globalDebug )
+            if (settings.globalDebug)
+            {
                 Debug.Listeners.Add(new TextWriterTraceListener(new LogStreamWriter(log, maskPasswords)));
+            }
 
             setTopMost();
             chatUsers = new List<ChatUser>();
