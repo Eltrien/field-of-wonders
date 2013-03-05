@@ -89,6 +89,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.timerEverySecond = new System.Windows.Forms.Timer(this.components);
+            this.label17 = new System.Windows.Forms.Label();
+            this.pictureGohaWeb = new System.Windows.Forms.PictureBox();
             this.textMessages = new SC2TV.RTFControl.ExRichTextBox();
             this.comboSc2Channels = new Ubiquitous.ComboBoxWithId();
             this.comboGGChannels = new Ubiquitous.ComboBoxWithId();
@@ -116,6 +118,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureSc2tvStream)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureGohaStream)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureStream)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureGohaWeb)).BeginInit();
             this.SuspendLayout();
             // 
             // bWorkerSteamPoll
@@ -139,45 +142,45 @@
             this.gohatvToolStripMenuItem,
             this.allToolStripMenuItem});
             this.contextMenuChat.Name = "contextMenuChat";
-            this.contextMenuChat.Size = new System.Drawing.Size(125, 114);
+            this.contextMenuChat.Size = new System.Drawing.Size(153, 136);
             this.contextMenuChat.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuChat_ItemClicked);
             // 
             // twitchToolStripMenuItem
             // 
             this.twitchToolStripMenuItem.Name = "twitchToolStripMenuItem";
-            this.twitchToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.twitchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.twitchToolStripMenuItem.Text = "Twitch.tv";
             this.twitchToolStripMenuItem.Click += new System.EventHandler(this.twitchToolStripMenuItem_Click);
             // 
             // sc2TvruToolStripMenuItem
             // 
             this.sc2TvruToolStripMenuItem.Name = "sc2TvruToolStripMenuItem";
-            this.sc2TvruToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.sc2TvruToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.sc2TvruToolStripMenuItem.Text = "Sc2tv.ru";
             // 
             // empiretvToolStripMenuItem
             // 
             this.empiretvToolStripMenuItem.Name = "empiretvToolStripMenuItem";
-            this.empiretvToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.empiretvToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.empiretvToolStripMenuItem.Text = "Empire.tv";
             // 
             // gohatvToolStripMenuItem
             // 
             this.gohatvToolStripMenuItem.Name = "gohatvToolStripMenuItem";
-            this.gohatvToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.gohatvToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.gohatvToolStripMenuItem.Text = "Goha.tv";
             // 
             // allToolStripMenuItem
             // 
             this.allToolStripMenuItem.Name = "allToolStripMenuItem";
-            this.allToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.allToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.allToolStripMenuItem.Text = "All";
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panel1.Controls.Add(this.panelMessages);
             this.panel1.Controls.Add(this.pictureCurrentChat);
@@ -194,14 +197,14 @@
             this.panel1.ForeColor = System.Drawing.SystemColors.Window;
             this.panel1.Location = new System.Drawing.Point(-3, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(729, 587);
+            this.panel1.Size = new System.Drawing.Size(731, 624);
             this.panel1.TabIndex = 0;
             // 
             // panelMessages
             // 
-            this.panelMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelMessages.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.panelMessages.Controls.Add(this.pictureBox1);
             this.panelMessages.Controls.Add(this.panelTools);
@@ -211,7 +214,7 @@
             this.panelMessages.Location = new System.Drawing.Point(3, 0);
             this.panelMessages.Name = "panelMessages";
             this.panelMessages.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.panelMessages.Size = new System.Drawing.Size(574, 565);
+            this.panelMessages.Size = new System.Drawing.Size(576, 602);
             this.panelMessages.TabIndex = 36;
             // 
             // pictureBox1
@@ -263,7 +266,7 @@
             this.contextSceneSwitch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.asdfToolStripMenuItem});
             this.contextSceneSwitch.Name = "contextSceneSwitch";
-            this.contextSceneSwitch.Size = new System.Drawing.Size(129, 26);
+            this.contextSceneSwitch.Size = new System.Drawing.Size(124, 26);
             this.contextSceneSwitch.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextSceneSwitch_Closing);
             this.contextSceneSwitch.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextSceneSwitch_ItemClicked);
             // 
@@ -271,7 +274,7 @@
             // 
             this.asdfToolStripMenuItem.CheckOnClick = true;
             this.asdfToolStripMenuItem.Name = "asdfToolStripMenuItem";
-            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.asdfToolStripMenuItem.Text = "No scenes";
             // 
             // checkBoxBorder
@@ -354,7 +357,7 @@
             this.pictureCurrentChat.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.pictureCurrentChat.ContextMenuStrip = this.contextMenuChat;
             this.pictureCurrentChat.Image = global::Ubiquitous.Properties.Resources.twitchicon;
-            this.pictureCurrentChat.Location = new System.Drawing.Point(2, 567);
+            this.pictureCurrentChat.Location = new System.Drawing.Point(2, 604);
             this.pictureCurrentChat.Name = "pictureCurrentChat";
             this.pictureCurrentChat.Size = new System.Drawing.Size(17, 18);
             this.pictureCurrentChat.TabIndex = 34;
@@ -367,7 +370,7 @@
             this.buttonFullscreen.BackColor = System.Drawing.SystemColors.Window;
             this.buttonFullscreen.ImageIndex = 0;
             this.buttonFullscreen.ImageList = this.imageListChatSize;
-            this.buttonFullscreen.Location = new System.Drawing.Point(704, 565);
+            this.buttonFullscreen.Location = new System.Drawing.Point(706, 602);
             this.buttonFullscreen.Name = "buttonFullscreen";
             this.buttonFullscreen.Size = new System.Drawing.Size(23, 21);
             this.buttonFullscreen.TabIndex = 9;
@@ -383,13 +386,13 @@
             // 
             // textCommand
             // 
-            this.textCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textCommand.BackColor = System.Drawing.Color.Black;
             this.textCommand.ForeColor = System.Drawing.Color.LightYellow;
-            this.textCommand.Location = new System.Drawing.Point(21, 567);
+            this.textCommand.Location = new System.Drawing.Point(21, 604);
             this.textCommand.Name = "textCommand";
-            this.textCommand.Size = new System.Drawing.Size(680, 20);
+            this.textCommand.Size = new System.Drawing.Size(682, 20);
             this.textCommand.TabIndex = 33;
             this.textCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textCommand_KeyUp);
             // 
@@ -397,7 +400,7 @@
             // 
             this.buttonInvisible.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonInvisible.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonInvisible.Location = new System.Drawing.Point(664, 435);
+            this.buttonInvisible.Location = new System.Drawing.Point(665, 435);
             this.buttonInvisible.Name = "buttonInvisible";
             this.buttonInvisible.Size = new System.Drawing.Size(62, 23);
             this.buttonInvisible.TabIndex = 6;
@@ -408,6 +411,8 @@
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label17);
+            this.groupBox1.Controls.Add(this.pictureGohaWeb);
             this.groupBox1.Controls.Add(this.label15);
             this.groupBox1.Controls.Add(this.pictureCybergame);
             this.groupBox1.Controls.Add(this.label13);
@@ -429,9 +434,9 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.pictureTwitch);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.groupBox1.Location = new System.Drawing.Point(583, 3);
+            this.groupBox1.Location = new System.Drawing.Point(585, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(143, 282);
+            this.groupBox1.Size = new System.Drawing.Size(143, 273);
             this.groupBox1.TabIndex = 21;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Chat login status";
@@ -440,7 +445,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label15.Location = new System.Drawing.Point(34, 255);
+            this.label15.Location = new System.Drawing.Point(34, 244);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(99, 18);
             this.label15.TabIndex = 20;
@@ -450,7 +455,7 @@
             // 
             this.pictureCybergame.Image = ((System.Drawing.Image)(resources.GetObject("pictureCybergame.Image")));
             this.pictureCybergame.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureCybergame.InitialImage")));
-            this.pictureCybergame.Location = new System.Drawing.Point(6, 253);
+            this.pictureCybergame.Location = new System.Drawing.Point(6, 242);
             this.pictureCybergame.Name = "pictureCybergame";
             this.pictureCybergame.Size = new System.Drawing.Size(20, 20);
             this.pictureCybergame.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -461,7 +466,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label13.Location = new System.Drawing.Point(34, 230);
+            this.label13.Location = new System.Drawing.Point(34, 222);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(70, 18);
             this.label13.TabIndex = 18;
@@ -471,7 +476,7 @@
             // 
             this.pictureEmpire.Image = ((System.Drawing.Image)(resources.GetObject("pictureEmpire.Image")));
             this.pictureEmpire.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureEmpire.InitialImage")));
-            this.pictureEmpire.Location = new System.Drawing.Point(6, 228);
+            this.pictureEmpire.Location = new System.Drawing.Point(6, 220);
             this.pictureEmpire.Name = "pictureEmpire";
             this.pictureEmpire.Size = new System.Drawing.Size(20, 20);
             this.pictureEmpire.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -482,17 +487,17 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label10.Location = new System.Drawing.Point(34, 204);
+            this.label10.Location = new System.Drawing.Point(33, 178);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(60, 18);
+            this.label10.Size = new System.Drawing.Size(95, 18);
             this.label10.TabIndex = 16;
-            this.label10.Text = "Goha.tv";
+            this.label10.Text = "Goha.tv(IRC)";
             // 
             // pictureGoha
             // 
             this.pictureGoha.Image = ((System.Drawing.Image)(resources.GetObject("pictureGoha.Image")));
             this.pictureGoha.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureGoha.InitialImage")));
-            this.pictureGoha.Location = new System.Drawing.Point(6, 202);
+            this.pictureGoha.Location = new System.Drawing.Point(5, 176);
             this.pictureGoha.Name = "pictureGoha";
             this.pictureGoha.Size = new System.Drawing.Size(20, 20);
             this.pictureGoha.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -503,7 +508,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label9.Location = new System.Drawing.Point(34, 177);
+            this.label9.Location = new System.Drawing.Point(33, 156);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(65, 18);
             this.label9.TabIndex = 14;
@@ -513,7 +518,7 @@
             // 
             this.pictureBattlelog.Image = ((System.Drawing.Image)(resources.GetObject("pictureBattlelog.Image")));
             this.pictureBattlelog.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBattlelog.InitialImage")));
-            this.pictureBattlelog.Location = new System.Drawing.Point(6, 176);
+            this.pictureBattlelog.Location = new System.Drawing.Point(5, 154);
             this.pictureBattlelog.Name = "pictureBattlelog";
             this.pictureBattlelog.Size = new System.Drawing.Size(20, 20);
             this.pictureBattlelog.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -524,7 +529,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label8.Location = new System.Drawing.Point(32, 151);
+            this.label8.Location = new System.Drawing.Point(31, 134);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(83, 18);
             this.label8.TabIndex = 12;
@@ -534,7 +539,7 @@
             // 
             this.pictureGoodgame.Image = ((System.Drawing.Image)(resources.GetObject("pictureGoodgame.Image")));
             this.pictureGoodgame.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureGoodgame.InitialImage")));
-            this.pictureGoodgame.Location = new System.Drawing.Point(6, 149);
+            this.pictureGoodgame.Location = new System.Drawing.Point(5, 132);
             this.pictureGoodgame.Name = "pictureGoodgame";
             this.pictureGoodgame.Size = new System.Drawing.Size(20, 20);
             this.pictureGoodgame.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -545,7 +550,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(32, 125);
+            this.label5.Location = new System.Drawing.Point(31, 112);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(49, 18);
             this.label5.TabIndex = 10;
@@ -555,7 +560,7 @@
             // 
             this.pictureSkype.Image = ((System.Drawing.Image)(resources.GetObject("pictureSkype.Image")));
             this.pictureSkype.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureSkype.InitialImage")));
-            this.pictureSkype.Location = new System.Drawing.Point(6, 123);
+            this.pictureSkype.Location = new System.Drawing.Point(5, 110);
             this.pictureSkype.Name = "pictureSkype";
             this.pictureSkype.Size = new System.Drawing.Size(20, 20);
             this.pictureSkype.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -566,7 +571,7 @@
             // 
             this.pictureSteamBot.Image = ((System.Drawing.Image)(resources.GetObject("pictureSteamBot.Image")));
             this.pictureSteamBot.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureSteamBot.InitialImage")));
-            this.pictureSteamBot.Location = new System.Drawing.Point(6, 19);
+            this.pictureSteamBot.Location = new System.Drawing.Point(5, 22);
             this.pictureSteamBot.Name = "pictureSteamBot";
             this.pictureSteamBot.Size = new System.Drawing.Size(20, 20);
             this.pictureSteamBot.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -578,7 +583,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(32, 99);
+            this.label4.Location = new System.Drawing.Point(31, 90);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(62, 18);
             this.label4.TabIndex = 8;
@@ -588,7 +593,7 @@
             // 
             this.pictureSteamAdmin.Image = ((System.Drawing.Image)(resources.GetObject("pictureSteamAdmin.Image")));
             this.pictureSteamAdmin.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureSteamAdmin.InitialImage")));
-            this.pictureSteamAdmin.Location = new System.Drawing.Point(6, 45);
+            this.pictureSteamAdmin.Location = new System.Drawing.Point(5, 44);
             this.pictureSteamAdmin.Name = "pictureSteamAdmin";
             this.pictureSteamAdmin.Size = new System.Drawing.Size(20, 20);
             this.pictureSteamAdmin.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -599,7 +604,7 @@
             // 
             this.pictureSc2tv.Image = ((System.Drawing.Image)(resources.GetObject("pictureSc2tv.Image")));
             this.pictureSc2tv.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureSc2tv.InitialImage")));
-            this.pictureSc2tv.Location = new System.Drawing.Point(6, 97);
+            this.pictureSc2tv.Location = new System.Drawing.Point(5, 88);
             this.pictureSc2tv.Name = "pictureSc2tv";
             this.pictureSc2tv.Size = new System.Drawing.Size(20, 20);
             this.pictureSc2tv.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -610,7 +615,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(32, 21);
+            this.label1.Location = new System.Drawing.Point(31, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(78, 18);
             this.label1.TabIndex = 4;
@@ -620,7 +625,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(32, 73);
+            this.label3.Location = new System.Drawing.Point(31, 68);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(101, 18);
             this.label3.TabIndex = 6;
@@ -630,7 +635,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(32, 47);
+            this.label2.Location = new System.Drawing.Point(31, 46);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(96, 18);
             this.label2.TabIndex = 4;
@@ -640,7 +645,7 @@
             // 
             this.pictureTwitch.Image = ((System.Drawing.Image)(resources.GetObject("pictureTwitch.Image")));
             this.pictureTwitch.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureTwitch.InitialImage")));
-            this.pictureTwitch.Location = new System.Drawing.Point(6, 71);
+            this.pictureTwitch.Location = new System.Drawing.Point(5, 66);
             this.pictureTwitch.Name = "pictureTwitch";
             this.pictureTwitch.Size = new System.Drawing.Size(20, 20);
             this.pictureTwitch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -659,7 +664,7 @@
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.pictureStream);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.groupBox2.Location = new System.Drawing.Point(583, 291);
+            this.groupBox2.Location = new System.Drawing.Point(585, 282);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(143, 138);
             this.groupBox2.TabIndex = 22;
@@ -751,7 +756,7 @@
             // buttonSettings
             // 
             this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSettings.Location = new System.Drawing.Point(584, 435);
+            this.buttonSettings.Location = new System.Drawing.Point(585, 435);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(75, 23);
             this.buttonSettings.TabIndex = 5;
@@ -763,7 +768,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(584, 512);
+            this.label7.Location = new System.Drawing.Point(585, 512);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 13);
             this.label7.TabIndex = 8;
@@ -775,7 +780,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(584, 469);
+            this.label6.Location = new System.Drawing.Point(585, 469);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(42, 13);
             this.label6.TabIndex = 24;
@@ -787,6 +792,27 @@
             this.timerEverySecond.Enabled = true;
             this.timerEverySecond.Interval = 1000;
             this.timerEverySecond.Tick += new System.EventHandler(this.timerEverySecond_Tick);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label17.Location = new System.Drawing.Point(33, 200);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(105, 18);
+            this.label17.TabIndex = 22;
+            this.label17.Text = "Goha.tv(WEB)";
+            // 
+            // pictureGohaWeb
+            // 
+            this.pictureGohaWeb.Image = ((System.Drawing.Image)(resources.GetObject("pictureGohaWeb.Image")));
+            this.pictureGohaWeb.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureGohaWeb.InitialImage")));
+            this.pictureGohaWeb.Location = new System.Drawing.Point(5, 198);
+            this.pictureGohaWeb.Name = "pictureGohaWeb";
+            this.pictureGohaWeb.Size = new System.Drawing.Size(20, 20);
+            this.pictureGohaWeb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureGohaWeb.TabIndex = 21;
+            this.pictureGohaWeb.TabStop = false;
             // 
             // textMessages
             // 
@@ -808,7 +834,7 @@
             this.textMessages.SaveToImage = global::Ubiquitous.Properties.Settings.Default.globalChat2Image;
             this.textMessages.SaveToImageFileName = global::Ubiquitous.Properties.Settings.Default.globalChatImageFilename;
             this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.textMessages.Size = new System.Drawing.Size(569, 565);
+            this.textMessages.Size = new System.Drawing.Size(571, 602);
             this.textMessages.TabIndex = 23;
             this.textMessages.Text = "";
             this.textMessages.TextColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
@@ -830,7 +856,7 @@
             this.comboSc2Channels.DropDownWidth = 300;
             this.comboSc2Channels.ForeColor = System.Drawing.SystemColors.Window;
             this.comboSc2Channels.FormattingEnabled = true;
-            this.comboSc2Channels.Location = new System.Drawing.Point(585, 485);
+            this.comboSc2Channels.Location = new System.Drawing.Point(586, 485);
             this.comboSc2Channels.Name = "comboSc2Channels";
             this.comboSc2Channels.Size = new System.Drawing.Size(86, 21);
             this.comboSc2Channels.TabIndex = 7;
@@ -845,7 +871,7 @@
             this.comboGGChannels.DropDownWidth = 300;
             this.comboGGChannels.ForeColor = System.Drawing.SystemColors.Window;
             this.comboGGChannels.FormattingEnabled = true;
-            this.comboGGChannels.Location = new System.Drawing.Point(584, 528);
+            this.comboGGChannels.Location = new System.Drawing.Point(585, 528);
             this.comboGGChannels.Name = "comboGGChannels";
             this.comboGGChannels.Size = new System.Drawing.Size(121, 21);
             this.comboGGChannels.TabIndex = 26;
@@ -859,7 +885,7 @@
             this.AcceptButton = this.buttonInvisible;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(724, 585);
+            this.ClientSize = new System.Drawing.Size(726, 622);
             this.Controls.Add(this.panel1);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "mainFormPosition", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.DataBindings.Add(new System.Windows.Forms.Binding("TopMost", global::Ubiquitous.Properties.Settings.Default, "mainformTopMost", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -906,6 +932,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureSc2tvStream)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureGohaStream)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureStream)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureGohaWeb)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -974,6 +1001,8 @@
         private System.Windows.Forms.ContextMenuStrip contextSceneSwitch;
         private System.Windows.Forms.ToolStripMenuItem asdfToolStripMenuItem;
         private System.Windows.Forms.Panel panelMessages;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.PictureBox pictureGohaWeb;
     }
 }
 

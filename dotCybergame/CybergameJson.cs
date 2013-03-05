@@ -34,7 +34,7 @@ namespace dotCybergame
             {
                 if (_messages == null)
                     return null;
-                _messages.Sort((m1, m2) => m1.messageid.CompareTo(m2.unixtimestamp));
+                _messages.Sort((m1, m2) => m1.unixtimestamp.CompareTo(m2.unixtimestamp));
                 return _messages;
             }
             set

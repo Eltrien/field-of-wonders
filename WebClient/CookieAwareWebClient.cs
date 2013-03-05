@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Collections;
 using System.IO;
+using System.Net.Sockets;
+using dotUtilities;
 namespace dotWebClient
 {
 
@@ -22,6 +24,8 @@ namespace dotWebClient
         private readonly CookieContainer m_container = new CookieContainer();
         private WebExceptionStatus _lastWebError;
         private Dictionary<ContentType, string> contentTypes;
+        private HttpWebResponse gResponse;
+
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
         public bool stillReading = false;
         public CookieAwareWebClient()
@@ -88,40 +92,78 @@ namespace dotWebClient
         {
             return m_container.GetCookies(new Uri(url))[name].Value;
         }
-        public string PostUrlEncoded( string url, string param )
+        public string postFormDataLowLevel(string formActionUrl, string postData)
         {
-            byte[] requestData = Encoding.UTF8.GetBytes(param);
-            string result = string.Empty;
+            var uri = new Uri(formActionUrl);
+            IPHostEntry hostEntry = Dns.GetHostEntry(uri.Host);
+            IPAddress address = hostEntry.AddressList[0];
+            IPEndPoint ipEndpoint = new IPEndPoint(address, 80);
+            Socket socket = new Socket(ipEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
             try
             {
-                HttpWebRequest request = (HttpWebRequest)GetWebRequest(new Uri(url));
-                request.Method = "POST";
-                request.UserAgent = userAgent;
-                request.ContentType = "application/x-www-form-urlencoded";
-                //request.CookieContainer = m_container;
-                request.ContentLength = requestData.Length;
-                request.KeepAlive = true;
-                request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
-
-                using (Stream stream = request.GetRequestStream())
-                    stream.Write(requestData, 0, requestData.Length);
-
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                socket.Connect(ipEndpoint);
+                if (socket.Connected)
                 {
-                      //foreach (Cookie c in response.Cookies)
-                      //Debug.Print(c.Name + " = " + c.Value);
-
-                    var reader = new StreamReader(response.GetResponseStream(), System.Text.Encoding.GetEncoding("utf-8"));
-                    result = reader.ReadToEnd();
-                    //Debug.Print(result);
+                    Debug.Print(String.Format("WebClient postFormDataLowLevel: Connected to {0}", ipEndpoint.ToString()));
                 }
-
+                else
+                {
+                    Debug.Print(String.Format("WebClient postFormDataLowLevel: can't connect to {0}", ipEndpoint.ToString()));
+                }
             }
-            catch
+            catch (SocketException ex)
             {
-                Debug.Print(String.Format("WebClient exception in PostUrlEncoded() url: {0}",url));
-
+                Debug.Print("WebClient postFormDataLowLevel: socket exception {0}", ex.Message);
             }
+            var buffer = Encoding.UTF8.GetBytes(postData);
+
+            String requestString = String.Format("POST {0} HTTP/1.1\r\n" +
+                "User-Agent: {4}\r\n" +
+                "Accept: text/html\r\n" +
+                "Host: {1}\r\n" +
+                "Cache-Control: no-store, no-cache\r\n" +
+                "Pragma: no-cache\r\n" +
+                "Content-Length: {2}\r\n" +
+                "Connection: Keep-Alive\r\n" +
+                "Content-Type: application/x-www-form-urlencoded\r\n\r\n"
+                + "{3}", uri.AbsolutePath, uri.Host, Encoding.UTF8.GetBytes(postData).Length, postData, userAgent);
+
+            byte[] request = Encoding.UTF8.GetBytes(requestString);
+
+            Byte[] bytesReceived = new Byte[1024];
+            socket.Send(request, request.Length, 0);
+            string result = String.Empty;
+            int bytes = 0;
+            try
+            {
+                do
+                {
+                    bytes = socket.Receive(bytesReceived, bytesReceived.Length, 0);
+                    result = result + Encoding.ASCII.GetString(bytesReceived, 0, bytes);
+                }
+                while (bytes > 0);
+            }
+            catch { 
+            
+            }
+            bool found = true;
+            var tmpResult = result;
+            while (found)
+            {
+                var pair = Re.GetSubString( tmpResult, @"Set-Cookie:\s([^;]+)?;", 1);
+                if (String.IsNullOrEmpty(pair))
+                {
+                    found = false;
+                    break;
+                }
+                var re = @"(.*)?=(.*)";
+                var name = Re.GetSubString(pair, re, 1);
+                var value = Re.GetSubString(pair, re, 2);
+                setCookie(name, value, uri.DnsSafeHost);
+                tmpResult = tmpResult.Replace( String.Format(@"Set-Cookie: {0}",name),"");
+            }
+
             return result;
         }
         public void PostMultipart(string url, string sData, string boundary)

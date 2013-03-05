@@ -5,7 +5,6 @@ using System.Text;
 using System.Diagnostics;
 using System.Web;
 using System.Net;
-
 using System.Threading;
 using dotWebClient;
 using dotUtilities;
@@ -17,15 +16,20 @@ namespace dotCybergame
         #region Constants
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
         private const string channelInfoUrl = "http://api.cybergame.tv/p/statusv2/?channel={0}";
-        private const string channelUrl = "http://www.cybergame.tv/{0}";
-        private const string adminAjaxUrl = "http://www.cybergame.tv/wp-admin/admin-ajax.php";
-        private const string loginUrl = "http://www.cybergame.tv/cabinet_login.php";
+        private const string channelUrl = "http://cybergame.tv/{0}";
+        private const string adminAjaxUrl = "http://cybergame.tv/wp-admin/admin-ajax.php";
+        private const string loginUrl = "http://cybergame.tv/cabinet_login.php";
+        private const string cabinetUrl = "http://cybergame.tv/cabinet.php";
+        private const string sendMessageUrl = "http://cybergame.tv/wp-admin/admin-ajax.php";
         private const string reChatUpdateMessageNonce = @",""quick_chat_update_messages_nonce"":""([^""]+)"",";
+        private const string reChatNewMessageNonce = @",""quick_chat_new_message_nonce"":""([^""]+)""";
         private const string reChatLastTimestamp = @",""quick_chat_last_timestamp"":(\d+),";
+
         #endregion     
         #region Private properties
         private string lastTimestamp;
         private string chatUpdateNonce;
+        private string chatNewMessageNonce;
         private Timer statsDownloader;
         private Timer chatDownloader;
         private CookieAwareWebClient statsWc;
@@ -71,35 +75,41 @@ namespace dotCybergame
         {
             DownloadChat();
         }
+
         private void statsDownloader_Tick(object o)
         {
             DownloadStats(_user);
         }
+        public bool isLoggedIn
+        {
+            get;
+            set;
+        }
         public bool Login()
         {
+            isLoggedIn = false;
             if (String.IsNullOrEmpty(_user) || String.IsNullOrEmpty(_password))
                 return false;
-
-            chatWc = new CookieAwareWebClient();
-            /*
-            // I need to find a way to catch per-path cookies for Wordpress. Will implement it later
-             
-            chatWc.Headers["Cache-Control"] = "no-cache";
-            string loginParams = String.Format("rememberme={0}&redirect_to=/{1}&log={1}&pwd={2}&submit=Войти", "forever", user, password);
-
-            chatWc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-            //var result = chatWc.UploadString(loginUrl, loginParams);
-            var result = chatWc.PostUrlEncoded(loginUrl, loginParams);
-
-            chatUpdateNonce = Re.GetSubString(result, reChatUpdateMessageNonce, 1 );
             
-            if( String.IsNullOrEmpty(chatUpdateNonce ))
+            chatWc = new CookieAwareWebClient();
+            
+            chatWc.Headers["Cache-Control"] = "no-cache";
+            string loginParams = String.Format("rememberme={0}&redirect_to=/{1}&log={1}&pwd={2}&submit=Войти", "forever", _user, _password);
+
+            chatWc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";            
+            var res = chatWc.postFormDataLowLevel(loginUrl, loginParams);
+
+            if (string.IsNullOrEmpty(res))
                 return false;
-            */
+            
+            if (!res.Contains("wordpress_logged_in_"))
+                return false;
 
             var result = chatWc.DownloadString(String.Format(channelUrl, _user));
             lastTimestamp = TimeUtils.UnixTimestamp();
             chatUpdateNonce = Re.GetSubString(result, reChatUpdateMessageNonce, 1);
+            chatNewMessageNonce = Re.GetSubString(result, reChatNewMessageNonce, 1);
+
             lastTimestamp = Re.GetSubString(result, reChatLastTimestamp, 1);
 
             if (OnLogin != null)
@@ -108,12 +118,85 @@ namespace dotCybergame
             chatDownloader = new Timer(new TimerCallback(chatDownloader_Tick), null, 0, 3000);
             statsDownloader = new Timer(new TimerCallback(statsDownloader_Tick), null, 0, 20000);
 
+            isLoggedIn = true;
+
+            return true;
+        }
+        public bool SendMessage(string message)
+        {
+            if (!isLoggedIn)
+                return false;
+
+            try
+            {
+                UTF8Encoding encoder = new UTF8Encoding();
+                byte[] bytes = Encoding.UTF8.GetBytes(message);
+                string utf8msg = HttpUtility.UrlEncode(encoder.GetString(bytes));
+
+                chatWc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                chatWc.Headers["X-Requested-With"] = "XMLHttpRequest";
+                chatWc.Headers[HttpRequestHeader.Accept] = "*/*";
+                string messageParams = String.Format("action=quick-chat-ajax-new-message&message={0}&room={1}&quick_chat_new_message_nonce={2}", utf8msg, _user, chatNewMessageNonce);
+                waitChatWC();
+                var result = chatWc.UploadString(sendMessageUrl, messageParams);
+
+                if( String.IsNullOrEmpty(result )) 
+                    return false;
+
+                var newNonce = Re.GetSubString(result, reChatNewMessageNonce, 1 );
+                if (string.IsNullOrEmpty(newNonce))
+                    return false;
+                else
+                    chatNewMessageNonce = newNonce;
+
+                Debug.Print("{0} {1}", messageParams, result);
+            }
+            catch
+            {
+                Debug.Print("Exception in Cybergame SendMessage()");
+            }
+
+            return true;
+        }
+        private void waitChatWC()
+        {
+            int tries = 0;
+            while (chatWc.IsBusy)
+            {
+                Thread.Sleep(100);
+                tries++;
+                if (tries > 100)
+                {
+                    break;
+                }
+            }
+        }
+        public bool StartAdvertising()
+        {
+            if (!isLoggedIn)
+                return false;
+
+            try
+            {
+                UTF8Encoding encoder = new UTF8Encoding();
+                chatWc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
+
+                string adsParams = String.Format("xjxfun=start_ad&xjxr={0}", TimeUtils.UnixTimestamp());
+                waitChatWC();
+                var result = chatWc.UploadString(cabinetUrl, adsParams);
+            }
+            catch
+            {
+                Debug.Print("Exception in Cybergame StartAdvertising()");
+            }
+
             return true;
         }
         private void DownloadChat()
         {
-            if (chatWc.IsBusy)
+            if (!isLoggedIn)
                 return;
+
             if( String.IsNullOrEmpty(chatUpdateNonce) )
                 return;
 
@@ -127,9 +210,10 @@ namespace dotCybergame
             chatWc.Headers[HttpRequestHeader.Accept] = "*/*";
             chatWc.Headers[HttpRequestHeader.AcceptLanguage] = "ru";
             chatWc.Headers[HttpRequestHeader.AcceptEncoding] = "deflate";
-            chatWc.KeepAlive = true;                
+            chatWc.KeepAlive = true;
 
-            var result = chatWc.PostUrlEncoded(adminAjaxUrl, updateChatParams);
+            waitChatWC();
+            var result = chatWc.UploadString(adminAjaxUrl, updateChatParams);
             
             var chatObject = JsonGenerics.ParseJson<Chat>.ReadObject(result);
             if (chatObject == null)
@@ -144,7 +228,7 @@ namespace dotCybergame
                 lastTimestamp = chatObject.MaxTimestamp().ToString();
                 foreach (Message msg in chatObject.messages)
                 {
-                    if( OnMessage != null)
+                    if( msg.message != "()" && OnMessage != null)
                         OnMessage(this, new MessageReceivedEventArgs(msg));
                 }
             }

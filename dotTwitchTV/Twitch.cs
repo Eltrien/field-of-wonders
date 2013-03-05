@@ -66,8 +66,11 @@ namespace dotTwitchTV
         }
         private void CrawlTwitchChannel( string channel )
         {
-            if( String.IsNullOrEmpty(currentChannelName) )
+            if (String.IsNullOrEmpty(currentChannelName))
+            {
+                Debug.Print("TwitchTV: channel name is empty. Can't fetch stats");
                 return;
+            }
             
             try
             {
@@ -77,39 +80,29 @@ namespace dotTwitchTV
                 {
                     if (stream == null)
                     {
-                        Debug.Print("Can't download channel info of {0} result stream is null. Url: {1}", currentChannelName, channelJsonUrl);
-                        return;
+                        Debug.Print("Can't download channel info of {0} result is null. Url: {1}", currentChannelName, channelJsonUrl);
                     }
-
-                    var tempChannel = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
-
-                    if (tempChannel == null)
+                    else
                     {
-                        Debug.Print("Can't parse twitch stats of {0}. Url: {1}", currentChannelName, url);
-                        return;
+                        var tempChannel = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
+
+                        if (tempChannel == null)
+                        {
+                            Debug.Print("Can't parse twitch stats of {0}. Url: {1}", currentChannelName, url);
+                        }
+                        else
+                        {
+                            Debug.Print("TwitchTV: got stats of {0} successfuly", currentChannelName);
+                            currentChannel = tempChannel;
+                            OnLive(EventArgs.Empty);
+                        }
                     }
 
-
-                    currentChannel = tempChannel;
-
-                    var liveStatus = isAlive();
-                    if (prevOnlineState != liveStatus)
-                    {
-                        if (!liveStatus)
-                        {
-                            OnOffline(new EventArgs());
-                        }
-                        else if (liveStatus)
-                        {
-                            OnLive(new EventArgs());
-                        }
-                        prevOnlineState = liveStatus;
-                    }
+                    if( !isAlive())
+                        OnOffline(EventArgs.Empty);
                 }
-
-
             }
-            catch 
+            catch
             {
                 Debug.Print("Exception in CrawlTwitchChannel");
             }            

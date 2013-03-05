@@ -38,7 +38,9 @@ namespace Ubiquitous
 
         public static void RtbToBitmap(SC2TV.RTFControl.ExRichTextBox rtb, string fileName) 
         {
-            //Rectangle rectangle = rtb.;            
+            if (rtb.ClientRectangle.Width <= 0 || rtb.ClientRectangle.Height <= 0)
+                return;
+
             Bitmap bmp = new Bitmap(rtb.ClientRectangle.Width,rtb.ClientRectangle.Height+20);
             using (Graphics gr = Graphics.FromImage(bmp)) 
             {
@@ -52,8 +54,6 @@ namespace Ubiquitous
                 rect.Right = (int)(bmp.Width + (bmp.Width * (bmp.VerticalResolution / 100)) * inch);
                 fmtRange.chrg.cpMin = rtb.GetCharIndexFromPosition(new Point(0,0));
                 fmtRange.chrg.cpMax = rtb.Text.Length;
-                //Debug.Print(String.Format("x:{0}, y:{1}, len:{2}",fmtRange.chrg.cpMin,fmtRange.chrg.cpMax,rtb.Text.Length));
-
                 fmtRange.hdc = hDC;
                 fmtRange.hdcTarget = hDC;
                 fmtRange.rc = rect;

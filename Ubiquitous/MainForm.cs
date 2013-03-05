@@ -26,6 +26,7 @@ using dotEmpireTV;
 using dotCybergame;
 using System.Configuration;
 using dotOBS;
+using dotUtilities;
 
 namespace Ubiquitous
 {
@@ -411,6 +412,8 @@ namespace Ubiquitous
             lastMessagePerEndpoint = new List<Message>();
             adminCommands.Add(new AdminCommand(@"^/r\s*([^\s]*)\s*(.*)", ReplyCommand));
             adminCommands.Add(new AdminCommand(@"^/stream$", StartStopStreamsCommand));
+            adminCommands.Add(new AdminCommand(@"^/gohaconfirm\s*([^\s]*)\s*(.*)", GohaConfirmCommand));
+            adminCommands.Add(new AdminCommand(@"^/gohasetpass\s*([^\s]*)\s*(.*)", GohaUpdatePassword));
 
             chatAliases.Add(new ChatAlias(settings.twitchChatAlias, EndPoint.TwitchTV, ChatIcon.TwitchTv));
             chatAliases.Add(new ChatAlias(settings.sc2tvChatAlias, EndPoint.Sc2Tv, ChatIcon.Sc2Tv));
@@ -564,7 +567,19 @@ namespace Ubiquitous
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SendMessage(new Message("/commercial", EndPoint.Console, EndPoint.TwitchTV));
+            //Advertising
+            if (settings.twitchEnabled && twitchIrc.IsRegistered)
+            {
+                SendMessageToTwitchIRC(new Message("/commercial", EndPoint.SteamAdmin, EndPoint.TwitchTV));
+                SendMessage(new Message("TwitchTv: advertising started!", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+            }           
+
+            if (settings.cyberEnabled && cybergame.isLoggedIn)
+            {
+                cybergame.StartAdvertising();
+                SendMessage(new Message("Cybergame: advertising started!", EndPoint.Cybergame, EndPoint.SteamAdmin));
+            }
+
         }
 
         void settings_SettingsSaving(object sender, CancelEventArgs e)
@@ -698,6 +713,12 @@ namespace Ubiquitous
                 else
                 {
                     currentChat = chatAlias.Endpoint;
+                    try
+                    {
+                        pictureCurrentChat.Image = log.GetChatBitmap(chatAlias.Icon);
+                    }
+                    catch { }
+
                     if (settings.steamCurrentChatNotify && settings.steamEnabled)
                     {
                         var msg = new Message(String.Format("Switching to {0}...", currentChat.ToString()), EndPoint.Bot, EndPoint.SteamAdmin);
@@ -706,7 +727,7 @@ namespace Ubiquitous
                     }
                     else
                     {
-                        var msg = new Message(String.Format("Switching to {0}...", currentChat.ToString()), chatAlias.Endpoint, EndPoint.SteamAdmin);
+                        var msg = new Message(String.Format("Switching to {0}...", currentChat.ToString()), chatAlias.Endpoint, EndPoint.Console);                        
                         if (!isFlood(msg))
                             SendMessage(msg);
                     }
@@ -718,6 +739,16 @@ namespace Ubiquitous
         private Result StartStopStreamsCommand()
         {
             StartStopOBSStream();
+            return Result.Successful;
+        }
+        private Result GohaConfirmCommand(string confirmCode)
+        {
+            SendConfirmCodeToGohaIRC(confirmCode);
+            return Result.Successful;
+        }
+        private Result GohaUpdatePassword()
+        {
+            SendUpdatePassToGohaIRC();
             return Result.Successful;
         }
         private Result ReplyCommand( string switchto, Message message)
@@ -810,6 +841,7 @@ namespace Ubiquitous
                         SendMessageToGohaIRC(message);
                         SendMessageToTwitchIRC(message);
                         SendMessageToSc2Tv(message);
+                        SendMessageToCybergame(message);
                     }
                     break;
                 case EndPoint.Sc2Tv:
@@ -832,6 +864,9 @@ namespace Ubiquitous
                     break;
                 case EndPoint.Empiretv:
                     SendMessageToEmpireTV(message);
+                    break;
+                case EndPoint.Cybergame:
+                    SendMessageToCybergame(message);
                     break;
                 case EndPoint.Console:
                     log.WriteLine(message.Text);
@@ -919,6 +954,43 @@ namespace Ubiquitous
                 gohaIrc.LocalUser.SendMessage(gohaChannel, message.Text);
             }
 
+        }
+        private void SendMessageToCybergame(Message message)
+        {
+            if (settings.cyberEnabled &&
+                cybergame.isLoggedIn &&
+                (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
+            {
+                cybergame.SendMessage(message.Text);
+            }
+
+        }
+        private void SendRegisterInfoToGohaIRC(string email)
+        {
+            if (settings.gohaEnabled &&
+                !string.IsNullOrEmpty(settings.GohaPassword) &&
+                !string.IsNullOrEmpty(settings.GohaUser))
+            {
+                gohaIrc.LocalUser.SendMessage("NickServ", String.Format("REGISTER {0} {1}",settings.GohaPassword, email));
+            }
+        }
+        private void SendConfirmCodeToGohaIRC(string confirmCode)
+        {
+            if (settings.gohaEnabled &&
+                !string.IsNullOrEmpty(settings.GohaPassword) &&
+                !string.IsNullOrEmpty(settings.GohaUser))
+            {
+                gohaIrc.LocalUser.SendMessage("NickServ", String.Format("VERIFY REGISTER {0} {1}",settings.GohaUser,confirmCode));
+            }
+        }
+        private void SendUpdatePassToGohaIRC()
+        {
+            if (settings.gohaEnabled &&
+                !string.IsNullOrEmpty(settings.GohaPassword) &&
+                !string.IsNullOrEmpty(settings.GohaUser))
+            {
+                gohaIrc.LocalUser.SendMessage("NickServ", String.Format("SET PASSWORD {0}", settings.GohaPassword));
+            }
         }
 
         private void SendMessageToEmpireTV(Message message)
@@ -1428,7 +1500,7 @@ namespace Ubiquitous
                 showTools();
             }
 
-            if (settings.obsRemoteEnable && panelMessages.Dock != DockStyle.Fill)
+            if (settings.obsRemoteEnable && !checkBoxBorder.Checked)
             {
                 var stats = String.Format(
                     " FPS: {0} RATE: {1}K DROPS: {2}",
@@ -1451,7 +1523,9 @@ namespace Ubiquitous
         #region Cybergame methods and events
         private void ConnectCybergame()
         {
-            if (!settings.cyberEnabled || String.IsNullOrEmpty(settings.cyberUser))
+            if (!settings.cyberEnabled || 
+                String.IsNullOrEmpty(settings.cyberUser) ||
+                String.IsNullOrEmpty(settings.cyberPassword))
                 return;
             cybergame = new Cybergame(settings.cyberUser, settings.cyberPassword);
             cybergame.Live += new EventHandler<EventArgs>(cybergame_Live);
@@ -1459,9 +1533,9 @@ namespace Ubiquitous
             cybergame.OnMessage += new EventHandler<MessageReceivedEventArgs>(cybergame_OnMessage);
             cybergame.OnLogin += new EventHandler<EventArgs>(cybergame_OnLogin);
 
-            if (!String.IsNullOrEmpty(settings.cyberPassword))
+            if (!cybergame.Login())
             {
-                cybergame.Login();
+                SendMessage(new Message("Cybergame: login failed!", EndPoint.Cybergame, EndPoint.SteamAdmin));
             }
         }
 
@@ -1525,6 +1599,7 @@ namespace Ubiquitous
         }
         private void OnGohaStreamLogin(object sender, EventArgs e)
         {
+            checkMark.SetOn(pictureGohaWeb);
             if (settings.gohaStreamControlOnStartExit && gohaTVstream.StreamStatus == "off")
                 gohaTVstream.SwitchStream();
         }
@@ -2303,9 +2378,49 @@ namespace Ubiquitous
 
         void gohaIrc_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
         {
-            if( e.RawContent.Contains("Invalid password") )
-                SendMessage(new Message("Goha login failed! Check settings!", EndPoint.Gohatv, EndPoint.SteamAdmin));
-            else if (settings.gohaDebugMessages)
+            if (e.Message.Source.Name.ToLower() == "nickserv")
+            {
+                if (e.RawContent.Contains("Invalid password for"))
+                {
+                    SendMessage(new Message("Goha login failed! Check settings!", EndPoint.Gohatv, EndPoint.SteamAdmin));
+
+                }
+                else if (e.RawContent.Contains("You are now identified"))
+                {
+                    SendMessage(new Message(String.Format("Goha IRC: logged in!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
+                    checkMark.SetOn(pictureGoha);
+
+                }
+                else if (e.RawContent.Contains("is not a registered nickname"))
+                {
+                    var email = InputBox.Show("Enter your email to receive Goha confirmation code:");
+                    if (string.IsNullOrEmpty(email))
+                        return;
+                    SendRegisterInfoToGohaIRC(email);
+                }
+                else if (e.RawContent.Contains("An email containing nickname activation instructions"))
+                {
+                    var confirmCode = InputBox.Show("Check your mail and enter Goha confirmation code:");
+                    if (string.IsNullOrEmpty(confirmCode))
+                        return;
+
+                    SendConfirmCodeToGohaIRC(confirmCode);
+                }
+                else if (e.RawContent.Contains("Verification failed. Invalid key for"))
+                {
+                    var confirmCode = InputBox.Show("Wrong confirmation code. Try again:");
+                    if (string.IsNullOrEmpty(confirmCode))
+                        return;
+
+                    SendConfirmCodeToGohaIRC(confirmCode);
+                }
+                else if (e.RawContent.Contains("has now been verified."))
+                {
+                    SendMessage(new Message(String.Format("Goha IRC: email verified!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
+                }
+            }
+            
+            if (settings.gohaDebugMessages)
             {
                 SendMessage(new Message(e.RawContent, EndPoint.Gohatv, EndPoint.SteamAdmin));
             }
@@ -2330,10 +2445,8 @@ namespace Ubiquitous
             e.Channel.MessageReceived += OnGohaMessageReceived;
             e.Channel.UserJoined += OnGohaChannelJoin;
             e.Channel.UserLeft += OnGohaChannelLeft;
-            SendMessage(new Message(String.Format("Goha IRC: logged in!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
 
             //gohaIrc.SendRawMessage("NICK " + settings.GohaUser);
-            checkMark.SetOn(pictureGoha);
             gohaIrc.LocalUser.SendMessage("NickServ", String.Format("IDENTIFY {0}", settings.GohaPassword));
   
         }
@@ -2557,7 +2670,6 @@ namespace Ubiquitous
 
         private void twitchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //ReplyCommand(
         }
 
         private void contextMenuChat_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
