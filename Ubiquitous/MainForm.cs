@@ -719,18 +719,13 @@ namespace Ubiquitous
                     }
                     catch { }
 
+                    var msg = new Message(String.Format("Switching to {0}...", currentChat.ToString()), EndPoint.Bot, EndPoint.SteamAdmin);
                     if (settings.steamCurrentChatNotify && settings.steamEnabled)
                     {
-                        var msg = new Message(String.Format("Switching to {0}...", currentChat.ToString()), EndPoint.Bot, EndPoint.SteamAdmin);
                         if (!isFlood(msg))
                             SendMessage(msg);
                     }
-                    else
-                    {
-                        var msg = new Message(String.Format("Switching to {0}...", currentChat.ToString()), chatAlias.Endpoint, EndPoint.Console);                        
-                        if (!isFlood(msg))
-                            SendMessage(msg);
-                    }
+                    log.WriteLine(String.Format("Switching to {0}...", currentChat.ToString()));
                     return true;
                 }
             }
@@ -2755,7 +2750,12 @@ namespace Ubiquitous
                 settings.globalFullSize = Size;
             }
         }
-
+        public static void ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        {
+            var errorMsg = e.Exception.Message + "\n\nStack Trace:\n" + e.Exception.StackTrace;
+            MessageBox.Show(errorMsg, "Error", MessageBoxButtons.AbortRetryIgnore,
+                MessageBoxIcon.Stop);
+        }
     }
 
 }
