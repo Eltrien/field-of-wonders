@@ -1476,39 +1476,47 @@ namespace Ubiquitous
         }
         private void timerEverySecond_Tick(object sender, EventArgs e)
         {
-            if( settings.globalOnTop != TopMost )
-                TopMost = settings.globalOnTop;
-
-            UInt32 twitchViewers = 0, cybergameViewers = 0;
-            if (twitchChannel != null)
-                UInt32.TryParse( twitchChannel.Viewers, out twitchViewers);
-
-            if (cybergame != null)
-                UInt32.TryParse(cybergame.Viewers, out cybergameViewers);
-
-            labelViewers.Text = String.Format("{0}",cybergameViewers + twitchViewers);
-            SetTooltip( viewersTooltip, labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {1}", twitchViewers, cybergameViewers));
-            if (trackBarTransparency.ClientRectangle.Contains(trackBarTransparency.PointToClient(Cursor.Position)))
-                return;
-
-            if ((!ClientRectangle.Contains(PointToClient(Cursor.Position))))
+            try
             {
-                hideTools();
-            }
-            else
-            {
-                showTools();
-            }
+                if (settings.globalOnTop != TopMost)
+                    TopMost = settings.globalOnTop;
 
-            if (settings.obsRemoteEnable && !checkBoxBorder.Checked)
-            {
-                var stats = String.Format(
-                    " FPS: {0} RATE: {1}K DROPS: {2}",
-                    obsRemote.Status.fps,
-                    obsRemote.Status.bitrate / 1024 * 8,
-                    obsRemote.Status.framesDropped);
-                this.Text = formTitle + stats;
+                UInt32 twitchViewers = 0, cybergameViewers = 0;
+                if (twitchChannel != null)
+                    UInt32.TryParse(twitchChannel.Viewers, out twitchViewers);
+
+                if (cybergame != null)
+                    UInt32.TryParse(cybergame.Viewers, out cybergameViewers);
+
+                labelViewers.Text = String.Format("{0}", cybergameViewers + twitchViewers);
+                SetTooltip(viewersTooltip, labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {1}", twitchViewers, cybergameViewers));
+                if (trackBarTransparency.ClientRectangle.Contains(trackBarTransparency.PointToClient(Cursor.Position)))
+                    return;
+
+                if ((!ClientRectangle.Contains(PointToClient(Cursor.Position))))
+                {
+                    hideTools();
+                }
+                else
+                {
+                    showTools();
+                }
+
+                if (settings.obsRemoteEnable && !checkBoxBorder.Checked)
+                {
+                    if (obsRemote != null)
+                    {
+                        var stats = String.Format(
+                            " FPS: {0} RATE: {1}K DROPS: {2}",
+                            obsRemote.Status.fps,
+                            obsRemote.Status.bitrate / 1024 * 8,
+                            obsRemote.Status.framesDropped);
+                        this.Text = formTitle + stats;
+                    }
+                }
             }
+            catch { }
+
         }
         private void trackBarTransparency_MouseMove(object sender, MouseEventArgs e)
         {
