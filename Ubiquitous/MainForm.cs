@@ -2386,6 +2386,15 @@ namespace Ubiquitous
 
         void gohaIrc_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
         {
+            if (settings.gohaDebugMessages)
+            {
+                SendMessage(new Message(e.RawContent, EndPoint.Gohatv, EndPoint.SteamAdmin));
+            }
+
+
+            if (e.Message.Source == null)
+                return;
+
             if (e.Message.Source.Name.ToLower() == "nickserv")
             {
                 if (e.RawContent.Contains("Invalid password for"))
@@ -2428,10 +2437,6 @@ namespace Ubiquitous
                 }
             }
             
-            if (settings.gohaDebugMessages)
-            {
-                SendMessage(new Message(e.RawContent, EndPoint.Gohatv, EndPoint.SteamAdmin));
-            }
         }
         private void OnGohaDisconnect(object sender, EventArgs e)
         {
