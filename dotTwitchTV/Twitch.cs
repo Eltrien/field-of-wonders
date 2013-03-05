@@ -84,16 +84,15 @@ namespace dotTwitchTV
                     }
                     else
                     {
-                        var tempChannel = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
+                        currentChannel = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
 
-                        if (tempChannel == null)
+                        if (currentChannel == null)
                         {
                             Debug.Print("Can't parse twitch stats of {0}. Url: {1}", currentChannelName, url);
                         }
                         else
                         {
                             Debug.Print("TwitchTV: got stats of {0} successfuly", currentChannelName);
-                            currentChannel = tempChannel;
                             OnLive(EventArgs.Empty);
                         }
                     }
@@ -115,12 +114,12 @@ namespace dotTwitchTV
         #region Public properties
         public string Viewers
         {
-            get { return isAlive() ? "0" : currentChannel.viewers; }
+            get { return !isAlive() ? "0" : currentChannel.viewers; }
             set { }
         }
         public string Bitrate
         {
-            get { return isAlive() ? "0" : currentChannel.videoBitrate; }
+            get { return !isAlive() ? "0" : currentChannel.videoBitrate; }
             set { }
         }
         #endregion
