@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Security.Permissions;
-
+using System.Diagnostics;
 namespace Ubiquitous
 {
     static class Program
@@ -27,7 +27,7 @@ namespace Ubiquitous
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception ex = (Exception)e.ExceptionObject;
-            MessageBox.Show("Error",
+            Debug.Print("Error",
                 ex.Message + "\n\nStack Trace:\n" + ex.StackTrace, MessageBoxButtons.OK, MessageBoxIcon.Stop);
         }
 

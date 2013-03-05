@@ -2753,8 +2753,7 @@ namespace Ubiquitous
         public static void ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             var errorMsg = e.Exception.Message + "\n\nStack Trace:\n" + e.Exception.StackTrace;
-            MessageBox.Show(errorMsg, "Error", MessageBoxButtons.AbortRetryIgnore,
-                MessageBoxIcon.Stop);
+            Debug.Print(errorMsg);
         }
     }
 
