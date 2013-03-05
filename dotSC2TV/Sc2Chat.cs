@@ -205,6 +205,9 @@ namespace dotSC2TV
         }
         public bool updateChat(UInt32 id)
         {
+            if (!LoggedIn)
+                return false;
+
             using (CookieAwareWebClient cwc = new CookieAwareWebClient())
             {
 
@@ -215,22 +218,29 @@ namespace dotSC2TV
                     currentChannelId = id;
                 }
 
-
-                System.IO.Stream stream = cwc.downloadURL(String.Format(messagesUrl, id, (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds));
+                var url = String.Format(messagesUrl, id, (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds);
+                System.IO.Stream stream = cwc.downloadURL(url);
 
                 _lastStatus = cwc.LastWebError;
                 if (_lastStatus == "ProtocolError")
                 {
+                    Debug.Print(String.Format("Sc2tv: error downloading from {0}", url));
                     return false;
                 }
 
                 if (stream == null)
+                {
+                    Debug.Print(String.Format("Sc2tv: stream is null"));
                     return false;
+                }
 
                 var newchat = ParseJson<ChatMessages>.ReadObject(stream);
 
                 if (newchat == null )
+                {
+                     Debug.Print(String.Format("Sc2tv: json is wrong or null"));
                     return false;
+                }
 
                 if (chat.messages == null)
                 {
@@ -260,15 +270,16 @@ namespace dotSC2TV
                             m.message = Regex.Replace(m.message, re, "", RegexOptions.IgnoreCase | RegexOptions.Multiline);
                         }
                     }
-
+                    Debug.Print("Sc2tv new messages");
                     OnMessageReceived(new Sc2MessageEvent(m));
                 }
-
+                Debug.Print("Sc2tv message update finished");
                 return true;
             }
         }
         public bool updateSmiles()
         {
+
             using (CookieAwareWebClient cwc = new CookieAwareWebClient())
             {
                 System.IO.Stream stream = cwc.downloadURL(smilesJSUrl);

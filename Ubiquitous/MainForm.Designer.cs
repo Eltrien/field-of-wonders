@@ -792,7 +792,6 @@
             // 
             this.textMessages.BackColor = System.Drawing.Color.Black;
             this.textMessages.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalChatFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("TimeColor", global::Ubiquitous.Properties.Settings.Default, "globalTimestampForeground", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("HiglightColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("SaveToImageFileName", global::Ubiquitous.Properties.Settings.Default, "globalChatImageFilename", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -800,7 +799,6 @@
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("TextColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textMessages.Font = global::Ubiquitous.Properties.Settings.Default.globalChatFont;
             this.textMessages.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
             this.textMessages.HiglightColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.textMessages.Location = new System.Drawing.Point(5, 0);

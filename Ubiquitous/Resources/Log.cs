@@ -124,16 +124,18 @@ namespace Ubiquitous
                 if (text != null)
                 {
                     if (tb.TimeStamp)
-                        tb.AppendTextAsRtf(DateTime.Now.GetDateTimeFormats('T')[0] + " ", tb.Font, tb.TimeColor);
+                        //tb.AppendTextAsRtf(DateTime.Now.GetDateTimeFormats('T')[0] + " ", tb.Font, tb.TimeColor);
+                        tb.AppendText(DateTime.Now.GetDateTimeFormats('T')[0] + " ");
 
                     if(chatIcon != null)
                         tb.InsertImage( chatIcon );
 
-                    tb.AppendTextAsRtf(" " + text,tb.Font,tb.TextColor);
+                    //tb.AppendTextAsRtf(" " + text, tb.Font, tb.TextColor);
+                    tb.AppendText(" " + text);
                 }
                 tb.SelectionStart = tb.Text.Length;
                 tb.SelectionLength = 0;
-                //                var bw = new BGWorker(tb.ScrollToEnd, null);
+
                 tb.ScrollToEnd();
                 
             }

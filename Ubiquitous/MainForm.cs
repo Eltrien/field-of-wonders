@@ -398,7 +398,7 @@ namespace Ubiquitous
             };
             if (settings.globalDebug)
             {
-                Debug.Listeners.Add(new TextWriterTraceListener(new LogStreamWriter(log, maskPasswords)));
+               Debug.Listeners.Add(new TextWriterTraceListener(new LogStreamWriter(log, maskPasswords)));
             }
 
             setTopMost();
@@ -425,6 +425,7 @@ namespace Ubiquitous
 
 
             uint.TryParse(settings.Sc2tvId, out sc2ChannelId);
+            Debug.Print(String.Format("Sc2tv Channel ID: {0}",sc2ChannelId));
 
             sc2tv = new Sc2Chat(settings.sc2LoadHistory);
             sc2tv.Logon += OnSc2TvLogin;
@@ -590,7 +591,7 @@ namespace Ubiquitous
             {
                 case "globalChatFont":
                     {
-                        textMessages.Font = settings.globalChatFont;
+                        textMessages.Font= settings.globalChatFont;
                     }
                     break;
                 case "globalToolBoxBack":
@@ -1908,8 +1909,8 @@ namespace Ubiquitous
         }
         private void OnSc2TvMessageReceived(object sender, Sc2Chat.Sc2MessageEvent e)
         {
-            if (e.message.name.ToLower() == settings.Sc2tvUser.ToLower())
-                return;
+            //if (e.message.name.ToLower() == settings.Sc2tvUser.ToLower())
+               // return;
 
             var message = sc2tv.sanitizeMessage(e.message.message,settings.sc2tvSanitizeSmiles);
             if (message.Trim().Length <= 0)
@@ -1943,13 +1944,18 @@ namespace Ubiquitous
         private void UpdateSc2TvMessages()
         {
             if (!sc2tv.LoggedIn)
+            {
+                Debug.Print("Sc2tv: Not logged in");
                 return;
+            }
+
             if (!sc2tv.updateChat(sc2ChannelId))
             {
                 SendMessage(new Message(String.Format(@"Sc2tv channel #{0} is unavailable", sc2ChannelId ), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
                 SendMessageToSc2Tv(new Message("Revive!", EndPoint.SteamAdmin, EndPoint.Sc2Tv));
 
             }
+            Debug.Print("Sc2tv: Chat updated");
             Thread.Sleep(5000);            
         }
         #endregion
