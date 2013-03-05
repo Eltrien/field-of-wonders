@@ -109,7 +109,7 @@ namespace dotTwitchTV
         }
         private bool isAlive()
         {
-            return currentChannel == null;
+            return currentChannel != null;
         }
         #endregion
         #region Public properties

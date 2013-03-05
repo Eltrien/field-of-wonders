@@ -213,8 +213,16 @@ namespace dotCybergame
             chatWc.KeepAlive = true;
 
             waitChatWC();
-            var result = chatWc.UploadString(adminAjaxUrl, updateChatParams);
-            
+            string result = string.Empty;
+            try
+            {
+                result = chatWc.UploadString(adminAjaxUrl, updateChatParams);
+            }
+            catch { }
+
+            if (String.IsNullOrEmpty(result))
+                return;
+
             var chatObject = JsonGenerics.ParseJson<Chat>.ReadObject(result);
             if (chatObject == null)
             {
@@ -228,7 +236,7 @@ namespace dotCybergame
                 lastTimestamp = chatObject.MaxTimestamp().ToString();
                 foreach (Message msg in chatObject.messages)
                 {
-                    if( msg.message != "()" && OnMessage != null)
+                    if( !String.IsNullOrEmpty(msg.message) )
                         OnMessage(this, new MessageReceivedEventArgs(msg));
                 }
             }

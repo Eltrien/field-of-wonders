@@ -832,11 +832,7 @@ namespace Ubiquitous
             {
                 case EndPoint.All:
                     {
-                        SendMessageToEmpireTV(message);
-                        SendMessageToGohaIRC(message);
-                        SendMessageToTwitchIRC(message);
-                        SendMessageToSc2Tv(message);
-                        SendMessageToCybergame(message);
+                        ThreadPool.QueueUserWorkItem( arg=> SendToAll(message) );
                     }
                     break;
                 case EndPoint.Sc2Tv:
@@ -899,6 +895,14 @@ namespace Ubiquitous
                     }
                 }
             }
+        }
+        private void SendToAll(Message message)
+        {
+            SendMessageToEmpireTV(message);
+            SendMessageToGohaIRC(message);
+            SendMessageToTwitchIRC(message);
+            SendMessageToSc2Tv(message);
+            SendMessageToCybergame(message);
         }
         private void SendMessageToSc2Tv(Message message)
         {
@@ -2086,7 +2090,7 @@ namespace Ubiquitous
                 // Ask for SteamGuard code if required
                 if (status == SteamAPISession.LoginStatus.SteamGuard)
                 {
-                    string code = InputBox.Show("Enter code:");
+                    string code = InputBox.Show("Check email and enter Steam Guard code:");
                     status = steamBot.Authenticate(user, password, code);
                 }
             }

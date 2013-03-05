@@ -179,6 +179,7 @@ namespace dotWebClient
                 request.ContentLength = data.Length;
                 //request.Referer = url;
                 request.KeepAlive = true;
+                
                 //request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
                 //request.Headers["Origin"] = "http://sc2tv.ru";
                 //request.Headers["Accept-Charset"] = "windows-1251,utf-8;q=0.7,*;q=0.3";
