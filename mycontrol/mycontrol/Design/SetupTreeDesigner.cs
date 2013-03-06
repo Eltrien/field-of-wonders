@@ -53,6 +53,7 @@ namespace mycontrol.Design
                 menuService = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
                 selectionService = GetService(typeof(ISelectionService)) as ISelectionService;
                 settingsTree = Control as SettingsTree;
+                settingsTree.TreeView.TreeViewNodeSorter = new NodeSorter();
                 settingsTree.TreeView.AfterSelect += OnNodeSelect;
             }
 
@@ -175,7 +176,16 @@ namespace mycontrol.Design
             }
         }
 
+        public class NodeSorter : IComparer
+        {
 
+            public int Compare(object x, object y)
+            {
+                var tx = x as TreeNode;
+                var ty = y as TreeNode;
+                return string.Compare(tx.Text, ty.Text);
+            }
+        }
 
     }
 }
