@@ -53,6 +53,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dotUtilities\dotUtilities.csproj">
+      <Project>{ED6C0B9C-608A-4325-8F98-5E23C7DC52CD}</Project>
+      <Name>dotUtilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebClient\dotWebClient.csproj">
       <Project>{E7DD099E-384E-4EDB-B217-D4850ACE32BC}</Project>
       <Name>dotWebClient</Name>

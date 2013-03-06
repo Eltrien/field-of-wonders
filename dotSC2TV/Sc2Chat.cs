@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Threading;
+using dotUtilities;
 
 
 namespace dotSC2TV
@@ -66,7 +67,7 @@ namespace dotSC2TV
         private const string chatDomain = "http://chat.sc2tv.ru";
         private string _lastStatus = null;
         private bool _loadHistory;
-        private CookieAwareWebClient wc;
+        private CookieAwareWebClient loginWC;
         private UInt32 currentChannelId = 0;
         private class LambdaComparer<T> : IEqualityComparer<T>
         {
@@ -162,9 +163,9 @@ namespace dotSC2TV
         public Sc2Chat( bool loadHistory = false)
         {
             _loadHistory = false;
-            wc = new CookieAwareWebClient();            
-            wc.Headers["User-Agent"] = userAgent;
-            wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
+            loginWC = new CookieAwareWebClient();            
+            loginWC.Headers["User-Agent"] = userAgent;
+            loginWC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
             chat = new ChatMessages();
         }
         public string sanitizeMessage(string message, bool cutSmiles = false)
@@ -201,16 +202,15 @@ namespace dotSC2TV
         public UInt32 ChannelId
         {
             get { return currentChannelId; }
-            set {currentChannelId = value; updateChat( currentChannelId ); }
+            set {
+                    currentChannelId = value; 
+                    updateChat( currentChannelId ); 
+            }
         }
         public bool updateChat(UInt32 id)
         {
-            if (!LoggedIn)
-                return false;
-
-            using (CookieAwareWebClient cwc = new CookieAwareWebClient())
+            using (CookieAwareWebClient chatWC = Utils.CloneObject(loginWC))
             {
-
                 if (currentChannelId != id)
                 {
                     _lastStatus = null;
@@ -218,10 +218,10 @@ namespace dotSC2TV
                     currentChannelId = id;
                 }
 
-                var url = String.Format(messagesUrl, id, (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds);
-                System.IO.Stream stream = cwc.downloadURL(url);
+                var url = String.Format(messagesUrl, id, TimeUtils.UnixTimestamp());
+                System.IO.Stream stream = chatWC.downloadURL(url);
 
-                _lastStatus = cwc.LastWebError;
+                _lastStatus = chatWC.LastWebError;
                 if (_lastStatus == "ProtocolError")
                 {
                     Debug.Print(String.Format("Sc2tv: error downloading from {0}", url));
@@ -238,7 +238,12 @@ namespace dotSC2TV
 
                 if (newchat == null )
                 {
-                     Debug.Print(String.Format("Sc2tv: json is wrong or null"));
+                     Debug.Print(String.Format("Sc2tv: JSON is wrong or empty"));
+                    return false;
+                }
+                else if (newchat.messages.Count <= 0)
+                {
+                    Debug.Print(String.Format("Sc2tv: Chat is empty"));
                     return false;
                 }
 
@@ -347,7 +352,7 @@ namespace dotSC2TV
             if (!LoggedIn)
                 return String.Empty;
 
-            var content = wc.DownloadString(urlUserStream);
+            var content = loginWC.DownloadString(urlUserStream);
 
             String streamId = GetSubString(content, reStreamId, 1);
 
@@ -360,7 +365,7 @@ namespace dotSC2TV
         {
             LoggedIn = false;
 
-            if (wc.gotCookies(cookieForTest, mainDomain))
+            if (loginWC.gotCookies(cookieForTest, mainDomain))
             {
                 LoggedIn = true;
                 return;
@@ -378,17 +383,17 @@ namespace dotSC2TV
                 {
                     string loginParams = "name=" + login + "&pass=" + password + "&form_build_id=" + formBuildId + "&form_id=user_login_block";
 
-                    wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
-                    wc.UploadString(loginUrl, loginParams);
+                    loginWC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
+                    loginWC.UploadString(loginUrl, loginParams);
 
-                    if (wc.gotCookies(cookieForTest, mainDomain))
+                    if (loginWC.gotCookies(cookieForTest, mainDomain))
                     {
-                        wc.setCookie("chat-img", "1", "chat.sc2tv.ru");
-                        wc.setCookie("chat_channel_id", currentChannelId.ToString(), "chat.sc2tv.ru");
-                        wc.setCookie("chat-on", "1", "chat.sc2tv.ru");
-                        wc.DownloadString(chatTokenUrl);
+                        loginWC.setCookie("chat-img", "1", "chat.sc2tv.ru");
+                        loginWC.setCookie("chat_channel_id", currentChannelId.ToString(), "chat.sc2tv.ru");
+                        loginWC.setCookie("chat-on", "1", "chat.sc2tv.ru");
+                        loginWC.DownloadString(chatTokenUrl);
 
-                        wc.setCookie("chat_token", wc.CookieValue("chat_token", chatDomain + "/gate.php"), "chat.sc2tv.ru");
+                        loginWC.setCookie("chat_token", loginWC.CookieValue("chat_token", chatDomain + "/gate.php"), "chat.sc2tv.ru");
                         LoggedIn = true;
 
                         OnLogon(new Sc2Event());
@@ -491,7 +496,7 @@ namespace dotSC2TV
             var url = String.Format("{0}?_={1}",channelEditUrl, (new DateTime(1970, 1, 1)).Ticks);
             try
             {
-                html = wc.DownloadString(url);
+                html = loginWC.DownloadString(url);
             }
             catch( WebException e)
             {
@@ -548,9 +553,9 @@ namespace dotSC2TV
             if (ChannelURLAlias)
                 postData.Params.Add(new PostDataParam( "pathauto_perform_alias","1",PostDataParamType.Field));
             
-            wc.PostMultipart(String.Format(channelEditUrl2, currentChannelId), postData.GetPostData(), postData.Boundary);
+            loginWC.PostMultipart(String.Format(channelEditUrl2, currentChannelId), postData.GetPostData(), postData.Boundary);
 
-            if (wc.LastWebError == "ProtocolError")
+            if (loginWC.LastWebError == "ProtocolError")
                 throw new Exception("Can't save SC2TV settings. Do it manually!");
 
         }
@@ -577,10 +582,10 @@ namespace dotSC2TV
                 byte[] bytes = Encoding.UTF8.GetBytes(message);
                 string utf8msg = HttpUtility.UrlEncode(encoder.GetString(bytes));
 
-                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
+                loginWC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
 
-                string messageParams = "task=WriteMessage&message=" + utf8msg + "&channel_id=" + currentChannelId + "&token=" + wc.CookieValue("chat_token",chatDomain);
-                wc.UploadString(String.Format(sendMessageUrl, currentChannelId), messageParams);
+                string messageParams = "task=WriteMessage&message=" + utf8msg + "&channel_id=" + currentChannelId + "&token=" + loginWC.CookieValue("chat_token",chatDomain);
+                loginWC.UploadString(String.Format(sendMessageUrl, currentChannelId), messageParams);
             }
             catch {
                 Debug.Print("Exception in Sc2 sendMessage()");
@@ -597,7 +602,7 @@ namespace dotSC2TV
             {
                 try
                 {
-                    html = wc.DownloadString(loginUrl);
+                    html = loginWC.DownloadString(loginUrl);
                 }
                 catch
                 {

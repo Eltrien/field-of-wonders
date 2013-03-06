@@ -290,5 +290,8 @@
     <Setting Name="globalCompactSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">740, 620</Value>
     </Setting>
+    <Setting Name="sc2DontRevive" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
