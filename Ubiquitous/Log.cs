@@ -27,7 +27,7 @@ namespace Ubiquitous
     /// <summary>
     /// Thread safe writing to textbox
     /// </summary>
-    class Log
+    public class Log
     {
         private ExRichTextBox tb;
         delegate void SetTextCallback(string text, ChatIcon icon);

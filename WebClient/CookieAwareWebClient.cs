@@ -23,6 +23,7 @@ namespace dotWebClient
     {
         private readonly CookieContainer m_container = new CookieContainer();
         private WebExceptionStatus _lastWebError;
+        private string _lastWebErrorDescription;
         private Dictionary<ContentType, string> contentTypes;
         private HttpWebResponse gResponse;
 
@@ -42,11 +43,40 @@ namespace dotWebClient
         {
             get { return _lastWebError.ToString(); }
         }
+        public string LastWebErrorDescription
+        {
+            get { return _lastWebErrorDescription; }
+        }
         public bool KeepAlive
         {
             get;
             set;
 
+        }
+        public CookieContainer Cookies
+        {
+            get { return m_container; }
+            set
+            {
+                Hashtable table = (Hashtable)value.GetType().InvokeMember("m_domainTable",
+                                                             BindingFlags.NonPublic |
+                                                             BindingFlags.GetField |
+                                                             BindingFlags.Instance,
+                                                             null,
+                                                             value,
+                                                             new object[] { });
+                foreach (var key in table.Keys)
+                {
+                    var url = String.Format("http://{0}/",key.ToString().TrimStart('.'));
+
+                    foreach (Cookie cookie in value.GetCookies(new Uri(url)))
+                    {
+                        m_container.Add(cookie);
+                    }
+                }
+
+
+            }
         }
         protected override WebRequest GetWebRequest(Uri address)
         {
@@ -166,8 +196,10 @@ namespace dotWebClient
 
             return result;
         }
-        public void PostMultipart(string url, string sData, string boundary)
+        public string PostMultipart(string url, string sData, string boundary)
         {
+            _lastWebError = WebExceptionStatus.Success;
+            _lastWebErrorDescription = string.Empty;
             byte[] data = Encoding.GetBytes(sData);
             try
             {
@@ -177,46 +209,46 @@ namespace dotWebClient
                 request.UserAgent = userAgent;
                 request.CookieContainer = m_container;
                 request.ContentLength = data.Length;
-                //request.Referer = url;
                 request.KeepAlive = true;
-                
-                //request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-                //request.Headers["Origin"] = "http://sc2tv.ru";
-                //request.Headers["Accept-Charset"] = "windows-1251,utf-8;q=0.7,*;q=0.3";
-                //request.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
-
-
-                
-
-                // You could add authentication here as well if needed:
-                // request.PreAuthenticate = true;
-                // request.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
-                // request.Headers.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.Encoding.Default.GetBytes("username" + ":" + "password")));
-
-                // Send the form data to the request.
                 using (var requestStream = request.GetRequestStream())
                 {
                     requestStream.Write(data, 0, data.Length);
                     requestStream.Close();
                 }
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    using (Stream resStream = response.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(resStream, Encoding.UTF8);
+                        return reader.ReadToEnd();
+                    }
+                }
+
             }
             catch (WebException e)
             {
-                Debug.Print("Exception while downloading from url: {0}", url);
+                Debug.Print("Exception while posting to url: {0}, Error: {1}", url, e.Message);
                 _lastWebError = e.Status;
+                _lastWebErrorDescription = e.Message;
             }
+            return string.Empty;
         }
 
         public System.IO.Stream downloadURL(string url)
         {
+            _lastWebError = WebExceptionStatus.Success;
+            _lastWebErrorDescription = string.Empty;
+
             try
             {
                 return this.OpenRead(url);
             }
             catch (WebException e)
             {
-                Debug.Print("Exception while downloading from url: {0}", url);
+                Debug.Print("Exception while downloading from url: {0}, Error: {1}", url, e.Message);
                 _lastWebError = e.Status;
+                _lastWebErrorDescription = e.Message;
+                   
             }
             return null;
         }

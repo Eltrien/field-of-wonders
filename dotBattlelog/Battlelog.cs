@@ -140,7 +140,7 @@ namespace dotBattlelog
         {
 
             Connected = true;
-            Debug.Print("WebSocket opened");
+            Debug.Print("Battlelog: WebSocket opened");
             Subscribe();
             pingTimer = new Timer(arg => Ping(), null, 0, pingInterval);
 
@@ -152,7 +152,7 @@ namespace dotBattlelog
         private void Message(object sender, MessageReceivedEventArgs e)
         {
 
-            Debug.Print("Got message: {0}",e.Message);
+            Debug.Print("Battlelog: Got message: {0}",e.Message);
 
             if (m_Message == null)
                 return;
@@ -160,7 +160,7 @@ namespace dotBattlelog
         }
         private void Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
-            Debug.Print("Error:{0}", e.Exception.Message);
+            Debug.Print("Battlelog Error:{0}", e.Exception.Message);
             if (m_Error == null)
                 return;
 
@@ -170,7 +170,7 @@ namespace dotBattlelog
         {
             pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
             Connected = false;
-            Debug.Print("WebSocket closed");
+            Debug.Print("Battlelog: WebSocket closed");
             if (m_Close == null)
                 return;
             m_Close(this, e);

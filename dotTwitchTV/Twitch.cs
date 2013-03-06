@@ -7,7 +7,7 @@ using System.Net;
 using System.Diagnostics;
 using System.Threading;
 using dotWebClient;
-
+using dotUtilities;
 namespace dotTwitchTV
 {
 
@@ -16,15 +16,15 @@ namespace dotTwitchTV
         #region Constants
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
         private const string channelJsonUrl = "http://api.justin.tv/api/stream/list.json?channel={0}&t={1}";
+        private const int pollInterval = 20000;
         #endregion
 
         
         #region Private properties
-        private Timer bwDownloader;
-
-        private CookieAwareWebClient wc;
-        private bool prevOnlineState = false;
-        private Channel currentChannel;
+        private Timer statsDownloader;
+        private CookieAwareWebClient statsWC;
+        private object downloadLock = new object();
+        private Channel currentChannelStats;
         private string currentChannelName;
         #endregion
         #region Events
@@ -53,73 +53,81 @@ namespace dotTwitchTV
         {
             currentChannelName = channelName;
 
-            wc = new CookieAwareWebClient();
-            wc.Headers["User-Agent"] = userAgent;
+            statsWC = new CookieAwareWebClient();
+            statsWC.Headers["User-Agent"] = userAgent;
+            statsDownloader = new Timer(new TimerCallback(statsDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
         }
         public void Start()
         {
-            bwDownloader = new Timer(new TimerCallback(bwDownloader_Tick), null, 0, 20000);
+            statsDownloader.Change(0, pollInterval);
         }
-        private void bwDownloader_Tick(object o)
+        public void Stop()
         {
-            CrawlTwitchChannel( currentChannelName );
+            statsDownloader.Change(Timeout.Infinite, Timeout.Infinite);
         }
-        private void CrawlTwitchChannel( string channel )
+        private void statsDownloader_Tick(object o)
         {
             if (String.IsNullOrEmpty(currentChannelName))
             {
                 Debug.Print("TwitchTV: channel name is empty. Can't fetch stats");
                 return;
             }
-            
-            try
+            CrawlTwitchChannel(currentChannelName);
+        }
+        private void CrawlTwitchChannel( string channel )
+        {
+            lock (downloadLock)
             {
-                wc.Headers["Cache-Control"] = "no-cache";
-                var url = String.Format(channelJsonUrl, channel, (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds);
-                using (var stream = wc.downloadURL(url))
+                var prevChannelStats = currentChannelStats;
+                try
                 {
-                    if (stream == null)
-                    {
-                        Debug.Print("Can't download channel info of {0} result is null. Url: {1}", currentChannelName, channelJsonUrl);
-                    }
-                    else
-                    {
-                        currentChannel = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
-
-                        if (currentChannel == null)
+                    statsWC.Headers["Cache-Control"] = "no-cache";
+                    var url = String.Format(channelJsonUrl, channel, TimeUtils.UnixTimestamp());
+                    using (var stream = statsWC.downloadURL(url))
+                    {                        
+                        if (statsWC.LastWebError == "ProtocolError")
                         {
-                            Debug.Print("Can't parse twitch stats of {0}. Url: {1}", currentChannelName, url);
+                            return;
+                        }
+
+                        if (stream == null)
+                        {
+                            Debug.Print("TwitchTV: Can't download channel info of {0} result is null. Url: {1}", currentChannelName, channelJsonUrl);
                         }
                         else
                         {
-                            Debug.Print("TwitchTV: got stats of {0} successfuly", currentChannelName);
-                            OnLive(EventArgs.Empty);
-                        }
-                    }
+                            currentChannelStats = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
 
-                    if( !isAlive())
-                        OnOffline(EventArgs.Empty);
+                            if (prevChannelStats != currentChannelStats && currentChannelStats != null)
+                            {
+                                OnLive(EventArgs.Empty);
+                            }
+                        }
+
+                        if (!isAlive() && prevChannelStats != currentChannelStats)
+                            OnOffline(EventArgs.Empty);
+                    }
+                }
+                catch
+                {
+                    Debug.Print("Exception in CrawlTwitchChannel");
                 }
             }
-            catch
-            {
-                Debug.Print("Exception in CrawlTwitchChannel");
-            }            
         }
         private bool isAlive()
         {
-            return currentChannel != null;
+            return currentChannelStats != null;
         }
         #endregion
         #region Public properties
         public string Viewers
         {
-            get { return !isAlive() ? "0" : currentChannel.viewers; }
+            get { return !isAlive() ? "0" : currentChannelStats.viewers; }
             set { }
         }
         public string Bitrate
         {
-            get { return !isAlive() ? "0" : currentChannel.videoBitrate; }
+            get { return !isAlive() ? "0" : currentChannelStats.videoBitrate; }
             set { }
         }
         #endregion

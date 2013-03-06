@@ -8,6 +8,7 @@ using System.Threading;
 using System.Net;
 using System.Web;
 using System.Diagnostics;
+using dotUtilities;
 
 namespace dotEmpireTV
 {
@@ -32,7 +33,8 @@ namespace dotEmpireTV
         private const string logoutRE = @"href=""/user/logout""";
         private const string empireDomain = "http://www.empiretv.org";
         private const string loginUrl = empireDomain + "/user";
-        private const int updatePeriod = 3 * 1000;
+        private const int pollInterval = 3000;
+
         
         //id = userid
         //msg = text
@@ -45,8 +47,14 @@ namespace dotEmpireTV
         #endregion
         #region Private properties
         private List<Message> lastMessages;
-        private CookieAwareWebClient wc;
+        private CookieAwareWebClient loginWC;
+        private CookieAwareWebClient messageWC;
         private bool _enabled;
+        private Timer chatDownloader;
+        
+        private object chatLock = new object();
+        private object messageLock = new object();
+        private object loginLock = new object();
         private string UserID
         {
             get;
@@ -77,139 +85,129 @@ namespace dotEmpireTV
             return result;
 
         }
-        private long unixTimestamp()
-        {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            TimeSpan diff = DateTime.Now - origin;
-            return (long)Math.Floor(diff.TotalSeconds);
-        }
         #endregion
         #region Public methods
         public EmpireTV()
         {
-            wc = new CookieAwareWebClient();
-            wc.Headers["User-Agent"] = userAgent;
+            loginWC = new CookieAwareWebClient();
+            messageWC = new CookieAwareWebClient();
+            loginWC.Headers["User-Agent"] = userAgent;
             Messages = null;
             lastMessages = new List<Message>();
             LoggedIn = false;
-            Enabled = false;
             LoadHistory = false;
+            
+            chatDownloader = new Timer(new TimerCallback(chatDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
+
+        }
+        private void chatDownloader_Tick(object o)
+        {
+            DownloadChat();
+        }
+        public void Start()
+        {
+            chatDownloader.Change(0, pollInterval);
+        }
+        public void Stop()
+        {
+            chatDownloader.Change(Timeout.Infinite, Timeout.Infinite);
         }
         public void SendMessage( String text )
         {
-            if (String.IsNullOrEmpty(CurrentChatID))
-                return;
-
-            var result = wc.DownloadString(String.Format(sendUrl, CurrentChatID, HttpUtility.UrlEncode(text), UserID + unixTimestamp()));
-
-
-        }
-        public void Poll()
-        {
-            Debug.WriteLine("Poll started");
-            while (Enabled)
+            lock (messageLock)
             {
-                UpdateChat();
-                Thread.Sleep(updatePeriod);
-            }
-
-        }
-        public void UpdateChat()
-        {
-            UpdateChat(UserID);
-        }
-        public void UpdateChat( String chatid)
-        {
-            CurrentChatID = chatid;
-            var result  = "";
-            try
-            {
-              result = wc.DownloadString(String.Format(getChatUrl, chatid, unixTimestamp()));
-            }
-            catch {
-                return;
-            }
-            if (String.IsNullOrEmpty(result))
-                return;
-
-            var messages = ParseJson<List<Message>>.ReadObject(result);
-
-            if (messages == null)
-                return;
-
-            if (!LoadHistory && Messages == null)
-                lastMessages = messages;
-
-            Messages = messages.Except(lastMessages, new LambdaComparer<Message>((x, y) => x.id == y.id)).ToList();
-
-            if (Messages == null)
-                return;
-
-            if (OnNewMessage != null && Messages.Count > 0)
-            {
-                lastMessages = messages;
-                foreach (var m in Messages)
+                if (String.IsNullOrEmpty(UserID))
+                    return;
+                try
                 {
-                    OnNewMessage(this, new MessageArgs(m));
+                    var result = messageWC.DownloadString(String.Format(sendUrl, UserID, HttpUtility.UrlEncode(text), UserID + TimeUtils.UnixTimestamp()));
+                }
+                catch
+                {
+                    Debug.Print("EmpireTV: Message send failed");
+                }
+            }
+
+
+        }
+        public void DownloadChat()
+        {
+            lock(chatLock)
+            {
+                var result  = "";
+                try
+                {
+                  result = loginWC.DownloadString(String.Format(getChatUrl, UserID, TimeUtils.UnixTimestamp()));
+                }
+                catch {
+                    Debug.Print("EmpireTV: chat download failed");
+                    return;
+                }
+                if (String.IsNullOrEmpty(result))
+                    return;
+
+                var messages = ParseJson<List<Message>>.ReadObject(result);
+
+                if (messages == null)
+                    return;
+
+                if (!LoadHistory && Messages == null)
+                    lastMessages = messages;
+
+                Messages = messages.Except(lastMessages, new LambdaComparer<Message>((x, y) => x.id == y.id)).ToList();
+
+                if (Messages == null)
+                    return;
+
+                if (OnNewMessage != null && Messages.Count > 0)
+                {
+                    lastMessages = messages;
+                    foreach (var m in Messages)
+                    {
+                        OnNewMessage(this, new MessageArgs(m));
+                    }
                 }
             }
 
         }
         public bool Login(string user, string password)
         {
-            var result = wc.DownloadString(empireDomain);
-            if (String.IsNullOrEmpty(result))
-                return false;
-            
-            var formid = GetSubString(result, formidRE ,1);
-            if (String.IsNullOrEmpty(result))
-                return false;
-            wc.ContentType = dotWebClient.ContentType.UrlEncoded;     
-       
-            result = wc.UploadString(loginUrl, String.Format(loginParams,user,password,formid));
+            lock (loginLock)
+            {
+                var result = loginWC.DownloadString(empireDomain);
+                if (String.IsNullOrEmpty(result))
+                    return false;
 
-            if (result.IndexOf(logoutRE) < 0)
-                return false;
+                var formid = GetSubString(result, formidRE, 1);
+                if (String.IsNullOrEmpty(result))
+                    return false;
+                loginWC.ContentType = dotWebClient.ContentType.UrlEncoded;
 
-            UserID = GetSubString(result, useridRE, 1);
+                result = loginWC.UploadString(loginUrl, String.Format(loginParams, user, password, formid));
 
-            if (String.IsNullOrEmpty(UserID))
-                return false;
+                if (result.IndexOf(logoutRE) < 0)
+                    return false;
 
-            if (OnLogin != null)
-                OnLogin(this, EventArgs.Empty);
+                UserID = GetSubString(result, useridRE, 1);
 
-            LoggedIn = true;
+                if (String.IsNullOrEmpty(UserID))
+                    return false;
 
-            Enabled = true;
+                if (OnLogin != null)
+                    OnLogin(this, EventArgs.Empty);
 
-            return true;
+                LoggedIn = true;
+                messageWC.Cookies = loginWC.Cookies;
+
+                return true;
+            }
         }
         #endregion
         #region Public properties
-
-        public String CurrentChatID
-        {
-            get;
-            set;
-        }
         public List<Message> Messages
         {
             get;
             set;
-        }
-        public bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (_enabled != value)
-                {
-                    _enabled = value;
-                    if (_enabled)
-                        ThreadPool.QueueUserWorkItem(c => Poll());
-                }
-            }
         }
         public bool LoggedIn
         {

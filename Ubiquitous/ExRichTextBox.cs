@@ -102,6 +102,9 @@ namespace SC2TV.RTFControl {
         private const int SB_TOP = 6;
         private const int SB_BOTTOM = 7;
         private const int SB_ENDSCROLL = 8;
+        private const int WM_USER = 0x400;
+        private const int SB_VERT = 1;
+        private const int EM_GETSCROLLPOS = WM_USER + 221;
 
         private System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
         
@@ -128,7 +131,7 @@ namespace SC2TV.RTFControl {
 		#endregion
 
 		#region My Privates
-
+        private object scrollLock = new object();
 		// The default text color
 		private Color textColor;
 
@@ -152,11 +155,21 @@ namespace SC2TV.RTFControl {
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool GetScrollInfo(IntPtr hwnd, int fnBar, ref SCROLLINFO lpsi);
 
+
+        [DllImport("user32.dll")]
+        private static extern bool GetScrollRange(IntPtr hWnd, int nBar, out int lpMinPos, out int lpMaxPos);
+
         [DllImport("user32.dll")]
         static extern int SetScrollInfo(IntPtr hwnd, int fnBar, [In] ref SCROLLINFO lpsi, bool fRedraw);
 
         [DllImport("User32.dll", CharSet = CharSet.Auto, EntryPoint = "SendMessage")]
         static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, Int32 wMsg, Int32 wParam, ref Point lParam);
+
+        [DllImport("user32.dll", EntryPoint = "HideCaret")]
+        public static extern long HideCaret(IntPtr hwnd);
 
         struct SCROLLINFO
         {
@@ -255,32 +268,62 @@ namespace SC2TV.RTFControl {
             get;
             set;
         }
+        public bool IsAtMaxScroll()
+        {
+            int minScroll;
+            int maxScroll;
+            GetScrollRange(this.Handle, SB_VERT, out minScroll, out maxScroll);
+            Point rtfPoint = Point.Empty;
+            SendMessage(this.Handle, EM_GETSCROLLPOS, 0, ref rtfPoint);
+
+
+            return (rtfPoint.Y + this.ClientSize.Height >= maxScroll);
+        }
+        public bool SlowScroll
+        {
+            get;
+            set;
+        }
+        public bool Caret
+        {
+            get;
+            set;
+        }
         public void ScrollToEnd()
         {
-            if (InvokeRequired)
-            {
-                ScrollCB d = new ScrollCB(ScrollToEnd);
-                try
+            if (String.IsNullOrEmpty(Text))
+                return;
+            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+                if (InvokeRequired)
                 {
-                    Parent.Invoke(d, new object[] {});
+                    ScrollCB d = new ScrollCB(ScrollToEnd);
+                    try
+                    {
+                        Parent.Invoke(d, new object[] { });
+                    }
+                    catch { }
                 }
-                catch { }
-            }
-            else
-            {
-                var linesToEnd = scroll(this.Handle, 1);
-                if (linesToEnd > 15)
-                    linesToEnd = scroll(this.Handle, (int)(linesToEnd - 15) );
-
-                while (linesToEnd > 0)
+                else
                 {
-                    linesToEnd = scroll(this.Handle, 1);
-                    Thread.Sleep(20);
+                    lock (scrollLock)
+                    {
+                        if (!IsAtMaxScroll())
+                        {
+                            var linesToEnd = scroll(this.Handle, 1);
+                            if (linesToEnd > 15)
+                                linesToEnd = scroll(this.Handle, (int)(linesToEnd - (SlowScroll?15:0)));
+                        
+                            while (linesToEnd > 0)
+                            {
+                                linesToEnd = scroll(this.Handle, 1);
+                                Thread.Sleep(20);
+                            }
+                            ToImage();
+                        }
+                        if (!Caret)
+                            HideCaret(this.Handle);
+                    }
                 }
-                this.Update();
-                ToImage();
-                
-            }
 
         }
         private void ToImage()
@@ -1093,7 +1136,12 @@ namespace SC2TV.RTFControl {
             this.ResumeLayout(false);
 
         }
-
+        protected override void OnClick(EventArgs e)
+        {
+            base.OnClick(e);
+            if (!Caret)
+                HideCaret(this.Handle);
+        }
         private void ExRichTextBox_Resize(object sender, EventArgs e)
         {
             ScrollToEnd();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
-
+using System.Threading;
 namespace Ubiquitous
 {
     /// <summary>
@@ -20,10 +20,10 @@ namespace Ubiquitous
 
         public BGWorker(StartFunc startFunc, CompleteFunc completeFunc)
         {
+
             _startFunc = startFunc;
             _completeFunc = completeFunc;
-
-            bw = new BackgroundWorker();
+            bw = new BackgroundWorker();           
             bw.DoWork += DoWork;
             bw.RunWorkerCompleted += Complete;
             bw.RunWorkerAsync();
@@ -38,7 +38,8 @@ namespace Ubiquitous
         }
         private void DoWork(object sender, DoWorkEventArgs e)
         {
-            if(_startFunc != null)
+            
+            if (_startFunc != null)
                 _startFunc();
         }
         private void Complete(object sender, RunWorkerCompletedEventArgs e)
