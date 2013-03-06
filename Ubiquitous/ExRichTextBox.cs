@@ -318,10 +318,11 @@ namespace SC2TV.RTFControl {
                                 linesToEnd = scroll(this.Handle, 1);
                                 Thread.Sleep(20);
                             }
-                            ToImage();
                         }
                         if (!Caret)
                             HideCaret(this.Handle);
+                        
+                        ToImage();
                     }
                 }
 
