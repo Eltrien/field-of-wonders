@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
+
 namespace dotUtilities
 {
     public static class Utils
@@ -18,5 +19,7 @@ namespace dotUtilities
                 return (T)formatter.Deserialize(memStream);
             }
         }
+
+
     }
 }

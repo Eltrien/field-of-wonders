@@ -101,9 +101,6 @@
     <Setting Name="goodgameLoadHistory" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="sc2LoadHistory" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="battlelogEmail" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -290,11 +287,11 @@
     <Setting Name="globalCompactSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">740, 620</Value>
     </Setting>
-    <Setting Name="sc2DontRevive" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="globalSmoothScroll" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="sc2LastMsgId" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -68,7 +68,6 @@ namespace dotSC2TV
         private const string mainDomain = "http://sc2tv.ru";
         private const string chatDomain = "http://chat.sc2tv.ru";
         private string _lastStatus = null;
-        private bool _loadHistory;
         private CookieAwareWebClient loginWC;
         private CookieAwareWebClient chatWC;
         private CookieAwareWebClient settingsWC;
@@ -172,9 +171,9 @@ namespace dotSC2TV
 
         #region "Public methods"
 
-        public Sc2Chat( bool loadHistory = false)
+        public Sc2Chat( uint lastMsgId )
         {
-            _loadHistory = false;
+            LastMessageId = lastMsgId;
             settingsWC = new CookieAwareWebClient();
             loginWC = new CookieAwareWebClient();
             chatWC = new CookieAwareWebClient();
@@ -237,6 +236,11 @@ namespace dotSC2TV
                 }
             }
         }
+        public UInt32 LastMessageId
+        {
+            get;
+            set;
+        }
         public bool DownloadChat(bool reload)
         {
             lock( chatLock )
@@ -256,7 +260,6 @@ namespace dotSC2TV
                 if (_lastStatus == "ProtocolError")
                 {
                     //Chat json isn't available at the moment
-                    Debug.Print(String.Format("Sc2tv: Chat is inactive or page isn't available"));
                     return false;
                 }
 
@@ -270,21 +273,18 @@ namespace dotSC2TV
 
                 if (newchat == null )
                 {
-                    Debug.Print(String.Format("Sc2tv: JSON is wrong or empty"));
                     return false;
                 }
                 else if (newchat.messages.Count <= 0)
                 {
-                    Debug.Print(String.Format("Sc2tv: Chat is empty currently"));
                     return false;
                 }
 
+
                 if (chat.messages == null)
                 {
-                    if (_loadHistory)
-                        chat.messages = new List<ChatMessage>();
-                    else
-                        chat.messages = newchat.messages;
+                    chat.messages = new List<ChatMessage>();
+                    chat.messages = newchat.messages.Where(msg => msg.id < LastMessageId).ToList();
                 }
 
                 // Find new messages
@@ -292,6 +292,9 @@ namespace dotSC2TV
                     chat.messages, new LambdaComparer<ChatMessage>( (x,y) => x.id == y.id ) );
 
                 chat = newchat;
+
+                if( newmessages.Count() > 0 )
+                    LastMessageId = newchat.MaxID();
 
                 // Put "to" nickname into separate property
                 foreach (var m in newmessages)
@@ -307,10 +310,8 @@ namespace dotSC2TV
                             m.message = Regex.Replace(m.message, re, "", RegexOptions.IgnoreCase | RegexOptions.Multiline);
                         }
                     }
-                    Debug.Print("Sc2tv new messages");
                     OnMessageReceived(new Sc2MessageEvent(m));
                 }
-                Debug.Print("Sc2tv message update finished");
                 return true;
             }
         }

@@ -67,9 +67,13 @@ namespace dotOBS
         void socket_DataReceived(object sender, WebSocket4Net.DataReceivedEventArgs e)
         {
         }
-        
 
 
+        public List<Scene> Scenes
+        {
+            get;
+            set;
+        }
         void socket_Closed(object sender, EventArgs e)
         {
             //throw new NotImplementedException();
@@ -132,6 +136,8 @@ namespace dotOBS
                 var sceneStatus = JsonGenerics.ParseJson<SceneStatus>.ReadObject(e.Message);
                 if (sceneStatus != null)
                 {
+                    if (sceneStatus.scenes.Count > 0)
+                        Scenes = sceneStatus.scenes;
                     if (OnSceneList != null)
                         OnSceneList(this, new OBSSceneStatusEventArgs(sceneStatus));
                 }

@@ -94,6 +94,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.timerEverySecond = new System.Windows.Forms.Timer(this.components);
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.contextMenuChat.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panelMessages.SuspendLayout();
@@ -202,7 +203,7 @@
             this.button1.Enabled = global::Ubiquitous.Properties.Settings.Default.globalDebug;
             this.button1.Location = new System.Drawing.Point(666, 435);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(46, 23);
+            this.button1.Size = new System.Drawing.Size(52, 23);
             this.button1.TabIndex = 37;
             this.button1.Text = "Log";
             this.button1.UseVisualStyleBackColor = true;
@@ -214,15 +215,16 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelMessages.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
+            this.panelMessages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelMessages.Controls.Add(this.pictureBox1);
             this.panelMessages.Controls.Add(this.panelTools);
             this.panelMessages.Controls.Add(this.labelViewers);
             this.panelMessages.Controls.Add(this.textMessages);
             this.panelMessages.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.panelMessages.Location = new System.Drawing.Point(3, 0);
+            this.panelMessages.Location = new System.Drawing.Point(3, 3);
             this.panelMessages.Name = "panelMessages";
-            this.panelMessages.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.panelMessages.Size = new System.Drawing.Size(576, 602);
+            this.panelMessages.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.panelMessages.Size = new System.Drawing.Size(576, 597);
             this.panelMessages.TabIndex = 36;
             // 
             // pictureBox1
@@ -330,7 +332,6 @@
             this.checkBoxOnTop.TabIndex = 1;
             this.checkBoxOnTop.Text = "On Top";
             this.checkBoxOnTop.UseVisualStyleBackColor = false;
-            this.checkBoxOnTop.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // trackBarTransparency
             // 
@@ -363,6 +364,7 @@
             // 
             this.textMessages.BackColor = System.Drawing.Color.Black;
             this.textMessages.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textMessages.Caret = false;
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("TimeColor", global::Ubiquitous.Properties.Settings.Default, "globalTimestampForeground", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("HiglightColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("SaveToImageFileName", global::Ubiquitous.Properties.Settings.Default, "globalChatImageFilename", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -373,15 +375,18 @@
             this.textMessages.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textMessages.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
             this.textMessages.HiglightColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
-            this.textMessages.Location = new System.Drawing.Point(5, 0);
+            this.textMessages.Location = new System.Drawing.Point(10, 0);
             this.textMessages.Margin = new System.Windows.Forms.Padding(10);
             this.textMessages.Name = "textMessages";
             this.textMessages.RawTextColor = null;
             this.textMessages.ReadOnly = true;
+            this.textMessages.RTF = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\deflang1049\\deflangfe1049{\\fonttbl{\\f0\\fnil\\fcharse" +
+    "t204 Microsoft Sans Serif;}}\r\n{\\colortbl ;\\red255\\green255\\blue255;}\r\n\\viewkind4" +
+    "\\uc1\\pard\\cf1\\f0\\fs17\\par\r\n}\r\n";
             this.textMessages.SaveToImage = global::Ubiquitous.Properties.Settings.Default.globalChat2Image;
             this.textMessages.SaveToImageFileName = global::Ubiquitous.Properties.Settings.Default.globalChatImageFilename;
             this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.textMessages.Size = new System.Drawing.Size(571, 602);
+            this.textMessages.Size = new System.Drawing.Size(564, 595);
             this.textMessages.SlowScroll = global::Ubiquitous.Properties.Settings.Default.globalSmoothScroll;
             this.textMessages.TabIndex = 23;
             this.textMessages.Text = "";
@@ -402,11 +407,12 @@
             // 
             this.pictureCurrentChat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pictureCurrentChat.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.pictureCurrentChat.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureCurrentChat.ContextMenuStrip = this.contextMenuChat;
             this.pictureCurrentChat.Image = global::Ubiquitous.Properties.Resources.twitchicon;
-            this.pictureCurrentChat.Location = new System.Drawing.Point(2, 604);
+            this.pictureCurrentChat.Location = new System.Drawing.Point(2, 601);
             this.pictureCurrentChat.Name = "pictureCurrentChat";
-            this.pictureCurrentChat.Size = new System.Drawing.Size(17, 18);
+            this.pictureCurrentChat.Size = new System.Drawing.Size(19, 21);
             this.pictureCurrentChat.TabIndex = 34;
             this.pictureCurrentChat.TabStop = false;
             this.pictureCurrentChat.Click += new System.EventHandler(this.pictureCurrentChat_Click_1);
@@ -415,9 +421,10 @@
             // 
             this.buttonFullscreen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonFullscreen.BackColor = System.Drawing.SystemColors.Window;
+            this.buttonFullscreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonFullscreen.ImageIndex = 0;
             this.buttonFullscreen.ImageList = this.imageListChatSize;
-            this.buttonFullscreen.Location = new System.Drawing.Point(706, 602);
+            this.buttonFullscreen.Location = new System.Drawing.Point(705, 601);
             this.buttonFullscreen.Name = "buttonFullscreen";
             this.buttonFullscreen.Size = new System.Drawing.Size(23, 21);
             this.buttonFullscreen.TabIndex = 9;
@@ -435,9 +442,12 @@
             // 
             this.textCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textCommand.BackColor = System.Drawing.Color.Black;
-            this.textCommand.ForeColor = System.Drawing.Color.LightYellow;
-            this.textCommand.Location = new System.Drawing.Point(21, 604);
+            this.textCommand.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
+            this.textCommand.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textCommand.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textCommand.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textCommand.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
+            this.textCommand.Location = new System.Drawing.Point(22, 601);
             this.textCommand.Name = "textCommand";
             this.textCommand.Size = new System.Drawing.Size(682, 20);
             this.textCommand.TabIndex = 33;
@@ -892,6 +902,12 @@
             this.timerEverySecond.Interval = 1000;
             this.timerEverySecond.Tick += new System.EventHandler(this.timerEverySecond_Tick);
             // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
             // MainForm
             // 
             this.AcceptButton = this.buttonInvisible;
@@ -900,14 +916,14 @@
             this.ClientSize = new System.Drawing.Size(726, 622);
             this.Controls.Add(this.panel1);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "mainFormPosition", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.DataBindings.Add(new System.Windows.Forms.Binding("TopMost", global::Ubiquitous.Properties.Settings.Default, "mainformTopMost", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.DataBindings.Add(new System.Windows.Forms.Binding("StartPosition", global::Ubiquitous.Properties.Settings.Default, "mainformStartPos", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.DataBindings.Add(new System.Windows.Forms.Binding("TopMost", global::Ubiquitous.Properties.Settings.Default, "globalOnTop", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Location = global::Ubiquitous.Properties.Settings.Default.mainFormPosition;
             this.Name = "MainForm";
             this.StartPosition = global::Ubiquitous.Properties.Settings.Default.mainformStartPos;
             this.Text = "Ubiquitous - MultiChat";
-            this.TopMost = global::Ubiquitous.Properties.Settings.Default.mainformTopMost;
+            this.TopMost = global::Ubiquitous.Properties.Settings.Default.globalOnTop;
             this.Activated += new System.EventHandler(this.MainForm_Activated);
             this.Deactivate += new System.EventHandler(this.MainForm_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -1015,6 +1031,7 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.PictureBox pictureGohaWeb;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }
 

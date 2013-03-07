@@ -421,18 +421,6 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool sc2LoadHistory {
-            get {
-                return ((bool)(this["sc2LoadHistory"]));
-            }
-            set {
-                this["sc2LoadHistory"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string battlelogEmail {
             get {
@@ -1177,18 +1165,6 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool sc2DontRevive {
-            get {
-                return ((bool)(this["sc2DontRevive"]));
-            }
-            set {
-                this["sc2DontRevive"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool globalSmoothScroll {
             get {
@@ -1196,6 +1172,18 @@ namespace Ubiquitous.Properties {
             }
             set {
                 this["globalSmoothScroll"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public uint sc2LastMsgId {
+            get {
+                return ((uint)(this["sc2LastMsgId"]));
+            }
+            set {
+                this["sc2LastMsgId"] = value;
             }
         }
     }

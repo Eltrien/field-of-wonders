@@ -32,12 +32,16 @@ namespace Ubiquitous
 {
     public partial class MainForm : Form
     {
+        #region Delegates
         delegate void SetTransparencyCB(Color color);
         delegate void SetVisibilityCB(Control control, bool state);
         delegate void SetTopMostCB(Form control, bool topmost);
         delegate void SetComboValueCB(ComboBox combo, object value);
         delegate void SetTooltipCB(ToolTip tooltip, Control control, string value);
         delegate void SetCheckedToolTipCB(ToolStripMenuItem item, bool state);
+        
+        #endregion
+
         #region Private classes and enums
         private enum EndPoint
         {
@@ -306,6 +310,7 @@ namespace Ubiquitous
         private string formTitle;
         private Point cursorPosBeforeMouseDown;
         private bool isRMBDown = false;
+        private bool isLMBDown = false;
         private Properties.Settings settings;
         private const string twitchIRCDomain = "jtvirc.com";
         private const string gohaIRCDomain = "i.gohanet.ru";
@@ -328,6 +333,7 @@ namespace Ubiquitous
         private BindingSource channelsGG;
         private uint sc2ChannelId = 0;
         private bool streamIsOnline = false;
+        private int firstSelectedCharIndex = 0;
         private BGWorker gohaBW, gohaStreamBW, steamBW, sc2BW, twitchBW, skypeBW, twitchTV, goodgameBW, battlelogBW,
                         empireBW, cyberBW, obsremoteBW;
         private EmpireTV empireTV;
@@ -347,7 +353,6 @@ namespace Ubiquitous
         private Form debugForm;
         #endregion 
 
-
         #region Form events and methods
         public MainForm()
         {
@@ -364,7 +369,6 @@ namespace Ubiquitous
             log = new Log(textMessages);
 
 
-            setTopMost();
             chatUsers = new List<ChatUser>();
 
             currentChat = EndPoint.TwitchTV;
@@ -374,8 +378,11 @@ namespace Ubiquitous
             lastMessagePerEndpoint = new List<Message>();
             adminCommands.Add(new AdminCommand(@"^/r\s*([^\s]*)\s*(.*)", ReplyCommand));
             adminCommands.Add(new AdminCommand(@"^/stream$", StartStopStreamsCommand));
-            adminCommands.Add(new AdminCommand(@"^/gohaconfirm\s*([^\s]*)\s*(.*)", GohaConfirmCommand));
-            adminCommands.Add(new AdminCommand(@"^/gohasetpass\s*([^\s]*)\s*(.*)", GohaUpdatePassword));
+            adminCommands.Add(new AdminCommand(@"^/gohaconfirm\s*(.*)", GohaConfirmCommand));
+            adminCommands.Add(new AdminCommand(@"^/gohasetpass", GohaUpdatePassword));
+            adminCommands.Add(new AdminCommand(@"^/width\s*(.*)", SetFormWidth));
+            adminCommands.Add(new AdminCommand(@"^/height\s*(.*)", SetFormHeight));
+            adminCommands.Add(new AdminCommand(@"^/scene\s*(.*)", SetOBSScene));
 
             chatAliases.Add(new ChatAlias(settings.twitchChatAlias, EndPoint.TwitchTV, ChatIcon.TwitchTv));
             chatAliases.Add(new ChatAlias(settings.sc2tvChatAlias, EndPoint.Sc2Tv, ChatIcon.Sc2Tv));
@@ -392,7 +399,7 @@ namespace Ubiquitous
             uint.TryParse(settings.Sc2tvId, out sc2ChannelId);
             Debug.Print(String.Format("Sc2tv Channel ID: {0}",sc2ChannelId));
 
-            sc2tv = new Sc2Chat(settings.sc2LoadHistory);
+            sc2tv = new Sc2Chat(settings.sc2LastMsgId);
             sc2tv.Logon += OnSc2TvLogin;
             sc2tv.ChannelList += OnSc2TvChannelList;
             sc2tv.MessageReceived += OnSc2TvMessageReceived;
@@ -483,10 +490,8 @@ namespace Ubiquitous
             settings.steamEnabled = !settings.steamEnabled;
             settings.Save();
         }
-
         private void MainForm_Shown(object sender, EventArgs e)
         {
-
             RefreshChatProperties();
 
             formTitle = String.Format("{0} {1}", this.Text, GetRunningVersion());
@@ -509,7 +514,6 @@ namespace Ubiquitous
             Size = new System.Drawing.Size(settings.mainformWidth, settings.mainformHeight);
 
 
-            SetTopMost(this, settings.globalOnTop);
             StartPosition = settings.mainformStartPos;
             Location = settings.mainFormPosition;
 
@@ -525,7 +529,6 @@ namespace Ubiquitous
                     return Assembly.GetExecutingAssembly().GetName().Version;
                 }
         }
-
         private void button1_Click(object sender, EventArgs e)
         {
             //Advertising
@@ -542,7 +545,6 @@ namespace Ubiquitous
             }
 
         }
-
         void settings_SettingsSaving(object sender, CancelEventArgs e)
         {
 
@@ -602,22 +604,19 @@ namespace Ubiquitous
         {
             SetChatProperties(e.PropertyName);
         }
-
-
         private void buttonFullscreen_Click(object sender, EventArgs e)
         {
             switchFullScreenMode();
 
         }
-
         private void buttonSettings_Click_1(object sender, EventArgs e)
         {
-            var lastOnTopState = this.TopMost;  
-            SetTopMost(this, false);
+            var lastOnTopState = this.TopMost;
+            settings.globalOnTop = false;
             SettingsDialog settingsForm = new SettingsDialog();
             settingsForm.ShowDialog();
             ProtectConfig();
-            SetTopMost(this, lastOnTopState);
+            settings.globalOnTop = lastOnTopState;
 
         }
         private void comboSc2Channels_DropDown(object sender, EventArgs e)
@@ -625,13 +624,11 @@ namespace Ubiquitous
             if( settings.sc2tvEnabled )
                 sc2tv.updateStreamList();
         }
-
         private void comboGGChannels_DropDown(object sender, EventArgs e)
         {
             if( settings.goodgameEnabled )
                 ggChat.updateChannelList();
         }
-
         private void textCommand_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -686,7 +683,10 @@ namespace Ubiquitous
                         if (!isFlood(msg))
                             SendMessage(msg);
                     }
+                    
                     log.WriteLine(String.Format("Switching to {0}...", currentChat.ToString()));
+                    lastMessageSent.FromEndPoint = chatAlias.Endpoint;
+
                     return true;
                 }
             }
@@ -697,6 +697,59 @@ namespace Ubiquitous
             StartStopOBSStream();
             return Result.Successful;
         }
+        private Result SetFormWidth(string width)
+        {
+            int _width;
+            int.TryParse(width, out _width);
+
+            if (_width > 0)
+                TSafe.SetProperty<Form, int>(this, "Width", _width);
+            
+            return Result.Successful;
+        }
+        private Result SetFormHeight(string height)
+        {
+            int _height;
+            int.TryParse(height, out _height);
+
+            if (_height > 0)
+                TSafe.SetProperty<Form, int>(this, "Height", _height);
+
+            return Result.Successful;
+        }
+        private Result SetOBSScene(string sceneMask)
+        {
+            if (!settings.obsRemoteEnable)
+            {
+                SendMessage(new Message("OBS isn't enabled", EndPoint.Bot, EndPoint.SteamAdmin));
+                return Result.Failed;
+            }
+
+            List<Scene> scenes = obsRemote.Scenes.Where(s => s.name.ToLower().Contains(sceneMask.ToLower())).ToList();
+            if( scenes.Count <= 0 )
+                SendMessage(new Message("No scenes found!", EndPoint.Bot, EndPoint.SteamAdmin));
+
+            if (scenes.Count > 1)
+            {
+                var foundScenes = "";
+                foreach (var scene in scenes)
+                {
+                    foundScenes += scene.name + ",";
+                }
+                if (!String.IsNullOrEmpty(foundScenes))
+                    foundScenes = foundScenes.TrimEnd(',');
+
+
+                SendMessage(new Message("Please clarify what scene:" + foundScenes, EndPoint.Bot, EndPoint.SteamAdmin));
+            }
+            else
+            {
+                obsRemote.SetCurrentScene(scenes[0].name);
+            }
+
+            return Result.Successful;
+        }
+
         private Result GohaConfirmCommand(string confirmCode)
         {
             SendConfirmCodeToGohaIRC(confirmCode);
@@ -713,6 +766,7 @@ namespace Ubiquitous
             //TODO Switch chat using given chat alias/user name
             if (!SwitchToChat(switchto))
                 return Result.Failed;
+
 
             if (currentChat != lastMessageSent.FromEndPoint)
             {
@@ -955,7 +1009,6 @@ namespace Ubiquitous
                 gohaIrc.LocalUser.SendMessage("NickServ", String.Format("SET PASSWORD {0}", settings.GohaPassword));
             }
         }
-
         private void SendMessageToEmpireTV(Message message)
         {
             if (settings.empireEnabled && empireTV.LoggedIn &&
@@ -964,8 +1017,6 @@ namespace Ubiquitous
                 empireTV.SendMessage(message.Text);
             }
         }
-
-
         private void pictureCurrentChat_Click(object sender, EventArgs e)
         {
             pictureCurrentChat.ContextMenuStrip.Show();
@@ -1053,9 +1104,18 @@ namespace Ubiquitous
         {
             if( settings.globalDebug && debugForm != null)
                 debugForm.Hide();
+
+            #region Save settings
             settings.mainformWidth = Size.Width;
             settings.mainformHeight = Size.Height;
+
+            if (settings.sc2tvEnabled)
+            {
+                settings.sc2LastMsgId = sc2tv.LastMessageId;
+            }
             settings.Save();
+            #endregion
+
             this.Visible = false;
             isDisconnecting = true;
             e.Cancel = true;
@@ -1140,7 +1200,6 @@ namespace Ubiquitous
                 checkMark.SetOff(pictureSc2tv);
             }  
         }
-
         private void RunWithTimeout(ParameterizedThreadStart start, int timeoutSec)
         {
             Thread t = new Thread(start);
@@ -1214,21 +1273,6 @@ namespace Ubiquitous
             }
 
         }
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            setTopMost();
-        }
-        private void setTopMost()
-        {
-            if (checkBoxOnTop.Checked)
-            {
-                SetTopMost(this, true);
-            }
-            else
-            {
-                SetTopMost( this, false);
-            }
-        }
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
             SwitchBorder();
@@ -1254,15 +1298,17 @@ namespace Ubiquitous
                 settings.isFullscreenMode = false;
                 panelMessages.Dock = DockStyle.None;
                 panelMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
-                panelMessages.Height = textCommand.Top;
+                panelMessages.Height = textCommand.Top - 5;
                 panelMessages.Width = groupBox1.Left - 5;
                 textMessages.ScrollToEnd();
+                button1.Show();
             }
             else
             {
                 Size = settings.globalCompactSize;
                 settings.isFullscreenMode = true;
                 panelMessages.Dock = DockStyle.Fill;
+                button1.Hide();
                 textMessages.ScrollToEnd();
             }
 
@@ -1271,7 +1317,6 @@ namespace Ubiquitous
         {
             switchFullScreenMode();
         }
-
         private void hideTools()
         {
             if (checkBoxOnTop.Visible)
@@ -1418,7 +1463,12 @@ namespace Ubiquitous
                 cursorPosBeforeMouseDown = Cursor.Position;
                 textMessages.Cursor = Cursors.SizeAll;
                 isRMBDown = true;
-            }           
+            }
+            else if (e.Button == MouseButtons.Left)
+            {
+                isLMBDown = true;
+            }
+            
         }
         private void textMessages_MouseMove(object sender, MouseEventArgs e)
         {
@@ -1437,6 +1487,9 @@ namespace Ubiquitous
                 this.Top += Cursor.Position.Y - cursorPosBeforeMouseDown.Y;
                 cursorPosBeforeMouseDown = Cursor.Position;
             }
+            if (isLMBDown)
+            {
+            }
             showTools();
         }
         private void textMessages_MouseUp(object sender, MouseEventArgs e)
@@ -1445,6 +1498,10 @@ namespace Ubiquitous
             {
                 textMessages.Cursor = Cursors.IBeam;
                 isRMBDown = false;
+            }
+            if (e.Button == MouseButtons.Left)
+            {
+                isLMBDown = false;
             }
         }
         private void timerEverySecond_Tick(object sender, EventArgs e)
@@ -1455,6 +1512,7 @@ namespace Ubiquitous
 
                 if (cybergame != null)
                     UInt32.TryParse(cybergame.Viewers, out cybergameViewers);
+
 
                 labelViewers.Text = String.Format("{0}", cybergameViewers + twitchViewers);
                 SetTooltip(viewersTooltip, labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {1}", twitchViewers, cybergameViewers));
@@ -1491,7 +1549,56 @@ namespace Ubiquitous
         private void buttonFullscreen_Click_1(object sender, EventArgs e)
         {
             switchFullScreenMode();
-        }           
+        }
+        private void twitchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+        private void contextMenuChat_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            SwitchToChat(chatAliases[contextMenuChat.Items.IndexOf(e.ClickedItem)].Alias);
+        }
+        private void pictureCurrentChat_Click_1(object sender, EventArgs e)
+        {
+            contextMenuChat.Show(Cursor.Position);
+        }
+        private void panelTools_MouseDown(object sender, MouseEventArgs e)
+        {
+
+        }
+        private void buttonStreamStartStop_Click(object sender, EventArgs e)
+        {
+
+            StartStopOBSStream();
+        }
+        private void contextSceneSwitch_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        {
+            //e.Cancel = !btnClose;
+            //btnClose = true;
+        }
+        private void textMessages_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (settings.globalDebug && debugForm != null)
+                debugForm.Show();
+        }
+        private void textMessages_SelectionChanged(object sender, EventArgs e)
+        {
+            //if (textMessages.SelectionType == RichTextBoxSelectionTypes.Object)
+            //{/
+            //    textMessages.Select(textMessages.GetCharIndexFromPosition(textMessages.PointToClient(Cursor.Position)), 0);
+            //}
+
+        }
+        private void MainForm_ResizeEnd(object sender, EventArgs e)
+        {
+            if (panelMessages.Dock == DockStyle.Fill)
+                settings.globalCompactSize = this.Size;
+            else
+                settings.globalFullSize = this.Size;
+        }
         #endregion
 
         #region Cybergame methods and events
@@ -1556,6 +1663,8 @@ namespace Ubiquitous
         }
         private void OnEmpireMessage(object sender, MessageArgs e)
         {
+            if (e.Message.nick.ToLower() == settings.empireUser.ToLower())
+                return;
             SendMessage(new Message(String.Format("{0} ({1}{2})", e.Message.text, e.Message.nick, settings.empireAlias), EndPoint.Empiretv, EndPoint.SteamAdmin));
         }
         #endregion
@@ -1951,8 +2060,8 @@ namespace Ubiquitous
         }
         private void OnSc2TvMessageReceived(object sender, Sc2Chat.Sc2MessageEvent e)
         {
-            //if (e.message.name.ToLower() == settings.Sc2tvUser.ToLower())
-               // return;
+            if (e.message.name.ToLower() == settings.Sc2tvUser.ToLower())
+               return;
 
             var message = sc2tv.sanitizeMessage(e.message.message,settings.sc2tvSanitizeSmiles);
             if (message.Trim().Length <= 0)
@@ -1999,6 +2108,8 @@ namespace Ubiquitous
 
             if (steamBot.loginStatus == SteamAPISession.LoginStatus.LoginSuccessful)
                 updateList = steamBot.Poll();
+            else
+                ThreadPool.QueueUserWorkItem(c => ConnectSteamBot());
         }
         private void backgroundWorkerPoll_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -2017,7 +2128,6 @@ namespace Ubiquitous
             steamBot.NewMessage += OnNewSteamMessage;
             steamBot.FriendStateChange += OnSteamFriendStatusChange;
             steamBot.Typing += OnSteamTyping;
-
             checkMark.SetOff(pictureSteamBot);
 
             string password = settings.SteamBotPassword;
@@ -2526,7 +2636,6 @@ namespace Ubiquitous
             obsRemote.OnSourceChange += new EventHandler<OBSSourceEventArgs>(obsRemote_OnSourceChange);
             obsRemote.Connect(settings.obsHost);
         }
-
         void obsRemote_OnSourceChange(object sender, OBSSourceEventArgs e)
         {
             foreach (ToolStripMenuItem item in contextSceneSwitch.Items)
@@ -2544,7 +2653,24 @@ namespace Ubiquitous
             }
             
         }
-
+        private void StartStopOBSStream()
+        {
+            if (settings.obsRemoteEnable)
+            {
+                if (obsRemote.Opened)
+                {
+                    obsRemote.StartStopStream();
+                }
+                else
+                {
+                    SendMessage(new Message("No connection to OBS plugin!", EndPoint.Bot, EndPoint.SteamAdmin));
+                }
+            }
+            else
+            {
+                SendMessage(new Message("OBS control is not enabled. Check your settings!", EndPoint.Bot, EndPoint.SteamAdmin));
+            }
+        }
         void obsRemote_OnSceneSet(object sender, OBSMessageEventArgs e)
         {
             var sceneName = e.Message;
@@ -2556,6 +2682,7 @@ namespace Ubiquitous
                 if (item.Text == sceneName)
                 {
                     SetCheckedToolTip(item, true);
+                    SendMessage(new Message("Scene set to " + sceneName, EndPoint.Bot, EndPoint.SteamAdmin));
                 }
                 else
                 {
@@ -2563,7 +2690,6 @@ namespace Ubiquitous
                 }
             }
         }
-
         void obsRemote_OnSceneList(object sender, OBSSceneStatusEventArgs e)
         {
             contextSceneSwitch.Items.Clear();
@@ -2587,8 +2713,6 @@ namespace Ubiquitous
                 }
             }
         }
-
-
         void contextSceneSwitch_onClick(object sender, EventArgs e)
         {
             ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
@@ -2602,103 +2726,29 @@ namespace Ubiquitous
             var menuItem = (ToolStripMenuItem)e.ClickedItem;
             obsRemote.SetCurrentScene(menuItem.Text);
         }
-
         void obsRemote_OnError(object sender, EventArgs e)
         {
             Thread.Sleep(3000);
             ConnectOBSRemote();
         }
-
         void obsRemote_OnOffline(object sender, EventArgs e)
         {
             buttonStreamStartStop.Image = Properties.Resources.play;
             SendMessage(new Message("OBS doesn't streaming. Switching players off!", EndPoint.Bot, EndPoint.SteamAdmin));
             SwitchPlayersOff(true,true);
         }
-
-
         void obsRemote_OnLive(object sender, EventArgs e)
         {
             buttonStreamStartStop.Image = Properties.Resources.stop;
             SendMessage(new Message("OBS is streaming. Switching players on!", EndPoint.Bot, EndPoint.SteamAdmin));
             SwitchPlayersOn(true,true);
         }
-
         #endregion
 
-        private void twitchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void contextMenuChat_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            SwitchToChat(chatAliases[contextMenuChat.Items.IndexOf(e.ClickedItem)].Alias);
-        }
-
-        private void pictureCurrentChat_Click_1(object sender, EventArgs e)
-        {
-            contextMenuChat.Show(Cursor.Position);
-        }
-
-        private void panelTools_MouseDown(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void buttonStreamStartStop_Click(object sender, EventArgs e)
-        {
-
-            StartStopOBSStream();
-        }
-        private void StartStopOBSStream()
-        {
-            if (settings.obsRemoteEnable)
-            {
-                if (obsRemote.Opened)
-                {
-                    obsRemote.StartStopStream();
-                }
-                else
-                {
-                    SendMessage(new Message("No connection to OBS plugin!", EndPoint.Bot, EndPoint.SteamAdmin));
-                }
-            }
-            else
-            {
-                SendMessage(new Message("OBS control is not enabled. Check your settings!", EndPoint.Bot, EndPoint.SteamAdmin));
-            }
-        }
-        private void contextSceneSwitch_Closing(object sender, ToolStripDropDownClosingEventArgs e)
-        {
-            //e.Cancel = !btnClose;
-            //btnClose = true;
-        }
-
-        private void textMessages_TextChanged(object sender, EventArgs e)
-        {
-
-        }
         private void Chat2Image()
         {
             Debug.Print("Screen capture");
             Control2Image.RtbToBitmap(textMessages, @"c:\test.jpeg");
-        }
-
-        private void MainForm_Resize(object sender, EventArgs e)
-        {
-
-        }
-
-        private void MainForm_ResizeEnd(object sender, EventArgs e)
-        {
-            if (settings.isFullscreenMode)
-            {
-                settings.globalCompactSize = Size;
-            }
-            else
-            {
-                settings.globalFullSize = Size;
-            }
         }
         public static void ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
@@ -2706,19 +2756,23 @@ namespace Ubiquitous
             Debug.Print(errorMsg);
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            if( settings.globalDebug && debugForm != null)
-                debugForm.Show();
-        }
 
-        private void textMessages_SelectionChanged(object sender, EventArgs e)
+    }
+    public static class TSafe
+    {
+        public delegate void SetPropCallback(Control ctrl, string propName, object value);
+        public static void SetProperty<TControl, TValue>(this TControl ctrl, string propName, TValue value) where TControl : Control
         {
-            if (textMessages.SelectionType == RichTextBoxSelectionTypes.Object)
+            if (ctrl.InvokeRequired)
             {
-                textMessages.Select(textMessages.GetFirstCharIndexOfCurrentLine(), 0);
+                var d = new SetPropCallback(SetProperty);
+                ctrl.Invoke(d, new object[] { ctrl, propName, value });
             }
-
+            else
+            {
+                Type t = ctrl.GetType();
+                t.InvokeMember(propName, BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.Public, null, ctrl, new object[] { value });
+            }
         }
     }
 

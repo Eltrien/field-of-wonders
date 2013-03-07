@@ -254,6 +254,11 @@ namespace SC2TV.RTFControl {
                 scroll(this.Handle, (int)pixelsToEnd - 60);
             }*/
         }
+        public string RTF
+        {
+            get { return Rtf; }
+            set { Rtf = value; }
+        }
         public void ReplaceSmileCode(String code, Bitmap bmp)
         {
 
@@ -279,6 +284,14 @@ namespace SC2TV.RTFControl {
 
             return (rtfPoint.Y + this.ClientSize.Height >= maxScroll);
         }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+              Rectangle r = this.ClientRectangle;
+              r.Width -= 5;
+              r.Height -= 5;
+              e.Graphics.DrawRectangle(Pens.DeepSkyBlue, r);
+        }
         public bool SlowScroll
         {
             get;
@@ -291,10 +304,7 @@ namespace SC2TV.RTFControl {
         }
         public void ScrollToEnd()
         {
-            if (String.IsNullOrEmpty(Text))
-                return;
-            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-                if (InvokeRequired)
+            if (InvokeRequired)
                 {
                     ScrollCB d = new ScrollCB(ScrollToEnd);
                     try
@@ -307,6 +317,9 @@ namespace SC2TV.RTFControl {
                 {
                     lock (scrollLock)
                     {
+                        if (String.IsNullOrEmpty(Text))
+                            return;
+
                         if (!IsAtMaxScroll())
                         {
                             var linesToEnd = scroll(this.Handle, 1);
@@ -348,7 +361,7 @@ namespace SC2TV.RTFControl {
 		 *				  found.
 		 * \deflang[N]	- The default language. \deflang1033 specifies US English.
 		 * */
-		private const string RTF_HEADER = @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033";
+        private const string RTF_HEADER = @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033";
 
 		/* RTF DOCUMENT AREA
 		 * -----------------
@@ -766,27 +779,27 @@ namespace SC2TV.RTFControl {
 		/// <param name="_image"></param>
 		public void InsertImage(Image _image) {
 
-			StringBuilder _rtf = new StringBuilder();
+            StringBuilder _rtf = new StringBuilder();
 
 			// Append the RTF header
-			_rtf.Append(RTF_HEADER);
+            _rtf.Append(RTF_HEADER);
 
-			// Create the font table using the RichTextBox's current font and append
+            // Create the font table using the RichTextBox's current font and append
 			// it to the RTF string
 			_rtf.Append(GetFontTable(this.Font));
 
-			// Create the image control string and append it to the RTF string
-			_rtf.Append(GetImagePrefix(_image));
+			// Create the image control string and append it to the RTF string			
+            _rtf.Append(GetImagePrefix(_image));
+            
 
 			// Create the Windows Metafile and append its bytes in HEX format
 			_rtf.Append(GetRtfImage(_image));
 
 			// Close the RTF image control string
-			_rtf.Append(RTF_IMAGE_POST);
+            _rtf.Append(RTF_IMAGE_POST);
 
-			this.SelectedRtf = _rtf.ToString();
+            this.SelectedRtf = _rtf.ToString();
 		}
-
         public string ImageToString(Image _image)
         {
             StringBuilder _rtf = new StringBuilder();
@@ -881,8 +894,9 @@ namespace SC2TV.RTFControl {
 			int pichgoal = (int)Math.Round((_image.Height / yDpi) * TWIPS_PER_INCH);
 
 			// Append values to RTF string
-			_rtf.Append(@"{\pict\wmetafile8");
-			_rtf.Append(@"\picw");
+            //_rtf.Append(@"{\*\picprop\shplid1025{\sp{\sn fLockAgainstSelect}{\sv 1}}}");
+            _rtf.Append(@"{\pict\wmetafile8{\*\picprop{\sp{\sn fLockAgainstSelect}{\sv 1}}}");
+            _rtf.Append(@"\picw");
 			_rtf.Append(picw);
 			_rtf.Append(@"\pich");
 			_rtf.Append(pich);
@@ -1126,7 +1140,6 @@ namespace SC2TV.RTFControl {
         }
 
         #endregion
-
         private void InitializeComponent()
         {
             this.SuspendLayout();

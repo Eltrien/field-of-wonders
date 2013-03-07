@@ -107,6 +107,9 @@
     <Compile Include="InputBox.Designer.cs">
       <DependentUpon>InputBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="IntTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="LogStreamWriter.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MainForm.cs">
@@ -128,6 +131,12 @@
     </Compile>
     <Compile Include="SettingsDialog.Designer.cs">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SizeBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SizeBox.Designer.cs">
+      <DependentUpon>SizeBox.cs</DependentUpon>
     </Compile>
     <Compile Include="StatusImage.cs" />
     <Compile Include="StatusServer.cs" />
@@ -156,6 +165,9 @@
     </Compile>
     <EmbeddedResource Include="SettingsDialog.resx">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SizeBox.resx">
+      <DependentUpon>SizeBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>

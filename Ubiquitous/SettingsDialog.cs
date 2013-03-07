@@ -60,10 +60,9 @@ namespace Ubiquitous
         private void SettingsDialog_Shown(object sender, EventArgs e)
         {
             textFontName.Text = settings.globalChatFont.ToString();
-            textFontTimestamp.Text = settings.globalTimestampFont.ToString();
             buttonBackColor.BackColor = settings.globalChatBackground;
             buttonForeColor.BackColor = settings.globalChatTextColor;
-            buttonTimeColor.BackColor = settings.globalTimestampForeground;
+
         }
 
         private void buttonChatFont_Click(object sender, EventArgs e)
@@ -120,7 +119,6 @@ namespace Ubiquitous
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
                 settings.globalTimestampForeground = colorDialog.Color;
-                buttonTimeColor.BackColor = colorDialog.Color;
             }
 
         }

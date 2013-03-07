@@ -386,7 +386,15 @@ namespace dotGoodgame
             _netConnection.OnConnect += _netConnection_OnConnect;
             _netConnection.NetStatus += _netConnection_NetStatus;
             _netConnection.Client = this;
-            _netConnection.Connect(_chatUrl, _userId, _userToken, ChatId);
+            try
+            {
+                _netConnection.Connect(_chatUrl, _userId, _userToken, ChatId);
+            }
+            catch(Exception e)
+            {
+                if( OnError != null)
+                    OnError(this, new TextEventArgs(e.Message));
+            }
             _sharedObject = (GGChat)RemoteSharedObject.GetRemote(typeof(GGChat), "chat" + ChatId, _chatUrl, true);
             _sharedObject.ClearEvents();
             _sharedObject.MessageReceived += OnMessageReceived;
