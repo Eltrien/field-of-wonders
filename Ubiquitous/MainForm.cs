@@ -311,6 +311,8 @@ namespace Ubiquitous
         private Point cursorPosBeforeMouseDown;
         private bool isRMBDown = false;
         private bool isLMBDown = false;
+        private Point _Offset = Point.Empty;
+        private Point _OffsetViewers = Point.Empty;
         private Properties.Settings settings;
         private const string twitchIRCDomain = "jtvirc.com";
         private const string gohaIRCDomain = "i.gohanet.ru";
@@ -1319,6 +1321,8 @@ namespace Ubiquitous
         }
         private void hideTools()
         {
+            if (_Offset != Point.Empty || _OffsetViewers != Point.Empty)
+                return;
             if (checkBoxOnTop.Visible)
             {
                 SetVisibility(panelTools, false);
@@ -1521,6 +1525,7 @@ namespace Ubiquitous
 
                 if ((!ClientRectangle.Contains(PointToClient(Cursor.Position))))
                 {
+
                     hideTools();
                 }
                 else
@@ -2754,6 +2759,75 @@ namespace Ubiquitous
         {
             var errorMsg = e.Exception.Message + "\n\nStack Trace:\n" + e.Exception.StackTrace;
             Debug.Print(errorMsg);
+        }
+
+        private void pictureBoxMoveTools_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _Offset = new Point(e.X, e.Y);
+
+            }
+        }
+
+        private void pictureBoxMoveTools_MouseUp(object sender, MouseEventArgs e)
+        {
+            _Offset = Point.Empty;
+
+        }
+
+        private void pictureBoxMoveTools_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_Offset != Point.Empty)
+            {
+                Point newlocation = panelTools.Location;
+
+                var newX = newlocation.X + e.X - _Offset.X;
+                if (newX < (this.Width - panelTools.ClientRectangle.Width)
+                    && newX > 0)
+                    newlocation.X += e.X - _Offset.X;
+
+                var newY = newlocation.Y + e.Y - _Offset.Y;
+                if (newY > 0
+                    && newY < (this.Height - panelTools.Height))
+                    newlocation.Y += e.Y - _Offset.Y;
+
+                    panelTools.Location = newlocation;
+            }
+        }
+
+        private void labelViewers_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _OffsetViewers = new Point(e.X, e.Y);
+
+            }
+        }
+
+        private void labelViewers_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_OffsetViewers != Point.Empty)
+            {
+                Point newlocation = labelViewers.Location;
+
+                var newX = newlocation.X + e.X - _OffsetViewers.X;
+                if (newX < (this.Width - labelViewers.ClientRectangle.Width)
+                    && newX > 0)
+                    newlocation.X += e.X - _OffsetViewers.X;
+                
+                var newY = newlocation.Y + e.Y - _OffsetViewers.Y;
+                if (newY > 0
+                    && newY < (this.Height - labelViewers.Height))
+                    newlocation.Y += e.Y - _OffsetViewers.Y;
+
+                labelViewers.Location = newlocation;
+            }
+        }
+
+        private void labelViewers_MouseUp(object sender, MouseEventArgs e)
+        {
+            _OffsetViewers = Point.Empty;
         }
 
 

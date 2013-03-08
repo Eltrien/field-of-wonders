@@ -331,6 +331,7 @@
   <ItemGroup>
     <Content Include="offline.mp3" />
     <Content Include="online.mp3" />
+    <None Include="Resources\dots.gif" />
     <None Include="Resources\cybergame.gif" />
     <None Include="Resources\coins.gif" />
     <None Include="Resources\play1.gif" />

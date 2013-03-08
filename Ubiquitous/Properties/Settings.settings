@@ -293,5 +293,11 @@
     <Setting Name="sc2LastMsgId" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="globalViewersLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="globalToolsLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">54, 0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
