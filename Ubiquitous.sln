@@ -44,6 +44,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Performance1.psess = Performance1.psess
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotHashd", "dotHashd\dotHashd.csproj", "{A4CD22CB-D696-471F-AB36-9A928393FD20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -244,6 +246,16 @@ Global
 		{C7B9B6CB-EDB0-4EC5-AD59-7643B11CC8BF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C7B9B6CB-EDB0-4EC5-AD59-7643B11CC8BF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C7B9B6CB-EDB0-4EC5-AD59-7643B11CC8BF}.Release|x86.ActiveCfg = Release|Any CPU
+		{A4CD22CB-D696-471F-AB36-9A928393FD20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4CD22CB-D696-471F-AB36-9A928393FD20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4CD22CB-D696-471F-AB36-9A928393FD20}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A4CD22CB-D696-471F-AB36-9A928393FD20}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A4CD22CB-D696-471F-AB36-9A928393FD20}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A4CD22CB-D696-471F-AB36-9A928393FD20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4CD22CB-D696-471F-AB36-9A928393FD20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4CD22CB-D696-471F-AB36-9A928393FD20}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A4CD22CB-D696-471F-AB36-9A928393FD20}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A4CD22CB-D696-471F-AB36-9A928393FD20}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

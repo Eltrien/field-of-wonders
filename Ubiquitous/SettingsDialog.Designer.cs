@@ -28,38 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("General");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Battlelog");
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Hashd.tv");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Steam");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Twitch.tv");
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Sc2tv.ru");
             System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Skype");
             System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Goodgame.ru");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Battlelog");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Goha.tv");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Stream control/monitor");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Empire.tv");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Cybergame.tv");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Goha.tv");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Stream control/monitor");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Empire.tv");
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Cybergame.tv");
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("General");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsDialog));
             this.settingsTree1 = new mycontrol.SettingsTree();
-            this.settingsPage11 = new mycontrol.SettingsPage();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label36 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.checkBox42 = new System.Windows.Forms.CheckBox();
-            this.checkBox38 = new System.Windows.Forms.CheckBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.textBox31 = new System.Windows.Forms.TextBox();
-            this.checkBox40 = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.checkBox39 = new System.Windows.Forms.CheckBox();
-            this.groupChatAppearance = new System.Windows.Forms.GroupBox();
-            this.buttonBackColor = new System.Windows.Forms.Button();
-            this.buttonForeColor = new System.Windows.Forms.Button();
-            this.label33 = new System.Windows.Forms.Label();
-            this.buttonChatFont = new System.Windows.Forms.Button();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
-            this.textFontName = new System.Windows.Forms.TextBox();
+            this.settingsPage12 = new mycontrol.SettingsPage();
+            this.label35 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.textBox32 = new System.Windows.Forms.TextBox();
+            this.checkBox17 = new System.Windows.Forms.CheckBox();
+            this.textBox33 = new System.Windows.Forms.TextBox();
+            this.textBox34 = new System.Windows.Forms.TextBox();
             this.settingsPage1 = new mycontrol.SettingsPage();
             this.checkBox28 = new System.Windows.Forms.CheckBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
@@ -171,14 +161,30 @@
             this.checkBox34 = new System.Windows.Forms.CheckBox();
             this.textBox28 = new System.Windows.Forms.TextBox();
             this.textBox29 = new System.Windows.Forms.TextBox();
+            this.settingsPage11 = new mycontrol.SettingsPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.sizeBox2 = new Ubiquitous.SizeBox();
             this.sizeBox1 = new Ubiquitous.SizeBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkBox39 = new System.Windows.Forms.CheckBox();
+            this.groupChatAppearance = new System.Windows.Forms.GroupBox();
+            this.buttonBackColor = new System.Windows.Forms.Button();
+            this.buttonForeColor = new System.Windows.Forms.Button();
+            this.label33 = new System.Windows.Forms.Label();
+            this.buttonChatFont = new System.Windows.Forms.Button();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.textFontName = new System.Windows.Forms.TextBox();
+            this.checkBox42 = new System.Windows.Forms.CheckBox();
+            this.checkBox38 = new System.Windows.Forms.CheckBox();
+            this.textBox31 = new System.Windows.Forms.TextBox();
+            this.checkBox40 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.settingsTree1.SplitContainer)).BeginInit();
             this.settingsTree1.SplitContainer.Panel2.SuspendLayout();
-            this.settingsPage11.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupChatAppearance.SuspendLayout();
+            this.settingsPage12.SuspendLayout();
             this.settingsPage1.SuspendLayout();
             this.settingsPage2.SuspendLayout();
             this.settingsPage3.SuspendLayout();
@@ -191,14 +197,18 @@
             this.groupBox2.SuspendLayout();
             this.settingsPage9.SuspendLayout();
             this.settingsPage10.SuspendLayout();
+            this.settingsPage11.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupChatAppearance.SuspendLayout();
             this.SuspendLayout();
             // 
             // settingsTree1
             // 
             treeNode1.Name = "";
-            treeNode1.Text = "General";
+            treeNode1.Text = "Battlelog";
             this.settingsTree1.CurrentNode = treeNode1;
-            this.settingsTree1.CurrentPage = this.settingsPage11;
+            this.settingsTree1.CurrentPage = this.settingsPage6;
             this.settingsTree1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.settingsTree1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.settingsTree1.LabelEdit = false;
@@ -226,6 +236,7 @@
             this.settingsTree1.SplitContainer.Panel2.Controls.Add(this.settingsPage9);
             this.settingsTree1.SplitContainer.Panel2.Controls.Add(this.settingsPage10);
             this.settingsTree1.SplitContainer.Panel2.Controls.Add(this.settingsPage11);
+            this.settingsTree1.SplitContainer.Panel2.Controls.Add(this.settingsPage12);
             this.settingsTree1.SplitContainer.Size = new System.Drawing.Size(483, 316);
             this.settingsTree1.SplitContainer.SplitterDistance = 164;
             this.settingsTree1.SplitContainer.TabIndex = 5;
@@ -238,237 +249,115 @@
             this.settingsTree1.TreeView.Location = new System.Drawing.Point(0, 0);
             this.settingsTree1.TreeView.Name = "treeSettings";
             this.settingsTree1.TreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode7,
-            treeNode11,
-            treeNode10,
             treeNode1,
-            treeNode8,
+            treeNode10,
+            treeNode9,
+            treeNode11,
+            treeNode7,
             treeNode6,
+            treeNode12,
             treeNode4,
             treeNode5,
             treeNode2,
-            treeNode9,
+            treeNode8,
             treeNode3});
             this.settingsTree1.TreeView.Size = new System.Drawing.Size(164, 316);
             this.settingsTree1.TreeView.Sorted = true;
             this.settingsTree1.TreeView.TabIndex = 0;
             this.settingsTree1.Load += new System.EventHandler(this.settingsTree1_Load);
             // 
-            // settingsPage11
+            // settingsPage12
             // 
-            this.settingsPage11.Controls.Add(this.groupBox4);
-            this.settingsPage11.Controls.Add(this.checkBox42);
-            this.settingsPage11.Controls.Add(this.checkBox38);
-            this.settingsPage11.Controls.Add(this.button2);
-            this.settingsPage11.Controls.Add(this.textBox31);
-            this.settingsPage11.Controls.Add(this.checkBox40);
-            this.settingsPage11.Controls.Add(this.groupBox3);
-            this.settingsPage11.Controls.Add(this.groupChatAppearance);
-            this.settingsPage11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsPage11.isActive = true;
-            this.settingsPage11.Location = new System.Drawing.Point(0, 0);
-            this.settingsPage11.Name = "settingsPage11";
-            this.settingsPage11.ParentNode = treeNode1;
-            this.settingsPage11.Size = new System.Drawing.Size(315, 316);
-            this.settingsPage11.TabIndex = 10;
+            this.settingsPage12.Controls.Add(this.label35);
+            this.settingsPage12.Controls.Add(this.label37);
+            this.settingsPage12.Controls.Add(this.label38);
+            this.settingsPage12.Controls.Add(this.textBox32);
+            this.settingsPage12.Controls.Add(this.checkBox17);
+            this.settingsPage12.Controls.Add(this.textBox33);
+            this.settingsPage12.Controls.Add(this.textBox34);
+            this.settingsPage12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsPage12.isActive = true;
+            this.settingsPage12.Location = new System.Drawing.Point(0, 0);
+            this.settingsPage12.Name = "settingsPage12";
+            treeNode12.Name = "";
+            treeNode12.Text = "Hashd.tv";
+            this.settingsPage12.ParentNode = treeNode12;
+            this.settingsPage12.Size = new System.Drawing.Size(315, 316);
+            this.settingsPage12.TabIndex = 11;
             // 
-            // groupBox4
+            // label35
             // 
-            this.groupBox4.Controls.Add(this.sizeBox2);
-            this.groupBox4.Controls.Add(this.sizeBox1);
-            this.groupBox4.Controls.Add(this.label36);
-            this.groupBox4.Controls.Add(this.label34);
-            this.groupBox4.Location = new System.Drawing.Point(13, 135);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(290, 76);
-            this.groupBox4.TabIndex = 12;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Dimensions";
+            this.label35.AutoSize = true;
+            this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label35.Location = new System.Drawing.Point(16, 41);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(53, 13);
+            this.label35.TabIndex = 67;
+            this.label35.Text = "Chat alias";
             // 
-            // label36
+            // label37
             // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(11, 42);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(47, 13);
-            this.label36.TabIndex = 0;
-            this.label36.Text = "Full size:";
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label37.Location = new System.Drawing.Point(10, 92);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(56, 13);
+            this.label37.TabIndex = 66;
+            this.label37.Text = "Password:";
             // 
-            // label34
+            // label38
             // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(6, 16);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(52, 13);
-            this.label34.TabIndex = 0;
-            this.label34.Text = "Compact:";
+            this.label38.AutoSize = true;
+            this.label38.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label38.Location = new System.Drawing.Point(30, 66);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(36, 13);
+            this.label38.TabIndex = 65;
+            this.label38.Text = "Login:";
             // 
-            // checkBox42
+            // textBox32
             // 
-            this.checkBox42.AutoSize = true;
-            this.checkBox42.Checked = global::Ubiquitous.Properties.Settings.Default.globalDebug;
-            this.checkBox42.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalDebug", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox42.Location = new System.Drawing.Point(13, 290);
-            this.checkBox42.Name = "checkBox42";
-            this.checkBox42.Size = new System.Drawing.Size(118, 17);
-            this.checkBox42.TabIndex = 14;
-            this.checkBox42.Text = "Verbose debugging";
-            this.checkBox42.UseVisualStyleBackColor = true;
+            this.textBox32.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "hashdAlias", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox32.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox32.Location = new System.Drawing.Point(81, 38);
+            this.textBox32.Name = "textBox32";
+            this.textBox32.Size = new System.Drawing.Size(154, 20);
+            this.textBox32.TabIndex = 62;
+            this.textBox32.Text = global::Ubiquitous.Properties.Settings.Default.hashdAlias;
             // 
-            // checkBox38
+            // checkBox17
             // 
-            this.checkBox38.AutoSize = true;
-            this.checkBox38.Checked = global::Ubiquitous.Properties.Settings.Default.globalSmoothScroll;
-            this.checkBox38.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox38.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalSmoothScroll", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox38.Location = new System.Drawing.Point(13, 267);
-            this.checkBox38.Name = "checkBox38";
-            this.checkBox38.Size = new System.Drawing.Size(113, 17);
-            this.checkBox38.TabIndex = 13;
-            this.checkBox38.Text = "Smooth auto scroll";
-            this.checkBox38.UseVisualStyleBackColor = true;
+            this.checkBox17.AutoSize = true;
+            this.checkBox17.Checked = global::Ubiquitous.Properties.Settings.Default.hashdEnabled;
+            this.checkBox17.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "hashdEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.checkBox17.Location = new System.Drawing.Point(19, 12);
+            this.checkBox17.Name = "checkBox17";
+            this.checkBox17.Size = new System.Drawing.Size(65, 17);
+            this.checkBox17.TabIndex = 61;
+            this.checkBox17.Text = "Enabled";
+            this.checkBox17.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // textBox33
             // 
-            this.button2.Location = new System.Drawing.Point(271, 238);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(26, 23);
-            this.button2.TabIndex = 12;
-            this.button2.Text = "...";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.textBox33.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "hashdUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox33.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox33.Location = new System.Drawing.Point(81, 64);
+            this.textBox33.Name = "textBox33";
+            this.textBox33.Size = new System.Drawing.Size(154, 20);
+            this.textBox33.TabIndex = 63;
+            this.textBox33.Text = global::Ubiquitous.Properties.Settings.Default.hashdUser;
             // 
-            // textBox31
+            // textBox34
             // 
-            this.textBox31.BackColor = System.Drawing.Color.White;
-            this.textBox31.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "globalChatImageFilename", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox31.Location = new System.Drawing.Point(13, 240);
-            this.textBox31.Name = "textBox31";
-            this.textBox31.ReadOnly = true;
-            this.textBox31.Size = new System.Drawing.Size(252, 20);
-            this.textBox31.TabIndex = 10;
-            this.textBox31.Text = global::Ubiquitous.Properties.Settings.Default.globalChatImageFilename;
-            // 
-            // checkBox40
-            // 
-            this.checkBox40.AutoSize = true;
-            this.checkBox40.Checked = global::Ubiquitous.Properties.Settings.Default.globalChat2Image;
-            this.checkBox40.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalChat2Image", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox40.Location = new System.Drawing.Point(13, 217);
-            this.checkBox40.Name = "checkBox40";
-            this.checkBox40.Size = new System.Drawing.Size(164, 17);
-            this.checkBox40.TabIndex = 9;
-            this.checkBox40.Text = "Save chat to image (for OBS)";
-            this.checkBox40.UseVisualStyleBackColor = true;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.checkBox39);
-            this.groupBox3.Location = new System.Drawing.Point(13, 81);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(290, 48);
-            this.groupBox3.TabIndex = 8;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Timestamps";
-            // 
-            // checkBox39
-            // 
-            this.checkBox39.AutoSize = true;
-            this.checkBox39.Checked = global::Ubiquitous.Properties.Settings.Default.globalChatEnableTimestamps;
-            this.checkBox39.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalChatEnableTimestamps", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox39.Location = new System.Drawing.Point(7, 20);
-            this.checkBox39.Name = "checkBox39";
-            this.checkBox39.Size = new System.Drawing.Size(114, 17);
-            this.checkBox39.TabIndex = 11;
-            this.checkBox39.Text = "Enable timestamps";
-            this.checkBox39.UseVisualStyleBackColor = true;
-            // 
-            // groupChatAppearance
-            // 
-            this.groupChatAppearance.Controls.Add(this.buttonBackColor);
-            this.groupChatAppearance.Controls.Add(this.buttonForeColor);
-            this.groupChatAppearance.Controls.Add(this.label33);
-            this.groupChatAppearance.Controls.Add(this.buttonChatFont);
-            this.groupChatAppearance.Controls.Add(this.label31);
-            this.groupChatAppearance.Controls.Add(this.label32);
-            this.groupChatAppearance.Controls.Add(this.textFontName);
-            this.groupChatAppearance.Location = new System.Drawing.Point(13, 3);
-            this.groupChatAppearance.Name = "groupChatAppearance";
-            this.groupChatAppearance.Size = new System.Drawing.Size(290, 72);
-            this.groupChatAppearance.TabIndex = 7;
-            this.groupChatAppearance.TabStop = false;
-            this.groupChatAppearance.Text = "Messages";
-            // 
-            // buttonBackColor
-            // 
-            this.buttonBackColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
-            this.buttonBackColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.buttonBackColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonBackColor.Location = new System.Drawing.Point(171, 44);
-            this.buttonBackColor.Name = "buttonBackColor";
-            this.buttonBackColor.Size = new System.Drawing.Size(20, 20);
-            this.buttonBackColor.TabIndex = 9;
-            this.buttonBackColor.UseVisualStyleBackColor = false;
-            this.buttonBackColor.Click += new System.EventHandler(this.buttonBackColor_Click);
-            // 
-            // buttonForeColor
-            // 
-            this.buttonForeColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
-            this.buttonForeColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.buttonForeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonForeColor.Location = new System.Drawing.Point(75, 44);
-            this.buttonForeColor.Name = "buttonForeColor";
-            this.buttonForeColor.Size = new System.Drawing.Size(20, 20);
-            this.buttonForeColor.TabIndex = 8;
-            this.buttonForeColor.UseVisualStyleBackColor = false;
-            this.buttonForeColor.Click += new System.EventHandler(this.buttonForeColor_Click);
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(101, 48);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(68, 13);
-            this.label33.TabIndex = 7;
-            this.label33.Text = "Background:";
-            // 
-            // buttonChatFont
-            // 
-            this.buttonChatFont.Location = new System.Drawing.Point(258, 16);
-            this.buttonChatFont.Name = "buttonChatFont";
-            this.buttonChatFont.Size = new System.Drawing.Size(26, 23);
-            this.buttonChatFont.TabIndex = 5;
-            this.buttonChatFont.Text = "...";
-            this.buttonChatFont.UseVisualStyleBackColor = true;
-            this.buttonChatFont.Click += new System.EventHandler(this.buttonChatFont_Click);
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(4, 21);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(31, 13);
-            this.label31.TabIndex = 3;
-            this.label31.Text = "Font:";
-            this.label31.Click += new System.EventHandler(this.label31_Click);
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(5, 48);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(64, 13);
-            this.label32.TabIndex = 3;
-            this.label32.Text = "Foreground:";
-            // 
-            // textFontName
-            // 
-            this.textFontName.BackColor = System.Drawing.Color.White;
-            this.textFontName.Location = new System.Drawing.Point(41, 18);
-            this.textFontName.Name = "textFontName";
-            this.textFontName.ReadOnly = true;
-            this.textFontName.Size = new System.Drawing.Size(211, 20);
-            this.textFontName.TabIndex = 4;
+            this.textBox34.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "hashdPassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox34.Location = new System.Drawing.Point(81, 90);
+            this.textBox34.Name = "textBox34";
+            this.textBox34.Size = new System.Drawing.Size(154, 20);
+            this.textBox34.TabIndex = 64;
+            this.textBox34.Text = global::Ubiquitous.Properties.Settings.Default.hashdPassword;
+            this.textBox34.UseSystemPasswordChar = true;
             // 
             // settingsPage1
             // 
@@ -1166,9 +1055,7 @@
             this.settingsPage6.isActive = true;
             this.settingsPage6.Location = new System.Drawing.Point(0, 0);
             this.settingsPage6.Name = "settingsPage6";
-            treeNode7.Name = "";
-            treeNode7.Text = "Battlelog";
-            this.settingsPage6.ParentNode = treeNode7;
+            this.settingsPage6.ParentNode = treeNode1;
             this.settingsPage6.Size = new System.Drawing.Size(315, 316);
             this.settingsPage6.TabIndex = 0;
             // 
@@ -1302,9 +1189,9 @@
             this.settingsPage7.isActive = true;
             this.settingsPage7.Location = new System.Drawing.Point(0, 0);
             this.settingsPage7.Name = "settingsPage7";
-            treeNode8.Name = "";
-            treeNode8.Text = "Goha.tv";
-            this.settingsPage7.ParentNode = treeNode8;
+            treeNode7.Name = "";
+            treeNode7.Text = "Goha.tv";
+            this.settingsPage7.ParentNode = treeNode7;
             this.settingsPage7.Size = new System.Drawing.Size(315, 316);
             this.settingsPage7.TabIndex = 0;
             // 
@@ -1487,9 +1374,9 @@
             this.settingsPage8.isActive = true;
             this.settingsPage8.Location = new System.Drawing.Point(0, 0);
             this.settingsPage8.Name = "settingsPage8";
-            treeNode9.Name = "";
-            treeNode9.Text = "Stream control/monitor";
-            this.settingsPage8.ParentNode = treeNode9;
+            treeNode8.Name = "";
+            treeNode8.Text = "Stream control/monitor";
+            this.settingsPage8.ParentNode = treeNode8;
             this.settingsPage8.Size = new System.Drawing.Size(315, 316);
             this.settingsPage8.TabIndex = 0;
             // 
@@ -1599,9 +1486,9 @@
             this.settingsPage9.isActive = true;
             this.settingsPage9.Location = new System.Drawing.Point(0, 0);
             this.settingsPage9.Name = "settingsPage9";
-            treeNode10.Name = "";
-            treeNode10.Text = "Empire.tv";
-            this.settingsPage9.ParentNode = treeNode10;
+            treeNode9.Name = "";
+            treeNode9.Text = "Empire.tv";
+            this.settingsPage9.ParentNode = treeNode9;
             this.settingsPage9.Size = new System.Drawing.Size(315, 316);
             this.settingsPage9.TabIndex = 8;
             this.settingsPage9.Paint += new System.Windows.Forms.PaintEventHandler(this.settingsPage9_Paint);
@@ -1747,9 +1634,9 @@
             this.settingsPage10.isActive = true;
             this.settingsPage10.Location = new System.Drawing.Point(0, 0);
             this.settingsPage10.Name = "settingsPage10";
-            treeNode11.Name = "";
-            treeNode11.Text = "Cybergame.tv";
-            this.settingsPage10.ParentNode = treeNode11;
+            treeNode10.Name = "";
+            treeNode10.Text = "Cybergame.tv";
+            this.settingsPage10.ParentNode = treeNode10;
             this.settingsPage10.Size = new System.Drawing.Size(315, 316);
             this.settingsPage10.TabIndex = 9;
             // 
@@ -1827,6 +1714,39 @@
             this.textBox29.Text = global::Ubiquitous.Properties.Settings.Default.cyberPassword;
             this.textBox29.UseSystemPasswordChar = true;
             // 
+            // settingsPage11
+            // 
+            this.settingsPage11.Controls.Add(this.groupBox4);
+            this.settingsPage11.Controls.Add(this.button2);
+            this.settingsPage11.Controls.Add(this.groupBox3);
+            this.settingsPage11.Controls.Add(this.groupChatAppearance);
+            this.settingsPage11.Controls.Add(this.checkBox42);
+            this.settingsPage11.Controls.Add(this.checkBox38);
+            this.settingsPage11.Controls.Add(this.textBox31);
+            this.settingsPage11.Controls.Add(this.checkBox40);
+            this.settingsPage11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsPage11.isActive = true;
+            this.settingsPage11.Location = new System.Drawing.Point(0, 0);
+            this.settingsPage11.Name = "settingsPage11";
+            treeNode11.Name = "";
+            treeNode11.Text = "General";
+            this.settingsPage11.ParentNode = treeNode11;
+            this.settingsPage11.Size = new System.Drawing.Size(315, 316);
+            this.settingsPage11.TabIndex = 10;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.sizeBox2);
+            this.groupBox4.Controls.Add(this.sizeBox1);
+            this.groupBox4.Controls.Add(this.label36);
+            this.groupBox4.Controls.Add(this.label34);
+            this.groupBox4.Location = new System.Drawing.Point(13, 135);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(290, 76);
+            this.groupBox4.TabIndex = 12;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Dimensions";
+            // 
             // sizeBox2
             // 
             this.sizeBox2.DataBindings.Add(new System.Windows.Forms.Binding("Dimensions", global::Ubiquitous.Properties.Settings.Default, "globalFullSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -1845,6 +1765,191 @@
             this.sizeBox1.Size = new System.Drawing.Size(119, 25);
             this.sizeBox1.TabIndex = 1;
             // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(11, 42);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(47, 13);
+            this.label36.TabIndex = 0;
+            this.label36.Text = "Full size:";
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(6, 16);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(52, 13);
+            this.label34.TabIndex = 0;
+            this.label34.Text = "Compact:";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(271, 238);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(26, 23);
+            this.button2.TabIndex = 12;
+            this.button2.Text = "...";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.checkBox39);
+            this.groupBox3.Location = new System.Drawing.Point(13, 81);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(290, 48);
+            this.groupBox3.TabIndex = 8;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Timestamps";
+            // 
+            // checkBox39
+            // 
+            this.checkBox39.AutoSize = true;
+            this.checkBox39.Checked = global::Ubiquitous.Properties.Settings.Default.globalChatEnableTimestamps;
+            this.checkBox39.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalChatEnableTimestamps", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox39.Location = new System.Drawing.Point(7, 20);
+            this.checkBox39.Name = "checkBox39";
+            this.checkBox39.Size = new System.Drawing.Size(114, 17);
+            this.checkBox39.TabIndex = 11;
+            this.checkBox39.Text = "Enable timestamps";
+            this.checkBox39.UseVisualStyleBackColor = true;
+            // 
+            // groupChatAppearance
+            // 
+            this.groupChatAppearance.Controls.Add(this.buttonBackColor);
+            this.groupChatAppearance.Controls.Add(this.buttonForeColor);
+            this.groupChatAppearance.Controls.Add(this.label33);
+            this.groupChatAppearance.Controls.Add(this.buttonChatFont);
+            this.groupChatAppearance.Controls.Add(this.label31);
+            this.groupChatAppearance.Controls.Add(this.label32);
+            this.groupChatAppearance.Controls.Add(this.textFontName);
+            this.groupChatAppearance.Location = new System.Drawing.Point(13, 3);
+            this.groupChatAppearance.Name = "groupChatAppearance";
+            this.groupChatAppearance.Size = new System.Drawing.Size(290, 72);
+            this.groupChatAppearance.TabIndex = 7;
+            this.groupChatAppearance.TabStop = false;
+            this.groupChatAppearance.Text = "Messages";
+            // 
+            // buttonBackColor
+            // 
+            this.buttonBackColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
+            this.buttonBackColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.buttonBackColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonBackColor.Location = new System.Drawing.Point(171, 44);
+            this.buttonBackColor.Name = "buttonBackColor";
+            this.buttonBackColor.Size = new System.Drawing.Size(20, 20);
+            this.buttonBackColor.TabIndex = 9;
+            this.buttonBackColor.UseVisualStyleBackColor = false;
+            this.buttonBackColor.Click += new System.EventHandler(this.buttonBackColor_Click);
+            // 
+            // buttonForeColor
+            // 
+            this.buttonForeColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
+            this.buttonForeColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.buttonForeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonForeColor.Location = new System.Drawing.Point(75, 44);
+            this.buttonForeColor.Name = "buttonForeColor";
+            this.buttonForeColor.Size = new System.Drawing.Size(20, 20);
+            this.buttonForeColor.TabIndex = 8;
+            this.buttonForeColor.UseVisualStyleBackColor = false;
+            this.buttonForeColor.Click += new System.EventHandler(this.buttonForeColor_Click);
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(101, 48);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(68, 13);
+            this.label33.TabIndex = 7;
+            this.label33.Text = "Background:";
+            // 
+            // buttonChatFont
+            // 
+            this.buttonChatFont.Location = new System.Drawing.Point(258, 16);
+            this.buttonChatFont.Name = "buttonChatFont";
+            this.buttonChatFont.Size = new System.Drawing.Size(26, 23);
+            this.buttonChatFont.TabIndex = 5;
+            this.buttonChatFont.Text = "...";
+            this.buttonChatFont.UseVisualStyleBackColor = true;
+            this.buttonChatFont.Click += new System.EventHandler(this.buttonChatFont_Click);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(4, 21);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(31, 13);
+            this.label31.TabIndex = 3;
+            this.label31.Text = "Font:";
+            this.label31.Click += new System.EventHandler(this.label31_Click);
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(5, 48);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(64, 13);
+            this.label32.TabIndex = 3;
+            this.label32.Text = "Foreground:";
+            // 
+            // textFontName
+            // 
+            this.textFontName.BackColor = System.Drawing.Color.White;
+            this.textFontName.Location = new System.Drawing.Point(41, 18);
+            this.textFontName.Name = "textFontName";
+            this.textFontName.ReadOnly = true;
+            this.textFontName.Size = new System.Drawing.Size(211, 20);
+            this.textFontName.TabIndex = 4;
+            // 
+            // checkBox42
+            // 
+            this.checkBox42.AutoSize = true;
+            this.checkBox42.Checked = global::Ubiquitous.Properties.Settings.Default.globalDebug;
+            this.checkBox42.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalDebug", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox42.Location = new System.Drawing.Point(13, 290);
+            this.checkBox42.Name = "checkBox42";
+            this.checkBox42.Size = new System.Drawing.Size(118, 17);
+            this.checkBox42.TabIndex = 14;
+            this.checkBox42.Text = "Verbose debugging";
+            this.checkBox42.UseVisualStyleBackColor = true;
+            // 
+            // checkBox38
+            // 
+            this.checkBox38.AutoSize = true;
+            this.checkBox38.Checked = global::Ubiquitous.Properties.Settings.Default.globalSmoothScroll;
+            this.checkBox38.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox38.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalSmoothScroll", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox38.Location = new System.Drawing.Point(13, 267);
+            this.checkBox38.Name = "checkBox38";
+            this.checkBox38.Size = new System.Drawing.Size(113, 17);
+            this.checkBox38.TabIndex = 13;
+            this.checkBox38.Text = "Smooth auto scroll";
+            this.checkBox38.UseVisualStyleBackColor = true;
+            // 
+            // textBox31
+            // 
+            this.textBox31.BackColor = System.Drawing.Color.White;
+            this.textBox31.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "globalChatImageFilename", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox31.Location = new System.Drawing.Point(13, 240);
+            this.textBox31.Name = "textBox31";
+            this.textBox31.ReadOnly = true;
+            this.textBox31.Size = new System.Drawing.Size(252, 20);
+            this.textBox31.TabIndex = 10;
+            this.textBox31.Text = global::Ubiquitous.Properties.Settings.Default.globalChatImageFilename;
+            // 
+            // checkBox40
+            // 
+            this.checkBox40.AutoSize = true;
+            this.checkBox40.Checked = global::Ubiquitous.Properties.Settings.Default.globalChat2Image;
+            this.checkBox40.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalChat2Image", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox40.Location = new System.Drawing.Point(13, 217);
+            this.checkBox40.Name = "checkBox40";
+            this.checkBox40.Size = new System.Drawing.Size(164, 17);
+            this.checkBox40.TabIndex = 9;
+            this.checkBox40.Text = "Save chat to image (for OBS)";
+            this.checkBox40.UseVisualStyleBackColor = true;
+            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1858,14 +1963,8 @@
             this.Shown += new System.EventHandler(this.SettingsDialog_Shown);
             this.settingsTree1.SplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.settingsTree1.SplitContainer)).EndInit();
-            this.settingsPage11.ResumeLayout(false);
-            this.settingsPage11.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupChatAppearance.ResumeLayout(false);
-            this.groupChatAppearance.PerformLayout();
+            this.settingsPage12.ResumeLayout(false);
+            this.settingsPage12.PerformLayout();
             this.settingsPage1.ResumeLayout(false);
             this.settingsPage1.PerformLayout();
             this.settingsPage2.ResumeLayout(false);
@@ -1889,6 +1988,14 @@
             this.settingsPage9.PerformLayout();
             this.settingsPage10.ResumeLayout(false);
             this.settingsPage10.PerformLayout();
+            this.settingsPage11.ResumeLayout(false);
+            this.settingsPage11.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupChatAppearance.ResumeLayout(false);
+            this.groupChatAppearance.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2028,5 +2135,13 @@
         private System.Windows.Forms.Label label34;
         private SizeBox sizeBox2;
         private SizeBox sizeBox1;
+        private mycontrol.SettingsPage settingsPage12;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.TextBox textBox32;
+        private System.Windows.Forms.CheckBox checkBox17;
+        private System.Windows.Forms.TextBox textBox33;
+        private System.Windows.Forms.TextBox textBox34;
     }
 }

@@ -27,6 +27,7 @@ using dotCybergame;
 using System.Configuration;
 using dotOBS;
 using dotUtilities;
+using dotHashd;
 using System.Runtime.InteropServices;
 namespace Ubiquitous
 {
@@ -58,6 +59,7 @@ namespace Ubiquitous
             Gohatv,
             Empiretv,
             Cybergame,
+            Hashd,
             All
         }
         private class ChatUser
@@ -297,6 +299,8 @@ namespace Ubiquitous
                             return ChatIcon.Goha;
                         case EndPoint.Cybergame:
                             return ChatIcon.Cybergame;
+                        case EndPoint.Hashd:
+                            return ChatIcon.Hashd;
                         default:
                             return ChatIcon.Default;
                     }
@@ -335,9 +339,8 @@ namespace Ubiquitous
         private BindingSource channelsGG;
         private uint sc2ChannelId = 0;
         private bool streamIsOnline = false;
-        private int firstSelectedCharIndex = 0;
         private BGWorker gohaBW, gohaStreamBW, steamBW, sc2BW, twitchBW, skypeBW, twitchTV, goodgameBW, battlelogBW,
-                        empireBW, cyberBW, obsremoteBW;
+                        empireBW, cyberBW, obsremoteBW, hashdBW;
         private EmpireTV empireTV;
         private GohaTV gohaTVstream;
         private Twitch twitchChannel;
@@ -353,6 +356,7 @@ namespace Ubiquitous
         private ToolTip viewersTooltip;
         private FontDialog fontDialog;
         private Form debugForm;
+        private Hashd hashd;
         #endregion 
 
         #region Form events and methods
@@ -395,6 +399,7 @@ namespace Ubiquitous
             chatAliases.Add(new ChatAlias(settings.empireAlias, EndPoint.Empiretv, ChatIcon.Empire));
             chatAliases.Add(new ChatAlias(settings.goodgameChatAlias, EndPoint.Goodgame, ChatIcon.Goodgame));
             chatAliases.Add(new ChatAlias(settings.cyberAlias, EndPoint.Cybergame, ChatIcon.Cybergame));
+            chatAliases.Add(new ChatAlias(settings.hashdAlias, EndPoint.Hashd, ChatIcon.Hashd));
             chatAliases.Add(new ChatAlias("@all", EndPoint.All, ChatIcon.Default));
 
 
@@ -428,6 +433,7 @@ namespace Ubiquitous
             skypeBW = new BGWorker(ConnectSkype, null);
             cyberBW = new BGWorker(ConnectCybergame, null);
             obsremoteBW = new BGWorker(ConnectOBSRemote, null);
+            hashdBW = new BGWorker(ConnectHashd, null);
  
             goodgameBW = new BGWorker(ConnectGoodgame, null);
             battlelogBW = new BGWorker(ConnectBattlelog, null);
@@ -474,7 +480,7 @@ namespace Ubiquitous
             viewersTooltip.ReshowDelay = 0;
             viewersTooltip.ShowAlways = false;
 
-            viewersTooltip.SetToolTip(labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {0}", 0, 0));
+            viewersTooltip.SetToolTip(labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {0}, Hashd.tv: {0}", 0));
 
             var tooltip = new ToolTip();
             tooltip.AutoPopDelay = 2000;
@@ -1136,6 +1142,7 @@ namespace Ubiquitous
 
                 twitchTV.Stop();
                 empireTV.Stop();
+                hashd.Stop();
              
 
                 // FlourineFx causing crash on exit if NetConnection object was connected to a server. 
@@ -1510,16 +1517,19 @@ namespace Ubiquitous
         }
         private void timerEverySecond_Tick(object sender, EventArgs e)
         {
-                UInt32 twitchViewers = 0, cybergameViewers = 0;
+                UInt32 twitchViewers = 0, cybergameViewers = 0, hashdViewers = 0;
                 if (twitchChannel != null)
                     UInt32.TryParse(twitchChannel.Viewers, out twitchViewers);
 
                 if (cybergame != null)
                     UInt32.TryParse(cybergame.Viewers, out cybergameViewers);
 
+                if (hashd != null)
+                    UInt32.TryParse(hashd.Viewers, out hashdViewers);
 
-                labelViewers.Text = String.Format("{0}", cybergameViewers + twitchViewers);
-                SetTooltip(viewersTooltip, labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {1}", twitchViewers, cybergameViewers));
+
+                labelViewers.Text = String.Format("{0}", cybergameViewers + twitchViewers + hashdViewers);
+                SetTooltip(viewersTooltip, labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {1}, Hashd.tv: {2}", twitchViewers, cybergameViewers, hashdViewers));
                 if (trackBarTransparency.ClientRectangle.Contains(trackBarTransparency.PointToClient(Cursor.Position)))
                     return;
 
@@ -1607,9 +1617,48 @@ namespace Ubiquitous
         #endregion
 
         #region Cybergame methods and events
+        private void ConnectHashd()
+        {
+            if (!settings.hashdEnabled ||
+                String.IsNullOrEmpty(settings.hashdUser) ||
+                String.IsNullOrEmpty(settings.hashdPassword))
+                return;
+            hashd = new Hashd(settings.hashdUser, settings.hashdPassword);
+            hashd.Live += new EventHandler<EventArgs>(hashd_Live);
+            hashd.Offline += new EventHandler<EventArgs>(hashd_Offline);
+            hashd.OnLogin += new EventHandler<EventArgs>(hashd_OnLogin);
+
+            if (!hashd.Login())
+            {
+                SendMessage(new Message("Hashd: login failed!", EndPoint.Hashd, EndPoint.SteamAdmin));
+            }
+            else
+            {
+                hashd.Start();
+            }
+        }
+
+        void hashd_OnLogin(object sender, EventArgs e)
+        {
+            checkMark.SetOn(pictureHashd);
+            SendMessage(new Message("Hashd: logged in!", EndPoint.Hashd, EndPoint.SteamAdmin));
+        }
+
+        void hashd_Offline(object sender, EventArgs e)
+        {
+            streamStatus.SetOff(pictureHashdStream);
+        }
+
+        void hashd_Live(object sender, EventArgs e)
+        {
+            streamStatus.SetOn(pictureHashdStream);
+        }
+        #endregion
+
+        #region Cybergame methods and events
         private void ConnectCybergame()
         {
-            if (!settings.cyberEnabled || 
+            if (!settings.cyberEnabled ||
                 String.IsNullOrEmpty(settings.cyberUser) ||
                 String.IsNullOrEmpty(settings.cyberPassword))
                 return;
@@ -2784,11 +2833,11 @@ namespace Ubiquitous
 
                 var newX = newlocation.X + e.X - _Offset.X;
                 if (newX < (this.Width - panelTools.ClientRectangle.Width)
-                    && newX > 0)
+                    && newX >= 0)
                     newlocation.X += e.X - _Offset.X;
 
                 var newY = newlocation.Y + e.Y - _Offset.Y;
-                if (newY > 0
+                if (newY >= 0
                     && newY < (this.Height - panelTools.Height))
                     newlocation.Y += e.Y - _Offset.Y;
 
@@ -2813,11 +2862,11 @@ namespace Ubiquitous
 
                 var newX = newlocation.X + e.X - _OffsetViewers.X;
                 if (newX < (this.Width - labelViewers.ClientRectangle.Width)
-                    && newX > 0)
+                    && newX >= 0)
                     newlocation.X += e.X - _OffsetViewers.X;
                 
                 var newY = newlocation.Y + e.Y - _OffsetViewers.Y;
-                if (newY > 0
+                if (newY >= 0
                     && newY < (this.Height - labelViewers.Height))
                     newlocation.Y += e.Y - _OffsetViewers.Y;
 
@@ -2828,6 +2877,11 @@ namespace Ubiquitous
         private void labelViewers_MouseUp(object sender, MouseEventArgs e)
         {
             _OffsetViewers = Point.Empty;
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
         }
 
 

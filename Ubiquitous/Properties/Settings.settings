@@ -299,5 +299,17 @@
     <Setting Name="globalToolsLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">54, 0</Value>
     </Setting>
+    <Setting Name="hashdAlias" Type="System.String" Scope="User">
+      <Value Profile="(Default)">@htv</Value>
+    </Setting>
+    <Setting Name="hashdUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="hashdPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="hashdEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

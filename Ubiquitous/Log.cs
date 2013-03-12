@@ -22,7 +22,8 @@ namespace Ubiquitous
         Goodgame,
         Empire,
         Cybergame,
-        Goha
+        Goha,
+        Hashd
     }
     /// <summary>
     /// Thread safe writing to textbox
@@ -90,6 +91,8 @@ namespace Ubiquitous
                     return Properties.Resources.cybergame;
                 case ChatIcon.Default:
                     return Properties.Resources.adminicon;
+                case ChatIcon.Hashd:
+                    return Properties.Resources.hashd;
                 default:
                     return null;
             }

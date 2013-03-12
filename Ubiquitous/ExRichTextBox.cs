@@ -171,6 +171,11 @@ namespace SC2TV.RTFControl {
         [DllImport("user32.dll", EntryPoint = "HideCaret")]
         public static extern long HideCaret(IntPtr hwnd);
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        static extern IntPtr LoadLibrary(string lpFileName);
+
+
+
         struct SCROLLINFO
         {
             public uint cbSize;
@@ -895,7 +900,7 @@ namespace SC2TV.RTFControl {
 
 			// Append values to RTF string
             //_rtf.Append(@"{\*\picprop\shplid1025{\sp{\sn fLockAgainstSelect}{\sv 1}}}");
-            _rtf.Append(@"{\pict\wmetafile8{\*\picprop{\sp{\sn fLockAgainstSelect}{\sv 1}}}");
+            _rtf.Append(@"{\pict{\*\picprop{\sp{\sn fLockAgainstSelect}{\sv 1}}}\wmetafile8");
             _rtf.Append(@"\picw");
 			_rtf.Append(picw);
 			_rtf.Append(@"\pich");
@@ -1159,6 +1164,17 @@ namespace SC2TV.RTFControl {
         private void ExRichTextBox_Resize(object sender, EventArgs e)
         {
             ScrollToEnd();
+        }
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var prams = base.CreateParams;
+                if (LoadLibrary("msftedit.dll") != IntPtr.Zero)
+                    prams.ClassName = "RICHEDIT50W";
+
+                return prams;
+            }
         }
     }
 }

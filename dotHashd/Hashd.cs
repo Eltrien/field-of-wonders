@@ -2,34 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
-using System.Net;
-using System.Diagnostics;
-using System.Threading;
 using dotWebClient;
+using System.Threading;
+using System.Diagnostics;
 using dotUtilities;
-namespace dotTwitchTV
-{
 
-    public class Twitch
+namespace dotHashd
+{
+    public class Hashd
     {
         #region Constants
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
-        private const string channelJsonUrl = "http://api.justin.tv/api/stream/list.json?channel={0}&t={1}";
-        private const int pollInterval = 20000;
-        #endregion
+        private const string channelInfoUrl = "http://api.hashd.tv/v1/stream/{0}";
+        private const int pollIntervalStats = 20000;
 
-        
+        #endregion
         #region Private properties
+        private string lastTimestamp;
+        private string chatUpdateNonce;
+        private string chatNewMessageNonce;
         private Timer statsDownloader;
         private CookieAwareWebClient statsWC;
-        private object statsLock = new object();
+        private bool prevOnlineState = false;
         private Channel currentChannelStats;
-        private string currentChannelName;
+        private string _user;
+        private string _password;
+        private object loginLock = new object();
+        private object statsLock = new object();
         #endregion
         #region Events
         public event EventHandler<EventArgs> Live;
         public event EventHandler<EventArgs> Offline;
+        public event EventHandler<EventArgs> OnLogin;
         private void DefaultEvent(EventHandler<EventArgs> evnt, EventArgs e)
         {
             EventHandler<EventArgs> handler = evnt;
@@ -38,7 +42,7 @@ namespace dotTwitchTV
                 handler(this, e);
             }
         }
-        private void OnLive( EventArgs e)
+        private void OnLive(EventArgs e)
         {
             DefaultEvent(Live, e);
         }
@@ -49,42 +53,63 @@ namespace dotTwitchTV
         #endregion
 
         #region Public methods
-        public Twitch(string channelName)
+        public Hashd(string user, string password)
         {
-            currentChannelName = channelName;
-
+            _user = user;
+            _password = password;
             statsWC = new CookieAwareWebClient();
             statsWC.Headers["User-Agent"] = userAgent;
             statsDownloader = new Timer(new TimerCallback(statsDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
+
+        }
+
+        private void statsDownloader_Tick(object o)
+        {
+            DownloadStats(_user);
+        }
+        public bool isLoggedIn
+        {
+            get;
+            set;
         }
         public void Start()
         {
-            statsDownloader.Change(0, pollInterval);
+            statsDownloader.Change(0, pollIntervalStats);
         }
         public void Stop()
         {
             statsDownloader.Change(Timeout.Infinite, Timeout.Infinite);
         }
-        private void statsDownloader_Tick(object o)
+        public bool Login()
         {
-            if (String.IsNullOrEmpty(currentChannelName))
+            lock (loginLock)
             {
-                Debug.Print("TwitchTV: channel name is empty. Can't fetch stats");
-                return;
+                isLoggedIn = false;
+                if (String.IsNullOrEmpty(_user) || String.IsNullOrEmpty(_password))
+                    return false;
+
+                if (OnLogin != null)
+                    OnLogin(this, EventArgs.Empty);
+
+                isLoggedIn = true;
+
+                return true;
             }
-            DownloadStats(currentChannelName);
         }
-        private void DownloadStats( string channel )
+
+        private void DownloadStats(string channel)
         {
+            if (String.IsNullOrEmpty(_user))
+                return;
             lock (statsLock)
             {
                 var prevChannelStats = currentChannelStats;
                 try
                 {
                     statsWC.Headers["Cache-Control"] = "no-cache";
-                    var url = String.Format(channelJsonUrl, channel, TimeUtils.UnixTimestamp());
+                    var url = String.Format(channelInfoUrl, channel);
                     using (var stream = statsWC.downloadURL(url))
-                    {                        
+                    {
                         if (statsWC.LastWebError == "ProtocolError")
                         {
                             return;
@@ -92,43 +117,45 @@ namespace dotTwitchTV
 
                         if (stream == null)
                         {
-                            Debug.Print("TwitchTV: Can't download channel info of {0} result is null. Url: {1}", currentChannelName, channelJsonUrl);
+                            Debug.Print("Cybergame: Can't download channel info of {0} result is null. Url: {1}", channel, channelInfoUrl);
                         }
                         else
                         {
-                            currentChannelStats = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
-
+                            currentChannelStats = JsonGenerics.ParseJson<Channel>.ReadObject(stream);
                         }
 
-                        if (!isAlive() && prevChannelStats != currentChannelStats)
+                        if (!Alive && prevChannelStats != currentChannelStats)
                             OnOffline(EventArgs.Empty);
-                        else if (isAlive() && prevChannelStats != currentChannelStats)
-                            OnLive(EventArgs.Empty);
+                        else if (Alive && prevChannelStats != currentChannelStats)
+                             OnLive(EventArgs.Empty);
+
                     }
                 }
                 catch
                 {
-                    Debug.Print("Exception in CrawlTwitchChannel");
+                    Debug.Print("Hashd: Exception in Downloadstats");
                 }
             }
         }
-        private bool isAlive()
+        private bool Alive
         {
-            return currentChannelStats != null;
+            get
+            {
+                if (currentChannelStats == null)
+                    return false;
+
+                return currentChannelStats.live;
+            }
         }
         #endregion
         #region Public properties
         public string Viewers
         {
-            get { return !isAlive() ? "0" : currentChannelStats.viewers; }
-            set { }
-        }
-        public string Bitrate
-        {
-            get { return !isAlive() ? "0" : currentChannelStats.videoBitrate; }
+            get { return Alive ? String.Format("{0}",currentChannelStats.currentViewers) : "0"; }
             set { }
         }
         #endregion
 
     }
+
 }

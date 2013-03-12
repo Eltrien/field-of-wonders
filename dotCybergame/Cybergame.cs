@@ -38,12 +38,13 @@ namespace dotCybergame
         private CookieAwareWebClient chatWC;
         private CookieAwareWebClient statsWC;
         private bool prevOnlineState = false;
-        private Channel currentChannel;
+        private Channel currentChannelStats;
         private string _user;
         private string _password;
         private object chatLock = new object();
         private object messageLock = new object();
         private object loginLock = new object();
+        private object statsLock = new object();
         #endregion
         #region Events
         public event EventHandler<EventArgs> Live;
@@ -261,59 +262,51 @@ namespace dotCybergame
         {
             if (String.IsNullOrEmpty(_user))
                 return;
-            
-            try
+            lock (statsLock)
             {
-                statsWC.Headers["Cache-Control"] = "no-cache";
-                var stream = statsWC.downloadURL(String.Format(channelInfoUrl, channel ));
-                if (stream == null)
+                var prevChannelStats = currentChannelStats;
+                try
                 {
-                    Debug.Print("Can't download channel info of {0} result stream is null. Url: {1}", _user, channelInfoUrl);
-                    return;
-                }
-
-                var tempChannel = JsonGenerics.ParseJson<Channel>.ReadObject(stream);
-
-                                
-                if (tempChannel == null)
-                    Debug.Print("Can't parse json of {0}. Url: {1}", _user, channelInfoUrl);
-
-                stream.Close();
-                stream.Dispose();
-
-                if (isAlive() && tempChannel == null)
-                {
-                    if (prevOnlineState != isAlive())
+                    statsWC.Headers["Cache-Control"] = "no-cache";
+                    var url = String.Format(channelInfoUrl, channel);
+                    using (var stream = statsWC.downloadURL(url))
                     {
-                        prevOnlineState = isAlive();
-                        OnOffline(new EventArgs());
+                        if (statsWC.LastWebError == "ProtocolError")
+                        {
+                            return;
+                        }
+
+                        if (stream == null)
+                        {
+                            Debug.Print("Cybergame: Can't download channel info of {0} result is null. Url: {1}", channel, channelInfoUrl);
+                        }
+                        else
+                        {
+                            currentChannelStats = JsonGenerics.ParseJson<Channel>.ReadObject(stream);
+
+                        }
+
+                        if (!Alive() && prevChannelStats != currentChannelStats)
+                            OnOffline(EventArgs.Empty);
+                        else if (Alive() && prevChannelStats != currentChannelStats)
+                            OnLive(EventArgs.Empty);
                     }
                 }
-                else if (!isAlive() && tempChannel != null)
+                catch
                 {
-                    if (prevOnlineState != isAlive())
-                    {
-                        prevOnlineState = isAlive();
-                        OnLive(new EventArgs());
-                    }
+                    Debug.Print("Cybergame: Exception in Downloadstats");
                 }
-                currentChannel = tempChannel;
-
-
             }
-            catch 
-            { 
-            }            
         }
-        private bool isAlive()
+        private bool Alive()
         {
-            if (currentChannel == null)
+            if (currentChannelStats == null)
                 return false;
 
-            if (currentChannel.online == "0")
+            if (currentChannelStats.online == "0")
                 return false;
 
-            if (currentChannel.online == "1")
+            if (currentChannelStats.online == "1")
                 return true;
 
             return false;
@@ -322,7 +315,7 @@ namespace dotCybergame
         #region Public properties
         public string Viewers
         {
-            get { return isAlive() ? currentChannel.viewers:"0"; }
+            get { return Alive() ? currentChannelStats.viewers:"0"; }
             set { }
         }
         #endregion
