@@ -1975,7 +1975,7 @@ namespace Ubiquitous
             using (var connectedEvent = new ManualResetEventSlim(false))
             {
                 twitchIrc.Connected += (sender2, e2) => connectedEvent.Set();
-                twitchIrc.Connect(settings.TwitchUser + "." + twitchIRCDomain, false, new IrcUserRegistrationInfo()
+                twitchIrc.Connect(settings.TwitchUser.ToLower() + "." + twitchIRCDomain, false, new IrcUserRegistrationInfo()
                 {
                     NickName = settings.TwitchUser,
                     UserName = settings.TwitchUser,
