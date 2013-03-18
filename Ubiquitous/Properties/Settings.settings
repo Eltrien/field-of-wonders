@@ -311,5 +311,14 @@
     <Setting Name="hashdEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="globalEnableSounds" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="globalSoundOfflineFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">offline.mp3</Value>
+    </Setting>
+    <Setting Name="globalSoundOnlineFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">online.mp3</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

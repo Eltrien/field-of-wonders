@@ -60,6 +60,8 @@ namespace dotIRC
 
         private static readonly string isupportPrefix;
 
+        private static Timer disconnectTimer;
+
         static IrcClient()
         {
             regexNickName = @"(?<nick>[^!@]+)";
@@ -76,6 +78,7 @@ namespace dotIRC
                 regexTargetMask, regexNickNameId);
 
             isupportPrefix = @"\((?<modes>.*)\)(?<prefixes>.*)";
+
         }
 
         #region Protocol Data
@@ -168,6 +171,9 @@ namespace dotIRC
             this.floodPreventer = null;
 
             InitializeMessageProcessors();
+
+            disconnectTimer = new Timer(new TimerCallback(SendDisconnectEvent), null, Timeout.Infinite, Timeout.Infinite);
+
         }
 
         /// <summary>
@@ -2203,6 +2209,12 @@ namespace dotIRC
             // Set that client has disconnected.
             this.disconnectedEvent.Set();
 
+            disconnectTimer.Change(5000, Timeout.Infinite);
+            
+        }
+
+        private void SendDisconnectEvent(object o)
+        {
             OnDisconnected(new EventArgs());
         }
 

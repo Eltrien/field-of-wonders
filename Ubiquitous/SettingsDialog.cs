@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using SC2TV.RTFControl;
@@ -145,15 +146,55 @@ namespace Ubiquitous
         private void button2_Click(object sender, EventArgs e)
         {
 
-            SaveFileDialog openFileDialog = new SaveFileDialog();
-            openFileDialog.FileName = "ubiquitouschat";
-            openFileDialog.DefaultExt = "jpg";
-            openFileDialog.Filter = "JPEG Image(*.jpg)|*.jpg";
-            openFileDialog.ValidateNames = true;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = "ubiquitouschat";
+            saveFileDialog.DefaultExt = "jpg";
+            saveFileDialog.Filter = "JPEG Image(*.jpg)|*.jpg";
+            saveFileDialog.ValidateNames = true;
             
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.globalChatImageFilename = saveFileDialog.FileName;
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            var appPath = Path.GetDirectoryName(Application.ExecutablePath);
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = appPath;
+            openFileDialog.FileName = "online";
+            openFileDialog.DefaultExt = "mp3";
+            openFileDialog.Filter = "MP3 file(*.mp3)|*.mp3";
+            openFileDialog.ValidateNames = true;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                settings.globalChatImageFilename = openFileDialog.FileName;
+                var choosenFile = openFileDialog.FileName;
+                if (Path.GetDirectoryName(choosenFile) == appPath)
+                    choosenFile = Path.GetFileName(choosenFile);
+
+                settings.globalSoundOnlineFile = choosenFile;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var appPath = Path.GetDirectoryName(Application.ExecutablePath);
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = appPath;
+            openFileDialog.FileName = "offline";
+            openFileDialog.DefaultExt = "mp3";
+            openFileDialog.Filter = "MP3 file(*.mp3)|*.mp3";
+            openFileDialog.ValidateNames = true;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                var choosenFile = openFileDialog.FileName;
+                if (Path.GetDirectoryName(choosenFile) == appPath)
+                    choosenFile = Path.GetFileName(choosenFile);
+
+                settings.globalSoundOfflineFile = choosenFile;
             }
         }
 

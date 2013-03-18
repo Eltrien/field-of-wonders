@@ -352,11 +352,12 @@ namespace Ubiquitous
         private Battlelog battlelog;
         private Cybergame cybergame;
         private List<ChatUser> chatUsers;
-        private bool isDisconnecting = false;
+        private bool isClosing = false;
         private ToolTip viewersTooltip;
         private FontDialog fontDialog;
         private Form debugForm;
         private Hashd hashd;
+        private System.Threading.Timer forceCloseTimer;
         #endregion 
 
         #region Form events and methods
@@ -460,6 +461,8 @@ namespace Ubiquitous
             settings.SettingsSaving += new SettingsSavingEventHandler(settings_SettingsSaving);
 
             fontDialog = new FontDialog();
+
+            forceCloseTimer = new System.Threading.Timer(new TimerCallback(ForceClose), null, Timeout.Infinite, Timeout.Infinite);
 
 
             //@Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
@@ -1109,8 +1112,16 @@ namespace Ubiquitous
             }
 
         }
+        private void ForceClose(object o)
+        {
+            Process.GetCurrentProcess().Kill();
+        }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            forceCloseTimer.Change(5000, Timeout.Infinite);
+
+            SendMessage(new Message(String.Format("Leaving chats..."), EndPoint.Steam, EndPoint.SteamAdmin));
+
             if( settings.globalDebug && debugForm != null)
                 debugForm.Hide();
 
@@ -1125,10 +1136,9 @@ namespace Ubiquitous
             settings.Save();
             #endregion
 
-            this.Visible = false;
-            isDisconnecting = true;
+            //this.Visible = false;
+            isClosing = true;
             e.Cancel = true;
-            SendMessage(new Message(String.Format("Leaving chats..."), EndPoint.Steam, EndPoint.SteamAdmin));
             timerEverySecond.Enabled = false;
             try
             {
@@ -1144,13 +1154,6 @@ namespace Ubiquitous
                 twitchTV.Stop();
                 empireTV.Stop();
                 hashd.Stop();
-             
-
-                // FlourineFx causing crash on exit if NetConnection object was connected to a server. 
-                // So I using this dirty workaround until I'll find something better.
-                //MessageBox.Show("test");
-                Thread.Sleep(5000);
-                Process.GetCurrentProcess().Kill();
             }
             catch
             {
@@ -1620,6 +1623,8 @@ namespace Ubiquitous
         #region Cybergame methods and events
         private void ConnectHashd()
         {
+            if (isClosing)
+                return; 
             if (!settings.hashdEnabled ||
                 String.IsNullOrEmpty(settings.hashdUser) ||
                 String.IsNullOrEmpty(settings.hashdPassword))
@@ -1659,6 +1664,9 @@ namespace Ubiquitous
         #region Cybergame methods and events
         private void ConnectCybergame()
         {
+            if (isClosing)
+                return;
+
             if (!settings.cyberEnabled ||
                 String.IsNullOrEmpty(settings.cyberUser) ||
                 String.IsNullOrEmpty(settings.cyberPassword))
@@ -1701,6 +1709,9 @@ namespace Ubiquitous
         #region EmpireTV methods and events
         private void ConnectEmpireTV()
         {
+            if (isClosing)
+                return;
+
             if (!settings.empireEnabled || String.IsNullOrEmpty(settings.empireUser) || String.IsNullOrEmpty(settings.empirePassword))
                 return;
 
@@ -1727,6 +1738,9 @@ namespace Ubiquitous
         #region GohaTV Stream methods and events
         private void ConnectGohaStream()
         {
+            if (isClosing)
+                return;
+
             if (!settings.gohaEnabled || String.IsNullOrEmpty(settings.GohaUser) || String.IsNullOrEmpty(settings.GohaPassword))
                 return;
 
@@ -1763,6 +1777,9 @@ namespace Ubiquitous
         #region Twitch channel methods and events
         private void ConnectTwitchChannel()
         {
+            if (isClosing)
+                return;
+
 
             if (String.IsNullOrEmpty(settings.TwitchUser) ||
                 !settings.twitchEnabled)
@@ -1795,19 +1812,29 @@ namespace Ubiquitous
                 return;
 
             Debug.Print("OnGoLive event");
-            try
+            SendMessage(new Message(String.Format("Twitch: STREAM ONLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+            if (settings.globalEnableSounds)
             {
-                WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
-                
-                a.URL = "online.mp3";
-                a.controls.play();
-                SendMessage(new Message(String.Format("Twitch: STREAM ONLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
-                while (a.playState == WMPPlayState.wmppsPlaying)
-                    Thread.Sleep(10);
+                try
+                {
+                    WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
+
+                    a.URL = settings.globalSoundOnlineFile;
+                    a.controls.play();
+                    var counter = 0;
+                    while (a.playState == WMPPlayState.wmppsPlaying)
+                    {
+                        counter++;
+                        if (counter > 300)
+                            break;
+                        Thread.Sleep(10);
+                    }
+                }
+                catch
+                {
+                    Debug.Print("Exception in OnGoLive()");
+                }
             }
-            catch{
-                Debug.Print("Exception in OnGoLive()");
-            }                
            
 
             if (settings.gohaStreamControl)
@@ -1853,18 +1880,27 @@ namespace Ubiquitous
                 return;
 
             Debug.Print("OnGoOffline event");
-
-            try
+            SendMessage(new Message(String.Format("Twitch: STREAM OFFLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+            if (settings.globalEnableSounds)
             {
-                WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
-                a.URL = "offline.mp3";
-                a.controls.play();
-                SendMessage(new Message(String.Format("Twitch: STREAM OFFLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
-                while (a.playState == WMPPlayState.wmppsPlaying)
-                    Thread.Sleep(10);
-            }
-            catch {
-                Debug.Print("Exception in OnGoOffline()");
+                try
+                {
+                    WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
+                    a.URL = settings.globalSoundOfflineFile;
+                    a.controls.play();
+                    var counter = 0;
+                    while (a.playState == WMPPlayState.wmppsPlaying)
+                    {
+                        counter++;
+                        if (counter > 300)
+                            break;
+                        Thread.Sleep(10);
+                    }
+                }
+                catch
+                {
+                    Debug.Print("Exception in OnGoOffline()");
+                }
             }
            
             if (settings.gohaStreamControl)
@@ -1909,6 +1945,9 @@ namespace Ubiquitous
         #region Twitch IRC methods and events
         private void ConnectTwitchIRC()
         {
+            if (isClosing)
+                return;
+
             //twitchIrc.FloodPreventer = new IrcStandardFloodPreventer(4, 1000);
             if (settings.TwitchUser.Length <= 0 ||
                 !settings.twitchEnabled)
@@ -1963,7 +2002,7 @@ namespace Ubiquitous
             if (e.RawContent.Contains("Login failed"))
             {
                 SendMessage(new Message("Twitch login failed! Check settings!", EndPoint.TwitchTV, EndPoint.SteamAdmin));
-                isDisconnecting = true;
+                isClosing = true;
             }
             else if (settings.twitchDebugMessages)
             {
@@ -1976,7 +2015,7 @@ namespace Ubiquitous
             if (!settings.twitchEnabled)
                 return;
 
-            if (!isDisconnecting)
+            if (!isClosing)
             {
                 SendMessage(new Message("Twitch bot is reconnecting to the IRC", EndPoint.TwitchTV, EndPoint.SteamAdmin));
                 twitchBW.Stop();
@@ -2055,6 +2094,9 @@ namespace Ubiquitous
         #region Sc2Tv methods and events
         private void ConnectSc2tv()
         {
+            if (isClosing)
+                return;
+
             if (!settings.sc2tvEnabled)
                 return;
 
@@ -2173,6 +2215,9 @@ namespace Ubiquitous
         }
         private void ConnectSteamBot()
         {
+            if (isClosing)
+                return;
+
             
             string user = settings.SteamBot;
             var steamEnabled = settings.steamEnabled;
@@ -2292,6 +2337,9 @@ namespace Ubiquitous
         #region Skype methods and events
         public void ConnectSkype()
         {
+            if (isClosing)
+                return;
+
             var skypeEnabled = settings.skypeEnabled;
             if (!skypeEnabled)
                 return;
@@ -2345,6 +2393,9 @@ namespace Ubiquitous
         #region Goodgame methods and events
         public void ConnectGoodgame()
         {
+            if (isClosing)
+                return;
+
             if (!settings.goodgameEnabled)
                 return;
 
@@ -2423,6 +2474,9 @@ namespace Ubiquitous
 
         public void ConnectBattlelog()
         {
+            if (isClosing)
+                return;
+
             if( settings.battlelogEnabled && 
                 !String.IsNullOrEmpty(settings.battlelogEmail) &&
                 !String.IsNullOrEmpty(settings.battlelogPassword))
@@ -2460,6 +2514,9 @@ namespace Ubiquitous
         #region Goha.tv methods and events
         private void ConnectGohaIRC()
         {
+            if (isClosing)
+                return;
+
             //gohaIrc.FloodPreventer = new IrcStandardFloodPreventer(4, 1000);
             if (settings.GohaUser.Length <= 0 ||
                 !settings.gohaEnabled)
@@ -2683,6 +2740,8 @@ namespace Ubiquitous
         #region OBS Remote methods and events
         public void ConnectOBSRemote()
         {
+            if (isClosing)
+                return;
             obsRemote = new OBSRemote();
             obsRemote.OnLive += new EventHandler<EventArgs>(obsRemote_OnLive);
             obsRemote.OnOffline += new EventHandler<EventArgs>(obsRemote_OnOffline);

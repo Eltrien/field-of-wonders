@@ -108,7 +108,7 @@ namespace dotTwitchTV
                 }
                 catch
                 {
-                    Debug.Print("Exception in CrawlTwitchChannel");
+                    Debug.Print("Twitch: Exception in DownloadStats");
                 }
             }
         }

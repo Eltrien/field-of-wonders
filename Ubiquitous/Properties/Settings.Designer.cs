@@ -1258,5 +1258,41 @@ namespace Ubiquitous.Properties {
                 this["hashdEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool globalEnableSounds {
+            get {
+                return ((bool)(this["globalEnableSounds"]));
+            }
+            set {
+                this["globalEnableSounds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("offline.mp3")]
+        public string globalSoundOfflineFile {
+            get {
+                return ((string)(this["globalSoundOfflineFile"]));
+            }
+            set {
+                this["globalSoundOfflineFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("online.mp3")]
+        public string globalSoundOnlineFile {
+            get {
+                return ((string)(this["globalSoundOnlineFile"]));
+            }
+            set {
+                this["globalSoundOnlineFile"] = value;
+            }
+        }
     }
 }
