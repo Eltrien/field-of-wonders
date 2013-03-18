@@ -407,6 +407,7 @@ namespace Ubiquitous
             Debug.Print(String.Format("Sc2tv Channel ID: {0}",sc2ChannelId));
 
             sc2tv = new Sc2Chat(settings.sc2LastMsgId);
+
             sc2tv.Logon += OnSc2TvLogin;
             sc2tv.ChannelList += OnSc2TvChannelList;
             sc2tv.MessageReceived += OnSc2TvMessageReceived;
@@ -1974,15 +1975,16 @@ namespace Ubiquitous
         {
             if (!settings.twitchEnabled)
                 return;
-            
-            SendMessage(new Message("Twitch bot disconnecting from the IRC", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+
             if (!isDisconnecting)
             {
+                SendMessage(new Message("Twitch bot is reconnecting to the IRC", EndPoint.TwitchTV, EndPoint.SteamAdmin));
                 twitchBW.Stop();
                 twitchBW = new BGWorker(ConnectTwitchIRC, null);
             }
             else
             {
+                SendMessage(new Message("Twitch bot is disconnecting", EndPoint.TwitchTV, EndPoint.SteamAdmin));
                 twitchIrc.Quit();
             }
         }

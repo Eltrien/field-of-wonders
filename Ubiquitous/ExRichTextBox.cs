@@ -108,7 +108,7 @@ namespace SC2TV.RTFControl {
 
         private System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
         
-        delegate void ScrollCB();
+        delegate void ScrollCB( object o);
 
 		// Ensures that the metafile maintains a 1:1 aspect ratio
 		private const int MM_ISOTROPIC = 7;
@@ -149,7 +149,11 @@ namespace SC2TV.RTFControl {
 
 		// The vertical resolution at which the control is being displayed
 		private float yDpi;
-		#endregion
+
+        private System.Threading.Timer scrollTimer;
+        private System.Threading.Timer toimageTimer;
+
+        #endregion
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -251,13 +255,7 @@ namespace SC2TV.RTFControl {
                 //t.Enabled = false;
                 //t.Stop();
             }
-/*            else if (pixelsToEnd > 60)
-            {
-                if (pixelsToEnd < 0)
-                    pixelsToEnd = 1;
 
-                scroll(this.Handle, (int)pixelsToEnd - 60);
-            }*/
         }
         public string RTF
         {
@@ -307,48 +305,58 @@ namespace SC2TV.RTFControl {
             get;
             set;
         }
-        public void ScrollToEnd()
+        private void scrollTimer_Tick(object o)
         {
             if (InvokeRequired)
+            {
+                ScrollCB d = new ScrollCB(scrollTimer_Tick);
+                try
                 {
-                    ScrollCB d = new ScrollCB(ScrollToEnd);
-                    try
-                    {
-                        Parent.Invoke(d, new object[] { });
-                    }
-                    catch { }
+                    Parent.Invoke(d, new object[] { this });
                 }
-                else
+                catch { }
+            }
+            else
+            {
+                lock (scrollLock)
                 {
-                    lock (scrollLock)
-                    {
-                        if (String.IsNullOrEmpty(Text))
-                            return;
+                    if (String.IsNullOrEmpty(Text))
+                        return;
 
-                        if (!IsAtMaxScroll())
+                    if (!IsAtMaxScroll())
+                    {
+                        var linesToEnd = scroll(this.Handle, 1);
+                        if (linesToEnd > 15)
+                            linesToEnd = scroll(this.Handle, (int)(linesToEnd - (SlowScroll ? 15 : 0)));
+
+                        while (linesToEnd > 0)
                         {
-                            var linesToEnd = scroll(this.Handle, 1);
-                            if (linesToEnd > 15)
-                                linesToEnd = scroll(this.Handle, (int)(linesToEnd - (SlowScroll?15:0)));
-                        
-                            while (linesToEnd > 0)
-                            {
-                                linesToEnd = scroll(this.Handle, 1);
-                                Thread.Sleep(20);
-                            }
+                            linesToEnd = scroll(this.Handle, 1);
+                            Thread.Sleep(20);
                         }
-                        if (!Caret)
-                            HideCaret(this.Handle);
-                        
-                        ToImage();
                     }
-                }
+                    if (!Caret)
+                        HideCaret(this.Handle);
 
+                    ToImage();
+                }
+            }
+
+        }
+        public void ScrollToEnd()
+        {
+            scrollTimer.Change(350, System.Threading.Timeout.Infinite);
+        }
+
+
+        private void toimageTimer_Tick(object o)
+        {
+            if (SaveToImage && !String.IsNullOrEmpty(SaveToImageFileName))
+                Control2Image.RtbToBitmap(this, SaveToImageFileName);
         }
         private void ToImage()
         {
-            if( SaveToImage && !String.IsNullOrEmpty(SaveToImageFileName))
-                Control2Image.RtbToBitmap(this, SaveToImageFileName);
+            toimageTimer.Change(1000, System.Threading.Timeout.Infinite);
         }
 
 		#region Elements required to create an RTF document
@@ -476,6 +484,9 @@ namespace SC2TV.RTFControl {
 			}
 
             t.Tick += new EventHandler(t_Tick);
+
+            scrollTimer = new System.Threading.Timer(new TimerCallback(scrollTimer_Tick), null, Timeout.Infinite, Timeout.Infinite);
+            toimageTimer = new System.Threading.Timer(new TimerCallback(toimageTimer_Tick), null, Timeout.Infinite, Timeout.Infinite);
 
 		}
 
