@@ -569,8 +569,11 @@ namespace dotSC2TV
             postData.Params.Add(new PostDataParam( "title",ChannelTitle,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "field_channel_type[value]",ChannelType,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "field_channel_name[0][value]",ChannelName,PostDataParamType.Field));            
-            postData.Params.Add(new PostDataParam( "field_channel_status[0][value]",_channelIsLive?"1":"0",PostDataParamType.Field));            
-            postData.Params.Add(new PostDataParam( "field_channel_id[0]","",PostDataParamType.Field));
+            postData.Params.Add(new PostDataParam( "field_channel_status[0][value]",_channelIsLive?"1":"0",PostDataParamType.Field));
+            postData.Params.Add(new PostDataParam("field_channel_id[0]", "", PostDataParamType.Field));
+            postData.Params.Add(new PostDataParam("field_cbg_image[0][fid]", "0", PostDataParamType.Field));
+            postData.Params.Add(new PostDataParam("field_cbg_image[0][list]", "1", PostDataParamType.Field));
+            postData.Params.Add(new PostDataParam("files[field_cbg_image_0]", "", PostDataParamType.File));
             postData.Params.Add(new PostDataParam( "taxonomy[1][]",ChannelGame,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "changed",ChannelChanged,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "form_build_id",ChannelFormBuildId,PostDataParamType.Field));
