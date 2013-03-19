@@ -30,7 +30,6 @@ namespace dotSC2TV
     public class Sc2Chat
     {
         #region "Private constants and properties"
-        #region Constants
         private const int pollInterval = 5000;
         private const string channelsUrl = "http://chat.sc2tv.ru/memfs/channels.json?_={0}";
         private const string channelEditUrl = "http://sc2tv.ru/node/add/userstream";
@@ -45,23 +44,22 @@ namespace dotSC2TV
 
 
         private const string reHiddenFormId = @".*hidden.*form_build_id.*id=""(.*?)"".*$";
-        private const string reChannelIsLive = @"<input type=""text""[^>]*?id=""edit-field-channel-status.*?""[^>]*?value=""(.*?)""";
-        private const string reChannelTitle = @"<input type=""text"".*?id=""edit-title""[^>]*?value=""(.*?)""";
+        private const string reChannelIsLive = @"<input type=""text""[^>]*?id=""edit-field-channel-status.*?""[^>]*value=""(.*?)""";
+        private const string reChannelTitle = @"<input type=""text"".*?id=""edit-title""[^>]*value=""(.*?)""";
         private const string reChannelType = @"<select .*?id=""edit-field-channel-type-value"".*?<option value=""([^>]*?)"" selected=""selected"".*?</select>";
-        private const string reChannelName = @"<input type=""text"".*?id=""edit-field-channel-name-0-value""[^>]*?value=""(.*?)""";
-        private const string reChannelAutoUpdate = @"<input type=""checkbox"".*?id=""edit-field-channel-autoupdate-value""[^>]*?value=""(.*?)""[^>]*?checked=""checked"".*?/>";
-        private const string reChannelWithoutComments = @"<input type=""checkbox"".*?id=""edit-field-channel-without-comments-value""[^>]*?value=""(.*?)""[^>]*?checked=""checked""";
+        private const string reChannelName = @"<input type=""text"".*?id=""edit-field-channel-name-0-value""[^>]*value=""(.*?)""";
+        private const string reChannelAutoUpdate = @"<input type=""checkbox"".*?id=""edit-field-channel-autoupdate-value""[^>]*value=""(.*?)""[^>]*?checked=""checked"".*?/>";
+        private const string reChannelWithoutComments = @"<input type=""checkbox"".*?id=""edit-field-channel-without-comments-value""[^>]*value=""(.*?)""[^>]*?checked=""checked""";
         private const string reChannelGame = @"<select .*?id=""edit-taxonomy-1"".*<option value=""([^>]*?)"" selected=""selected"".*?</select>";
         private const string reChannelLongInfo = @"<textarea .*?id=""edit-body"".*?>(.*?)</textarea>";
         private const string reChannelShortInfo = @"<textarea .*?id=""edit-teaser"".*?>(.*?)</textarea>";
-        private const string reChannelURLAlias = @"<input type=""checkbox"".*?id=""edit-pathauto-perform-alias"".*?value=""(.*?)""[^>]*?checked=""checked""";
-        private const string reChannelURLPath = @"<input type=""text"".*?id=""edit-path""[^>]*?value=""(.*?)""";
-        private const string reChannelChanged = @"<input type=""hidden"".*?id=""edit-changed""[^>]*?value=""(.*?)""";
-        private const string reChannelFormBuildId = @"<input type=""hidden"".*?id=""form-................................""[^>]*?value=""(.*?)""";
-        private const string reChannelFormToken = @"<input type=""hidden"".*?id=""edit-userstream-node-form-form-token""[^>]*?value=""(.*?)""";
-        private const string reChannelFormId = @"<input type=""hidden"".*?id=""edit-userstream-node-form""[^>]*?value=""(.*?)""";
+        private const string reChannelURLAlias = @"<input type=""checkbox"".*?id=""edit-pathauto-perform-alias""[^>]*value=""(.*?)""[^>]*?checked=""checked""";
+        private const string reChannelURLPath = @"<input type=""text"".*?id=""edit-path""[^>]*value=""(.*?)""";
+        private const string reChannelChanged = @"<input type=""hidden"".*?id=""edit-changed""[^>]*value=""(.*?)""";
+        private const string reChannelFormBuildId = @"<input type=""hidden"".*?id=""form-................................""[^>]*value=""(.*?)""";
+        private const string reChannelFormToken = @"<input type=""hidden"".*?id=""edit-userstream-node-form-form-token""[^>]*value=""(.*?)""";
+        private const string reChannelFormId = @"<input type=""hidden"".*?id=""edit-userstream-node-form""[^>]*value=""(.*?)""";
         private const string reStreamId = @"http://sc2tv.ru/node/(\d+)?/edit";
-        #endregion
 
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
         private const string cookieForTest = "drupal_uid";
@@ -79,7 +77,7 @@ namespace dotSC2TV
         private object loginLock = new object();
         private object settingsLock = new object();
         private bool _channelIsLive;
-
+        #endregion
         #region Classes
         private class LambdaComparer<T> : IEqualityComparer<T>
         {
@@ -113,7 +111,7 @@ namespace dotSC2TV
             }
         }
         #endregion
-        #endregion
+
         #region "Events"
         public event EventHandler<Sc2Event> Logon;
         public event EventHandler<Sc2Event> ChannelList;
@@ -168,7 +166,7 @@ namespace dotSC2TV
         public List<Smile> smiles = new List<Smile>();
         public bool LoggedIn = false;
         #endregion
-
+        
         #region "Public methods"
 
         public Sc2Chat( uint lastMsgId )
@@ -571,9 +569,9 @@ namespace dotSC2TV
             postData.Params.Add(new PostDataParam( "field_channel_name[0][value]",ChannelName,PostDataParamType.Field));            
             postData.Params.Add(new PostDataParam( "field_channel_status[0][value]",_channelIsLive?"1":"0",PostDataParamType.Field));
             postData.Params.Add(new PostDataParam("field_channel_id[0]", "", PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam("field_cbg_image[0][fid]", "0", PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam("field_cbg_image[0][list]", "1", PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam("files[field_cbg_image_0]", "", PostDataParamType.File));
+//            postData.Params.Add(new PostDataParam("field_cbg_image[0][fid]", "0", PostDataParamType.Field));
+//            postData.Params.Add(new PostDataParam("field_cbg_image[0][list]", "1", PostDataParamType.Field));
+//            postData.Params.Add(new PostDataParam("files[field_cbg_image_0]", "", PostDataParamType.File));
             postData.Params.Add(new PostDataParam( "taxonomy[1][]",ChannelGame,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "changed",ChannelChanged,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "form_build_id",ChannelFormBuildId,PostDataParamType.Field));
@@ -598,13 +596,6 @@ namespace dotSC2TV
         {
             ChannelIsLive = status;
             SaveStreamSettings();
-            var i = 0;
-            while (ChannelIsLive != status)
-            {
-                Thread.Sleep(1000);
-                i++;
-                if (i > 3) break;
-            }
         }
         public bool SendMessage(string message)
         {

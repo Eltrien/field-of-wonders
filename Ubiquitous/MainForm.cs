@@ -317,6 +317,7 @@ namespace Ubiquitous
         private bool isLMBDown = false;
         private Point _Offset = Point.Empty;
         private Point _OffsetViewers = Point.Empty;
+        private Point _OffsetForm = Point.Empty;
         private Properties.Settings settings;
         private const string twitchIRCDomain = "jtvirc.com";
         private const string gohaIRCDomain = "i.gohanet.ru";
@@ -1475,9 +1476,8 @@ namespace Ubiquitous
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                cursorPosBeforeMouseDown = Cursor.Position;
-                textMessages.Cursor = Cursors.SizeAll;
-                isRMBDown = true;
+                _OffsetForm = new Point(e.X, e.Y);
+                Cursor = Cursors.SizeAll;
             }
             else if (e.Button == MouseButtons.Left)
             {
@@ -1487,32 +1487,23 @@ namespace Ubiquitous
         }
         private void textMessages_MouseMove(object sender, MouseEventArgs e)
         {
-            Point p = textMessages.PointToClient(Cursor.Position);
-            if (!(p.X <= textMessages.ClientRectangle.Right &&
-                p.X >= textMessages.ClientRectangle.Left &&
-                p.Y <= textMessages.ClientRectangle.Bottom &&
-                p.Y >= textMessages.ClientRectangle.Top))
+            if (_OffsetForm != Point.Empty)
             {
-                textMessages.Cursor = Cursors.IBeam;
-                isRMBDown = false;
+                Point newlocation = this.Location;
+
+                newlocation.X += e.X - _OffsetForm.X;
+                newlocation.Y += e.Y - _OffsetForm.Y;
+                this.Location = newlocation;
             }
-            if (isRMBDown)
-            {
-                this.Left += Cursor.Position.X - cursorPosBeforeMouseDown.X;
-                this.Top += Cursor.Position.Y - cursorPosBeforeMouseDown.Y;
-                cursorPosBeforeMouseDown = Cursor.Position;
-            }
-            if (isLMBDown)
-            {
-            }
+
             showTools();
         }
         private void textMessages_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                textMessages.Cursor = Cursors.IBeam;
-                isRMBDown = false;
+                _OffsetForm = Point.Empty;
+                Cursor = Cursors.IBeam;
             }
             if (e.Button == MouseButtons.Left)
             {
@@ -1531,9 +1522,12 @@ namespace Ubiquitous
                 if (hashd != null)
                     UInt32.TryParse(hashd.Viewers, out hashdViewers);
 
-
-                labelViewers.Text = String.Format("{0}", cybergameViewers + twitchViewers + hashdViewers);
-                SetTooltip(viewersTooltip, labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {1}, Hashd.tv: {2}", twitchViewers, cybergameViewers, hashdViewers));
+                var viewersText = String.Format("{0}", cybergameViewers + twitchViewers + hashdViewers);
+                if (viewersText != labelViewers.Text)
+                {
+                    labelViewers.Text = viewersText;
+                    SetTooltip(viewersTooltip, labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {1}, Hashd.tv: {2}", twitchViewers, cybergameViewers, hashdViewers));
+                }
                 if (trackBarTransparency.ClientRectangle.Contains(trackBarTransparency.PointToClient(Cursor.Position)))
                     return;
 
