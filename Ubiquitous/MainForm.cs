@@ -1099,7 +1099,6 @@ namespace Ubiquitous
                 if( sc2tv.LoggedIn && sc2tv.ChannelIsLive )
                 {
                     sc2tv.setLiveStatus(false);
-                    Thread.Sleep(2000);
                     if (sc2tv.ChannelIsLive)
                     {
                         MessageBox.Show("Sc2tv Live Stream Player wasn't switched off! Do it manually!");
@@ -2828,7 +2827,6 @@ namespace Ubiquitous
             var errorMsg = e.Exception.Message + "\n\nStack Trace:\n" + e.Exception.StackTrace;
             Debug.Print(errorMsg);
         }
-
         private void pictureBoxMoveTools_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -2837,13 +2835,11 @@ namespace Ubiquitous
 
             }
         }
-
         private void pictureBoxMoveTools_MouseUp(object sender, MouseEventArgs e)
         {
             _Offset = Point.Empty;
 
         }
-
         private void pictureBoxMoveTools_MouseMove(object sender, MouseEventArgs e)
         {
             if (_Offset != Point.Empty)
@@ -2863,7 +2859,6 @@ namespace Ubiquitous
                     panelTools.Location = newlocation;
             }
         }
-
         private void labelViewers_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -2872,7 +2867,6 @@ namespace Ubiquitous
 
             }
         }
-
         private void labelViewers_MouseMove(object sender, MouseEventArgs e)
         {
             if (_OffsetViewers != Point.Empty)
@@ -2892,13 +2886,21 @@ namespace Ubiquitous
                 labelViewers.Location = newlocation;
             }
         }
-
         private void labelViewers_MouseUp(object sender, MouseEventArgs e)
         {
             _OffsetViewers = Point.Empty;
         }
+<<<<<<< HEAD
 
         private void panel1_Paint(object sender, PaintEventArgs e)
+=======
+<<<<<<< HEAD
+        private void MainForm_Load(object sender, EventArgs e)
+=======
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+>>>>>>> appearance changes
+>>>>>>> appearance
         {
 
         }
