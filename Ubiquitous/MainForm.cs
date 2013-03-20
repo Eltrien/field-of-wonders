@@ -2890,17 +2890,7 @@ namespace Ubiquitous
         {
             _OffsetViewers = Point.Empty;
         }
-<<<<<<< HEAD
-
         private void panel1_Paint(object sender, PaintEventArgs e)
-=======
-<<<<<<< HEAD
-        private void MainForm_Load(object sender, EventArgs e)
-=======
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
->>>>>>> appearance changes
->>>>>>> appearance
         {
 
         }
