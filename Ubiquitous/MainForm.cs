@@ -1296,8 +1296,6 @@ namespace Ubiquitous
             if (checkBoxBorder.Checked)
             {
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                //if( panelMessages.Dock == DockStyle.Fill)
-                    //this.Size = settings.globalCompactSize;
             }
             else
             {
@@ -1312,8 +1310,8 @@ namespace Ubiquitous
                 settings.isFullscreenMode = false;
                 panelMessages.Dock = DockStyle.None;
                 panelMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
-                panelMessages.Height = textCommand.Top - 5;
-                panelMessages.Width = groupBox1.Left - 5;
+                panelMessages.Height = textCommand.Top - 2;
+                panelMessages.Width = groupBox1.Left - 2;
                 textMessages.ScrollToEnd();
                 button1.Show();
             }
@@ -1445,33 +1443,6 @@ namespace Ubiquitous
                 combo.SelectedValue = value;
             }
         }
-        private void MainForm_MouseMove(object sender, MouseEventArgs e)
-        {
-
-        }
-        private void MainForm_MouseEnter(object sender, EventArgs e)
-        {
-
-        }
-        private void MainForm_Enter(object sender, EventArgs e)
-        {
-        }
-        private void MainForm_Activated(object sender, EventArgs e)
-        {
-
-        }
-        private void MainForm_Deactivate(object sender, EventArgs e)
-        {
-
-        }
-        private void textMessages_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
         private void textMessages_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
@@ -1503,7 +1474,7 @@ namespace Ubiquitous
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
                 _OffsetForm = Point.Empty;
-                Cursor = Cursors.IBeam;
+                Cursor = Cursors.Default;
             }
             if (e.Button == MouseButtons.Left)
             {
@@ -1563,9 +1534,6 @@ namespace Ubiquitous
         {
             switchFullScreenMode();
         }
-        private void twitchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
         private void contextMenuChat_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             SwitchToChat(chatAliases[contextMenuChat.Items.IndexOf(e.ClickedItem)].Alias);
@@ -1573,10 +1541,6 @@ namespace Ubiquitous
         private void pictureCurrentChat_Click_1(object sender, EventArgs e)
         {
             contextMenuChat.Show(Cursor.Position);
-        }
-        private void panelTools_MouseDown(object sender, MouseEventArgs e)
-        {
-
         }
         private void buttonStreamStartStop_Click(object sender, EventArgs e)
         {
@@ -2934,7 +2898,7 @@ namespace Ubiquitous
             _OffsetViewers = Point.Empty;
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
         }
