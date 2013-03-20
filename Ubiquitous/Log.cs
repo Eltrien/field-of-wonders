@@ -43,6 +43,7 @@ namespace Ubiquitous
         public Log(ExRichTextBox logTb)
         {
             tb = logTb;
+            tb.Clear();
         }
         public void ReplaceSmileCode(String code, Bitmap bmp)
         {
