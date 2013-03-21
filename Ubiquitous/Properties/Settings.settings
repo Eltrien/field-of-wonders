@@ -282,10 +282,10 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="globalFullSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">740, 620</Value>
+      <Value Profile="(Default)">515, 388</Value>
     </Setting>
     <Setting Name="globalCompactSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">740, 620</Value>
+      <Value Profile="(Default)">515, 388</Value>
     </Setting>
     <Setting Name="globalSmoothScroll" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

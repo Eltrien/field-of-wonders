@@ -1141,7 +1141,7 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("740, 620")]
+        [global::System.Configuration.DefaultSettingValueAttribute("515, 388")]
         public global::System.Drawing.Size globalFullSize {
             get {
                 return ((global::System.Drawing.Size)(this["globalFullSize"]));
@@ -1153,7 +1153,7 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("740, 620")]
+        [global::System.Configuration.DefaultSettingValueAttribute("515, 388")]
         public global::System.Drawing.Size globalCompactSize {
             get {
                 return ((global::System.Drawing.Size)(this["globalCompactSize"]));

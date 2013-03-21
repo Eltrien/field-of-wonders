@@ -312,9 +312,6 @@ namespace Ubiquitous
 
         #region Private properties
         private string formTitle;
-        private Point cursorPosBeforeMouseDown;
-        private bool isRMBDown = false;
-        private bool isLMBDown = false;
         private Point _Offset = Point.Empty;
         private Point _OffsetViewers = Point.Empty;
         private Point _OffsetForm = Point.Empty;
@@ -358,6 +355,7 @@ namespace Ubiquitous
         private FontDialog fontDialog;
         private Form debugForm;
         private Hashd hashd;
+        private uint MaxViewers = 0;
         private System.Threading.Timer forceCloseTimer;
         #endregion 
 
@@ -1449,11 +1447,7 @@ namespace Ubiquitous
                 _OffsetForm = new Point(e.X, e.Y);
                 Cursor = Cursors.SizeAll;
             }
-            else if (e.Button == MouseButtons.Left)
-            {
-                isLMBDown = true;
-            }
-            
+
         }
         private void textMessages_MouseMove(object sender, MouseEventArgs e)
         {
@@ -1475,10 +1469,6 @@ namespace Ubiquitous
                 _OffsetForm = Point.Empty;
                 Cursor = Cursors.Default;
             }
-            if (e.Button == MouseButtons.Left)
-            {
-                isLMBDown = false;
-            }
         }
         private void timerEverySecond_Tick(object sender, EventArgs e)
         {
@@ -1492,11 +1482,15 @@ namespace Ubiquitous
                 if (hashd != null)
                     UInt32.TryParse(hashd.Viewers, out hashdViewers);
 
-                var viewersText = String.Format("{0}", cybergameViewers + twitchViewers + hashdViewers);
+                var totalViewers = cybergameViewers + twitchViewers + hashdViewers;
+                if (MaxViewers < totalViewers)
+                    MaxViewers = totalViewers;
+
+                var viewersText = String.Format("{0}", totalViewers);
                 if (viewersText != labelViewers.Text)
                 {
                     labelViewers.Text = viewersText;
-                    SetTooltip(viewersTooltip, labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {1}, Hashd.tv: {2}", twitchViewers, cybergameViewers, hashdViewers));
+                    SetTooltip(viewersTooltip, labelViewers, String.Format("Twitch.tv: {0}, Cybergame.tv: {1}, Hashd.tv: {2}, Max total: {3}", twitchViewers, cybergameViewers, hashdViewers, MaxViewers));
                 }
                 if (trackBarTransparency.ClientRectangle.Contains(trackBarTransparency.PointToClient(Cursor.Position)))
                     return;
@@ -2847,16 +2841,25 @@ namespace Ubiquitous
                 Point newlocation = panelTools.Location;
 
                 var newX = newlocation.X + e.X - _Offset.X;
-                if (newX < (this.Width - panelTools.ClientRectangle.Width)
-                    && newX >= 0)
-                    newlocation.X += e.X - _Offset.X;
-
                 var newY = newlocation.Y + e.Y - _Offset.Y;
-                if (newY >= 0
-                    && newY < (this.Height - panelTools.Height))
-                    newlocation.Y += e.Y - _Offset.Y;
+                var maxX = this.Width - panelTools.ClientRectangle.Width;
+                var maxY = this.Height - panelTools.Height;
 
-                    panelTools.Location = newlocation;
+                if (newX < maxX && newX >= 0)
+                    newlocation.X += e.X - _Offset.X;
+                else if (newX > maxX)
+                    newlocation.X = maxX;
+                else if (newX < 0)
+                    newlocation.X = 0;
+
+                if (newY >= 0 && newY < maxY)
+                    newlocation.Y += e.Y - _Offset.Y;
+                else if (newY > maxY)
+                    newlocation.Y = maxY;
+                else if (newY < 0)
+                    newlocation.Y = 0;
+
+                panelTools.Location = newlocation;
             }
         }
         private void labelViewers_MouseDown(object sender, MouseEventArgs e)
@@ -2874,14 +2877,23 @@ namespace Ubiquitous
                 Point newlocation = labelViewers.Location;
 
                 var newX = newlocation.X + e.X - _OffsetViewers.X;
-                if (newX < (this.Width - labelViewers.ClientRectangle.Width)
-                    && newX >= 0)
-                    newlocation.X += e.X - _OffsetViewers.X;
-                
                 var newY = newlocation.Y + e.Y - _OffsetViewers.Y;
-                if (newY >= 0
-                    && newY < (this.Height - labelViewers.Height))
+                var maxX = this.Width - labelViewers.ClientRectangle.Width;
+                var maxY = this.Height - labelViewers.Height;
+
+                if (newX < maxX && newX >= 0)
+                    newlocation.X += e.X - _OffsetViewers.X;
+                else if (newX > maxX)
+                    newlocation.X = maxX;
+                else if (newX < 0)
+                    newlocation.X = 0;
+                
+                if (newY >= 0 && newY < maxY)
                     newlocation.Y += e.Y - _OffsetViewers.Y;
+                else if (newY > maxY)
+                    newlocation.Y = maxY;
+                else if (newY < 0)
+                    newlocation.Y = 0;
 
                 labelViewers.Location = newlocation;
             }
@@ -2889,10 +2901,6 @@ namespace Ubiquitous
         private void labelViewers_MouseUp(object sender, MouseEventArgs e)
         {
             _OffsetViewers = Point.Empty;
-        }
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
 

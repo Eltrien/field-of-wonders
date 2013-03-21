@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Threading;
 using dotWebClient;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace dotGohaTV
 {
@@ -90,7 +91,16 @@ namespace dotGohaTV
                 );
 
             wc.ContentType = ContentType.UrlEncoded;
-            wc.UploadString(loginUrl, loginParams);
+            try
+            {
+                wc.UploadString(loginUrl, loginParams);
+            }
+            catch
+            {
+                Debug.Print("Error connecting to goha.ru");
+                return false;
+            }
+
             var result = wc.DownloadString(uidgetUrl);
             if( String.IsNullOrEmpty(result) )
                 return false;
