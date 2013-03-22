@@ -388,7 +388,7 @@ namespace SC2TV.RTFControl {
 		 *				  table.
 		 * \fs[N]		- Font size in half-points.
 		 * */
-		private const string RTF_DOCUMENT_PRE = @"\viewkind4\uc1\pard\cf1\f0\fs20\shad";
+		private const string RTF_DOCUMENT_PRE = @"\viewkind4\uc1\pard\cf1\f0\fs20";
 		private const string RTF_DOCUMENT_POST = @"\cf0\fs17}";
 		private string RTF_IMAGE_POST = @"}";
 
@@ -446,8 +446,8 @@ namespace SC2TV.RTFControl {
 		public ExRichTextBox() : base() {
 
 			// Initialize default text and background colors
-			textColor = Color.Black;
-			highlightColor = Color.White;
+            textColor = this.TextColor;
+            highlightColor = this.BackColor;
 
 			// Initialize the dictionary mapping color codes to definitions
 			rtfColor = new HybridDictionary();
@@ -655,10 +655,28 @@ namespace SC2TV.RTFControl {
 
 			// Create the document area from the text to be added as RTF and append
 			// it to the RTF string.
-			_rtf.Append(GetDocumentArea(_text, _font));
+			_rtf.Append(GetDocumentArea(EncodeNonAsciiCharacters(_text), _font));
 
 			this.SelectedRtf = _rtf.ToString();
 		}
+        private string EncodeNonAsciiCharacters(string value)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in value)
+            {
+                if (c > 127)
+                {
+                    // This character is too big for ASCII
+                    string encodedValue = "\\u" + ((int)c).ToString("d4") + "?";
+                    sb.Append(encodedValue);
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
         public string TextToRtfText(string _text)
         {
             StringBuilder _rtf = new StringBuilder();

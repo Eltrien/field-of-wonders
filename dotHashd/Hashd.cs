@@ -6,6 +6,9 @@ using dotWebClient;
 using System.Threading;
 using System.Diagnostics;
 using dotUtilities;
+using System.Web;
+using System.Net;
+using WebSocket4Net;
 
 namespace dotHashd
 {
@@ -13,7 +16,17 @@ namespace dotHashd
     {
         #region Constants
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
-        private const string channelInfoUrl = "http://api.hashd.tv/v1/stream/{0}";
+        private const string hashDomain = "hashd.tv";
+        private const string channelInfoUrl = "http://api." + hashDomain + "/v1/stream/{0}";
+        private const string loginUrl = "http://" + hashDomain + "/signin";
+        private const string loginParams = @"utf8=%E2%9C%93&authenticity_token={2}&username={0}&password={1}&commit=Log+in";
+
+        private const int maxServerNum = 0x1e3;
+
+        private const string reAssetsHost = @"Hashd.assetsHost[^']+'([^']+)'";
+        private const string reUserName = @"username = ""([^""]+)"";";
+        private const string reAuthToken = @"<input name=""authenticity_token""[^>]+value=""([^""])""";
+        private const string reMessage = @"{\\""message\\"":\\""(.*?)\\"",\\""user\\"":{\\""id\\"":\\"".*?\\"",\\""chatNameColor\\"":\\"".*?\\"",\\""username\\"":\\""(.*?)\\"",";
         private const int pollIntervalStats = 20000;
 
         #endregion
@@ -22,18 +35,23 @@ namespace dotHashd
         private string chatUpdateNonce;
         private string chatNewMessageNonce;
         private Timer statsDownloader;
-        private CookieAwareWebClient statsWC;
+        private CookieAwareWebClient statsWC, loginWC;
         private bool prevOnlineState = false;
         private Channel currentChannelStats;
+        private string _login;
         private string _user;
         private string _password;
         private object loginLock = new object();
         private object statsLock = new object();
+        private WebSocket socket;
+        private int _opcode;
         #endregion
         #region Events
         public event EventHandler<EventArgs> Live;
         public event EventHandler<EventArgs> Offline;
         public event EventHandler<EventArgs> OnLogin;
+        public event EventHandler<EventArgs> OnError;
+        public event EventHandler<HashdMessageEventArgs> OnMessage;
         private void DefaultEvent(EventHandler<EventArgs> evnt, EventArgs e)
         {
             EventHandler<EventArgs> handler = evnt;
@@ -53,19 +71,19 @@ namespace dotHashd
         #endregion
 
         #region Public methods
-        public Hashd(string user, string password)
+        public Hashd(string login, string password)
         {
-            _user = user;
+            _login = login;
             _password = password;
             statsWC = new CookieAwareWebClient();
-            statsWC.Headers["User-Agent"] = userAgent;
+            loginWC = new CookieAwareWebClient();
             statsDownloader = new Timer(new TimerCallback(statsDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
 
         }
 
         private void statsDownloader_Tick(object o)
         {
-            DownloadStats(_user);
+            DownloadStats(_login);
         }
         public bool isLoggedIn
         {
@@ -74,6 +92,8 @@ namespace dotHashd
         }
         public void Start()
         {
+
+            ConnectWebsocket();
             statsDownloader.Change(0, pollIntervalStats);
         }
         public void Stop()
@@ -84,22 +104,120 @@ namespace dotHashd
         {
             lock (loginLock)
             {
+                _opcode = 0;
+                List<KeyValuePair<string, string>> cookies = new List<KeyValuePair<string,string>>();
+
                 isLoggedIn = false;
-                if (String.IsNullOrEmpty(_user) || String.IsNullOrEmpty(_password))
+                if (String.IsNullOrEmpty(_login) || String.IsNullOrEmpty(_password))
                     return false;
 
-                if (OnLogin != null)
-                    OnLogin(this, EventArgs.Empty);
+                var result = loginWC.DownloadString(loginUrl);
+                if (String.IsNullOrEmpty(result))
+                    return false;
 
+                var auth_token = Re.GetSubString(result, reAuthToken, 1);
+                if (String.IsNullOrEmpty(result))
+                    return false;
+
+                loginWC.ContentType = ContentType.UrlEncoded;
+
+                result = loginWC.UploadString(loginUrl, String.Format(loginParams, HttpUtility.UrlEncode(_login), HttpUtility.UrlEncode(_password), HttpUtility.UrlEncode(auth_token)));
+
+                var assetsHost = Re.GetSubString(result, reAssetsHost, 1);
+                if (String.IsNullOrEmpty(assetsHost))
+                    return false;
+
+                _user = Re.GetSubString(result, reUserName, 1);
+                if (String.IsNullOrEmpty(_user))
+                    return false;
                 isLoggedIn = true;
 
                 return true;
             }
         }
 
+        private void ConnectWebsocket()
+        {
+            socket = new WebSocket(
+                String.Format("ws://{0}:9999/chat/{1}/{2}/websocket", hashDomain,random_hashd_number(), random_hashd_string()),
+                "",
+                loginWC.CookiesStrings,
+                null,
+                null,
+                @"http://" + hashDomain,
+                WebSocketVersion.DraftHybi10
+                );
+            socket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(socket_MessageReceived);
+            socket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(socket_Error);
+            socket.Open();
+        }
+
+        private string OpCode
+        {
+            get { _opcode++; return _opcode.ToString(); }
+        }
+
+        void socket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
+        {
+            if (OnError != null)
+                OnError(this, EventArgs.Empty);
+        }
+
+        private void SwitchChannel( string channel)
+        { 
+            var channelCommand = @"[""{\""opcodeID\"":" + OpCode + @",\""data\"":{\""channel\"":\""" + channel + @"\""}}""]";
+            socket.Send(channelCommand);
+        }
+        private void SendSessionID()
+        {
+            var sessionCookie = loginWC.CookiesStrings.Where(m => m.Key == "_session_id").FirstOrDefault();
+            var sessionCommand = @"[""{\""opcodeID\"":" + OpCode + @",\""data\"":{\""sessionID\"":\""" + sessionCookie.Value + @"\"",\""type\"":2}}""]";
+            socket.Send(sessionCommand);
+        }
+        public string User
+        {
+            get { return _user; }
+        }
+        public void SendMessage(string text)
+        {
+            var sendCommand = @"[""{\""opcodeID\"":" + OpCode + @",\""data\"":{\""message\"":\""" + text + @"\""}}""]";
+            socket.Send(sendCommand);
+        }
+        void socket_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(e.Message))
+                return;
+
+            if (e.Message == "o")
+            {
+                if (OnLogin != null)
+                    OnLogin(this, EventArgs.Empty);
+
+                SwitchChannel(_user);
+                Thread.Sleep(1000);
+                SendSessionID();
+            }
+            else if (e.Message.Contains(@"\""data\"":{\""message\"":"))
+            {
+                var text = Re.GetSubString(e.Message, reMessage, 1);
+                var user = Re.GetSubString(e.Message, reMessage, 2);
+                if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(user))
+                    return;
+
+                if (OnMessage != null)
+                    OnMessage(this, new HashdMessageEventArgs(new Message() { User = user, Text = text }));
+
+            }
+            else
+            {
+                Debug.Print(e.Message);
+            }
+
+        }
+
         private void DownloadStats(string channel)
         {
-            if (String.IsNullOrEmpty(_user))
+            if (String.IsNullOrEmpty(_login))
                 return;
             lock (statsLock)
             {
@@ -117,7 +235,7 @@ namespace dotHashd
 
                         if (stream == null)
                         {
-                            Debug.Print("Cybergame: Can't download channel info of {0} result is null. Url: {1}", channel, channelInfoUrl);
+                            Debug.Print("Hashd: Can't download channel info of {0} result is null. Url: {1}", channel, channelInfoUrl);
                         }
                         else
                         {
@@ -147,6 +265,22 @@ namespace dotHashd
                 return currentChannelStats.live;
             }
         }
+        private string random_hashd_number()
+        {
+            var num = new Random();
+            return (num.Next(0, maxServerNum)).ToString("000");
+        }
+        private string random_hashd_string()
+        {
+            var chars = "abcdefghijklmnopqrstuvwxyz0123456789_";
+            StringBuilder builder = new StringBuilder();
+            var random = new Random();
+            
+            for (var i = 0; i < 8; i++)
+                builder.Append(chars[random.Next(0, chars.Length - 1)]);
+
+            return builder.ToString();
+        }
         #endregion
         #region Public properties
         public string Viewers
@@ -155,6 +289,30 @@ namespace dotHashd
             set { }
         }
         #endregion
+
+        public class HashdMessageEventArgs : EventArgs
+        {
+            public HashdMessageEventArgs(Message message)
+            {
+                Message = message;
+            }
+
+            public Message Message { get; private set; }
+        }
+
+        public class Message
+        {
+            public string Text
+            {
+                get;
+                set;
+            }
+            public string User
+            {
+                get;
+                set;
+            }
+        }
 
     }
 

@@ -592,6 +592,7 @@ namespace Ubiquitous
                 case "globalChatTextColor":
                     {
                         textMessages.TextColor = settings.globalChatTextColor;
+                        textMessages.ForeColor = settings.globalChatTextColor;
                     }
                     break;
                 case "globalTimestampForeground":
@@ -885,6 +886,9 @@ namespace Ubiquitous
                 case EndPoint.Cybergame:
                     ThreadPool.QueueUserWorkItem(f => SendMessageToCybergame(message));
                     break;
+                case EndPoint.Hashd:
+                    ThreadPool.QueueUserWorkItem(f => SendMessageToHashd(message));
+                    break;
                 case EndPoint.Console:
                     log.WriteLine(message.Text);
                     break;
@@ -929,6 +933,7 @@ namespace Ubiquitous
             SendMessageToTwitchIRC(message);
             SendMessageToSc2Tv(message);
             SendMessageToCybergame(message);
+            SendMessageToHashd(message);
         }
         private void SendMessageToSc2Tv(Message message)
         {
@@ -990,6 +995,16 @@ namespace Ubiquitous
                 (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
             {
                 cybergame.SendMessage(message.Text);
+            }
+
+        }
+        private void SendMessageToHashd(Message message)
+        {
+            if (settings.hashdEnabled &&
+                hashd.isLoggedIn &&
+                (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
+            {
+                hashd.SendMessage(message.Text);
             }
 
         }
@@ -1584,6 +1599,7 @@ namespace Ubiquitous
             hashd.Live += new EventHandler<EventArgs>(hashd_Live);
             hashd.Offline += new EventHandler<EventArgs>(hashd_Offline);
             hashd.OnLogin += new EventHandler<EventArgs>(hashd_OnLogin);
+            hashd.OnMessage += new EventHandler<Hashd.HashdMessageEventArgs>(hashd_OnMessage);
 
             if (!hashd.Login())
             {
@@ -1593,6 +1609,14 @@ namespace Ubiquitous
             {
                 hashd.Start();
             }
+        }
+
+        void hashd_OnMessage(object sender, Hashd.HashdMessageEventArgs e)
+        {
+            if (e.Message.User.ToLower() == hashd.User)
+                return;
+
+            SendMessage(new Message(String.Format("{0} ({1})", e.Message.Text, e.Message.User), EndPoint.Hashd, EndPoint.SteamAdmin));
         }
 
         void hashd_OnLogin(object sender, EventArgs e)

@@ -31,6 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SuperSocket.ClientEngine.Common">
+      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.ClientEngine.Core">
+      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.ClientEngine.Protocol">
+      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Protocol.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.ClientEngine.Proxy">
+      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Proxy.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
@@ -48,6 +60,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dotBattlelog\websocket.net.client2\WebSocket4Net\WebSocket4Net.csproj">
+      <Project>{6920447F-76B1-4739-822E-9CE3A2882718}</Project>
+      <Name>WebSocket4Net</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotUtilities\dotUtilities.csproj">
       <Project>{ED6C0B9C-608A-4325-8F98-5E23C7DC52CD}</Project>
       <Name>dotUtilities</Name>

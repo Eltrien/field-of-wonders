@@ -17,6 +17,7 @@ namespace dotWebClient
     public enum ContentType
     {
         UrlEncoded,
+        UrlEncodedUTF8,
         Multipart
     }
     public class CookieAwareWebClient : WebClient
@@ -31,10 +32,12 @@ namespace dotWebClient
         public bool stillReading = false;
         public CookieAwareWebClient()
         {
+            
             ServicePointManager.DefaultConnectionLimit = 5;
             ServicePointManager.Expect100Continue = false;
             ServicePointManager.UseNagleAlgorithm = false;
             contentTypes = new Dictionary<ContentType, string>();
+            contentTypes.Add(ContentType.UrlEncodedUTF8, "application/x-www-form-urlencoded; charset=UTF-8");
             contentTypes.Add(ContentType.UrlEncoded, "application/x-www-form-urlencoded");
             contentTypes.Add(ContentType.Multipart, "multipart/form-data");
             
@@ -52,6 +55,31 @@ namespace dotWebClient
             get;
             set;
 
+        }
+        public List<KeyValuePair<string, string>> CookiesStrings
+        {
+            get
+            {
+                List<KeyValuePair<string, string>> _cookies = new List<KeyValuePair<string, string>>();
+                Hashtable table = (Hashtable)m_container.GetType().InvokeMember("m_domainTable",
+                                             BindingFlags.NonPublic |
+                                             BindingFlags.GetField |
+                                             BindingFlags.Instance,
+                                             null,
+                                             m_container,
+                                             new object[] { });
+                foreach (var key in table.Keys)
+                {
+                    var url = String.Format("http://{0}/", key.ToString().TrimStart('.'));
+
+                    foreach (Cookie cookie in m_container.GetCookies(new Uri(url)))
+                    {
+                        _cookies.Add(new KeyValuePair<string, string>(cookie.Name, cookie.Value));
+                    }
+                }
+
+                return _cookies;
+            }
         }
         public CookieContainer Cookies
         {
