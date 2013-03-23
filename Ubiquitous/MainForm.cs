@@ -1167,6 +1167,7 @@ namespace Ubiquitous
                 twitchTV.Stop();
                 empireTV.Stop();
                 hashd.Stop();
+                cybergame.Stop();
             }
             catch
             {
@@ -1662,6 +1663,7 @@ namespace Ubiquitous
         {
             checkMark.SetOn(pictureCybergame);
             SendMessage(new Message("Cybergame: logged in!", EndPoint.Cybergame, EndPoint.SteamAdmin));
+            cybergame.Start();
         }
         void cybergame_OnMessage(object sender, MessageReceivedEventArgs e)
         {

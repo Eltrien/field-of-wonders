@@ -83,7 +83,7 @@ namespace dotHashd
 
         private void statsDownloader_Tick(object o)
         {
-            DownloadStats(_login);
+            DownloadStats(_user);
         }
         public bool isLoggedIn
         {
