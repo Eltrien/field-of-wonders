@@ -42,7 +42,7 @@ namespace dotHashd
         [DataMember(Name = "current_viewers")]
         public uint currentViewers;
         [DataMember(Name = "unique_viewers")]
-        public string uniqueViewers;
+        public uint uniqueViewers;
         [DataMember(Name = "total_views")]
         public string totalViews;
         [DataMember(Name = "game_id")]

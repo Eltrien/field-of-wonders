@@ -83,7 +83,8 @@ namespace dotHashd
 
         private void statsDownloader_Tick(object o)
         {
-            DownloadStats(_user);
+            //DownloadStats(_user);
+            DownloadStats("swisslegends");
         }
         public bool isLoggedIn
         {
@@ -217,7 +218,7 @@ namespace dotHashd
 
         private void DownloadStats(string channel)
         {
-            if (String.IsNullOrEmpty(_login))
+            if (String.IsNullOrEmpty(_user))
                 return;
             lock (statsLock)
             {

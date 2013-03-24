@@ -2717,6 +2717,9 @@ namespace Ubiquitous
         #region OBS Remote methods and events
         public void ConnectOBSRemote()
         {
+            if (!settings.obsRemoteEnable)
+                return;
+
             if (isClosing)
                 return;
             obsRemote = new OBSRemote();
@@ -2730,6 +2733,9 @@ namespace Ubiquitous
         }
         void obsRemote_OnSourceChange(object sender, OBSSourceEventArgs e)
         {
+            if (!settings.obsRemoteEnable)
+                return;
+
             foreach (ToolStripMenuItem item in contextSceneSwitch.Items)
             {
                 if (item.Checked)
@@ -2765,6 +2771,9 @@ namespace Ubiquitous
         }
         void obsRemote_OnSceneSet(object sender, OBSMessageEventArgs e)
         {
+            if (!settings.obsRemoteEnable)
+                return;
+
             var sceneName = e.Message;
             if (String.IsNullOrEmpty(sceneName))
                 return;
@@ -2784,6 +2793,9 @@ namespace Ubiquitous
         }
         void obsRemote_OnSceneList(object sender, OBSSceneStatusEventArgs e)
         {
+            if (!settings.obsRemoteEnable)
+                return;
+
             contextSceneSwitch.Items.Clear();
             if (e.Status.scenes.Count <= 0)
             {
@@ -2807,6 +2819,9 @@ namespace Ubiquitous
         }
         void contextSceneSwitch_onClick(object sender, EventArgs e)
         {
+            if (!settings.obsRemoteEnable)
+                return;
+
             ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
             obsRemote.SetSourceRenderer(clickedItem.Text, !clickedItem.Checked);
         }
@@ -2820,17 +2835,25 @@ namespace Ubiquitous
         }
         void obsRemote_OnError(object sender, EventArgs e)
         {
+            if (!settings.obsRemoteEnable)
+                return;
+
             Thread.Sleep(3000);
             ConnectOBSRemote();
         }
         void obsRemote_OnOffline(object sender, EventArgs e)
         {
+            if (!settings.obsRemoteEnable)
+                return;
+
             buttonStreamStartStop.Image = Properties.Resources.play;
             SendMessage(new Message("OBS doesn't streaming. Switching players off!", EndPoint.Bot, EndPoint.SteamAdmin));
             SwitchPlayersOff(true,true);
         }
         void obsRemote_OnLive(object sender, EventArgs e)
         {
+            if (!settings.obsRemoteEnable)
+                return;
             buttonStreamStartStop.Image = Properties.Resources.stop;
             SendMessage(new Message("OBS is streaming. Switching players on!", EndPoint.Bot, EndPoint.SteamAdmin));
             SwitchPlayersOn(true,true);
