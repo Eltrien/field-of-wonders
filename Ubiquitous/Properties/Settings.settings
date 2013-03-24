@@ -294,7 +294,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="globalViewersLocation" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 0</Value>
+      <Value Profile="(Default)">0, 27</Value>
     </Setting>
     <Setting Name="globalToolsLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">54, 0</Value>
@@ -319,6 +319,30 @@
     </Setting>
     <Setting Name="globalSoundOnlineFile" Type="System.String" Scope="User">
       <Value Profile="(Default)">online.mp3</Value>
+    </Setting>
+    <Setting Name="globalCounterTotal" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="globalCounterCybergame" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="globalCounterHashd" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="globalCounterTwitch" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="globalCounterPosTwitch" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 18</Value>
+    </Setting>
+    <Setting Name="globalCounterPosHashd" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 36</Value>
+    </Setting>
+    <Setting Name="globalCounterPosCybergame" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 54</Value>
+    </Setting>
+    <Setting Name="globalCounterPosTotal" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -715,7 +715,7 @@ namespace Ubiquitous
             int.TryParse(width, out _width);
 
             if (_width > 0)
-                TSafe.SetProperty<Form, int>(this, "Width", _width);
+                Utils.SetProperty<Form, int>(this, "Width", _width);
             
             return Result.Successful;
         }
@@ -725,7 +725,7 @@ namespace Ubiquitous
             int.TryParse(height, out _height);
 
             if (_height > 0)
-                TSafe.SetProperty<Form, int>(this, "Height", _height);
+                Utils.SetProperty<Form, int>(this, "Height", _height);
 
             return Result.Successful;
         }
@@ -1503,6 +1503,14 @@ namespace Ubiquitous
                     MaxViewers = totalViewers;
 
                 var viewersText = String.Format("{0}", totalViewers);
+
+                if (counterCybergame.Visible)
+                    counterCybergame.Counter = cybergameViewers.ToString();
+                if (counterTwitch.Visible)
+                    counterTwitch.Counter = twitchViewers.ToString();
+                if (counterHash.Visible)
+                    counterHash.Counter = hashdViewers.ToString();
+
                 if (viewersText != labelViewers.Text)
                 {
                     labelViewers.Text = viewersText;
@@ -2953,23 +2961,8 @@ namespace Ubiquitous
         }
 
 
+
     }
-    public static class TSafe
-    {
-        public delegate void SetPropCallback(Control ctrl, string propName, object value);
-        public static void SetProperty<TControl, TValue>(this TControl ctrl, string propName, TValue value) where TControl : Control
-        {
-            if (ctrl.InvokeRequired)
-            {
-                var d = new SetPropCallback(SetProperty);
-                ctrl.Invoke(d, new object[] { ctrl, propName, value });
-            }
-            else
-            {
-                Type t = ctrl.GetType();
-                t.InvokeMember(propName, BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.Public, null, ctrl, new object[] { value });
-            }
-        }
-    }
+
 
 }

@@ -92,6 +92,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Control2Image.cs" />
+    <Compile Include="CounterPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CounterPanel.Designer.cs">
+      <DependentUpon>CounterPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,6 +146,9 @@
     </Compile>
     <Compile Include="StatusImage.cs" />
     <Compile Include="StatusServer.cs" />
+    <EmbeddedResource Include="CounterPanel.resx">
+      <DependentUpon>CounterPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>
     </EmbeddedResource>
