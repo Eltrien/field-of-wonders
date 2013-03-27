@@ -61,8 +61,12 @@ namespace Ubiquitous
         private void SettingsDialog_Shown(object sender, EventArgs e)
         {
             textFontName.Text = settings.globalChatFont.ToString();
+            textCounterFont.Text = settings.globalCounterFont.ToString();
+
             buttonBackColor.BackColor = settings.globalChatBackground;
             buttonForeColor.BackColor = settings.globalChatTextColor;
+            buttonCounterBackColor.BackColor = settings.globalCounterBackColor;
+            buttonCounterForeColor.BackColor = settings.globalCounterTextColor;
 
         }
 
@@ -83,6 +87,7 @@ namespace Ubiquitous
         void fontDialog_Apply(object sender, EventArgs e)
         {
             settings.globalChatFont = fontDialog.Font;
+            textFontName.Text = settings.globalChatFont.ToString();
         }
 
         private void buttonForeColor_Click(object sender, EventArgs e)
@@ -198,6 +203,47 @@ namespace Ubiquitous
             }
         }
 
+        private void buttonCounterFont_Click(object sender, EventArgs e)
+        {
+            fontDialog = new FontDialog();
+            fontDialog.Font = settings.globalCounterFont;
+            fontDialog.ShowColor = false;
+            fontDialog.ShowApply = true;
+            fontDialog.ShowEffects = true;
+            fontDialog.Apply +=new EventHandler(fontCounterDialog_Apply);
+
+            fontDialog.ShowDialog();
+
+            settings.globalCounterFont = fontDialog.Font;
+            textCounterFont.Text = settings.globalCounterFont.ToString();
+        }
+        void fontCounterDialog_Apply(object sender, EventArgs e)
+        {
+            settings.globalCounterFont = fontDialog.Font;
+            textCounterFont.Text = settings.globalCounterFont.ToString();
+        }
+
+        private void buttonCounterForeColor_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.globalCounterTextColor = colorDialog.Color;
+                buttonCounterForeColor.BackColor = colorDialog.Color;
+            }
+        }
+
+        private void buttonCounterBackColor_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.globalCounterBackColor = colorDialog.Color;
+                buttonCounterBackColor.BackColor = colorDialog.Color;
+            }
+        }
 
 
     }

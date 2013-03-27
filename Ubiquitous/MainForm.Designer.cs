@@ -146,44 +146,44 @@
             this.gohatvToolStripMenuItem,
             this.allToolStripMenuItem});
             this.contextMenuChat.Name = "contextMenuChat";
-            this.contextMenuChat.Size = new System.Drawing.Size(125, 114);
+            this.contextMenuChat.Size = new System.Drawing.Size(121, 114);
             this.contextMenuChat.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuChat_ItemClicked);
             // 
             // twitchToolStripMenuItem
             // 
             this.twitchToolStripMenuItem.Name = "twitchToolStripMenuItem";
-            this.twitchToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.twitchToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.twitchToolStripMenuItem.Text = "Twitch.tv";
             // 
             // sc2TvruToolStripMenuItem
             // 
             this.sc2TvruToolStripMenuItem.Name = "sc2TvruToolStripMenuItem";
-            this.sc2TvruToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.sc2TvruToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.sc2TvruToolStripMenuItem.Text = "Sc2tv.ru";
             // 
             // empiretvToolStripMenuItem
             // 
             this.empiretvToolStripMenuItem.Name = "empiretvToolStripMenuItem";
-            this.empiretvToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.empiretvToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.empiretvToolStripMenuItem.Text = "Empire.tv";
             // 
             // gohatvToolStripMenuItem
             // 
             this.gohatvToolStripMenuItem.Name = "gohatvToolStripMenuItem";
-            this.gohatvToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.gohatvToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.gohatvToolStripMenuItem.Text = "Goha.tv";
             // 
             // allToolStripMenuItem
             // 
             this.allToolStripMenuItem.Name = "allToolStripMenuItem";
-            this.allToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.allToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.allToolStripMenuItem.Text = "All";
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.panel1.Controls.Add(this.panelTools);
             this.panel1.Controls.Add(this.panelMessages);
@@ -258,7 +258,7 @@
             this.contextSceneSwitch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.asdfToolStripMenuItem});
             this.contextSceneSwitch.Name = "contextSceneSwitch";
-            this.contextSceneSwitch.Size = new System.Drawing.Size(129, 26);
+            this.contextSceneSwitch.Size = new System.Drawing.Size(124, 26);
             this.contextSceneSwitch.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextSceneSwitch_Closing);
             this.contextSceneSwitch.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextSceneSwitch_ItemClicked);
             // 
@@ -266,7 +266,7 @@
             // 
             this.asdfToolStripMenuItem.CheckOnClick = true;
             this.asdfToolStripMenuItem.Name = "asdfToolStripMenuItem";
-            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.asdfToolStripMenuItem.Text = "No scenes";
             // 
             // checkBoxBorder
@@ -334,9 +334,9 @@
             // 
             // panelMessages
             // 
-            this.panelMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelMessages.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.panelMessages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelMessages.Controls.Add(this.counterCybergame);
@@ -352,9 +352,15 @@
             // 
             // counterCybergame
             // 
+            this.counterCybergame.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
             this.counterCybergame.Counter = "0";
             this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterCybergame", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosCybergame", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterCybergame.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.counterCybergame.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
             this.counterCybergame.Image = global::Ubiquitous.Properties.Resources.cybergame;
             this.counterCybergame.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosCybergame;
             this.counterCybergame.Name = "counterCybergame";
@@ -364,9 +370,15 @@
             // 
             // counterHash
             // 
+            this.counterHash.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
             this.counterHash.Counter = "0";
             this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterHashd", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosHashd", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHash.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.counterHash.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
             this.counterHash.Image = global::Ubiquitous.Properties.Resources.hashd;
             this.counterHash.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosHashd;
             this.counterHash.Name = "counterHash";
@@ -376,9 +388,15 @@
             // 
             // counterTwitch
             // 
+            this.counterTwitch.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
             this.counterTwitch.Counter = "0";
             this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterTwitch", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosTwitch", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterTwitch.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.counterTwitch.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
             this.counterTwitch.Image = global::Ubiquitous.Properties.Resources.twitchicon;
             this.counterTwitch.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosTwitch;
             this.counterTwitch.Name = "counterTwitch";
@@ -388,9 +406,15 @@
             // 
             // labelViewers
             // 
+            this.labelViewers.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
             this.labelViewers.Counter = "0";
             this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterTotal", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosTotal", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.labelViewers.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.labelViewers.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
             this.labelViewers.Image = global::Ubiquitous.Properties.Resources.adminicon;
             this.labelViewers.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosTotal;
             this.labelViewers.Name = "labelViewers";
@@ -477,8 +501,8 @@
             // 
             // textCommand
             // 
-            this.textCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textCommand.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.textCommand.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textCommand.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));

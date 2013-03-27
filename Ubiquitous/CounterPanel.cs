@@ -37,6 +37,47 @@ namespace Ubiquitous
                 Utils.SetProperty<Label, String>(labelViewers, "Text", value);
             }
         }
+        public override Font Font
+        {
+            get
+            {
+                return base.Font;
+            }
+            set
+            {
+                base.Font = value;
+                labelViewers.Font = value;
+                labelViewers.FlatStyle = FlatStyle.System;
+                labelViewers.AutoSize = false;
+                labelViewers.Margin = new Padding(0, 0, 0, 0);
+                labelViewers.Padding = new Padding(0, 0, 0, 0);
+
+               
+            }
+        }
+        public override Color BackColor
+        {
+
+            get { return base.BackColor; }
+            set
+            {
+                base.BackColor = value;
+                labelViewers.BackColor = value;
+                pictureBox1.BackColor = value;
+            }
+        }
+        public override Color ForeColor
+        {
+            get
+            {
+                 return base.ForeColor;
+            }
+            set
+            {
+                base.ForeColor = value;
+                labelViewers.ForeColor = value;                
+            }
+        }
         public String Counter
         {
             get { return labelViewers.Text; }

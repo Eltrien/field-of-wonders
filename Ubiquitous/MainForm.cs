@@ -406,7 +406,7 @@ namespace Ubiquitous
             uint.TryParse(settings.Sc2tvId, out sc2ChannelId);
             Debug.Print(String.Format("Sc2tv Channel ID: {0}",sc2ChannelId));
 
-            sc2tv = new Sc2Chat(settings.sc2LastMsgId);
+            sc2tv = new Sc2Chat(settings.sc2LastMsgId + 1);
 
             sc2tv.Logon += OnSc2TvLogin;
             sc2tv.ChannelList += OnSc2TvChannelList;

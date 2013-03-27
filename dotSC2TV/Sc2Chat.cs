@@ -44,7 +44,7 @@ namespace dotSC2TV
 
 
         private const string reHiddenFormId = @".*hidden.*form_build_id.*id=""(.*?)"".*$";
-        private const string reChannelIsLive = @"<input type=""text""[^>]*?id=""edit-field-channel-status.*?""[^>]*value=""(.*?)""";
+        private const string reChannelIsLive = @"<select[^>]*name=""field_channel_status.*?<option value=""([01])""[^>]+?selected=""selected""";
         private const string reChannelTitle = @"<input type=""text"".*?id=""edit-title""[^>]*value=""(.*?)""";
         private const string reChannelType = @"<select .*?id=""edit-field-channel-type-value"".*?<option value=""([^>]*?)"" selected=""selected"".*?</select>";
         private const string reChannelName = @"<input type=""text"".*?id=""edit-field-channel-name-0-value""[^>]*value=""(.*?)""";
@@ -540,7 +540,7 @@ namespace dotSC2TV
                     Debug.Print(String.Format("Exception in LoadStreamSettings() {0} {1}", e.Message, url));
                     return;
                 }
-                MatchCollection reChannelStatusValue = Regex.Matches(html, reChannelIsLive, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                //MatchCollection reChannelStatusValue = Regex.Matches(html, reChannelIsLive, RegexOptions.IgnoreCase | RegexOptions.Multiline);
                 ChannelTitle = GetSubString(html, reChannelTitle, 1);
                 ChannelType = GetSubString(html, reChannelType, 1);
                 ChannelName = GetSubString(html, reChannelName, 1);
@@ -566,8 +566,8 @@ namespace dotSC2TV
             var postData = new PostData();
             postData.Params.Add(new PostDataParam( "title",ChannelTitle,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "field_channel_type[value]",ChannelType,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam( "field_channel_name[0][value]",ChannelName,PostDataParamType.Field));            
-            postData.Params.Add(new PostDataParam( "field_channel_status[0][value]",_channelIsLive?"1":"0",PostDataParamType.Field));
+            postData.Params.Add(new PostDataParam( "field_channel_name[0][value]",ChannelName,PostDataParamType.Field));
+            postData.Params.Add(new PostDataParam("field_channel_status[value]", _channelIsLive ? "1" : "0", PostDataParamType.Field));
             postData.Params.Add(new PostDataParam("field_channel_id[0]", "", PostDataParamType.Field));
 //            postData.Params.Add(new PostDataParam("field_cbg_image[0][fid]", "0", PostDataParamType.Field));
 //            postData.Params.Add(new PostDataParam("field_cbg_image[0][list]", "1", PostDataParamType.Field));

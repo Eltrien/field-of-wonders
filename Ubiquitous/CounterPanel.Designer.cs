@@ -35,17 +35,19 @@
             // 
             // labelViewers
             // 
+            this.labelViewers.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.labelViewers.AutoEllipsis = true;
             this.labelViewers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.labelViewers.Cursor = System.Windows.Forms.Cursors.SizeAll;
-            this.labelViewers.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelViewers.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.labelViewers.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelViewers.ForeColor = System.Drawing.Color.White;
-            this.labelViewers.Location = new System.Drawing.Point(14, 0);
+            this.labelViewers.Location = new System.Drawing.Point(18, 0);
             this.labelViewers.Margin = new System.Windows.Forms.Padding(0);
             this.labelViewers.Name = "labelViewers";
-            this.labelViewers.Size = new System.Drawing.Size(32, 16);
-            this.labelViewers.TabIndex = 1;
+            this.labelViewers.Size = new System.Drawing.Size(24, 16);
+            this.labelViewers.TabIndex = 0;
             this.labelViewers.Text = "0";
-            this.labelViewers.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelViewers.MouseDown += new System.Windows.Forms.MouseEventHandler(this.labelViewers_MouseDown);
             this.labelViewers.MouseMove += new System.Windows.Forms.MouseEventHandler(this.labelViewers_MouseMove);
             this.labelViewers.MouseUp += new System.Windows.Forms.MouseEventHandler(this.labelViewers_MouseUp);
@@ -55,6 +57,7 @@
             this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.SizeAll;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(16, 16);
             this.pictureBox1.TabIndex = 2;
@@ -69,8 +72,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.labelViewers);
+            this.ForeColor = System.Drawing.Color.DimGray;
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "CounterPanel";
-            this.Size = new System.Drawing.Size(44, 17);
+            this.Size = new System.Drawing.Size(43, 17);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
