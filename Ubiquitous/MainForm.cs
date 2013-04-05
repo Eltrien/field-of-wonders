@@ -29,6 +29,7 @@ using dotOBS;
 using dotUtilities;
 using dotHashd;
 using System.Runtime.InteropServices;
+using System.Net;
 namespace Ubiquitous
 {
     public partial class MainForm : Form
@@ -356,6 +357,9 @@ namespace Ubiquitous
         private Form debugForm;
         private Hashd hashd;
         private uint MaxViewers = 0;
+        IPHostEntry twitchServers = new IPHostEntry();
+        IPAddress nextTwitchIP = new IPAddress(0); 
+
         private System.Threading.Timer forceCloseTimer;
         #endregion 
 
@@ -1957,10 +1961,40 @@ namespace Ubiquitous
             twitchIrc.Disconnected += OnTwitchDisconnect;
             twitchIrc.Error += new EventHandler<IrcErrorEventArgs>(twitchIrc_Error);
             twitchIrc.RawMessageReceived += new EventHandler<IrcRawMessageEventArgs>(twitchIrc_RawMessageReceived);
+
+            var twitchDnsName  = settings.TwitchUser.ToLower() + "." + twitchIRCDomain;
+
+            try
+            {
+                twitchServers = Dns.GetHostEntry(twitchDnsName);
+            }
+            catch
+            {
+                SendMessage(new Message("Twitch: error resolving twitch hostname. Using harcoded list of IPs", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                twitchServers = new IPHostEntry()
+                {
+                    AddressList = new IPAddress[] {
+                        IPAddress.Parse("199.9.253.199"),
+                        IPAddress.Parse("199.9.250.229")
+                    }
+                };
+            }
             using (var connectedEvent = new ManualResetEventSlim(false))
             {
                 twitchIrc.Connected += (sender2, e2) => connectedEvent.Set();
-                twitchIrc.Connect(settings.TwitchUser.ToLower() + "." + twitchIRCDomain, false, new IrcUserRegistrationInfo()
+                
+                var tmpNextServer = twitchServers.AddressList.SkipWhile( p => p.ToString() == nextTwitchIP.ToString()).FirstOrDefault();
+
+
+                if (tmpNextServer == null)
+                    tmpNextServer = twitchServers.AddressList.FirstOrDefault();
+
+                if( nextTwitchIP.Address != 0 )
+                    SendMessage(new Message("Twitch: cycling to the next server " +  tmpNextServer.ToString(), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+
+                nextTwitchIP = tmpNextServer;
+
+                twitchIrc.Connect(nextTwitchIP, false, new IrcUserRegistrationInfo()
                 {
                     NickName = settings.TwitchUser,
                     UserName = settings.TwitchUser,
