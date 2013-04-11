@@ -26,12 +26,12 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://raw.github.com/xedoc/Ubiquitous/master/Ubiquitous/publish/</InstallUrl>
-    <UpdateUrl>https://raw.github.com/xedoc/Ubiquitous/master/Ubiquitous/publish/</UpdateUrl>
+    <UpdateUrl>http://www.xedocproject.com/ubiquitous/</UpdateUrl>
     <ProductName>Ubiquitous Multichat</ProductName>
     <PublisherName>Ubiquitous</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>21</ApplicationRevision>
+    <ApplicationRevision>22</ApplicationRevision>
     <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
