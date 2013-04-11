@@ -353,5 +353,11 @@
     <Setting Name="globalCounterFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Arial Narrow, 9pt, style=Bold</Value>
     </Setting>
+    <Setting Name="appearanceMsgFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%t (%s%d@%c)</Value>
+    </Setting>
+    <Setting Name="appearanceGrpMessageFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%t (%s@%sg)</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

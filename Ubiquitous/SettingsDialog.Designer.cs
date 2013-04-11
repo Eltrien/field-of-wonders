@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Fonts and Colors");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Twitch.tv");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Appearance");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Steam");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Twitch.tv");
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Sc2tv.ru");
             System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Skype");
             System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Goodgame.ru");
@@ -44,16 +44,29 @@
             System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Sounds");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsDialog));
             this.settingsTree1 = new mycontrol.SettingsTree();
-            this.settingsPage2 = new mycontrol.SettingsPage();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.settingsPage14 = new mycontrol.SettingsPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.buttonCounterFont = new System.Windows.Forms.Button();
+            this.label42 = new System.Windows.Forms.Label();
+            this.label43 = new System.Windows.Forms.Label();
+            this.textCounterFont = new System.Windows.Forms.TextBox();
+            this.groupChatAppearance = new System.Windows.Forms.GroupBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.buttonChatFont = new System.Windows.Forms.Button();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.textFontName = new System.Windows.Forms.TextBox();
             this.settingsPage1 = new mycontrol.SettingsPage();
             this.label9 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.settingsPage2 = new mycontrol.SettingsPage();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.settingsPage3 = new mycontrol.SettingsPage();
             this.label11 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -102,19 +115,11 @@
             this.label39 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.settingsPage14 = new mycontrol.SettingsPage();
-            this.groupChatAppearance = new System.Windows.Forms.GroupBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.buttonChatFont = new System.Windows.Forms.Button();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
-            this.textFontName = new System.Windows.Forms.TextBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.label41 = new System.Windows.Forms.Label();
-            this.buttonCounterFont = new System.Windows.Forms.Button();
-            this.label42 = new System.Windows.Forms.Label();
-            this.label43 = new System.Windows.Forms.Label();
-            this.textCounterFont = new System.Windows.Forms.TextBox();
+            this.label44 = new System.Windows.Forms.Label();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
+            this.textBox38 = new System.Windows.Forms.TextBox();
+            this.textBox37 = new System.Windows.Forms.TextBox();
             this.buttonCounterBackColor = new System.Windows.Forms.Button();
             this.buttonCounterForeColor = new System.Windows.Forms.Button();
             this.buttonBackColor = new System.Windows.Forms.Button();
@@ -190,6 +195,8 @@
             this.textBox28 = new System.Windows.Forms.TextBox();
             this.textBox29 = new System.Windows.Forms.TextBox();
             this.checkBox46 = new System.Windows.Forms.CheckBox();
+            this.sizeBox2 = new Ubiquitous.SizeBox();
+            this.sizeBox1 = new Ubiquitous.SizeBox();
             this.checkBox39 = new System.Windows.Forms.CheckBox();
             this.checkBox42 = new System.Windows.Forms.CheckBox();
             this.checkBox38 = new System.Windows.Forms.CheckBox();
@@ -203,12 +210,13 @@
             this.textBox36 = new System.Windows.Forms.TextBox();
             this.textBox35 = new System.Windows.Forms.TextBox();
             this.checkBox41 = new System.Windows.Forms.CheckBox();
-            this.sizeBox2 = new Ubiquitous.SizeBox();
-            this.sizeBox1 = new Ubiquitous.SizeBox();
-            ((System.ComponentModel.ISupportInitialize)(this.settingsTree1.SplitContainer)).BeginInit();
+            this.label47 = new System.Windows.Forms.Label();
             this.settingsTree1.SplitContainer.Panel2.SuspendLayout();
-            this.settingsPage2.SuspendLayout();
+            this.settingsPage14.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.groupChatAppearance.SuspendLayout();
             this.settingsPage1.SuspendLayout();
+            this.settingsPage2.SuspendLayout();
             this.settingsPage3.SuspendLayout();
             this.settingsPage4.SuspendLayout();
             this.settingsPage5.SuspendLayout();
@@ -224,15 +232,12 @@
             this.groupBox3.SuspendLayout();
             this.settingsPage12.SuspendLayout();
             this.settingsPage13.SuspendLayout();
-            this.settingsPage14.SuspendLayout();
-            this.groupChatAppearance.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // settingsTree1
             // 
             treeNode1.Name = "";
-            treeNode1.Text = "Fonts and Colors";
+            treeNode1.Text = "Appearance";
             this.settingsTree1.CurrentNode = treeNode1;
             this.settingsTree1.CurrentPage = this.settingsPage14;
             this.settingsTree1.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -277,10 +282,10 @@
             this.settingsTree1.TreeView.Location = new System.Drawing.Point(0, 0);
             this.settingsTree1.TreeView.Name = "treeSettings";
             this.settingsTree1.TreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1,
             treeNode7,
             treeNode11,
             treeNode10,
-            treeNode1,
             treeNode12,
             treeNode8,
             treeNode6,
@@ -295,6 +300,210 @@
             this.settingsTree1.TreeView.Sorted = true;
             this.settingsTree1.TreeView.TabIndex = 0;
             this.settingsTree1.Load += new System.EventHandler(this.settingsTree1_Load);
+            // 
+            // settingsPage14
+            // 
+            this.settingsPage14.Controls.Add(this.label47);
+            this.settingsPage14.Controls.Add(this.label46);
+            this.settingsPage14.Controls.Add(this.label45);
+            this.settingsPage14.Controls.Add(this.textBox38);
+            this.settingsPage14.Controls.Add(this.label44);
+            this.settingsPage14.Controls.Add(this.textBox37);
+            this.settingsPage14.Controls.Add(this.groupBox5);
+            this.settingsPage14.Controls.Add(this.groupChatAppearance);
+            this.settingsPage14.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsPage14.isActive = true;
+            this.settingsPage14.Location = new System.Drawing.Point(0, 0);
+            this.settingsPage14.Name = "settingsPage14";
+            this.settingsPage14.ParentNode = treeNode1;
+            this.settingsPage14.Size = new System.Drawing.Size(315, 316);
+            this.settingsPage14.TabIndex = 13;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.buttonCounterBackColor);
+            this.groupBox5.Controls.Add(this.buttonCounterForeColor);
+            this.groupBox5.Controls.Add(this.label41);
+            this.groupBox5.Controls.Add(this.buttonCounterFont);
+            this.groupBox5.Controls.Add(this.label42);
+            this.groupBox5.Controls.Add(this.label43);
+            this.groupBox5.Controls.Add(this.textCounterFont);
+            this.groupBox5.Location = new System.Drawing.Point(13, 90);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(290, 72);
+            this.groupBox5.TabIndex = 10;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Counters";
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(101, 48);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(68, 13);
+            this.label41.TabIndex = 7;
+            this.label41.Text = "Background:";
+            // 
+            // buttonCounterFont
+            // 
+            this.buttonCounterFont.Location = new System.Drawing.Point(258, 16);
+            this.buttonCounterFont.Name = "buttonCounterFont";
+            this.buttonCounterFont.Size = new System.Drawing.Size(26, 23);
+            this.buttonCounterFont.TabIndex = 5;
+            this.buttonCounterFont.Text = "...";
+            this.buttonCounterFont.UseVisualStyleBackColor = true;
+            this.buttonCounterFont.Click += new System.EventHandler(this.buttonCounterFont_Click);
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(4, 21);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(31, 13);
+            this.label42.TabIndex = 3;
+            this.label42.Text = "Font:";
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(5, 48);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(64, 13);
+            this.label43.TabIndex = 3;
+            this.label43.Text = "Foreground:";
+            // 
+            // textCounterFont
+            // 
+            this.textCounterFont.BackColor = System.Drawing.Color.White;
+            this.textCounterFont.Location = new System.Drawing.Point(41, 18);
+            this.textCounterFont.Name = "textCounterFont";
+            this.textCounterFont.ReadOnly = true;
+            this.textCounterFont.Size = new System.Drawing.Size(211, 20);
+            this.textCounterFont.TabIndex = 4;
+            // 
+            // groupChatAppearance
+            // 
+            this.groupChatAppearance.Controls.Add(this.buttonBackColor);
+            this.groupChatAppearance.Controls.Add(this.buttonForeColor);
+            this.groupChatAppearance.Controls.Add(this.label33);
+            this.groupChatAppearance.Controls.Add(this.buttonChatFont);
+            this.groupChatAppearance.Controls.Add(this.label31);
+            this.groupChatAppearance.Controls.Add(this.label32);
+            this.groupChatAppearance.Controls.Add(this.textFontName);
+            this.groupChatAppearance.Location = new System.Drawing.Point(13, 12);
+            this.groupChatAppearance.Name = "groupChatAppearance";
+            this.groupChatAppearance.Size = new System.Drawing.Size(290, 72);
+            this.groupChatAppearance.TabIndex = 8;
+            this.groupChatAppearance.TabStop = false;
+            this.groupChatAppearance.Text = "Messages";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(101, 48);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(68, 13);
+            this.label33.TabIndex = 7;
+            this.label33.Text = "Background:";
+            // 
+            // buttonChatFont
+            // 
+            this.buttonChatFont.Location = new System.Drawing.Point(258, 16);
+            this.buttonChatFont.Name = "buttonChatFont";
+            this.buttonChatFont.Size = new System.Drawing.Size(26, 23);
+            this.buttonChatFont.TabIndex = 5;
+            this.buttonChatFont.Text = "...";
+            this.buttonChatFont.UseVisualStyleBackColor = true;
+            this.buttonChatFont.Click += new System.EventHandler(this.buttonChatFont_Click);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(4, 21);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(31, 13);
+            this.label31.TabIndex = 3;
+            this.label31.Text = "Font:";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(5, 48);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(64, 13);
+            this.label32.TabIndex = 3;
+            this.label32.Text = "Foreground:";
+            // 
+            // textFontName
+            // 
+            this.textFontName.BackColor = System.Drawing.Color.White;
+            this.textFontName.Location = new System.Drawing.Point(41, 18);
+            this.textFontName.Name = "textFontName";
+            this.textFontName.ReadOnly = true;
+            this.textFontName.Size = new System.Drawing.Size(211, 20);
+            this.textFontName.TabIndex = 4;
+            // 
+            // settingsPage1
+            // 
+            this.settingsPage1.Controls.Add(this.checkBox28);
+            this.settingsPage1.Controls.Add(this.textBox9);
+            this.settingsPage1.Controls.Add(this.label9);
+            this.settingsPage1.Controls.Add(this.label1);
+            this.settingsPage1.Controls.Add(this.label6);
+            this.settingsPage1.Controls.Add(this.label3);
+            this.settingsPage1.Controls.Add(this.checkBox9);
+            this.settingsPage1.Controls.Add(this.textBox7);
+            this.settingsPage1.Controls.Add(this.textBox1);
+            this.settingsPage1.Controls.Add(this.textBox2);
+            this.settingsPage1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsPage1.isActive = true;
+            this.settingsPage1.Location = new System.Drawing.Point(0, 0);
+            this.settingsPage1.Name = "settingsPage1";
+            treeNode2.Name = "";
+            treeNode2.Text = "Steam";
+            this.settingsPage1.ParentNode = treeNode2;
+            this.settingsPage1.Size = new System.Drawing.Size(315, 316);
+            this.settingsPage1.TabIndex = 0;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label9.Location = new System.Drawing.Point(49, 40);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(56, 13);
+            this.label9.TabIndex = 10;
+            this.label9.Text = "Chat alias:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(60, 92);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(51, 13);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "Bot login:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label6.Location = new System.Drawing.Point(49, 66);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(62, 13);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Admin nick:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(37, 118);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 13);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "Bot password:";
             // 
             // settingsPage2
             // 
@@ -362,68 +571,6 @@
             this.label4.Size = new System.Drawing.Size(36, 13);
             this.label4.TabIndex = 18;
             this.label4.Text = "Login:";
-            // 
-            // settingsPage1
-            // 
-            this.settingsPage1.Controls.Add(this.checkBox28);
-            this.settingsPage1.Controls.Add(this.textBox9);
-            this.settingsPage1.Controls.Add(this.label9);
-            this.settingsPage1.Controls.Add(this.label1);
-            this.settingsPage1.Controls.Add(this.label6);
-            this.settingsPage1.Controls.Add(this.label3);
-            this.settingsPage1.Controls.Add(this.checkBox9);
-            this.settingsPage1.Controls.Add(this.textBox7);
-            this.settingsPage1.Controls.Add(this.textBox1);
-            this.settingsPage1.Controls.Add(this.textBox2);
-            this.settingsPage1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsPage1.isActive = true;
-            this.settingsPage1.Location = new System.Drawing.Point(0, 0);
-            this.settingsPage1.Name = "settingsPage1";
-            treeNode2.Name = "";
-            treeNode2.Text = "Steam";
-            this.settingsPage1.ParentNode = treeNode2;
-            this.settingsPage1.Size = new System.Drawing.Size(315, 316);
-            this.settingsPage1.TabIndex = 0;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label9.Location = new System.Drawing.Point(49, 40);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(56, 13);
-            this.label9.TabIndex = 10;
-            this.label9.Text = "Chat alias:";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(60, 92);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 13);
-            this.label1.TabIndex = 16;
-            this.label1.Text = "Bot login:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(49, 66);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(62, 13);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Admin nick:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(37, 118);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 13);
-            this.label3.TabIndex = 17;
-            this.label3.Text = "Bot password:";
             // 
             // settingsPage3
             // 
@@ -1026,141 +1173,50 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // settingsPage14
+            // label44
             // 
-            this.settingsPage14.Controls.Add(this.groupBox5);
-            this.settingsPage14.Controls.Add(this.groupChatAppearance);
-            this.settingsPage14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsPage14.isActive = true;
-            this.settingsPage14.Location = new System.Drawing.Point(0, 0);
-            this.settingsPage14.Name = "settingsPage14";
-            this.settingsPage14.ParentNode = treeNode1;
-            this.settingsPage14.Size = new System.Drawing.Size(315, 316);
-            this.settingsPage14.TabIndex = 13;
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(13, 179);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(85, 13);
+            this.label44.TabIndex = 12;
+            this.label44.Text = "Message format:";
             // 
-            // groupChatAppearance
+            // label45
             // 
-            this.groupChatAppearance.Controls.Add(this.buttonBackColor);
-            this.groupChatAppearance.Controls.Add(this.buttonForeColor);
-            this.groupChatAppearance.Controls.Add(this.label33);
-            this.groupChatAppearance.Controls.Add(this.buttonChatFont);
-            this.groupChatAppearance.Controls.Add(this.label31);
-            this.groupChatAppearance.Controls.Add(this.label32);
-            this.groupChatAppearance.Controls.Add(this.textFontName);
-            this.groupChatAppearance.Location = new System.Drawing.Point(13, 12);
-            this.groupChatAppearance.Name = "groupChatAppearance";
-            this.groupChatAppearance.Size = new System.Drawing.Size(290, 72);
-            this.groupChatAppearance.TabIndex = 8;
-            this.groupChatAppearance.TabStop = false;
-            this.groupChatAppearance.Text = "Messages";
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(13, 218);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(116, 13);
+            this.label45.TabIndex = 14;
+            this.label45.Text = "Group message format:";
             // 
-            // label33
+            // label46
             // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(101, 48);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(68, 13);
-            this.label33.TabIndex = 7;
-            this.label33.Text = "Background:";
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(13, 257);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(289, 13);
+            this.label46.TabIndex = 15;
+            this.label46.Text = "%s - From Name, %d - To Name, %sg - From Group %t - Text";
             // 
-            // buttonChatFont
+            // textBox38
             // 
-            this.buttonChatFont.Location = new System.Drawing.Point(258, 16);
-            this.buttonChatFont.Name = "buttonChatFont";
-            this.buttonChatFont.Size = new System.Drawing.Size(26, 23);
-            this.buttonChatFont.TabIndex = 5;
-            this.buttonChatFont.Text = "...";
-            this.buttonChatFont.UseVisualStyleBackColor = true;
-            this.buttonChatFont.Click += new System.EventHandler(this.buttonChatFont_Click);
+            this.textBox38.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "appearanceGrpMessageFormat", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox38.Location = new System.Drawing.Point(16, 234);
+            this.textBox38.Name = "textBox38";
+            this.textBox38.Size = new System.Drawing.Size(287, 20);
+            this.textBox38.TabIndex = 13;
+            this.textBox38.Text = global::Ubiquitous.Properties.Settings.Default.appearanceGrpMessageFormat;
             // 
-            // label31
+            // textBox37
             // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(4, 21);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(31, 13);
-            this.label31.TabIndex = 3;
-            this.label31.Text = "Font:";
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(5, 48);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(64, 13);
-            this.label32.TabIndex = 3;
-            this.label32.Text = "Foreground:";
-            // 
-            // textFontName
-            // 
-            this.textFontName.BackColor = System.Drawing.Color.White;
-            this.textFontName.Location = new System.Drawing.Point(41, 18);
-            this.textFontName.Name = "textFontName";
-            this.textFontName.ReadOnly = true;
-            this.textFontName.Size = new System.Drawing.Size(211, 20);
-            this.textFontName.TabIndex = 4;
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.buttonCounterBackColor);
-            this.groupBox5.Controls.Add(this.buttonCounterForeColor);
-            this.groupBox5.Controls.Add(this.label41);
-            this.groupBox5.Controls.Add(this.buttonCounterFont);
-            this.groupBox5.Controls.Add(this.label42);
-            this.groupBox5.Controls.Add(this.label43);
-            this.groupBox5.Controls.Add(this.textCounterFont);
-            this.groupBox5.Location = new System.Drawing.Point(13, 90);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(290, 72);
-            this.groupBox5.TabIndex = 10;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Counters";
-            // 
-            // label41
-            // 
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(101, 48);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(68, 13);
-            this.label41.TabIndex = 7;
-            this.label41.Text = "Background:";
-            // 
-            // buttonCounterFont
-            // 
-            this.buttonCounterFont.Location = new System.Drawing.Point(258, 16);
-            this.buttonCounterFont.Name = "buttonCounterFont";
-            this.buttonCounterFont.Size = new System.Drawing.Size(26, 23);
-            this.buttonCounterFont.TabIndex = 5;
-            this.buttonCounterFont.Text = "...";
-            this.buttonCounterFont.UseVisualStyleBackColor = true;
-            this.buttonCounterFont.Click += new System.EventHandler(this.buttonCounterFont_Click);
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(4, 21);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(31, 13);
-            this.label42.TabIndex = 3;
-            this.label42.Text = "Font:";
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(5, 48);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(64, 13);
-            this.label43.TabIndex = 3;
-            this.label43.Text = "Foreground:";
-            // 
-            // textCounterFont
-            // 
-            this.textCounterFont.BackColor = System.Drawing.Color.White;
-            this.textCounterFont.Location = new System.Drawing.Point(41, 18);
-            this.textCounterFont.Name = "textCounterFont";
-            this.textCounterFont.ReadOnly = true;
-            this.textCounterFont.Size = new System.Drawing.Size(211, 20);
-            this.textCounterFont.TabIndex = 4;
+            this.textBox37.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "appearanceMsgFormat", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox37.Location = new System.Drawing.Point(16, 195);
+            this.textBox37.Name = "textBox37";
+            this.textBox37.Size = new System.Drawing.Size(287, 20);
+            this.textBox37.TabIndex = 11;
+            this.textBox37.Text = global::Ubiquitous.Properties.Settings.Default.appearanceMsgFormat;
             // 
             // buttonCounterBackColor
             // 
@@ -2055,6 +2111,24 @@
             this.checkBox46.Text = "Show total viewers counter";
             this.checkBox46.UseVisualStyleBackColor = true;
             // 
+            // sizeBox2
+            // 
+            this.sizeBox2.DataBindings.Add(new System.Windows.Forms.Binding("Dimensions", global::Ubiquitous.Properties.Settings.Default, "globalFullSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.sizeBox2.Dimensions = global::Ubiquitous.Properties.Settings.Default.globalFullSize;
+            this.sizeBox2.Location = new System.Drawing.Point(57, 37);
+            this.sizeBox2.Name = "sizeBox2";
+            this.sizeBox2.Size = new System.Drawing.Size(119, 25);
+            this.sizeBox2.TabIndex = 1;
+            // 
+            // sizeBox1
+            // 
+            this.sizeBox1.DataBindings.Add(new System.Windows.Forms.Binding("Dimensions", global::Ubiquitous.Properties.Settings.Default, "globalCompactSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.sizeBox1.Dimensions = global::Ubiquitous.Properties.Settings.Default.globalCompactSize;
+            this.sizeBox1.Location = new System.Drawing.Point(57, 10);
+            this.sizeBox1.Name = "sizeBox1";
+            this.sizeBox1.Size = new System.Drawing.Size(119, 25);
+            this.sizeBox1.TabIndex = 1;
+            // 
             // checkBox39
             // 
             this.checkBox39.AutoSize = true;
@@ -2207,23 +2281,14 @@
             this.checkBox41.Text = "Enabled";
             this.checkBox41.UseVisualStyleBackColor = true;
             // 
-            // sizeBox2
+            // label47
             // 
-            this.sizeBox2.DataBindings.Add(new System.Windows.Forms.Binding("Dimensions", global::Ubiquitous.Properties.Settings.Default, "globalFullSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.sizeBox2.Dimensions = global::Ubiquitous.Properties.Settings.Default.globalFullSize;
-            this.sizeBox2.Location = new System.Drawing.Point(57, 37);
-            this.sizeBox2.Name = "sizeBox2";
-            this.sizeBox2.Size = new System.Drawing.Size(119, 25);
-            this.sizeBox2.TabIndex = 1;
-            // 
-            // sizeBox1
-            // 
-            this.sizeBox1.DataBindings.Add(new System.Windows.Forms.Binding("Dimensions", global::Ubiquitous.Properties.Settings.Default, "globalCompactSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.sizeBox1.Dimensions = global::Ubiquitous.Properties.Settings.Default.globalCompactSize;
-            this.sizeBox1.Location = new System.Drawing.Point(57, 10);
-            this.sizeBox1.Name = "sizeBox1";
-            this.sizeBox1.Size = new System.Drawing.Size(119, 25);
-            this.sizeBox1.TabIndex = 1;
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(13, 279);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(83, 13);
+            this.label47.TabIndex = 15;
+            this.label47.Text = "%c - Chat Name";
             // 
             // SettingsDialog
             // 
@@ -2237,11 +2302,16 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsDialog_FormClosing);
             this.Shown += new System.EventHandler(this.SettingsDialog_Shown);
             this.settingsTree1.SplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.settingsTree1.SplitContainer)).EndInit();
-            this.settingsPage2.ResumeLayout(false);
-            this.settingsPage2.PerformLayout();
+            this.settingsPage14.ResumeLayout(false);
+            this.settingsPage14.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            this.groupChatAppearance.ResumeLayout(false);
+            this.groupChatAppearance.PerformLayout();
             this.settingsPage1.ResumeLayout(false);
             this.settingsPage1.PerformLayout();
+            this.settingsPage2.ResumeLayout(false);
+            this.settingsPage2.PerformLayout();
             this.settingsPage3.ResumeLayout(false);
             this.settingsPage3.PerformLayout();
             this.settingsPage4.ResumeLayout(false);
@@ -2271,11 +2341,6 @@
             this.settingsPage12.PerformLayout();
             this.settingsPage13.ResumeLayout(false);
             this.settingsPage13.PerformLayout();
-            this.settingsPage14.ResumeLayout(false);
-            this.groupChatAppearance.ResumeLayout(false);
-            this.groupChatAppearance.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2444,5 +2509,11 @@
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.TextBox textCounterFont;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.TextBox textBox38;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.TextBox textBox37;
+        private System.Windows.Forms.Label label47;
     }
 }

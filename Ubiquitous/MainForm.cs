@@ -258,6 +258,16 @@ namespace Ubiquitous
                 get { return _fromEndpoint; }
                 set { _fromEndpoint = value; }
             }
+            public String ToGroupName
+            {
+                get;
+                set;
+            }
+            public String FromGroupName
+            {
+                get;
+                set;
+            }
             public string ToName
             {
                 get { return _to; }
@@ -857,6 +867,24 @@ namespace Ubiquitous
                 message.ToEndPoint = currentChat;
             }
 
+            var text = message.Text;
+
+            if (!String.IsNullOrEmpty(message.FromName))
+                text = settings.appearanceMsgFormat;
+
+            if (!String.IsNullOrEmpty(message.FromGroupName))
+                text = settings.appearanceGrpMessageFormat;
+
+            if (!String.IsNullOrEmpty(message.FromGroupName) || !String.IsNullOrEmpty(message.FromName))
+            {
+                text = text.Replace(@"%t", message.Text);
+                text = text.Replace(@"%s", message.FromName == null ? String.Empty : message.FromName);
+                text = text.Replace(@"%d", message.ToName == null ? String.Empty : "->" + message.ToName);
+                text = text.Replace(@"%c", message.FromEndPoint.ToString());
+                text = text.Replace(@"%sg", message.FromGroupName == null ? String.Empty : message.FromGroupName);
+            }
+
+            message.Text = text;
 
             // Send message to specified chat(s)
             switch (message.ToEndPoint)
@@ -1629,7 +1657,7 @@ namespace Ubiquitous
             if (e.Message.User.ToLower() == hashd.User)
                 return;
 
-            SendMessage(new Message(String.Format("{0} ({1})", e.Message.Text, e.Message.User), EndPoint.Hashd, EndPoint.SteamAdmin));
+            SendMessage(new Message(String.Format("{0}", e.Message.Text), EndPoint.Hashd, EndPoint.SteamAdmin) { FromName = e.Message.User });
         }
 
         void hashd_OnLogin(object sender, EventArgs e)
@@ -1679,7 +1707,7 @@ namespace Ubiquitous
         }
         void cybergame_OnMessage(object sender, MessageReceivedEventArgs e)
         {
-            SendMessage(new Message( String.Format("{0} ({1})",e.Message.message,e.Message.alias), EndPoint.Cybergame, EndPoint.SteamAdmin ));
+            SendMessage(new Message( String.Format("{0}",e.Message.message), EndPoint.Cybergame, EndPoint.SteamAdmin ) {FromName = e.Message.alias});
         }
         void cybergame_Offline(object sender, EventArgs e)
         {
@@ -1720,7 +1748,7 @@ namespace Ubiquitous
         {
             if (e.Message.nick.ToLower() == settings.empireUser.ToLower())
                 return;
-            SendMessage(new Message(String.Format("{0} ({1}{2})", e.Message.text, e.Message.nick, settings.empireAlias), EndPoint.Empiretv, EndPoint.SteamAdmin));
+            SendMessage(new Message(String.Format("{0}", e.Message.text), EndPoint.Empiretv, EndPoint.SteamAdmin) {FromName = e.Message.nick});
         }
         #endregion
 
@@ -2073,11 +2101,11 @@ namespace Ubiquitous
                 e.Text.Contains("EMOTESET")) 
                 return;
 
-            SendMessage(new Message(String.Format("{1} ({0}{2})", e.Source, e.Text, "@twitch.tv"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+            SendMessage(new Message(String.Format("{0}", e.Text), EndPoint.TwitchTV, EndPoint.SteamAdmin) { FromName = e.Source.ToString() });
         }
         private void OnTwitchNoticeReceivedLocal(object sender, IrcMessageEventArgs e)
         {
-            SendMessage(new Message(String.Format("{1} ({0}{2})", e.Source, e.Text, "@twitch.tv"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+            SendMessage(new Message(String.Format("{0}", e.Text), EndPoint.TwitchTV, EndPoint.SteamAdmin) { FromName = e.Source.ToString() });
         }
         private void OnTwitchChannelJoin(object sender, IrcChannelUserEventArgs e)
         {
@@ -2091,14 +2119,11 @@ namespace Ubiquitous
         }
         private void OnTwitchMessageReceived(object sender, IrcMessageEventArgs e)
         {
-            var m = new Message(String.Format("{1} ({0}{2})", e.Source, e.Text, "@twitch.tv"), EndPoint.TwitchTV, EndPoint.SteamAdmin);
-            
-            SendMessage(m);
+            SendMessage(new Message(String.Format("{0}", e.Text), EndPoint.TwitchTV, EndPoint.SteamAdmin) { FromName = e.Source.ToString() });
         }
         private void OnTwitchNoticeReceived(object sender, IrcMessageEventArgs e)
         {
-            var m = new Message(String.Format("{1} ({0}{2})", e.Source, e.Text, "@twitch.tv"), EndPoint.TwitchTV, EndPoint.SteamAdmin);
-            SendMessage(m);
+            SendMessage(new Message(String.Format("{0}", e.Text), EndPoint.TwitchTV, EndPoint.SteamAdmin) { FromName = e.Source.ToString() });
         }
         private void OnTwitchRegister(object sender, EventArgs e)
         {
@@ -2189,11 +2214,11 @@ namespace Ubiquitous
             if( to == settings.Sc2tvUser && 
                 settings.sc2tvPersonalizedOnly )
             {
-                SendMessage(new Message(String.Format("{0} ({1}{2})", message, e.message.name, settings.sc2tvChatAlias), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                SendMessage(new Message(String.Format("{0}", message), EndPoint.Sc2Tv, EndPoint.SteamAdmin) {FromName = e.message.name });
             }
             else
             {
-                SendMessage(new Message(String.Format("{0} ({1}{2})", message, e.message.name, to == null?"":"->" + to), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                SendMessage(new Message(String.Format("{0}", message), EndPoint.Sc2Tv, EndPoint.SteamAdmin) { FromName = e.message.name, ToName = to });
             }
         }
 
@@ -2390,11 +2415,11 @@ namespace Ubiquitous
         private void OnGroupMessageReceived(object sender, ChatMessageEventArgs e)
         {
             if( !settings.skypeSkipGroupMessages )
-                SendMessage(new Message(String.Format("{2} ({1}@{0})", e.GroupName, e.From, e.Text), EndPoint.SkypeGroup, EndPoint.SteamAdmin));
+                SendMessage(new Message(String.Format("{0}", e.Text), EndPoint.SkypeGroup, EndPoint.SteamAdmin) { FromName = e.From, FromGroupName = e.GroupName });
         }
         public void OnMessageReceived(object sender, ChatMessageEventArgs e)
         {
-            SendMessage(new Message(String.Format("{0} ({1}{2})", e.Text, e.From,settings.skypeChatAlias), EndPoint.Skype, EndPoint.SteamAdmin));
+            SendMessage(new Message(String.Format("{0}", e.Text), EndPoint.Skype, EndPoint.SteamAdmin) { FromName = e.From });
         }
         public void OnIncomingCall(object sender, CallEventArgs e)
         {
@@ -2451,7 +2476,7 @@ namespace Ubiquitous
         }
         public void OnGGMessageReceived(object sender, Goodgame.GGMessageEventArgs e)
         {
-            SendMessage(new Message(String.Format("{0} ({1}{2})", e.Message.Text, e.Message.Sender.Name, settings.goodgameChatAlias), EndPoint.Goodgame, EndPoint.SteamAdmin));
+            SendMessage(new Message(String.Format("{0}", e.Message.Text), EndPoint.Goodgame, EndPoint.SteamAdmin) { FromName = e.Message.Sender.Name });
         }
         private void OnGGError(object sender, Goodgame.TextEventArgs e)
         {
@@ -2524,7 +2549,7 @@ namespace Ubiquitous
             if (settings.battlelogEnabled)
             {
                 if( e.message.fromUsername != settings.battlelogNick )
-                    SendMessage(new Message(String.Format("{0} ({1}{2})", e.message.message, e.message.fromUsername, settings.battlelogChatAlias), EndPoint.Battlelog, EndPoint.SteamAdmin));                    
+                    SendMessage(new Message(String.Format("{0}", e.message.message), EndPoint.Battlelog, EndPoint.SteamAdmin) { FromName = e.message.fromUsername });                    
             }
         }
 
@@ -2653,8 +2678,8 @@ namespace Ubiquitous
             //SendMessage(new Message(String.Format("Goha: logged in!"), EndPoint.Gohatv,EndPoint.SteamAdmin));
         }
         private void OnGohaMessageReceivedLocal(object sender, IrcMessageEventArgs e)
-        {      
-            SendMessage(new Message(String.Format("{1} ({0}{2})", e.Source, e.Text, "@goha.tv"), EndPoint.Gohatv, EndPoint.SteamAdmin));
+        {
+            SendMessage(new Message(String.Format("{0}",e.Text), EndPoint.Gohatv, EndPoint.SteamAdmin) { FromName = e.Source.ToString() });
         }
         private void OnGohaNoticeReceivedLocal(object sender, IrcMessageEventArgs e)
         {
@@ -2682,14 +2707,11 @@ namespace Ubiquitous
         }
         private void OnGohaMessageReceived(object sender, IrcMessageEventArgs e)
         {
-            var m = new Message(String.Format("{1} ({0}{2})", e.Source, e.Text, "@goha.tv"), EndPoint.Gohatv, EndPoint.SteamAdmin);
-
-            SendMessage(m);
+            SendMessage(new Message(String.Format("{0}", e.Text), EndPoint.Gohatv, EndPoint.SteamAdmin) { FromName = e.Source.ToString() });
         }
         private void OnGohaNoticeReceived(object sender, IrcMessageEventArgs e)
         {
-            var m = new Message(String.Format("{1} ({0})", e.Source, e.Text), EndPoint.Gohatv, EndPoint.SteamAdmin);
-            SendMessage(m);
+            SendMessage(new Message(String.Format("{0}", e.Text), EndPoint.Gohatv, EndPoint.SteamAdmin) { FromName = e.Source.ToString() });
         }
         private void OnGohaRegister(object sender, EventArgs e)
         {
