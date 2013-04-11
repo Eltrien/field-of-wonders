@@ -869,11 +869,11 @@ namespace Ubiquitous
 
             var text = message.Text;
 
-            if (!String.IsNullOrEmpty(message.FromName))
-                text = settings.appearanceMsgFormat;
-
             if (!String.IsNullOrEmpty(message.FromGroupName))
                 text = settings.appearanceGrpMessageFormat;
+            else if (!String.IsNullOrEmpty(message.FromName))
+                text = settings.appearanceMsgFormat;
+
 
             if (!String.IsNullOrEmpty(message.FromGroupName) || !String.IsNullOrEmpty(message.FromName))
             {
@@ -990,7 +990,6 @@ namespace Ubiquitous
                     return;
                 if (steamAdmin.status != SteamAPISession.UserStatus.Online)
                     return;
-
                 steamBot.SendMessage(steamAdmin, message.Text);
             }
         }
