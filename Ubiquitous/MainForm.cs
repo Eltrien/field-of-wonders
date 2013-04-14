@@ -35,7 +35,7 @@ namespace Ubiquitous
     public partial class MainForm : Form
     {
         #region Delegates
-        delegate void SetTransparencyCB(Color color);
+        delegate void SetTransparencyCB(Color color,bool chroma);
         delegate void SetVisibilityCB(Control control, bool state);
         delegate void SetTopMostCB(Form control, bool topmost);
         delegate void SetComboValueCB(ComboBox combo, object value);
@@ -1424,29 +1424,37 @@ namespace Ubiquitous
                 item.Checked = state;
             }
         }
-        private void SetTransparency(Color color)
+        private void SetTransparency(Color color, bool chroma = false)
         {
             if (this.InvokeRequired)
             {
                 SetTransparencyCB d = new SetTransparencyCB(SetTransparency);
-                this.Invoke(d, new object[] { color });
+                this.Invoke(d, new object[] { color,chroma });
             }
             else
             {
-                if (color == Color.Empty)
+                if (chroma)
                 {
-                    if (this.Opacity != 1)
-                    {
-                        this.AllowTransparency = false;
-                        this.Opacity = 1;
-                    }
+                    this.TransparencyKey = textMessages.BackColor;
                 }
                 else
                 {
-                    if (this.Opacity != settings.globalTransparency / 100.0f)
+                    if (color == Color.Empty)
                     {
-                        this.AllowTransparency = true;
-                        this.Opacity = settings.globalTransparency / 100.0f;
+                        if (this.Opacity != 1)
+                        {
+                            this.AllowTransparency = false;
+                            this.Opacity = 1;
+
+                        }
+                    }
+                    else
+                    {
+                        if (this.Opacity != settings.globalTransparency / 100.0f)
+                        {
+                            this.AllowTransparency = true;
+                            this.Opacity = settings.globalTransparency / 100.0f;
+                        }
                     }
                 }
             }
@@ -3013,6 +3021,11 @@ namespace Ubiquitous
         private void labelViewers_MouseUp(object sender, MouseEventArgs e)
         {
             _OffsetViewers = Point.Empty;
+        }
+
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+            SetTransparency(this.BackColor, checkBox1.Checked);
         }
 
 

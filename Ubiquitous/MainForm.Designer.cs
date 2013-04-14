@@ -43,6 +43,7 @@
             this.buttonStreamStartStop = new System.Windows.Forms.Button();
             this.contextSceneSwitch = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.asdfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBoxBorder = new System.Windows.Forms.CheckBox();
             this.buttonCommercial = new System.Windows.Forms.Button();
             this.checkBoxOnTop = new System.Windows.Forms.CheckBox();
@@ -146,44 +147,44 @@
             this.gohatvToolStripMenuItem,
             this.allToolStripMenuItem});
             this.contextMenuChat.Name = "contextMenuChat";
-            this.contextMenuChat.Size = new System.Drawing.Size(121, 114);
+            this.contextMenuChat.Size = new System.Drawing.Size(125, 114);
             this.contextMenuChat.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuChat_ItemClicked);
             // 
             // twitchToolStripMenuItem
             // 
             this.twitchToolStripMenuItem.Name = "twitchToolStripMenuItem";
-            this.twitchToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.twitchToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.twitchToolStripMenuItem.Text = "Twitch.tv";
             // 
             // sc2TvruToolStripMenuItem
             // 
             this.sc2TvruToolStripMenuItem.Name = "sc2TvruToolStripMenuItem";
-            this.sc2TvruToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.sc2TvruToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.sc2TvruToolStripMenuItem.Text = "Sc2tv.ru";
             // 
             // empiretvToolStripMenuItem
             // 
             this.empiretvToolStripMenuItem.Name = "empiretvToolStripMenuItem";
-            this.empiretvToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.empiretvToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.empiretvToolStripMenuItem.Text = "Empire.tv";
             // 
             // gohatvToolStripMenuItem
             // 
             this.gohatvToolStripMenuItem.Name = "gohatvToolStripMenuItem";
-            this.gohatvToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.gohatvToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.gohatvToolStripMenuItem.Text = "Goha.tv";
             // 
             // allToolStripMenuItem
             // 
             this.allToolStripMenuItem.Name = "allToolStripMenuItem";
-            this.allToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.allToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.allToolStripMenuItem.Text = "All";
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.panel1.Controls.Add(this.panelTools);
             this.panel1.Controls.Add(this.panelMessages);
@@ -202,7 +203,7 @@
             this.panel1.ForeColor = System.Drawing.Color.White;
             this.panel1.Location = new System.Drawing.Point(-3, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(496, 364);
+            this.panel1.Size = new System.Drawing.Size(885, 364);
             this.panel1.TabIndex = 0;
             // 
             // panelTools
@@ -210,6 +211,7 @@
             this.panelTools.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.panelTools.Controls.Add(this.pictureBoxMoveTools);
             this.panelTools.Controls.Add(this.buttonStreamStartStop);
+            this.panelTools.Controls.Add(this.checkBox1);
             this.panelTools.Controls.Add(this.checkBoxBorder);
             this.panelTools.Controls.Add(this.buttonCommercial);
             this.panelTools.Controls.Add(this.checkBoxOnTop);
@@ -219,7 +221,7 @@
             this.panelTools.Location = global::Ubiquitous.Properties.Settings.Default.globalToolsLocation;
             this.panelTools.Margin = new System.Windows.Forms.Padding(0);
             this.panelTools.Name = "panelTools";
-            this.panelTools.Size = new System.Drawing.Size(310, 19);
+            this.panelTools.Size = new System.Drawing.Size(392, 19);
             this.panelTools.TabIndex = 35;
             // 
             // pictureBoxMoveTools
@@ -245,7 +247,7 @@
             this.buttonStreamStartStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonStreamStartStop.Font = new System.Drawing.Font("Chiller", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStreamStartStop.Image = global::Ubiquitous.Properties.Resources.play;
-            this.buttonStreamStartStop.Location = new System.Drawing.Point(288, -1);
+            this.buttonStreamStartStop.Location = new System.Drawing.Point(371, 0);
             this.buttonStreamStartStop.Margin = new System.Windows.Forms.Padding(0);
             this.buttonStreamStartStop.Name = "buttonStreamStartStop";
             this.buttonStreamStartStop.Size = new System.Drawing.Size(18, 18);
@@ -258,7 +260,7 @@
             this.contextSceneSwitch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.asdfToolStripMenuItem});
             this.contextSceneSwitch.Name = "contextSceneSwitch";
-            this.contextSceneSwitch.Size = new System.Drawing.Size(124, 26);
+            this.contextSceneSwitch.Size = new System.Drawing.Size(129, 26);
             this.contextSceneSwitch.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextSceneSwitch_Closing);
             this.contextSceneSwitch.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextSceneSwitch_ItemClicked);
             // 
@@ -266,8 +268,25 @@
             // 
             this.asdfToolStripMenuItem.CheckOnClick = true;
             this.asdfToolStripMenuItem.Name = "asdfToolStripMenuItem";
-            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.asdfToolStripMenuItem.Text = "No scenes";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
+            this.checkBox1.Checked = global::Ubiquitous.Properties.Settings.Default.globalUseChroma;
+            this.checkBox1.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "globalUseChroma", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox1.ForeColor = System.Drawing.Color.White;
+            this.checkBox1.Location = new System.Drawing.Point(162, 1);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(83, 17);
+            this.checkBox1.TabIndex = 2;
+            this.checkBox1.Text = "Use chroma";
+            this.checkBox1.UseVisualStyleBackColor = false;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.checkBox1.Click += new System.EventHandler(this.checkBox1_Click);
             // 
             // checkBoxBorder
             // 
@@ -294,7 +313,7 @@
             this.buttonCommercial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCommercial.Font = new System.Drawing.Font("Chiller", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonCommercial.Image = ((System.Drawing.Image)(resources.GetObject("buttonCommercial.Image")));
-            this.buttonCommercial.Location = new System.Drawing.Point(262, -1);
+            this.buttonCommercial.Location = new System.Drawing.Point(345, 0);
             this.buttonCommercial.Margin = new System.Windows.Forms.Padding(0);
             this.buttonCommercial.Name = "buttonCommercial";
             this.buttonCommercial.Size = new System.Drawing.Size(18, 18);
@@ -322,7 +341,7 @@
             this.trackBarTransparency.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.trackBarTransparency.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Ubiquitous.Properties.Settings.Default, "globalTransparency", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.trackBarTransparency.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.trackBarTransparency.Location = new System.Drawing.Point(157, 2);
+            this.trackBarTransparency.Location = new System.Drawing.Point(240, 3);
             this.trackBarTransparency.Maximum = 100;
             this.trackBarTransparency.Minimum = 20;
             this.trackBarTransparency.Name = "trackBarTransparency";
@@ -334,9 +353,9 @@
             // 
             // panelMessages
             // 
-            this.panelMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.panelMessages.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.panelMessages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelMessages.Controls.Add(this.counterCybergame);
@@ -347,7 +366,7 @@
             this.panelMessages.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.panelMessages.Location = new System.Drawing.Point(4, 0);
             this.panelMessages.Name = "panelMessages";
-            this.panelMessages.Size = new System.Drawing.Size(382, 341);
+            this.panelMessages.Size = new System.Drawing.Size(771, 341);
             this.panelMessages.TabIndex = 36;
             // 
             // counterCybergame
@@ -363,6 +382,7 @@
             this.counterCybergame.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
             this.counterCybergame.Image = global::Ubiquitous.Properties.Resources.cybergame;
             this.counterCybergame.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosCybergame;
+            this.counterCybergame.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.counterCybergame.Name = "counterCybergame";
             this.counterCybergame.Size = new System.Drawing.Size(44, 17);
             this.counterCybergame.TabIndex = 27;
@@ -381,6 +401,7 @@
             this.counterHash.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
             this.counterHash.Image = global::Ubiquitous.Properties.Resources.hashd;
             this.counterHash.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosHashd;
+            this.counterHash.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.counterHash.Name = "counterHash";
             this.counterHash.Size = new System.Drawing.Size(44, 17);
             this.counterHash.TabIndex = 26;
@@ -399,6 +420,7 @@
             this.counterTwitch.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
             this.counterTwitch.Image = global::Ubiquitous.Properties.Resources.twitchicon;
             this.counterTwitch.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosTwitch;
+            this.counterTwitch.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.counterTwitch.Name = "counterTwitch";
             this.counterTwitch.Size = new System.Drawing.Size(44, 17);
             this.counterTwitch.TabIndex = 25;
@@ -417,6 +439,7 @@
             this.labelViewers.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
             this.labelViewers.Image = global::Ubiquitous.Properties.Resources.adminicon;
             this.labelViewers.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosTotal;
+            this.labelViewers.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.labelViewers.Name = "labelViewers";
             this.labelViewers.Size = new System.Drawing.Size(44, 17);
             this.labelViewers.TabIndex = 24;
@@ -447,7 +470,7 @@
             this.textMessages.SaveToImageFileName = global::Ubiquitous.Properties.Settings.Default.globalChatImageFilename;
             this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.textMessages.SelectionAlignment = SC2TV.RTFControl.ExRichTextBox.TextAlign.Left;
-            this.textMessages.Size = new System.Drawing.Size(380, 339);
+            this.textMessages.Size = new System.Drawing.Size(769, 339);
             this.textMessages.SlowScroll = global::Ubiquitous.Properties.Settings.Default.globalSmoothScroll;
             this.textMessages.TabIndex = 23;
             this.textMessages.Text = "";
@@ -485,7 +508,7 @@
             this.buttonFullscreen.ForeColor = System.Drawing.Color.Black;
             this.buttonFullscreen.ImageIndex = 0;
             this.buttonFullscreen.ImageList = this.imageListChatSize;
-            this.buttonFullscreen.Location = new System.Drawing.Point(471, 342);
+            this.buttonFullscreen.Location = new System.Drawing.Point(860, 342);
             this.buttonFullscreen.Name = "buttonFullscreen";
             this.buttonFullscreen.Size = new System.Drawing.Size(23, 21);
             this.buttonFullscreen.TabIndex = 9;
@@ -501,8 +524,8 @@
             // 
             // textCommand
             // 
-            this.textCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textCommand.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.textCommand.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textCommand.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -510,7 +533,7 @@
             this.textCommand.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
             this.textCommand.Location = new System.Drawing.Point(23, 343);
             this.textCommand.Name = "textCommand";
-            this.textCommand.Size = new System.Drawing.Size(447, 20);
+            this.textCommand.Size = new System.Drawing.Size(836, 20);
             this.textCommand.TabIndex = 33;
             this.textCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textCommand_KeyUp);
             // 
@@ -518,7 +541,7 @@
             // 
             this.buttonInvisible.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonInvisible.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonInvisible.Location = new System.Drawing.Point(350, 622);
+            this.buttonInvisible.Location = new System.Drawing.Point(739, 622);
             this.buttonInvisible.Name = "buttonInvisible";
             this.buttonInvisible.Size = new System.Drawing.Size(62, 23);
             this.buttonInvisible.TabIndex = 0;
@@ -533,7 +556,7 @@
             this.comboSc2Channels.DropDownWidth = 300;
             this.comboSc2Channels.ForeColor = System.Drawing.SystemColors.Window;
             this.comboSc2Channels.FormattingEnabled = true;
-            this.comboSc2Channels.Location = new System.Drawing.Point(351, 552);
+            this.comboSc2Channels.Location = new System.Drawing.Point(740, 552);
             this.comboSc2Channels.Name = "comboSc2Channels";
             this.comboSc2Channels.Size = new System.Drawing.Size(86, 21);
             this.comboSc2Channels.TabIndex = 3;
@@ -548,7 +571,7 @@
             this.comboGGChannels.DropDownWidth = 300;
             this.comboGGChannels.ForeColor = System.Drawing.SystemColors.Window;
             this.comboGGChannels.FormattingEnabled = true;
-            this.comboGGChannels.Location = new System.Drawing.Point(350, 595);
+            this.comboGGChannels.Location = new System.Drawing.Point(739, 595);
             this.comboGGChannels.Name = "comboGGChannels";
             this.comboGGChannels.Size = new System.Drawing.Size(121, 21);
             this.comboGGChannels.TabIndex = 4;
@@ -587,7 +610,7 @@
             this.groupBox1.Controls.Add(this.pictureTwitch);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(391, 28);
+            this.groupBox1.Location = new System.Drawing.Point(780, 28);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(100, 203);
             this.groupBox1.TabIndex = 21;
@@ -863,7 +886,7 @@
             this.groupBox2.Controls.Add(this.pictureStream);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(391, 231);
+            this.groupBox2.Location = new System.Drawing.Point(780, 231);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(100, 108);
             this.groupBox2.TabIndex = 22;
@@ -977,7 +1000,7 @@
             this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.buttonSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSettings.Location = new System.Drawing.Point(391, 4);
+            this.buttonSettings.Location = new System.Drawing.Point(780, 4);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(56, 23);
             this.buttonSettings.TabIndex = 1;
@@ -989,7 +1012,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(350, 579);
+            this.label7.Location = new System.Drawing.Point(739, 579);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 13);
             this.label7.TabIndex = 8;
@@ -1000,7 +1023,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(350, 536);
+            this.label6.Location = new System.Drawing.Point(739, 536);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(42, 13);
             this.label6.TabIndex = 24;
@@ -1014,7 +1037,7 @@
             this.button1.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", global::Ubiquitous.Properties.Settings.Default, "globalDebug", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.button1.Enabled = global::Ubiquitous.Properties.Settings.Default.globalDebug;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(453, 4);
+            this.button1.Location = new System.Drawing.Point(842, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(38, 23);
             this.button1.TabIndex = 2;
@@ -1040,7 +1063,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.ClientSize = new System.Drawing.Size(491, 363);
+            this.ClientSize = new System.Drawing.Size(880, 363);
             this.Controls.Add(this.panel1);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "mainFormPosition", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.DataBindings.Add(new System.Windows.Forms.Binding("StartPosition", global::Ubiquitous.Properties.Settings.Default, "mainformStartPos", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -1164,6 +1187,7 @@
         private CounterPanel counterCybergame;
         private CounterPanel counterHash;
         private CounterPanel counterTwitch;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

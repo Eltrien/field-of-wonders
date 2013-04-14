@@ -359,5 +359,8 @@
     <Setting Name="appearanceGrpMessageFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">%t (%s@%sg)</Value>
     </Setting>
+    <Setting Name="globalUseChroma" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
