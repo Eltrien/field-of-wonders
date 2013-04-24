@@ -4,18 +4,36 @@
 	<head>
         <link href="css/chat.css" rel="stylesheet" type="text/css" />
 		<title>Ubiquitous chat</title>
+        <script type ="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script type ="text/javascript">
+            try {
+                $(document).ready(function () {
+                    var interval = 1000; 
+                    var refresh = function () {
+                        $.ajax({
+                            url: "/chat.htm",
+                            cache: false,
+                            success: function (html) {
+                                $('#chat').html(html);
+                                setTimeout(function () {
+                                    refresh();
+                                }, interval);
+                            }
+                        });
+                    };
+                    refresh();
+                });
+                $("#chat").animate({ "scrollTop": $("#chat").scrollTop() + 100 });
+            }
+            catch (e) {
+            }
+         
+
+        </script>
 	</head>
 	<body>
 	<div id="chat">
-        <!--MESSAGELOOP_BEGIN-->
-        <img src="images/<!--ICON-->" alt=""/>
-        <p><!--TEXT-->
-        <!--FROM-->
-        <!--FROM_TO_SEPARATOR-->
-        <!--TO-->
-        <!--CHAT_ID-->
-        <br />
-        <!--MESSAGELOOP_END-->
+
     </div>
 	</body>
 </html>

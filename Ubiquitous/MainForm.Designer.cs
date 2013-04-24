@@ -1071,6 +1071,7 @@
             this.ForeColor = System.Drawing.Color.White;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Location = global::Ubiquitous.Properties.Settings.Default.mainFormPosition;
+            this.MinimumSize = new System.Drawing.Size(10, 10);
             this.Name = "MainForm";
             this.StartPosition = global::Ubiquitous.Properties.Settings.Default.mainformStartPos;
             this.Text = "Ubiquitous - MultiChat";

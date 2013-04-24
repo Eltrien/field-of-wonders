@@ -51,9 +51,9 @@ namespace dotWebServer
         {
             if (Messages.Count >= lineNumber)
             {
-                Messages.RemoveAt(0);
+                Messages.RemoveAt(Messages.Count - 1);
             }
-            Messages.Add( 
+            Messages.Insert(0, 
                 new ChatLine { 
                     image = image,
                     text = text,
@@ -85,12 +85,12 @@ namespace dotWebServer
         {
             var msgLoopRe = "^(.*)<!--.*MESSAGELOOP_BEGIN[^>]*-->(.*)<!--.*MESSAGELOOP_END[^>]*-->(.*)$";
 
-            var requestUrl = p.http_url;
-            
+            var requestUrl = new string( p.http_url.TakeWhile(c => c != '?').ToArray() );
+
             if (requestUrl.Equals("/"))
                 requestUrl = "index.htm";
 
-            var contentType = ContentTypes.Where(kvp => requestUrl.ToLower().EndsWith(kvp.Key)).Select( item => item.Value ).FirstOrDefault();
+            var contentType = ContentTypes.Where(kvp => requestUrl.ToLower().Contains(kvp.Key)).Select( item => item.Value ).FirstOrDefault();
 
             if (!String.IsNullOrEmpty(contentType))
             {
@@ -111,6 +111,13 @@ namespace dotWebServer
                             loopcontent += line.ParseTemplate(loopblock);
                         }
                         p.outputStream.Write(header + loopcontent + footer);
+                    }
+                    else
+                    {
+                        using (Stream fs = File.Open(path, FileMode.Open))
+                        {
+                            fs.CopyTo(p.outputStream.BaseStream);
+                        }                        
                     }
                 }
                 else

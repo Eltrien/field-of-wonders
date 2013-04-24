@@ -29,10 +29,11 @@
     <UpdateUrl>http://www.xedocproject.com/ubiquitous/</UpdateUrl>
     <ProductName>Ubiquitous Multichat</ProductName>
     <PublisherName>Ubiquitous</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>26</ApplicationRevision>
-    <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -351,10 +352,21 @@
     <Content Include="web\css\chat.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="web\images\empire.bmp" />
-    <None Include="web\images\goha.bmp" />
-    <None Include="web\images\cybergame.gif" />
-    <None Include="web\images\hashd.png" />
+    <Content Include="web\images\empire.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\goha.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\cybergame.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\hashd.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\chat.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="web\index.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
