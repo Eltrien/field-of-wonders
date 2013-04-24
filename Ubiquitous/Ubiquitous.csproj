@@ -242,6 +242,10 @@
       <Project>{ED6C0B9C-608A-4325-8F98-5E23C7DC52CD}</Project>
       <Name>dotUtilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\dotWebServer\dotWebServer.csproj">
+      <Project>{F4DE78C8-AE10-4831-A082-38A32B43E14F}</Project>
+      <Name>dotWebServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotXSplit\dotXSplit\dotXSplit.csproj">
       <Project>{75B0D174-732F-4A64-82FB-21016CD8DAA7}</Project>
       <Name>dotXSplit</Name>
@@ -344,6 +348,37 @@
   <ItemGroup>
     <Content Include="offline.mp3" />
     <Content Include="online.mp3" />
+    <Content Include="web\css\chat.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="web\images\empire.bmp" />
+    <None Include="web\images\goha.bmp" />
+    <None Include="web\images\cybergame.gif" />
+    <None Include="web\images\hashd.png" />
+    <Content Include="web\index.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\twitchicon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\steamicon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\skypeicon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\sc2icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\goodgameicon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\bf3icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\adminicon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\hashd.png" />
     <None Include="Resources\dots.gif" />
     <None Include="Resources\cybergame.gif" />
@@ -356,6 +391,7 @@
     <None Include="Resources\cybergame.bmp" />
     <None Include="Resources\coins.bmp" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -30,6 +30,8 @@ using dotUtilities;
 using dotHashd;
 using System.Runtime.InteropServices;
 using System.Net;
+using dotWebServer;
+
 namespace Ubiquitous
 {
     public partial class MainForm : Form
@@ -278,6 +280,46 @@ namespace Ubiquitous
                 get { return _toEndpoint; }
                 set { _toEndpoint = value; }
             }
+            public string ImagePath
+            {
+                get
+                {
+                    switch (_fromEndpoint)
+                    {
+                        case EndPoint.Sc2Tv:
+                            return "sc2icon.png";
+                        case EndPoint.TwitchTV:
+                            return "twitchicon.png";
+                        case EndPoint.Skype:
+                            return "skypeicon.png";
+                        case EndPoint.SkypeGroup:
+                            return "skypeicon.png";
+                        case EndPoint.Steam:
+                            return "steamicon.png";
+                        case EndPoint.SteamAdmin:
+                            return "steamicon.png";
+                        case EndPoint.Console:
+                            return "adminicon.png";
+                        case EndPoint.Bot:
+                            return "adminicon.png";
+                        case EndPoint.Goodgame:
+                            return "goodgameicon.png";
+                        case EndPoint.Battlelog:
+                            return "bf3icon.png";
+                        case EndPoint.Empiretv:
+                            return "empire.bmp";
+                        case EndPoint.Gohatv:
+                            return "goha.bmp";
+                        case EndPoint.Cybergame:
+                            return "cybergame.gif";
+                        case EndPoint.Hashd:
+                            return "hashd.png";
+                        default:
+                            return "adminicon.png";
+
+                    }
+                }
+            }
             public ChatIcon Icon
             {
                 get
@@ -368,7 +410,9 @@ namespace Ubiquitous
         private Hashd hashd;
         private uint MaxViewers = 0;
         IPHostEntry twitchServers = new IPHostEntry();
-        IPAddress nextTwitchIP = new IPAddress(0); 
+        IPAddress nextTwitchIP = new IPAddress(0);
+
+        private WebChat webChat;
 
         private System.Threading.Timer forceCloseTimer;
         #endregion 
@@ -477,6 +521,12 @@ namespace Ubiquitous
 
             forceCloseTimer = new System.Threading.Timer(new TimerCallback(ForceClose), null, Timeout.Infinite, Timeout.Infinite);
 
+            if (settings.webEnable)
+            {
+                int port;
+                int.TryParse(settings.webPort, out port);
+                webChat = new WebChat(port);
+            }
 
             //@Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
             #region Set tooltips
@@ -930,6 +980,18 @@ namespace Ubiquitous
             }
             if (!isFlood(message))
             {
+                if (settings.webEnable)
+                {
+                    webChat.AddMessage(
+                        message.ImagePath,
+                        message.Text,
+                        message.FromName,
+                        message.ToName,
+                        DateTime.Now.GetDateTimeFormats('T')[0],
+                        String.IsNullOrEmpty(message.ToName) ? "" : "->",
+                        message.FromEndPoint.ToString()
+                        );
+                }
                 log.WriteLine(message.Text, message.Icon);
                 if (message.Icon == ChatIcon.Sc2Tv)
                 {

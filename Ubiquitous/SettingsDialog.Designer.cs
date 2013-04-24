@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Appearance");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Web server");
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Appearance");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Steam");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Twitch.tv");
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Sc2tv.ru");
@@ -45,6 +46,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsDialog));
             this.settingsTree1 = new mycontrol.SettingsTree();
             this.settingsPage14 = new mycontrol.SettingsPage();
+            this.label47 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label44 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.label41 = new System.Windows.Forms.Label();
             this.buttonCounterFont = new System.Windows.Forms.Button();
@@ -115,15 +120,9 @@
             this.label39 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.label44 = new System.Windows.Forms.Label();
-            this.label45 = new System.Windows.Forms.Label();
-            this.label46 = new System.Windows.Forms.Label();
-            this.textBox38 = new System.Windows.Forms.TextBox();
-            this.textBox37 = new System.Windows.Forms.TextBox();
-            this.buttonCounterBackColor = new System.Windows.Forms.Button();
-            this.buttonCounterForeColor = new System.Windows.Forms.Button();
-            this.buttonBackColor = new System.Windows.Forms.Button();
-            this.buttonForeColor = new System.Windows.Forms.Button();
+            this.settingsPage15 = new mycontrol.SettingsPage();
+            this.label48 = new System.Windows.Forms.Label();
+            this.textBox39 = new System.Windows.Forms.TextBox();
             this.checkBox28 = new System.Windows.Forms.CheckBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.checkBox9 = new System.Windows.Forms.CheckBox();
@@ -210,7 +209,14 @@
             this.textBox36 = new System.Windows.Forms.TextBox();
             this.textBox35 = new System.Windows.Forms.TextBox();
             this.checkBox41 = new System.Windows.Forms.CheckBox();
-            this.label47 = new System.Windows.Forms.Label();
+            this.textBox38 = new System.Windows.Forms.TextBox();
+            this.textBox37 = new System.Windows.Forms.TextBox();
+            this.buttonCounterBackColor = new System.Windows.Forms.Button();
+            this.buttonCounterForeColor = new System.Windows.Forms.Button();
+            this.buttonBackColor = new System.Windows.Forms.Button();
+            this.buttonForeColor = new System.Windows.Forms.Button();
+            this.checkBox47 = new System.Windows.Forms.CheckBox();
+            ((System.ComponentModel.ISupportInitialize)(this.settingsTree1.SplitContainer)).BeginInit();
             this.settingsTree1.SplitContainer.Panel2.SuspendLayout();
             this.settingsPage14.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -232,14 +238,15 @@
             this.groupBox3.SuspendLayout();
             this.settingsPage12.SuspendLayout();
             this.settingsPage13.SuspendLayout();
+            this.settingsPage15.SuspendLayout();
             this.SuspendLayout();
             // 
             // settingsTree1
             // 
             treeNode1.Name = "";
-            treeNode1.Text = "Appearance";
+            treeNode1.Text = "Web server";
             this.settingsTree1.CurrentNode = treeNode1;
-            this.settingsTree1.CurrentPage = this.settingsPage14;
+            this.settingsTree1.CurrentPage = this.settingsPage15;
             this.settingsTree1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.settingsTree1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.settingsTree1.LabelEdit = false;
@@ -270,6 +277,7 @@
             this.settingsTree1.SplitContainer.Panel2.Controls.Add(this.settingsPage12);
             this.settingsTree1.SplitContainer.Panel2.Controls.Add(this.settingsPage13);
             this.settingsTree1.SplitContainer.Panel2.Controls.Add(this.settingsPage14);
+            this.settingsTree1.SplitContainer.Panel2.Controls.Add(this.settingsPage15);
             this.settingsTree1.SplitContainer.Size = new System.Drawing.Size(483, 316);
             this.settingsTree1.SplitContainer.SplitterDistance = 164;
             this.settingsTree1.SplitContainer.TabIndex = 5;
@@ -282,7 +290,7 @@
             this.settingsTree1.TreeView.Location = new System.Drawing.Point(0, 0);
             this.settingsTree1.TreeView.Name = "treeSettings";
             this.settingsTree1.TreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
+            treeNode15,
             treeNode7,
             treeNode11,
             treeNode10,
@@ -295,7 +303,8 @@
             treeNode14,
             treeNode2,
             treeNode9,
-            treeNode3});
+            treeNode3,
+            treeNode1});
             this.settingsTree1.TreeView.Size = new System.Drawing.Size(164, 316);
             this.settingsTree1.TreeView.Sorted = true;
             this.settingsTree1.TreeView.TabIndex = 0;
@@ -306,18 +315,56 @@
             this.settingsPage14.Controls.Add(this.label47);
             this.settingsPage14.Controls.Add(this.label46);
             this.settingsPage14.Controls.Add(this.label45);
-            this.settingsPage14.Controls.Add(this.textBox38);
             this.settingsPage14.Controls.Add(this.label44);
-            this.settingsPage14.Controls.Add(this.textBox37);
             this.settingsPage14.Controls.Add(this.groupBox5);
             this.settingsPage14.Controls.Add(this.groupChatAppearance);
+            this.settingsPage14.Controls.Add(this.textBox38);
+            this.settingsPage14.Controls.Add(this.textBox37);
             this.settingsPage14.Dock = System.Windows.Forms.DockStyle.Fill;
             this.settingsPage14.isActive = true;
             this.settingsPage14.Location = new System.Drawing.Point(0, 0);
             this.settingsPage14.Name = "settingsPage14";
-            this.settingsPage14.ParentNode = treeNode1;
+            treeNode15.Name = "";
+            treeNode15.Text = "Appearance";
+            this.settingsPage14.ParentNode = treeNode15;
             this.settingsPage14.Size = new System.Drawing.Size(315, 316);
             this.settingsPage14.TabIndex = 13;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(13, 279);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(83, 13);
+            this.label47.TabIndex = 15;
+            this.label47.Text = "%c - Chat Name";
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(13, 257);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(289, 13);
+            this.label46.TabIndex = 15;
+            this.label46.Text = "%s - From Name, %d - To Name, %sg - From Group %t - Text";
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(13, 218);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(116, 13);
+            this.label45.TabIndex = 14;
+            this.label45.Text = "Group message format:";
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(13, 179);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(85, 13);
+            this.label44.TabIndex = 12;
+            this.label44.Text = "Message format:";
             // 
             // groupBox5
             // 
@@ -1173,98 +1220,36 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // label44
+            // settingsPage15
             // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(13, 179);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(85, 13);
-            this.label44.TabIndex = 12;
-            this.label44.Text = "Message format:";
+            this.settingsPage15.Controls.Add(this.checkBox47);
+            this.settingsPage15.Controls.Add(this.textBox39);
+            this.settingsPage15.Controls.Add(this.label48);
+            this.settingsPage15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsPage15.isActive = true;
+            this.settingsPage15.Location = new System.Drawing.Point(0, 0);
+            this.settingsPage15.Name = "settingsPage15";
+            this.settingsPage15.ParentNode = treeNode1;
+            this.settingsPage15.Size = new System.Drawing.Size(315, 316);
+            this.settingsPage15.TabIndex = 14;
             // 
-            // label45
+            // label48
             // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(13, 218);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(116, 13);
-            this.label45.TabIndex = 14;
-            this.label45.Text = "Group message format:";
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(14, 45);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(29, 13);
+            this.label48.TabIndex = 0;
+            this.label48.Text = "Port:";
             // 
-            // label46
+            // textBox39
             // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(13, 257);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(289, 13);
-            this.label46.TabIndex = 15;
-            this.label46.Text = "%s - From Name, %d - To Name, %sg - From Group %t - Text";
-            // 
-            // textBox38
-            // 
-            this.textBox38.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "appearanceGrpMessageFormat", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox38.Location = new System.Drawing.Point(16, 234);
-            this.textBox38.Name = "textBox38";
-            this.textBox38.Size = new System.Drawing.Size(287, 20);
-            this.textBox38.TabIndex = 13;
-            this.textBox38.Text = global::Ubiquitous.Properties.Settings.Default.appearanceGrpMessageFormat;
-            // 
-            // textBox37
-            // 
-            this.textBox37.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "appearanceMsgFormat", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox37.Location = new System.Drawing.Point(16, 195);
-            this.textBox37.Name = "textBox37";
-            this.textBox37.Size = new System.Drawing.Size(287, 20);
-            this.textBox37.TabIndex = 11;
-            this.textBox37.Text = global::Ubiquitous.Properties.Settings.Default.appearanceMsgFormat;
-            // 
-            // buttonCounterBackColor
-            // 
-            this.buttonCounterBackColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
-            this.buttonCounterBackColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.buttonCounterBackColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonCounterBackColor.Location = new System.Drawing.Point(171, 44);
-            this.buttonCounterBackColor.Name = "buttonCounterBackColor";
-            this.buttonCounterBackColor.Size = new System.Drawing.Size(20, 20);
-            this.buttonCounterBackColor.TabIndex = 9;
-            this.buttonCounterBackColor.UseVisualStyleBackColor = false;
-            this.buttonCounterBackColor.Click += new System.EventHandler(this.buttonCounterBackColor_Click);
-            // 
-            // buttonCounterForeColor
-            // 
-            this.buttonCounterForeColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
-            this.buttonCounterForeColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.buttonCounterForeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonCounterForeColor.Location = new System.Drawing.Point(75, 44);
-            this.buttonCounterForeColor.Name = "buttonCounterForeColor";
-            this.buttonCounterForeColor.Size = new System.Drawing.Size(20, 20);
-            this.buttonCounterForeColor.TabIndex = 8;
-            this.buttonCounterForeColor.UseVisualStyleBackColor = false;
-            this.buttonCounterForeColor.Click += new System.EventHandler(this.buttonCounterForeColor_Click);
-            // 
-            // buttonBackColor
-            // 
-            this.buttonBackColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
-            this.buttonBackColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.buttonBackColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonBackColor.Location = new System.Drawing.Point(171, 44);
-            this.buttonBackColor.Name = "buttonBackColor";
-            this.buttonBackColor.Size = new System.Drawing.Size(20, 20);
-            this.buttonBackColor.TabIndex = 9;
-            this.buttonBackColor.UseVisualStyleBackColor = false;
-            this.buttonBackColor.Click += new System.EventHandler(this.buttonBackColor_Click);
-            // 
-            // buttonForeColor
-            // 
-            this.buttonForeColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
-            this.buttonForeColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.buttonForeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonForeColor.Location = new System.Drawing.Point(75, 44);
-            this.buttonForeColor.Name = "buttonForeColor";
-            this.buttonForeColor.Size = new System.Drawing.Size(20, 20);
-            this.buttonForeColor.TabIndex = 8;
-            this.buttonForeColor.UseVisualStyleBackColor = false;
-            this.buttonForeColor.Click += new System.EventHandler(this.buttonForeColor_Click);
+            this.textBox39.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "webPort", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox39.Location = new System.Drawing.Point(49, 42);
+            this.textBox39.Name = "textBox39";
+            this.textBox39.Size = new System.Drawing.Size(48, 20);
+            this.textBox39.TabIndex = 1;
+            this.textBox39.Text = global::Ubiquitous.Properties.Settings.Default.webPort;
             // 
             // checkBox28
             // 
@@ -2281,14 +2266,83 @@
             this.checkBox41.Text = "Enabled";
             this.checkBox41.UseVisualStyleBackColor = true;
             // 
-            // label47
+            // textBox38
             // 
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(13, 279);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(83, 13);
-            this.label47.TabIndex = 15;
-            this.label47.Text = "%c - Chat Name";
+            this.textBox38.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "appearanceGrpMessageFormat", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox38.Location = new System.Drawing.Point(16, 234);
+            this.textBox38.Name = "textBox38";
+            this.textBox38.Size = new System.Drawing.Size(287, 20);
+            this.textBox38.TabIndex = 13;
+            this.textBox38.Text = global::Ubiquitous.Properties.Settings.Default.appearanceGrpMessageFormat;
+            // 
+            // textBox37
+            // 
+            this.textBox37.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Ubiquitous.Properties.Settings.Default, "appearanceMsgFormat", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox37.Location = new System.Drawing.Point(16, 195);
+            this.textBox37.Name = "textBox37";
+            this.textBox37.Size = new System.Drawing.Size(287, 20);
+            this.textBox37.TabIndex = 11;
+            this.textBox37.Text = global::Ubiquitous.Properties.Settings.Default.appearanceMsgFormat;
+            // 
+            // buttonCounterBackColor
+            // 
+            this.buttonCounterBackColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
+            this.buttonCounterBackColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.buttonCounterBackColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonCounterBackColor.Location = new System.Drawing.Point(171, 44);
+            this.buttonCounterBackColor.Name = "buttonCounterBackColor";
+            this.buttonCounterBackColor.Size = new System.Drawing.Size(20, 20);
+            this.buttonCounterBackColor.TabIndex = 9;
+            this.buttonCounterBackColor.UseVisualStyleBackColor = false;
+            this.buttonCounterBackColor.Click += new System.EventHandler(this.buttonCounterBackColor_Click);
+            // 
+            // buttonCounterForeColor
+            // 
+            this.buttonCounterForeColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
+            this.buttonCounterForeColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.buttonCounterForeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonCounterForeColor.Location = new System.Drawing.Point(75, 44);
+            this.buttonCounterForeColor.Name = "buttonCounterForeColor";
+            this.buttonCounterForeColor.Size = new System.Drawing.Size(20, 20);
+            this.buttonCounterForeColor.TabIndex = 8;
+            this.buttonCounterForeColor.UseVisualStyleBackColor = false;
+            this.buttonCounterForeColor.Click += new System.EventHandler(this.buttonCounterForeColor_Click);
+            // 
+            // buttonBackColor
+            // 
+            this.buttonBackColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
+            this.buttonBackColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.buttonBackColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonBackColor.Location = new System.Drawing.Point(171, 44);
+            this.buttonBackColor.Name = "buttonBackColor";
+            this.buttonBackColor.Size = new System.Drawing.Size(20, 20);
+            this.buttonBackColor.TabIndex = 9;
+            this.buttonBackColor.UseVisualStyleBackColor = false;
+            this.buttonBackColor.Click += new System.EventHandler(this.buttonBackColor_Click);
+            // 
+            // buttonForeColor
+            // 
+            this.buttonForeColor.BackColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
+            this.buttonForeColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.buttonForeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonForeColor.Location = new System.Drawing.Point(75, 44);
+            this.buttonForeColor.Name = "buttonForeColor";
+            this.buttonForeColor.Size = new System.Drawing.Size(20, 20);
+            this.buttonForeColor.TabIndex = 8;
+            this.buttonForeColor.UseVisualStyleBackColor = false;
+            this.buttonForeColor.Click += new System.EventHandler(this.buttonForeColor_Click);
+            // 
+            // checkBox47
+            // 
+            this.checkBox47.AutoSize = true;
+            this.checkBox47.Checked = global::Ubiquitous.Properties.Settings.Default.webEnable;
+            this.checkBox47.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Ubiquitous.Properties.Settings.Default, "webEnable", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox47.Location = new System.Drawing.Point(17, 12);
+            this.checkBox47.Name = "checkBox47";
+            this.checkBox47.Size = new System.Drawing.Size(231, 17);
+            this.checkBox47.TabIndex = 2;
+            this.checkBox47.Text = "Enable web server (to read chat in browser)";
+            this.checkBox47.UseVisualStyleBackColor = true;
             // 
             // SettingsDialog
             // 
@@ -2302,6 +2356,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsDialog_FormClosing);
             this.Shown += new System.EventHandler(this.SettingsDialog_Shown);
             this.settingsTree1.SplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.settingsTree1.SplitContainer)).EndInit();
             this.settingsPage14.ResumeLayout(false);
             this.settingsPage14.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -2341,6 +2396,8 @@
             this.settingsPage12.PerformLayout();
             this.settingsPage13.ResumeLayout(false);
             this.settingsPage13.PerformLayout();
+            this.settingsPage15.ResumeLayout(false);
+            this.settingsPage15.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2515,5 +2572,9 @@
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.TextBox textBox37;
         private System.Windows.Forms.Label label47;
+        private mycontrol.SettingsPage settingsPage15;
+        private System.Windows.Forms.TextBox textBox39;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.CheckBox checkBox47;
     }
 }
