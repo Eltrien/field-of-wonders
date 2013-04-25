@@ -5,15 +5,19 @@
 	font-weight:bold;
 	background-color:#000000;
 	color:#00AA00;
+	
 }
 #chat {
-	height: auto;
-	overflow : scroll;
+	margin: 0;
+	overflow : auto;
 }
-
-
+p
+{
+    white-space: normal;
+}
 li
-{    
+{       
+    white-space: normal;
     list-style-type:none;
 }
 li span {display:block;}

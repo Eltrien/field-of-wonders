@@ -213,7 +213,7 @@ namespace dotSteam
             if (username == "")
                 return LoginStatus.LoginFailed;
 
-            String response = steamRequest( "ISteamOAuth2/GetTokenWithCredentials/v0001",
+            String response = steamRequest("   /GetTokenWithCredentials/v0001",
                 "client_id=DE45CD61&grant_type=password&username=" + Uri.EscapeDataString( username ) + "&password=" + Uri.EscapeDataString( password ) + "&x_emailauthcode=" + emailauthcode + "&scope=read_profile%20write_profile%20read_client%20write_client" );
 
             if ( response != null )
