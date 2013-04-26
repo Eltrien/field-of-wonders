@@ -1,0 +1,5 @@
+﻿<ul>
+<!--MESSAGELOOP_BEGIN-->
+<li class="<!--CHAT_ID-->"><p><!--TEXT--></p></li>
+<!--MESSAGELOOP_END-->
+</ul>

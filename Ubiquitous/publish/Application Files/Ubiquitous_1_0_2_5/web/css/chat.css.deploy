@@ -1,0 +1,66 @@
+﻿html,body {
+	margin : 0px;
+	font-family: Geneva, Arial, Helvetica, sans-serif;	
+	font-size:16px;
+	font-weight:bold;
+	background-color:#000000;
+	color:#00AA00;
+	
+}
+#chat {
+	margin: 0;
+	overflow : auto;
+}
+p
+{
+    white-space: normal;
+}
+li
+{       
+    white-space: normal;
+    list-style-type:none;
+}
+li span {display:block;}
+
+li.Sc2Tv {
+    list-style-image: url('/images/sc2icon.png');
+}
+li.TwitchTV {
+    list-style-image: url('/images/twitchicon.png');
+}
+li.Skype {
+    list-style-image: url('/images/skypeicon.png');
+}
+li.SkypeGroup {
+    list-style-image: url('/images/skypeicon.png');
+}
+li.Steam {
+    list-style-image: url('/images/steamicon.png');
+}
+li.SteamAdmin {
+    list-style-image: url('/images/steamicon.png');
+}
+li.Console {
+    list-style-image: url('/images/adminicon.png');
+}
+li.Bot {
+    list-style-image: url('/images/adminicon.png');
+}
+li.Goodgame {
+    list-style-image: url('/images/goodgameicon.png');
+}
+li.Battlelog {
+    list-style-image: url('/images/bf3icon.png');
+}
+li.Empiretv {
+    list-style-image: url('/images/empire.bmp');
+}
+li.Gohatv {
+    list-style-image: url('/images/goha.bmp');
+}
+li.Cybergame {
+    list-style-image: url('/images/cybergame.gif');
+}
+li.Hashd {
+    list-style-image: url('/images/hashd.png');
+}

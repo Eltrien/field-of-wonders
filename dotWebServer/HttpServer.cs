@@ -212,15 +212,22 @@ namespace dotWebServer
 
         public void listen()
         {
-            listener = new TcpListener(port);
-            listener.Start();
-            while (is_active)
+            try
             {
-                TcpClient s = listener.AcceptTcpClient();
-                HttpProcessor processor = new HttpProcessor(s, this);
-                Thread thread = new Thread(new ThreadStart(processor.process));
-                thread.Start();
-                Thread.Sleep(1);
+                listener = new TcpListener(port);
+                listener.Start();
+                while (is_active)
+                {
+                    TcpClient s = listener.AcceptTcpClient();
+                    HttpProcessor processor = new HttpProcessor(s, this);
+                    Thread thread = new Thread(new ThreadStart(processor.process));
+                    thread.Start();
+                    Thread.Sleep(1);
+                }
+            }
+            catch( SocketException e )
+            {
+                Debug.Print("Web server error: " + e.Message);
             }
         }
 

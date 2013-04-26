@@ -525,7 +525,14 @@ namespace Ubiquitous
             {
                 int port;
                 int.TryParse(settings.webPort, out port);
-                webChat = new WebChat(port);
+                try
+                {
+                    webChat = new WebChat(port);
+                }
+                catch (Exception e)
+                {
+                    SendMessage(new Message("Web server error: " + e.Message, EndPoint.SteamAdmin));
+                }
             }
 
             //@Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
@@ -1075,7 +1082,7 @@ namespace Ubiquitous
             if( twitchIrc.IsRegistered &&
                 (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
             {
-                var channelName = "#" + settings.TwitchUser;
+                var channelName = "#" + settings.TwitchUser.ToLower();
                 var twitchChannel = twitchIrc.Channels.SingleOrDefault(c => c.Name == channelName);
                 twitchIrc.LocalUser.SendMessage(twitchChannel, message.Text);
             }
@@ -2362,8 +2369,8 @@ namespace Ubiquitous
 
             if (String.IsNullOrEmpty(token))
                 token = steamBot.RSALogin(user, password);
-            else 
-                status = steamBot.Authenticate(token);
+
+            status = steamBot.Authenticate(token);
 
             if (status == SteamAPISession.LoginStatus.LoginSuccessful)
             {

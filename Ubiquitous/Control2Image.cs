@@ -38,36 +38,43 @@ namespace Ubiquitous
 
         public static void RtbToBitmap(SC2TV.RTFControl.ExRichTextBox rtb, string fileName) 
         {
+
             if (rtb.ClientRectangle.Width <= 0 || rtb.ClientRectangle.Height <= 0)
                 return;
 
-            Bitmap bmp = new Bitmap(rtb.ClientRectangle.Width,rtb.ClientRectangle.Height+20);
-            using (Graphics gr = Graphics.FromImage(bmp)) 
+            try
             {
-                IntPtr hDC = gr.GetHdc();
-                FORMATRANGE fmtRange;
-                RECT rect;
-                int fromAPI;
+                Bitmap bmp = new Bitmap(rtb.ClientRectangle.Width, rtb.ClientRectangle.Height + 20);
+                using (Graphics gr = Graphics.FromImage(bmp))
+                {
+                    IntPtr hDC = gr.GetHdc();
+                    FORMATRANGE fmtRange;
+                    RECT rect;
+                    int fromAPI;
 
-                rect.Top = 0; rect.Left = 0;
-                rect.Bottom = (int)(bmp.Height + (bmp.Height * (bmp.HorizontalResolution/100)) * inch);
-                rect.Right = (int)(bmp.Width + (bmp.Width * (bmp.VerticalResolution / 100)) * inch);
-                fmtRange.chrg.cpMin = rtb.GetCharIndexFromPosition(new Point(0,0));
-                fmtRange.chrg.cpMax = rtb.Text.Length;
-                fmtRange.hdc = hDC;
-                fmtRange.hdcTarget = hDC;
-                fmtRange.rc = rect;
-                fmtRange.rcPage = rect;
-                int wParam = 1;
-                IntPtr lParam = Marshal.AllocCoTaskMem(Marshal.SizeOf(fmtRange));
-                Marshal.StructureToPtr(fmtRange, lParam, false);
-                fromAPI = SendMessage(rtb.Handle, EM_FORMATRANGE, wParam, lParam);
-                Marshal.FreeCoTaskMem(lParam);
-                fromAPI = SendMessage(rtb.Handle, EM_FORMATRANGE, wParam, new IntPtr(0));
-                gr.ReleaseHdc(hDC);
+                    rect.Top = 0; rect.Left = 0;
+                    rect.Bottom = (int)(bmp.Height + (bmp.Height * (bmp.HorizontalResolution / 100)) * inch);
+                    rect.Right = (int)(bmp.Width + (bmp.Width * (bmp.VerticalResolution / 100)) * inch);
+                    fmtRange.chrg.cpMin = rtb.GetCharIndexFromPosition(new Point(0, 0));
+                    fmtRange.chrg.cpMax = rtb.Text.Length;
+                    fmtRange.hdc = hDC;
+                    fmtRange.hdcTarget = hDC;
+                    fmtRange.rc = rect;
+                    fmtRange.rcPage = rect;
+                    int wParam = 1;
+                    IntPtr lParam = Marshal.AllocCoTaskMem(Marshal.SizeOf(fmtRange));
+                    Marshal.StructureToPtr(fmtRange, lParam, false);
+                    fromAPI = SendMessage(rtb.Handle, EM_FORMATRANGE, wParam, lParam);
+                    Marshal.FreeCoTaskMem(lParam);
+                    fromAPI = SendMessage(rtb.Handle, EM_FORMATRANGE, wParam, new IntPtr(0));
+                    gr.ReleaseHdc(hDC);
+                }
+                bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                bmp.Dispose();
             }
-            bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Jpeg);
-            bmp.Dispose();
+            catch
+            {
+            }
         }
     }
 }
