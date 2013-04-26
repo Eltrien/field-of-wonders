@@ -642,6 +642,18 @@ namespace Ubiquitous
         {
             switch (propertyName)
             {
+                case "SteamBotPassword":
+                    {
+                        if( settings.SteamBotAccessToken != null )
+                            settings.SteamBotAccessToken = null;
+                    }
+                    break;
+                case "SteamBot":
+                    {
+                        if (settings.SteamBotAccessToken != null)
+                            settings.SteamBotAccessToken = null;
+                    }
+                    break;
                 case "globalChatFont":
                     {
                         textMessages.Font= settings.globalChatFont;
@@ -980,7 +992,7 @@ namespace Ubiquitous
             }
             if (!isFlood(message))
             {
-                if (settings.webEnable)
+                if (settings.webEnable && webChat != null)
                 {
                     webChat.AddMessage(
                         message.ImagePath,
@@ -2342,25 +2354,16 @@ namespace Ubiquitous
             steamBot.NewMessage += OnNewSteamMessage;
             steamBot.FriendStateChange += OnSteamFriendStatusChange;
             steamBot.Typing += OnSteamTyping;
+            steamBot.SteamGuard += new EventHandler<SteamAPISession.SteamEvent>(steamBot_SteamGuard);
             checkMark.SetOff(pictureSteamBot);
 
             string password = settings.SteamBotPassword;
+            string token = settings.SteamBotAccessToken;
 
-            // Try to authenticate with token first
-            status = steamBot.Authenticate(settings.SteamBotAccessToken);
-
-            // If token failed, try user and password
-            if (status != SteamAPISession.LoginStatus.LoginSuccessful)
-            {
-                settings.SteamBotAccessToken = "";
-                status = steamBot.Authenticate(user, password);
-                // Ask for SteamGuard code if required
-                if (status == SteamAPISession.LoginStatus.SteamGuard)
-                {
-                    string code = InputBox.Show("Check email and enter Steam Guard code:");
-                    status = steamBot.Authenticate(user, password, code);
-                }
-            }
+            if (String.IsNullOrEmpty(token))
+                token = steamBot.RSALogin(user, password);
+            else 
+                status = steamBot.Authenticate(token);
 
             if (status == SteamAPISession.LoginStatus.LoginSuccessful)
             {
@@ -2372,6 +2375,12 @@ namespace Ubiquitous
                 SendMessage(new Message(String.Format("Steam: login failed"), EndPoint.Steam, EndPoint.SteamAdmin));
             }
             settings.Save();
+        }
+
+        void steamBot_SteamGuard(object sender, SteamAPISession.SteamEvent e)
+        {
+            string code = InputBox.Show("Check email and enter Steam Guard code:");
+            steamBot.SteamGuardKey = code;
         }
         private void OnSteamTyping(object sender, SteamAPISession.SteamEvent e)
         {
@@ -2431,6 +2440,9 @@ namespace Ubiquitous
         }
         private void OnSteamFriendStatusChange(object sender, SteamAPISession.SteamEvent e)
         {
+            if (steamAdmin == null)
+                return;
+
             if (e.update.origin == steamAdmin.steamid)
             {
                 if (e.update.status == SteamAPISession.UserStatus.Offline)

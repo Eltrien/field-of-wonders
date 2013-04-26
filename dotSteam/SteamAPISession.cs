@@ -6,6 +6,12 @@ using System.Net;
 using System.IO;
 using System.Drawing;
 using dot.Json.Linq;
+using System.Collections.Specialized;
+using System.Web;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
+using System.Diagnostics;
 
 namespace dotSteam
 {
@@ -24,7 +30,7 @@ namespace dotSteam
         public event EventHandler<SteamEvent> NewMessage;
         public event EventHandler<SteamEvent> Typing;
         public event EventHandler<SteamEvent> FriendStateChange;
-        
+        public event EventHandler<SteamEvent> SteamGuard;
 
         #region "Events"
         public class SteamEvent : EventArgs
@@ -58,6 +64,10 @@ namespace dotSteam
         protected virtual void OnFriendStateChange(SteamEvent e)
         {
             DefaultEvent(FriendStateChange, e);
+        }
+        protected virtual void OnSteamGuard(SteamEvent e)
+        {
+            DefaultEvent(SteamGuard, e);
         }
         #endregion
         /// <summary>
@@ -199,7 +209,158 @@ namespace dotSteam
             public DateTime serverTime;
             public String serverTimeString;
         }
+        public static string Fetch(string url, string method, NameValueCollection data = null, CookieContainer cookies = null, bool ajax = true)
+        {
+            HttpWebResponse response = Request(url, method, data, cookies, ajax);
+            StreamReader reader = new StreamReader(response.GetResponseStream());
+            return reader.ReadToEnd();
+        }
+        public String SteamGuardKey
+        {
+            get;
+            set;
+        }
+        public static HttpWebResponse Request(string url, string method, NameValueCollection data = null, CookieContainer cookies = null, bool ajax = true)
+        {
+            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
 
+            request.Method = method;
+
+            request.Accept = "text/javascript, text/html, application/xml, text/xml, */*";
+            request.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
+            request.Host = "steamcommunity.com";
+            request.UserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.47 Safari/536.11";
+            request.Referer = "http://steamcommunity.com/trade/1";
+
+            if (ajax)
+            {
+                request.Headers.Add("X-Requested-With", "XMLHttpRequest");
+                request.Headers.Add("X-Prototype-Version", "1.7");
+            }
+
+            // Cookies
+            request.CookieContainer = cookies ?? new CookieContainer();
+
+            // Request data
+            if (data != null)
+            {
+                string dataString = String.Join("&", Array.ConvertAll(data.AllKeys, key =>
+                    String.Format("{0}={1}", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(data[key]))
+                )
+                );
+
+                byte[] dataBytes = Encoding.ASCII.GetBytes(dataString);
+                request.ContentLength = dataBytes.Length;
+
+                Stream requestStream = request.GetRequestStream();
+                requestStream.Write(dataBytes, 0, dataBytes.Length);
+            }
+
+            // Get the response
+            return request.GetResponse() as HttpWebResponse;
+        }
+        public String RSALogin(string username, string password)
+        {
+            var data = new NameValueCollection();
+            data.Add("username", username);
+
+            String response = Fetch("https://steamcommunity.com/login/getrsakey", "POST", data, null, false);
+
+            JObject json = JObject.Parse(response);
+            //GetRsaKey rsaJSON = JsonConvert.DeserializeObject<GetRsaKey>(response);
+
+
+            // Validate
+            if ((bool)json["success"] != true)
+            {
+                return null;
+            }
+
+            //RSA Encryption
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            RSAParameters rsaParameters = new RSAParameters();
+
+            rsaParameters.Exponent = HexToByte((String)json["publickey_exp"]);
+            rsaParameters.Modulus = HexToByte((String)json["publickey_mod"] );
+
+            rsa.ImportParameters(rsaParameters);
+
+            byte[] bytePassword = Encoding.ASCII.GetBytes(password);
+            byte[] encodedPassword = rsa.Encrypt(bytePassword, false);
+            string encryptedBase64Password = Convert.ToBase64String(encodedPassword);
+
+            JToken token = null;
+            JObject loginJson = null;
+            //CookieCollection cookies;
+            string steamGuardText = "";
+            string steamGuardId = "";
+            do
+            {
+                Debug.Print("SteamWeb: Logging In...");
+                
+                bool steamGuard = loginJson != null && (bool)loginJson["emailauth_needed"] == true;
+
+                string time = (String)json["timestamp"];
+
+                data = new NameValueCollection();
+                data.Add("password", encryptedBase64Password);
+                data.Add("username", username);
+
+                data.Add("captcha_gid", "");
+                data.Add("captcha_text", "");
+                // Captcha end
+
+                // SteamGuard
+                if (steamGuard)
+                {
+                    OnSteamGuard(new SteamEvent());
+                    if (!String.IsNullOrEmpty(SteamGuardKey))
+                    {
+                        steamGuardText = Uri.EscapeDataString(SteamGuardKey);
+                        steamGuardId = (String)loginJson["emailsteamid"];
+                    }
+                }
+
+                data.Add("emailauth", steamGuardText);
+                data.Add("emailsteamid", steamGuardId);                             
+                // SteamGuard end
+
+                data.Add("oauth_client_id", "DE45CD61");
+                data.Add("oauth_scope", "read_profile write_profile read_client write_client");
+
+                data.Add("rsatimestamp", time);
+
+                HttpWebResponse webResponse = Request("https://steamcommunity.com/mobilelogin/dologin/", "POST", data, null, false);
+
+                StreamReader reader = new StreamReader(webResponse.GetResponseStream());
+                string response2 = reader.ReadToEnd();
+
+                token = JToken.Parse(response2);
+
+                if (!String.IsNullOrEmpty(response2))
+                    loginJson = JObject.Parse(response2);
+
+                //cookies = webResponse.Cookies;
+
+                if (loginJson == null)
+                    break;
+
+                
+            } while ( loginJson["emailauth_needed"] != null && (bool)loginJson["emailauth_needed"] == true);
+
+            if( loginJson["oauth"] != null )
+            {
+                JObject oauth = JObject.Parse((String)loginJson["oauth"]);
+                Token = (String)oauth["oauth_token"];
+            }
+            return Token;
+
+        }
+        public String Token
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// Authenticate with a username and password.
         /// Sends the SteamGuard e-mail if it has been set up.
@@ -213,7 +374,7 @@ namespace dotSteam
             if (username == "")
                 return LoginStatus.LoginFailed;
 
-            String response = steamRequest("   /GetTokenWithCredentials/v0001",
+            String response = steamRequest("/GetTokenWithCredentials/v0001",
                 "client_id=DE45CD61&grant_type=password&username=" + Uri.EscapeDataString( username ) + "&password=" + Uri.EscapeDataString( password ) + "&x_emailauthcode=" + emailauthcode + "&scope=read_profile%20write_profile%20read_client%20write_client" );
 
             if ( response != null )
@@ -781,6 +942,33 @@ namespace dotSteam
         {
             DateTime origin = new DateTime( 1970, 1, 1, 0, 0, 0, 0 );
             return origin.AddSeconds( timestamp );
+        }
+        static byte[] HexToByte(string hex)
+        {
+            if (hex.Length % 2 == 1)
+                throw new Exception("The binary key cannot have an odd number of digits");
+
+            byte[] arr = new byte[hex.Length >> 1];
+            int l = hex.Length;
+
+            for (int i = 0; i < (l >> 1); ++i)
+            {
+                arr[i] = (byte)((GetHexVal(hex[i << 1]) << 4) + (GetHexVal(hex[(i << 1) + 1])));
+            }
+
+            return arr;
+        }
+
+        static int GetHexVal(char hex)
+        {
+            int val = (int)hex;
+            return val - (val < 58 ? 48 : 55);
+        }
+
+        public static bool ValidateRemoteCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
+        {
+            // allow all certificates
+            return true;
         }
     }
 }
