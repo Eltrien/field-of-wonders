@@ -23,6 +23,7 @@ namespace Ubiquitous
         Empire,
         Cybergame,
         Goha,
+        Music,
         Hashd
     }
     /// <summary>
@@ -94,6 +95,8 @@ namespace Ubiquitous
                     return Properties.Resources.adminicon;
                 case ChatIcon.Hashd:
                     return Properties.Resources.hashd;
+                case ChatIcon.Music:
+                    return Properties.Resources.music;
                 default:
                     return null;
             }

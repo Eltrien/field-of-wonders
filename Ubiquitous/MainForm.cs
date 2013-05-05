@@ -31,6 +31,7 @@ using dotHashd;
 using System.Runtime.InteropServices;
 using System.Net;
 using dotWebServer;
+using dotLastfm;
 
 namespace Ubiquitous
 {
@@ -63,6 +64,7 @@ namespace Ubiquitous
             Empiretv,
             Cybergame,
             Hashd,
+            Music,
             All
         }
         private class ChatUser
@@ -314,6 +316,8 @@ namespace Ubiquitous
                             return "cybergame.gif";
                         case EndPoint.Hashd:
                             return "hashd.png";
+                        case EndPoint.Music:
+                            return "music.png";
                         default:
                             return "adminicon.png";
 
@@ -354,6 +358,8 @@ namespace Ubiquitous
                             return ChatIcon.Cybergame;
                         case EndPoint.Hashd:
                             return ChatIcon.Hashd;
+                        case EndPoint.Music:
+                            return ChatIcon.Music;
                         default:
                             return ChatIcon.Default;
                     }
@@ -411,6 +417,7 @@ namespace Ubiquitous
         private uint MaxViewers = 0;
         IPHostEntry twitchServers = new IPHostEntry();
         IPAddress nextTwitchIP = new IPAddress(0);
+        private ULastFm lastFm;
 
         private WebChat webChat;
 
@@ -535,6 +542,15 @@ namespace Ubiquitous
                 }
             }
 
+            if (settings.lastFmEnable)
+            {
+                lastFm = new ULastFm();
+                lastFm.OnLogin += new EventHandler<EventArgs>(lastFm_OnLogin);
+                lastFm.OnTrackChange += new EventHandler<LastFmArgs>(lastFm_OnTrackChange);
+                ThreadPool.QueueUserWorkItem( t => lastFm.Authenticate(settings.lastFmLogin, settings.lastFmPassword));
+
+            }
+
             //@Debug.Print("Config is here:" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath);
             #region Set tooltips
             ToolTip fullScreenDblClk = new ToolTip();
@@ -566,6 +582,16 @@ namespace Ubiquitous
             #endregion
             
 
+        }
+
+        void lastFm_OnTrackChange(object sender, LastFmArgs e)
+        {
+            SendMessage(new Message(String.Format("{0} - {1}",e.Artist, e.Title), EndPoint.Music, EndPoint.SteamAdmin));
+        }
+
+        void lastFm_OnLogin(object sender, EventArgs e)
+        {
+            SendMessage(new Message("Last.Fm: logged in!", EndPoint.Music, EndPoint.SteamAdmin));
         }
         private void pictureSteamBot_Click(object sender, EventArgs e)
         {
