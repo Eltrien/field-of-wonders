@@ -353,8 +353,9 @@
   <ItemGroup>
     <Content Include="offline.mp3" />
     <Content Include="online.mp3" />
-    <None Include="Resources\music.png" />
-    <None Include="Resources\twitchicon1.png" />
+    <Content Include="Resources\music.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="web\css\chat.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

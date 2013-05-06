@@ -524,7 +524,9 @@ namespace dotLastfm.Services
 			
 			XmlDocument doc = request("user.getRecentTracks", p);
 			XmlNode node = doc.GetElementsByTagName("track")[0];
-			
+            if (node == null)
+                return null; 
+
 			if (node.Attributes.Count > 0)
 				return new Track(extract(node, "artist"), extract(node, "name"), Session);
 			else
