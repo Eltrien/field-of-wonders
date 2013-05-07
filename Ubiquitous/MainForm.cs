@@ -420,7 +420,7 @@ namespace Ubiquitous
         private ULastFm lastFm;
 
         private WebChat webChat;
-
+        private object lockTwitchConnect = new object();
         private System.Threading.Timer forceCloseTimer;
         #endregion 
 
@@ -1062,6 +1062,22 @@ namespace Ubiquitous
 
                         textMessages.ScrollToEnd();
                     }
+                }
+                else if (message.Icon == ChatIcon.TwitchTv)
+                {
+                    var regex = new Regex(@"[\s\t\r\n]");
+                    var msgText = message.Text;
+                    var words = regex.Split(msgText).Where(x => !string.IsNullOrEmpty(x));
+                    foreach (var w in words)
+                    {
+                        Bitmap smile = TwitchSmile.Smile( w );
+
+                        if (smile != null)
+                        {
+                            log.ReplaceSmileCode(w, smile);
+                        }
+                    }
+
                 }
             }
         }
@@ -2076,81 +2092,84 @@ namespace Ubiquitous
         #region Twitch IRC methods and events
         private void ConnectTwitchIRC()
         {
-            if (isClosing)
-                return;
-
-            //twitchIrc.FloodPreventer = new IrcStandardFloodPreventer(4, 1000);
-            if (settings.TwitchUser.Length <= 0 ||
-                !settings.twitchEnabled)
-                return;
-
-            try
+            lock (lockTwitchConnect)
             {
-                if (twitchIrc != null && twitchIrc.IsConnected)
+                if (isClosing)
+                    return;
+
+                //twitchIrc.FloodPreventer = new IrcStandardFloodPreventer(4, 1000);
+                if (settings.TwitchUser.Length <= 0 ||
+                    !settings.twitchEnabled)
+                    return;
+
+                try
                 {
-                    twitchIrc.Quit("Bye!");
-                    twitchIrc = null;
+                    if (twitchIrc != null && twitchIrc.IsConnected)
+                    {
+                        twitchIrc.Quit("Bye!");
+                        twitchIrc = null;
+                    }
                 }
-            }
-            catch
-            {
-                Debug.Print("Exception in ConnectTwitchIRC()");
-            }
-
-            twitchIrc = new IrcClient();
-            twitchIrc.Connected += OnTwitchConnect;
-            twitchIrc.Registered += OnTwitchRegister;
-            twitchIrc.Disconnected += OnTwitchDisconnect;
-            twitchIrc.Error += new EventHandler<IrcErrorEventArgs>(twitchIrc_Error);
-            twitchIrc.RawMessageReceived += new EventHandler<IrcRawMessageEventArgs>(twitchIrc_RawMessageReceived);
-
-            var twitchDnsName  = settings.TwitchUser.ToLower() + "." + twitchIRCDomain;
-
-            try
-            {
-                twitchServers = Dns.GetHostEntry(twitchDnsName);
-            }
-            catch
-            {
-                SendMessage(new Message("Twitch: error resolving twitch hostname. Using harcoded list of IPs", EndPoint.TwitchTV, EndPoint.SteamAdmin));
-                twitchServers = new IPHostEntry()
+                catch
                 {
-                    AddressList = new IPAddress[] {
+                    Debug.Print("Exception in ConnectTwitchIRC()");
+                }
+
+                twitchIrc = new IrcClient();
+                twitchIrc.Connected += OnTwitchConnect;
+                twitchIrc.Registered += OnTwitchRegister;
+                twitchIrc.Disconnected += OnTwitchDisconnect;
+                twitchIrc.Error += new EventHandler<IrcErrorEventArgs>(twitchIrc_Error);
+                twitchIrc.RawMessageReceived += new EventHandler<IrcRawMessageEventArgs>(twitchIrc_RawMessageReceived);
+
+                var twitchDnsName = settings.TwitchUser.ToLower() + "." + twitchIRCDomain;
+
+                try
+                {
+                    twitchServers = Dns.GetHostEntry(twitchDnsName);
+                }
+                catch
+                {
+                    SendMessage(new Message("Twitch: error resolving twitch hostname. Using harcoded list of IPs", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                    twitchServers = new IPHostEntry()
+                    {
+                        AddressList = new IPAddress[] {
                         IPAddress.Parse("199.9.253.199"),
                         IPAddress.Parse("199.9.250.229")
                     }
-                };
-            }
-            using (var connectedEvent = new ManualResetEventSlim(false))
-            {
-                twitchIrc.Connected += (sender2, e2) => connectedEvent.Set();
-                
-                var tmpNextServer = twitchServers.AddressList.SkipWhile( p => p.ToString() == nextTwitchIP.ToString()).FirstOrDefault();
-
-
-                if (tmpNextServer == null)
-                    tmpNextServer = twitchServers.AddressList.FirstOrDefault();
-
-                if( nextTwitchIP.Address != 0 )
-                    SendMessage(new Message("Twitch: cycling to the next server " +  tmpNextServer.ToString(), EndPoint.TwitchTV, EndPoint.SteamAdmin));
-
-                nextTwitchIP = tmpNextServer;
-
-                twitchIrc.Connect(nextTwitchIP, false, new IrcUserRegistrationInfo()
-                {
-                    NickName = settings.TwitchUser,
-                    UserName = settings.TwitchUser,
-                    RealName = "Twitch bot of " + settings.TwitchUser,
-                    Password = settings.TwitchPassword
-                });               
-                if (!connectedEvent.Wait(10000))
-                {
-                    SendMessage(new Message("Twitch: connection timeout!", EndPoint.TwitchTV, EndPoint.SteamAdmin));
-                    return;
+                    };
                 }
-                
+                using (var connectedEvent = new ManualResetEventSlim(false))
+                {
+                    twitchIrc.Connected += (sender2, e2) => connectedEvent.Set();
+
+                    var tmpNextServer = twitchServers.AddressList.SkipWhile(p => p.ToString() == nextTwitchIP.ToString()).FirstOrDefault();
+
+
+                    if (tmpNextServer == null)
+                        tmpNextServer = twitchServers.AddressList.FirstOrDefault();
+
+                    if (nextTwitchIP.Address != 0)
+                        SendMessage(new Message("Twitch: cycling to the next server " + tmpNextServer.ToString(), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+
+                    nextTwitchIP = tmpNextServer;
+
+                    twitchIrc.Connect(nextTwitchIP, false, new IrcUserRegistrationInfo()
+                    {
+                        NickName = settings.TwitchUser,
+                        UserName = settings.TwitchUser,
+                        RealName = "Twitch bot of " + settings.TwitchUser,
+                        Password = settings.TwitchPassword
+                    });
+                    if (!connectedEvent.Wait(10000))
+                    {
+                        SendMessage(new Message("Twitch: connection timeout!", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                        return;
+                    }
+
                 }
             }
+        }
 
         void twitchIrc_Error(object sender, IrcErrorEventArgs e)
         {
@@ -2178,7 +2197,7 @@ namespace Ubiquitous
 
             if (!isClosing)
             {
-                SendMessage(new Message("Twitch bot is reconnecting to the IRC", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                SendMessage(new Message("Twitch bot disconnected. Trying to reconnect...", EndPoint.TwitchTV, EndPoint.SteamAdmin));
                 twitchBW.Stop();
                 twitchBW = new BGWorker(ConnectTwitchIRC, null);
             }

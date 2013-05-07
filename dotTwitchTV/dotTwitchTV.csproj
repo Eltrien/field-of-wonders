@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
@@ -45,6 +46,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JSon.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Twitch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -57,6 +63,100 @@
       <Project>{E7DD099E-384E-4EDB-B217-D4850ACE32BC}</Project>
       <Name>dotWebClient</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\Smiles\4Head.png" />
+    <Content Include="Resources\Smiles\anger.png" />
+    <Content Include="Resources\Smiles\ArsonNoSexy.png" />
+    <Content Include="Resources\Smiles\AsianGlow.png" />
+    <Content Include="Resources\Smiles\BCWarror.png" />
+    <Content Include="Resources\Smiles\BibleThump.png" />
+    <Content Include="Resources\Smiles\BionicBunion.png" />
+    <Content Include="Resources\Smiles\BlargNaut.png" />
+    <Content Include="Resources\Smiles\BloodTrail.png" />
+    <Content Include="Resources\Smiles\bored.png" />
+    <Content Include="Resources\Smiles\BORT.png" />
+    <Content Include="Resources\Smiles\BrainSlug.png" />
+    <Content Include="Resources\Smiles\BrokeBack.png" />
+    <Content Include="Resources\Smiles\cool.png" />
+    <Content Include="Resources\Smiles\CougarHunt.png" />
+    <Content Include="Resources\Smiles\DansGame.png" />
+    <Content Include="Resources\Smiles\DatSheffy.png" />
+    <Content Include="Resources\Smiles\DBStyle.png" />
+    <Content Include="Resources\Smiles\EagleEye.png" />
+    <Content Include="Resources\Smiles\EvilFetus.png" />
+    <Content Include="Resources\Smiles\eyes.png" />
+    <Content Include="Resources\Smiles\FailFish.png" />
+    <Content Include="Resources\Smiles\FPSMarksman.png" />
+    <Content Include="Resources\Smiles\FrankerZ.png" />
+    <Content Include="Resources\Smiles\FreakinStinkin.png" />
+    <Content Include="Resources\Smiles\frown.png" />
+    <Content Include="Resources\Smiles\FUNgineer.png" />
+    <Content Include="Resources\Smiles\FuzzyOtterOO.png" />
+    <Content Include="Resources\Smiles\GingerPower.png" />
+    <Content Include="Resources\Smiles\HassanChop.png" />
+    <Content Include="Resources\Smiles\heart.png" />
+    <Content Include="Resources\Smiles\HotPokket.png" />
+    <Content Include="Resources\Smiles\ItsBoshyTime.png" />
+    <Content Include="Resources\Smiles\Jebaited.png" />
+    <Content Include="Resources\Smiles\JKanStyle.png" />
+    <Content Include="Resources\Smiles\JonCarnage.png" />
+    <Content Include="Resources\Smiles\Kappa.png" />
+    <Content Include="Resources\Smiles\KevinTurtle.png" />
+    <Content Include="Resources\Smiles\Kreygasm.png" />
+    <Content Include="Resources\Smiles\MrDestructoid.png" />
+    <Content Include="Resources\Smiles\MVGame.png" />
+    <Content Include="Resources\Smiles\NinjaTroll.png" />
+    <Content Include="Resources\Smiles\NoNoSpot.png" />
+    <Content Include="Resources\Smiles\OMGScoots.png" />
+    <Content Include="Resources\Smiles\OneHand.png" />
+    <Content Include="Resources\Smiles\OpieOP.png" />
+    <Content Include="Resources\Smiles\OptimizePrime.png" />
+    <Content Include="Resources\Smiles\PazPazowitz.png" />
+    <Content Include="Resources\Smiles\PicoMause.png" />
+    <Content Include="Resources\Smiles\PJSalt.png" />
+    <Content Include="Resources\Smiles\PMSTwin.png" />
+    <Content Include="Resources\Smiles\PogChamp.png" />
+    <Content Include="Resources\Smiles\Poooound.png" />
+    <Content Include="Resources\Smiles\PunchTrees.png" />
+    <Content Include="Resources\Smiles\R.png" />
+    <Content Include="Resources\Smiles\RedCoat.png" />
+    <Content Include="Resources\Smiles\ResidentSleeper.png" />
+    <Content Include="Resources\Smiles\RuleFive.png" />
+    <Content Include="Resources\Smiles\ShazBotstix.png" />
+    <Content Include="Resources\Smiles\slant.png" />
+    <Content Include="Resources\Smiles\smile.png" />
+    <Content Include="Resources\Smiles\SMOrc.png" />
+    <Content Include="Resources\Smiles\SMSkull.png" />
+    <Content Include="Resources\Smiles\SoBayed.png" />
+    <Content Include="Resources\Smiles\SoonerLater.png" />
+    <Content Include="Resources\Smiles\SSSsss.png" />
+    <Content Include="Resources\Smiles\StoneLightning.png" />
+    <Content Include="Resources\Smiles\StrawBeary.png" />
+    <Content Include="Resources\Smiles\SuperVinlin.png" />
+    <Content Include="Resources\Smiles\surprised.png" />
+    <Content Include="Resources\Smiles\SwiftRage.png" />
+    <Content Include="Resources\Smiles\TehFunrun.png" />
+    <Content Include="Resources\Smiles\TheRinger.png" />
+    <Content Include="Resources\Smiles\TheTarFu.png" />
+    <Content Include="Resources\Smiles\TinyFace.png" />
+    <Content Include="Resources\Smiles\tongue.png" />
+    <Content Include="Resources\Smiles\tonguewink.png" />
+    <Content Include="Resources\Smiles\TooSpicy.png" />
+    <Content Include="Resources\Smiles\TriHard.png" />
+    <Content Include="Resources\Smiles\UleetBackup.png" />
+    <Content Include="Resources\Smiles\UnSane.png" />
+    <Content Include="Resources\Smiles\vhappy.png" />
+    <Content Include="Resources\Smiles\Volcania.png" />
+    <Content Include="Resources\Smiles\wink.png" />
+    <Content Include="Resources\Smiles\WinWaker.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

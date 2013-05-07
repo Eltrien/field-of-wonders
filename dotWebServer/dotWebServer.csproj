@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,6 +47,10 @@
     <Compile Include="WebChat.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dotTwitchTV\dotTwitchTV.csproj">
+      <Project>{C1B0A91F-BE05-48AB-9D94-BEF81D3174A2}</Project>
+      <Name>dotTwitchTV</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotUtilities\dotUtilities.csproj">
       <Project>{ED6C0B9C-608A-4325-8F98-5E23C7DC52CD}</Project>
       <Name>dotUtilities</Name>

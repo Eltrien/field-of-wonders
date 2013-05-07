@@ -10,6 +10,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Drawing;
+using System.Drawing.Imaging;
+using dotTwitchTV;
 using dotUtilities;
 
 namespace dotWebServer
@@ -28,7 +31,11 @@ namespace dotWebServer
         {
             //<!--ICON--><!--TEXT--><!--FROM--><!--FROM_TO_SEPARATOR--><!--TO--><!--CHAT_ID-->
             content = content.Replace("<!--ICON-->", image);
-            content = content.Replace("<!--TEXT-->", text);
+            if( chatId == "TwitchTV" )
+                content = content.Replace("<!--TEXT-->", ReplaceSmiles(text));
+            else
+                content = content.Replace("<!--TEXT-->", text);
+
             content = content.Replace("<!--FROM-->", from);
             content = content.Replace("<!--FROM_TO_SEPARATOR-->", fromToSeparator);
             content = content.Replace("<!--TO-->", to);
@@ -36,7 +43,23 @@ namespace dotWebServer
             return content;
 
         }
+
+        private string ReplaceSmiles(string content)
+        {
+            var regex = new Regex(@"[\s\t\r\n]");
+            var words = regex.Split(content).Where(x => !string.IsNullOrEmpty(x));
+            foreach (var w in words)
+            {
+                Bitmap smile = TwitchSmile.Smile(w);
+                if( smile != null )
+                {
+                    content = content.Replace(w, Base64Image.ToBase64ImageTag(smile, ImageFormat.Png));
+                }
+            }
+            return content;
+        }
     }
+
     public class WebChat : HttpServer
     {
         const string webFolder = @"web\";
@@ -141,5 +164,48 @@ namespace dotWebServer
             //p.outputStream.WriteLine("postbody: <pre>{0}</pre>", data);
         }
 
+    }
+
+    public static class Base64Image
+    {
+        public static string ToBase64String(this Bitmap bmp, ImageFormat imageFormat)
+        {
+            string base64String = string.Empty;
+
+
+            MemoryStream memoryStream = new MemoryStream();
+            bmp.Save(memoryStream, imageFormat);
+
+
+            memoryStream.Position = 0;
+            byte[] byteBuffer = memoryStream.ToArray();
+
+
+            memoryStream.Close();
+
+
+            base64String = Convert.ToBase64String(byteBuffer);
+            byteBuffer = null;
+
+
+            return base64String;
+        }
+        public static string ToBase64ImageTag(this Bitmap bmp, ImageFormat imageFormat)
+        {
+            string imgTag = string.Empty;
+            string base64String = string.Empty;
+
+
+            base64String = ToBase64String(bmp, imageFormat);
+
+
+            imgTag = "<img src=\"data:image/" + imageFormat.ToString() + ";base64,";
+            imgTag += base64String + "\" ";
+            imgTag += "width=\"" + bmp.Width.ToString() + "\" ";
+            imgTag += "height=\"" + bmp.Height.ToString() + "\" />";
+
+
+            return imgTag;
+        }
     }
 }
