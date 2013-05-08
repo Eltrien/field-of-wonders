@@ -1693,14 +1693,18 @@ namespace Ubiquitous
 
                 if (settings.obsRemoteEnable && !checkBoxBorder.Checked)
                 {
-                    if (obsRemote != null)
+                    if (obsRemote != null )
                     {
-                        var stats = String.Format(
-                            " FPS: {0} RATE: {1}K DROPS: {2}",
-                            obsRemote.Status.fps,
-                            obsRemote.Status.bitrate / 1024 * 8,
-                            obsRemote.Status.framesDropped);
-                        this.Text = formTitle + stats;
+                        try
+                        {
+                            var stats = String.Format(
+                                " FPS: {0} RATE: {1}K DROPS: {2}",
+                                obsRemote.Status.fps,
+                                obsRemote.Status.bitrate / 1024 * 8,
+                                obsRemote.Status.framesDropped);
+                            this.Text = formTitle + stats;
+                        }
+                        catch {}
                     }
                 }
 

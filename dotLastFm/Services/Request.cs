@@ -127,7 +127,7 @@ namespace dotLastfm.Services
 			}
 			
 			XmlDocument doc = new XmlDocument();
-      doc.Load(webresponse.GetResponseStream());
+            doc.Load(webresponse.GetResponseStream());
 
 			checkForErrors(doc);
 			
@@ -144,9 +144,7 @@ namespace dotLastfm.Services
 			{
 				XmlNode err = document.GetElementsByTagName("error")[0];
 				ServiceExceptionType type = (ServiceExceptionType)Convert.ToInt32(err.Attributes[0].InnerText);
-				string description = err.InnerText;
-				
-				throw new ServiceException(type, description);
+				string description = err.InnerText;								
 			}
 		}
 	}
