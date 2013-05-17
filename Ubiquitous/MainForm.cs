@@ -2264,7 +2264,7 @@ namespace Ubiquitous
         }
         private void OnTwitchRegister(object sender, EventArgs e)
         {
-            twitchIrc.Channels.Join("#" + settings.TwitchUser);
+            twitchIrc.Channels.Join(settings.twitchChannel.Contains('#')?settings.twitchChannel:"#" + settings.twitchChannel);
             twitchIrc.LocalUser.NoticeReceived += OnTwitchNoticeReceivedLocal;
             twitchIrc.LocalUser.MessageReceived += OnTwitchMessageReceivedLocal;
             twitchIrc.LocalUser.JoinedChannel += OnTwitchChannelJoinLocal;

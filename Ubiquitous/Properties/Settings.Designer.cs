@@ -1522,5 +1522,17 @@ namespace Ubiquitous.Properties {
                 this["lastFmPassword"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string twitchChannel {
+            get {
+                return ((string)(this["twitchChannel"]));
+            }
+            set {
+                this["twitchChannel"] = value;
+            }
+        }
     }
 }
