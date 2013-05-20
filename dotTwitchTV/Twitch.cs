@@ -148,7 +148,7 @@ namespace dotTwitchTV
                     return Properties.Resources.ArsonNoSexy;
                 case "AsianGlow":
                     return Properties.Resources.AsianGlow;
-                case "BCWarror":
+                case "BCWarrior":
                     return Properties.Resources.BCWarror;
                 case "BibleThump":
                     return Properties.Resources.BibleThump;
@@ -172,7 +172,7 @@ namespace dotTwitchTV
                     return Properties.Resources.DansGame;
                 case "DatSheffy":
                     return Properties.Resources.DatSheffy;
-                case "DBStyle":
+                case "DBstyle":
                     return Properties.Resources.DBStyle;
                 case "EagleEye":
                     return Properties.Resources.EagleEye;
@@ -254,7 +254,7 @@ namespace dotTwitchTV
                     return Properties.Resources.RuleFive;
                 case "ShazBotstix":
                     return Properties.Resources.ShazBotstix;
-                case @":\":
+                case ":\\":
                     return Properties.Resources.slant;
                 case ":/":
                     return Properties.Resources.slant;

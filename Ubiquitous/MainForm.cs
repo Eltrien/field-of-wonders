@@ -421,6 +421,7 @@ namespace Ubiquitous
 
         private WebChat webChat;
         private object lockTwitchConnect = new object();
+        private object lockSendMessage = new object();
         private System.Threading.Timer forceCloseTimer;
         #endregion 
 
@@ -931,153 +932,156 @@ namespace Ubiquitous
         }
         private void SendMessage(Message message)
         {
-            if( message == null )
-                return;            
-
-            message.Text = message.Text.Trim();           
-
-            if( message.FromEndPoint != EndPoint.Console && 
-                message.FromEndPoint != EndPoint.SteamAdmin &&
-                message.FromEndPoint != EndPoint.Bot)
-                lastMessageSent = message;
-
-            if (message.Text.Length <= 0)
-                return;
-
-            // Execute command or write it to console
-            if (message.FromEndPoint == EndPoint.Console ||
-                message.FromEndPoint == EndPoint.SteamAdmin)
+            lock (lockSendMessage)
             {
-                if (ParseAdminCommand(message.Text) == Result.Successful)
-                {
-                    log.WriteLine(message.Text, ChatIcon.Admin);
+                if (message == null)
                     return;
+
+                message.Text = message.Text.Trim();
+
+                if (message.FromEndPoint != EndPoint.Console &&
+                    message.FromEndPoint != EndPoint.SteamAdmin &&
+                    message.FromEndPoint != EndPoint.Bot)
+                    lastMessageSent = message;
+
+                if (message.Text.Length <= 0)
+                    return;
+
+                // Execute command or write it to console
+                if (message.FromEndPoint == EndPoint.Console ||
+                    message.FromEndPoint == EndPoint.SteamAdmin)
+                {
+                    if (ParseAdminCommand(message.Text) == Result.Successful)
+                    {
+                        log.WriteLine(message.Text, ChatIcon.Admin);
+                        return;
+                    }
+                    if (!isFlood(message))
+                        log.WriteLine(message.Text, ChatIcon.Admin);
+
+                    if (message.ToEndPoint == EndPoint.Console)
+                        return;
+
+                    message.ToEndPoint = currentChat;
+                }
+
+                var text = message.Text;
+
+                if (!String.IsNullOrEmpty(message.FromGroupName))
+                    text = settings.appearanceGrpMessageFormat;
+                else if (!String.IsNullOrEmpty(message.FromName))
+                    text = settings.appearanceMsgFormat;
+
+
+                if (!String.IsNullOrEmpty(message.FromGroupName) || !String.IsNullOrEmpty(message.FromName))
+                {
+                    text = text.Replace(@"%t", message.Text);
+                    text = text.Replace(@"%s", message.FromName == null ? String.Empty : message.FromName);
+                    text = text.Replace(@"%d", message.ToName == null ? String.Empty : "->" + message.ToName);
+                    text = text.Replace(@"%c", message.FromEndPoint.ToString());
+                    text = text.Replace(@"%sg", message.FromGroupName == null ? String.Empty : message.FromGroupName);
+                }
+
+                message.Text = text;
+
+                // Send message to specified chat(s)
+                switch (message.ToEndPoint)
+                {
+                    case EndPoint.All:
+                        {
+                            ThreadPool.QueueUserWorkItem(arg => SendToAll(message));
+                        }
+                        break;
+                    case EndPoint.Sc2Tv:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToSc2Tv(message));
+                        break;
+                    case EndPoint.Skype:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToSkype(message));
+                        break;
+                    case EndPoint.SkypeGroup:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToSkype(message));
+                        break;
+                    case EndPoint.SteamAdmin:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToSteamAdmin(message));
+                        break;
+                    case EndPoint.TwitchTV:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToTwitchIRC(message));
+                        break;
+                    case EndPoint.Gohatv:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToGohaIRC(message));
+                        break;
+                    case EndPoint.Empiretv:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToEmpireTV(message));
+                        break;
+                    case EndPoint.Cybergame:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToCybergame(message));
+                        break;
+                    case EndPoint.Hashd:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToHashd(message));
+                        break;
+                    case EndPoint.Console:
+                        log.WriteLine(message.Text);
+                        break;
+                    default:
+                        log.WriteLine("Can't send a message. Chat is readonly!");
+                        break;
                 }
                 if (!isFlood(message))
-                    log.WriteLine(message.Text, ChatIcon.Admin);
-
-                if (message.ToEndPoint == EndPoint.Console)
-                    return;
-
-                message.ToEndPoint = currentChat;
-            }
-
-            var text = message.Text;
-
-            if (!String.IsNullOrEmpty(message.FromGroupName))
-                text = settings.appearanceGrpMessageFormat;
-            else if (!String.IsNullOrEmpty(message.FromName))
-                text = settings.appearanceMsgFormat;
-
-
-            if (!String.IsNullOrEmpty(message.FromGroupName) || !String.IsNullOrEmpty(message.FromName))
-            {
-                text = text.Replace(@"%t", message.Text);
-                text = text.Replace(@"%s", message.FromName == null ? String.Empty : message.FromName);
-                text = text.Replace(@"%d", message.ToName == null ? String.Empty : "->" + message.ToName);
-                text = text.Replace(@"%c", message.FromEndPoint.ToString());
-                text = text.Replace(@"%sg", message.FromGroupName == null ? String.Empty : message.FromGroupName);
-            }
-
-            message.Text = text;
-
-            // Send message to specified chat(s)
-            switch (message.ToEndPoint)
-            {
-                case EndPoint.All:
+                {
+                    if (settings.webEnable && webChat != null)
                     {
-                        ThreadPool.QueueUserWorkItem( arg=> SendToAll(message) );
+                        webChat.AddMessage(
+                            message.ImagePath,
+                            message.Text,
+                            message.FromName,
+                            message.ToName,
+                            DateTime.Now.GetDateTimeFormats('T')[0],
+                            String.IsNullOrEmpty(message.ToName) ? "" : "->",
+                            message.FromEndPoint.ToString()
+                            );
                     }
-                    break;
-                case EndPoint.Sc2Tv:
-                    ThreadPool.QueueUserWorkItem(f => SendMessageToSc2Tv(message));
-                    break;
-                case EndPoint.Skype:
-                    ThreadPool.QueueUserWorkItem(f => SendMessageToSkype(message));
-                    break;
-                case EndPoint.SkypeGroup:
-                    ThreadPool.QueueUserWorkItem(f => SendMessageToSkype(message));
-                    break;
-                case EndPoint.SteamAdmin:
-                    ThreadPool.QueueUserWorkItem(f => SendMessageToSteamAdmin(message));
-                    break;
-                case EndPoint.TwitchTV:
-                    ThreadPool.QueueUserWorkItem(f => SendMessageToTwitchIRC(message));
-                    break;
-                case EndPoint.Gohatv:
-                    ThreadPool.QueueUserWorkItem(f => SendMessageToGohaIRC(message));
-                    break;
-                case EndPoint.Empiretv:
-                    ThreadPool.QueueUserWorkItem(f => SendMessageToEmpireTV(message));
-                    break;
-                case EndPoint.Cybergame:
-                    ThreadPool.QueueUserWorkItem(f => SendMessageToCybergame(message));
-                    break;
-                case EndPoint.Hashd:
-                    ThreadPool.QueueUserWorkItem(f => SendMessageToHashd(message));
-                    break;
-                case EndPoint.Console:
-                    log.WriteLine(message.Text);
-                    break;
-                default:
-                    log.WriteLine("Can't send a message. Chat is readonly!");
-                    break;
-            }
-            if (!isFlood(message))
-            {
-                if (settings.webEnable && webChat != null)
-                {
-                    webChat.AddMessage(
-                        message.ImagePath,
-                        message.Text,
-                        message.FromName,
-                        message.ToName,
-                        DateTime.Now.GetDateTimeFormats('T')[0],
-                        String.IsNullOrEmpty(message.ToName) ? "" : "->",
-                        message.FromEndPoint.ToString()
-                        );
-                }
-                log.WriteLine(message.Text, message.Icon);
-                if (message.Icon == ChatIcon.Sc2Tv)
-                {
-                    if (message.Text.Contains(":s:"))
+                    log.WriteLine(message.Text, message.Icon);
+                    if (message.Icon == ChatIcon.Sc2Tv)
                     {
-                        String m = message.Text;
-                        for (int i = 0; i < m.Length; i++)
+                        if (message.Text.Contains(":s:"))
                         {
-                            int smilePos = -1;
-                            if (m.Substring(i).IndexOf(":s:") == 0)
+                            String m = message.Text;
+                            for (int i = 0; i < m.Length; i++)
                             {
-                                foreach (Smile smile in sc2tv.smiles)
+                                int smilePos = -1;
+                                if (m.Substring(i).IndexOf(":s:") == 0)
                                 {
-                                    smilePos = m.Substring(i).IndexOf(":s" + smile.Code);
-                                    if (smilePos == 0)
-                                    {                                                                
-                                        log.ReplaceSmileCode(":s" + smile.Code, smile.bmp );                                        
-                                        break;
+                                    foreach (Smile smile in sc2tv.smiles)
+                                    {
+                                        smilePos = m.Substring(i).IndexOf(":s" + smile.Code);
+                                        if (smilePos == 0)
+                                        {
+                                            log.ReplaceSmileCode(":s" + smile.Code, smile.bmp);
+                                            break;
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        textMessages.ScrollToEnd();
+                            textMessages.ScrollToEnd();
+                        }
                     }
-                }
-                else if (message.Icon == ChatIcon.TwitchTv)
-                {
-                    var regex = new Regex(@"[\s\t\r\n]");
-                    var msgText = message.Text;
-                    var words = regex.Split(msgText).Where(x => !string.IsNullOrEmpty(x));
-                    foreach (var w in words)
+                    else if (message.Icon == ChatIcon.TwitchTv)
                     {
-                        Bitmap smile = TwitchSmile.Smile( w );
-
-                        if (smile != null)
+                        var regex = new Regex(@"[\s\t\r\n]");
+                        var msgText = message.Text;
+                        var words = regex.Split(msgText).Where(x => !string.IsNullOrEmpty(x));
+                        foreach (var w in words)
                         {
-                            log.ReplaceSmileCode(w, smile);
-                        }
-                    }
+                            Bitmap smile = TwitchSmile.Smile(w);
 
+                            if (smile != null)
+                            {
+                                log.ReplaceSmileCode(w, smile);
+                            }
+                        }
+
+                    }
                 }
             }
         }
@@ -2264,7 +2268,7 @@ namespace Ubiquitous
         }
         private void OnTwitchRegister(object sender, EventArgs e)
         {
-            twitchIrc.Channels.Join(settings.twitchChannel.Contains('#')?settings.twitchChannel:"#" + settings.twitchChannel);
+            twitchIrc.Channels.Join(String.IsNullOrEmpty(settings.twitchChannel)?"#"+settings.TwitchUser.ToLower():settings.twitchChannel.Contains('#')?settings.twitchChannel:"#" + settings.twitchChannel);
             twitchIrc.LocalUser.NoticeReceived += OnTwitchNoticeReceivedLocal;
             twitchIrc.LocalUser.MessageReceived += OnTwitchMessageReceivedLocal;
             twitchIrc.LocalUser.JoinedChannel += OnTwitchChannelJoinLocal;

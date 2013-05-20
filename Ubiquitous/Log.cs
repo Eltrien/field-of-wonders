@@ -60,11 +60,13 @@ namespace Ubiquitous
             else
             {
                 int start = tb.Text.Substring(0).IndexOf(code);
-
-                tb.SelectionStart = start;
-                tb.SelectionLength = code.Length;                
-                //tb.Cut();
-                tb.InsertImage(bmp);
+                if (start > 0)
+                {
+                    tb.SelectionStart = start;
+                    tb.SelectionLength = code.Length;
+                    //tb.Cut();
+                    tb.InsertImage(bmp);
+                }
             }
         }
         public Bitmap GetChatBitmap( ChatIcon icon)

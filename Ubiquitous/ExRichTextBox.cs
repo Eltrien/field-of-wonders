@@ -815,21 +815,30 @@ namespace SC2TV.RTFControl {
 
             StringBuilder _rtf = new StringBuilder();
 
-			// Append the RTF header
-            _rtf.Append(RTF_HEADER);
+            using (Image b = new Bitmap(_image.Width, _image.Height))
+            {
+                using (Graphics g = Graphics.FromImage(b))
+                {
+                    g.Clear(this.BackColor);
+                    g.DrawImageUnscaled(_image, 0, 0);
+                }
+                _image = b;
 
-            // Create the font table using the RichTextBox's current font and append
-			// it to the RTF string
-			_rtf.Append(GetFontTable(this.Font));
+			    // Append the RTF header
+                _rtf.Append(RTF_HEADER);
 
-			// Create the image control string and append it to the RTF string			
-            _rtf.Append(GetImagePrefix(_image));
+                // Create the font table using the RichTextBox's current font and append
+			    // it to the RTF string
+			    _rtf.Append(GetFontTable(this.Font));
+
+			    // Create the image control string and append it to the RTF string			
+                _rtf.Append(GetImagePrefix(_image));
             
 
-			// Create the Windows Metafile and append its bytes in HEX format
-			_rtf.Append(GetRtfImage(_image));
-
-			// Close the RTF image control string
+			    // Create the Windows Metafile and append its bytes in HEX format
+			    _rtf.Append(GetRtfImage(_image));
+            }
+            // Close the RTF image control string
             _rtf.Append(RTF_IMAGE_POST);
             this.SelectedRtf = _rtf.ToString();
 		}
