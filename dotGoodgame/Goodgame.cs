@@ -372,11 +372,12 @@ namespace dotGoodgame
         public void Connect()
         {
 
+            cwc.setCookie("token", _userToken , "goodgame.ru");
             var result = cwc.DownloadString(String.Format(_channelUrl,_user));
             if (string.IsNullOrEmpty(result))
                 return;
 
-            ChatId = GetSubString(result, @"""chatroom"":""(.*?)""", 1);
+            ChatId = GetSubString(result, @"var User = '(.*?)';", 1);
 
             if (string.IsNullOrEmpty(ChatId))
                 return;             
