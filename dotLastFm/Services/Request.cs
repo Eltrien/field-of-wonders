@@ -127,10 +127,15 @@ namespace dotLastfm.Services
 			}
 			
 			XmlDocument doc = new XmlDocument();
-            doc.Load(webresponse.GetResponseStream());
+            try
+            {
+                doc.Load(webresponse.GetResponseStream());
 
-			checkForErrors(doc);
-			
+                checkForErrors(doc);
+            }
+            catch
+            {
+            }
 			return doc;
 		}
 		

@@ -3,19 +3,20 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.JScript;
+using System.Diagnostics;
 
 namespace dotSC2TV
 {
-    class JSEvaluator
+    public class JSEvaluator
     {
 
         #region Private Members
 
-        private static Type _evaluatorType;
+        public static Type _evaluatorType;
         private static object _evaluatorInstance;
         private static readonly string _jscriptEvalClass =
         @"import System;
-        class JScriptEvaluator
+        public class JScriptEvaluator
         {
             public static function Eval(expression : String) : Object
             {
@@ -27,7 +28,7 @@ namespace dotSC2TV
 
         #region Private Methods
 
-        private static void Initialize()
+        public static void Initialize()
         {
 
             CodeDomProvider compiler = new JScriptCodeProvider();
@@ -51,14 +52,21 @@ namespace dotSC2TV
         {
             if (_evaluatorInstance == null)
                 Initialize();
-
-            object result = _evaluatorType.InvokeMember(
-            "Eval",
-           BindingFlags.InvokeMethod,
-            null,
-           _evaluatorInstance,
-            new object[] { expression }
-           );
+            object result = null;
+            try
+            {
+                result = _evaluatorType.InvokeMember(
+                "Eval",
+               BindingFlags.InvokeMethod,
+                null,
+               _evaluatorInstance,
+                new object[] { expression }
+               );
+            }
+            catch (TargetInvocationException e)
+            {
+                Debug.Print("JScript EvalObject: " + e.InnerException.Message);
+            }
 
             return result;
         }
@@ -74,6 +82,9 @@ namespace dotSC2TV
         {
             List<object> list = new List<object>();
             ArrayObject ar = EvalObject(expression) as ArrayObject;
+            if (ar == null)
+                return null;
+
             foreach (object i in ar)
             {
                 list.Add(ar[i]);

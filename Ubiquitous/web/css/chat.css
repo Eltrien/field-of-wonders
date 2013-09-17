@@ -1,11 +1,18 @@
 ﻿html,body {
 	margin : 0px;
 	font-family: Geneva, Arial, Helvetica, sans-serif;	
-	font-size:16px;
+	font-size:14px;
 	font-weight:bold;
 	background-color:#000000;
 	color:#00AA00;
 	
+}
+li.personalmsg
+{
+    background-color:#171717;
+    color: yellow;
+    padding: 1 0 1 10;
+    border:1px solid DarkSlateGray;
 }
 #chat {
 	margin: 0;

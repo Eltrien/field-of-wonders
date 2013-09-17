@@ -302,6 +302,7 @@ namespace dotTwitchTV
                     return Properties.Resources.wink;
                 case "WinWaker":
                     return Properties.Resources.WinWaker;
+
             }
 
             switch (code.ToLower())
@@ -316,6 +317,20 @@ namespace dotTwitchTV
                     return Properties.Resources.tongue;
                 case ";p":
                     return Properties.Resources.tonguewink;
+                case ":peka:":
+                    return Properties.Resources.peka;
+                case "peka":
+                    return Properties.Resources.peka;
+                case "пека":
+                    return Properties.Resources.peka;
+                case ":fp:":
+                    return Properties.Resources.facepalm;
+                case "facepalm":
+                    return Properties.Resources.facepalm;
+                case "fp":
+                    return Properties.Resources.facepalm;
+                case "фейспалм":
+                    return Properties.Resources.facepalm;
             }
             return null;
         }

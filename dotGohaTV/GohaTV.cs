@@ -8,6 +8,9 @@ using System.Threading;
 using dotWebClient;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using dotUtilities;
+using System.Web;
+using System.Net;
 
 namespace dotGohaTV
 {
@@ -23,12 +26,15 @@ namespace dotGohaTV
         #region Constants
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
         private const string gohaForumDomain = "http://forums.goha.ru";
-        private const string gohaTVDomain = "http://gohatv.testsite.goha.ru";        
+        private const string gohaTVDomain = "http://goha.tv";        
         private const string loginUrl = gohaForumDomain + "/10gin.php?do=login";
         private const string uidgetUrl = gohaForumDomain + "/flcheck.php";
         private const string authUrl = gohaTVDomain + "/auth/v3/auth.php/{0}";
-        private const string finalAuth = gohaTVDomain + "/app/tv/data.php/streamer/{0}/ru.js";
-        private const string switchUrl = gohaTVDomain + "/app/tv/data.php/streamer/change/{0}/auto/ru.js";
+        //private const string finalAuth = gohaTVDomain + "/app/tv/data.php/streamer/{0}/ru.js";
+        private const string finalAuth = gohaTVDomain + @"/app/tv/data-v2.php/stream/getStatus/{0}/gohaTV.mvc.js";
+        //private const string switchUrl = gohaTVDomain + "/app/tv/data.php/streamer/change/{0}/auto/ru.js";
+        private const string switchUrl = gohaTVDomain + @"/app/tv/data-v2.php/stream/setStatus/{0}/{1}/gohaTV.mvc.js";
+        private const string reLiveStatus = @"(\{""stop""|\[\])";
         private const string On = "on";
         private const string Off = "off";
         private const string OffNull = "null";
@@ -117,17 +123,16 @@ namespace dotGohaTV
             wc.setCookie("keeponline", "1", "www.goha.tv");
             wc.setCookie("ghfuid", uid, "www.goha.tv");
 
-            result = wc.DownloadString(String.Format(finalAuth, userid));
-            if ( String.IsNullOrEmpty(result) )
-                return false; 
-            StreamStatus = GetSubString(result, @"""status"":""(.*?)""", 1).ToLower();
-            
-            if (String.IsNullOrEmpty(StreamStatus))
-                return false;
+
+
+
+            //StreamStatus = GetSubString(result, @"""status"":""(.*?)""", 1).ToLower();
 
             LoggedIn = true;
             if( OnLogin != null )
                 OnLogin(this, EventArgs.Empty);
+
+            GetStreamStatus();
 
             switch (StreamStatus.ToLower())
             {
@@ -143,16 +148,38 @@ namespace dotGohaTV
 
             return true;
         }
+        private void GetStreamStatus()
+        {
+            var result = wc.DownloadString(String.Format(finalAuth, userid));
+            if (String.IsNullOrEmpty(result))
+                return;
+
+            StreamStatus = GetSubString(result, reLiveStatus, 1).ToLower() == "[]" ? "off" : "on";
+
+            if (String.IsNullOrEmpty(StreamStatus))
+                return;
+
+        }
         public GohaTVResult SwitchStream()
         {
             if (!LoggedIn)
                 return GohaTVResult.Unknown;
             while (wc.IsBusy) ;
+            var ts = TimeUtils.UnixTimestamp();
+            
+            wc.ContentType = ContentType.UrlEncoded;
+            
+            GetStreamStatus();
+            if( StreamStatus == On )
+                wc.postFormDataLowLevel(String.Format(switchUrl, uid, userid),
+                             HttpUtility.UrlEncode(@"startstop=stop&data[start][epoch-stop]=" + ts + "&data[start][stop]=&data[start][comment]=&data[startstop][epoch-start]=&data[startstop][start]=&data[startstop][epoch-stop]=&data[startstop][stop]=" + ts + "&data[startstop][comment]=&streamProvider=default&referrer=http://www.goha.tv/#!/my/stream").Replace(@"%3d", @"=").Replace(@"%26", "&"));
+            else
+                wc.postFormDataLowLevel(String.Format(switchUrl, uid, userid),
+                              HttpUtility.UrlEncode( @"startstop=start&data[start][epoch-stop]=&data[start][stop]=&data[start][comment]=&data[startstop][epoch-start]=&data[startstop][start]=&data[startstop][epoch-stop]=&data[startstop][stop]=&data[startstop][comment]=&streamProvider=default&referrer=http://www.goha.tv/#!/my/stream" ).Replace(@"%3d",@"=").Replace(@"%26","&"));
+            GetStreamStatus();
 
-            var result = wc.DownloadString(String.Format(switchUrl, uid));
-            if (GetSubString(result, String.Format(@"""({0})""",On), 1) != null)
+            if (StreamStatus == On)
             {
-                StreamStatus = On;
                 if (OnLive != null)
                     OnLive(this, EventArgs.Empty);
                 return GohaTVResult.On;

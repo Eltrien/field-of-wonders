@@ -48,6 +48,14 @@ namespace dotLastfm.Services
 		
 		internal string extract(XmlNode node, string name, int index)
 		{
+            if (node == null)
+                return "";
+            if (((XmlElement)node).GetElementsByTagName(name).Count <= 0)
+                return "";
+
+            if (((XmlElement)node).GetElementsByTagName(name)[index] == null)
+                return "";
+
 			return ((XmlElement)node).GetElementsByTagName(name)[index].InnerText;
 		}
 		

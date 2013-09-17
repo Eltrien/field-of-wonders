@@ -39,7 +39,7 @@
             this.exRichTextBoxDebug.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.exRichTextBoxDebug.Dock = System.Windows.Forms.DockStyle.Fill;
             this.exRichTextBoxDebug.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
-            this.exRichTextBoxDebug.HiglightColor = System.Drawing.Color.White;
+            this.exRichTextBoxDebug.HighlightColor = System.Drawing.Color.White;
             this.exRichTextBoxDebug.Location = new System.Drawing.Point(0, 0);
             this.exRichTextBoxDebug.Name = "exRichTextBoxDebug";
             this.exRichTextBoxDebug.RawTextColor = null;

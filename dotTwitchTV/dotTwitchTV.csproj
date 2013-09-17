@@ -73,6 +73,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Resources\peka.png" />
+    <None Include="Resources\facepalm.png" />
     <Content Include="Resources\Smiles\4Head.png" />
     <Content Include="Resources\Smiles\anger.png" />
     <Content Include="Resources\Smiles\ArsonNoSexy.png" />

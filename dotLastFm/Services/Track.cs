@@ -85,8 +85,11 @@ namespace dotLastfm.Services
 		public int GetID()
 		{
 			XmlDocument doc = request("track.getInfo");
-			
-			return Int32.Parse(extract(doc, "id"));
+            var id = extract(doc, "id");
+            if (String.IsNullOrEmpty(id))
+                return -1;
+            else
+			    return Int32.Parse(id);
 		}
 		
 		/// <summary>

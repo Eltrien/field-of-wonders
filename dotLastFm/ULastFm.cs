@@ -66,25 +66,31 @@ namespace dotLastfm
         }
         public bool Authenticate(string user, string password)
         {
-
-            _session = new Session(API_KEY, API_SECRET);
-
-            string md5password = Utilities.MD5(password);
-
-            _session.Authenticate(user, md5password);
-            if (_session.Authenticated)
+            try
             {
-                if (OnLogin != null)
-                    OnLogin(this, EventArgs.Empty);
-                _lfmUser = new User(user, _session);
-                
-                pollTimer.Change(0, Timeout.Infinite);
-                return true;
+                _session = new Session(API_KEY, API_SECRET);
+
+                string md5password = Utilities.MD5(password);
+
+                _session.Authenticate(user, md5password);
+                if (_session.Authenticated)
+                {
+                    if (OnLogin != null)
+                        OnLogin(this, EventArgs.Empty);
+                    _lfmUser = new User(user, _session);
+
+                    pollTimer.Change(0, Timeout.Infinite);
+                    return true;
+                }
+                else
+                {
+                    if (OnLoginFailed != null)
+                        OnLoginFailed(this, EventArgs.Empty);
+                    return false;
+                }
             }
-            else
-            {
-                if (OnLoginFailed != null)
-                    OnLoginFailed(this, EventArgs.Empty);
+            catch {
+                Debug.Print("Last.FM authentication error");
                 return false;
             }
         }

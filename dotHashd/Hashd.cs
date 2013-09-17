@@ -9,6 +9,8 @@ using dotUtilities;
 using System.Web;
 using System.Net;
 using WebSocket4Net;
+using dot.Json.Linq;
+using dot.Json;
 
 namespace dotHashd
 {
@@ -28,6 +30,7 @@ namespace dotHashd
         private const string reAuthToken = @"<input name=""authenticity_token""[^>]+value=""([^""])""";
         private const string reMessage = @"{\\""message\\"":\\""(.*?)\\"",\\""user\\"":{\\""id\\"":\\"".*?\\"",\\""chatNameColor\\"":\\"".*?\\"",\\""username\\"":\\""(.*?)\\"",";
         private const int pollIntervalStats = 20000;
+        private const int pingInterval = 5000;
 
         #endregion
         #region Private properties
@@ -35,12 +38,14 @@ namespace dotHashd
         private string chatUpdateNonce;
         private string chatNewMessageNonce;
         private Timer statsDownloader;
+        private Timer pingTimer;
         private CookieAwareWebClient statsWC, loginWC;
         private bool prevOnlineState = false;
         private Channel currentChannelStats;
         private string _login;
         private string _user;
         private string _password;
+        private string _rnd_number, _rnd_string;
         private object loginLock = new object();
         private object statsLock = new object();
         private WebSocket socket;
@@ -78,12 +83,17 @@ namespace dotHashd
             statsWC = new CookieAwareWebClient();
             loginWC = new CookieAwareWebClient();
             statsDownloader = new Timer(new TimerCallback(statsDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
+            pingTimer = new Timer(new TimerCallback(pingTimer_Tick), null, Timeout.Infinite, Timeout.Infinite);
 
         }
 
         private void statsDownloader_Tick(object o)
         {
             DownloadStats(_user);
+        }
+        private void pingTimer_Tick(object o)
+        {
+            Ping();
         }
         public bool isLoggedIn
         {
@@ -99,6 +109,7 @@ namespace dotHashd
         public void Stop()
         {
             statsDownloader.Change(Timeout.Infinite, Timeout.Infinite);
+            pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
         public bool Login()
         {
@@ -138,8 +149,11 @@ namespace dotHashd
 
         private void ConnectWebsocket()
         {
+            _rnd_number = random_hashd_number();
+            _rnd_string = random_hashd_string();
+
             socket = new WebSocket(
-                String.Format("ws://{0}:9999/chat/{1}/{2}/websocket", hashDomain,random_hashd_number(), random_hashd_string()),
+                String.Format("ws://{0}:9999/chat/{1}/{2}/websocket", hashDomain,_rnd_number, random_hashd_string()),
                 "",
                 loginWC.CookiesStrings,
                 null,
@@ -150,6 +164,7 @@ namespace dotHashd
             socket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(socket_MessageReceived);
             socket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(socket_Error);
             socket.Open();
+
         }
 
         private string OpCode
@@ -165,13 +180,13 @@ namespace dotHashd
 
         private void SwitchChannel( string channel)
         { 
-            var channelCommand = @"[""{\""opcodeID\"":" + OpCode + @",\""data\"":{\""channel\"":\""" + channel + @"\""}}""]";
+            var channelCommand = @"[""{\""opcodeID\"":1,\""data\"":{\""channel\"":\""" + channel + @"\""}}""]";
             socket.Send(channelCommand);
         }
         private void SendSessionID()
         {
             var sessionCookie = loginWC.CookiesStrings.Where(m => m.Key == "_session_id").FirstOrDefault();
-            var sessionCommand = @"[""{\""opcodeID\"":" + OpCode + @",\""data\"":{\""sessionID\"":\""" + sessionCookie.Value + @"\"",\""type\"":2}}""]";
+            var sessionCommand = @"[""{\""opcodeID\"":2,\""data\"":{\""sessionID\"":\""" + sessionCookie.Value + @"\"",\""type\"":2}}""]";
             socket.Send(sessionCommand);
         }
         public string User
@@ -180,7 +195,7 @@ namespace dotHashd
         }
         public void SendMessage(string text)
         {
-            var sendCommand = @"[""{\""opcodeID\"":" + OpCode + @",\""data\"":{\""message\"":\""" + text + @"\""}}""]";
+            var sendCommand = @"[""{\""opcodeID\"":3,\""data\"":{\""message\"":\""" + text + @"\""}}""]";
             socket.Send(sendCommand);
         }
         void socket_MessageReceived(object sender, MessageReceivedEventArgs e)
@@ -192,29 +207,63 @@ namespace dotHashd
             {
                 if (OnLogin != null)
                     OnLogin(this, EventArgs.Empty);
+                pingTimer.Change(pingInterval, pingInterval);
 
                 SwitchChannel(_user);
                 Thread.Sleep(1000);
                 SendSessionID();
+                return;
             }
-            else if (e.Message.Contains(@"\""data\"":{\""message\"":"))
-            {
-                var text = Re.GetSubString(e.Message, reMessage, 1);
-                var user = Re.GetSubString(e.Message, reMessage, 2);
-                if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(user))
-                    return;
 
-                if (OnMessage != null)
-                    OnMessage(this, new HashdMessageEventArgs(new Message() { User = user, Text = text }));
-
-            }
-            else
+            if (e.Message.Contains(@"a[""{\""opcodeID\"""))
             {
-                Debug.Print(e.Message);
+
+                int opcodeId = -1;
+                JObject data = null;
+                try
+                {
+                    var first = JArray.Parse(e.Message.Substring(1));
+                    if (first != null)
+                    {
+                        var pair = JObject.Parse((String)first[0]);
+                        if (pair != null)
+                        {
+                            opcodeId = (int)pair["opcodeID"];
+                            data = (JObject)pair["data"];
+                            switch (opcodeId)
+                            {
+                                case 4:
+                                    var text = data["message"].ToString();
+                                    var userobj = data["user"];
+                                    var user = userobj["username"].ToString();
+
+                                    
+                                    if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(user))
+                                        return;
+                                    if (user != _user)
+                                    {
+                                        if (OnMessage != null)
+                                            OnMessage(this, new HashdMessageEventArgs(new Message() { User = user, Text = text }));
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    }
+                    catch{}
+
+
+
             }
 
         }
+        private void Ping()
+        {
+            var command = @"[""{\""opcodeID\"":11,\""data\"":{}}""]";
 
+            //loginWC.XMLHttpRequest(String.Format(@"http://hashd.tv:9999/chat/{0}/{1}/xhr_send", _rnd_number, _rnd_string), command);
+            socket.Send(command );
+        }
         private void DownloadStats(string channel)
         {
             if (String.IsNullOrEmpty(_user))
@@ -225,7 +274,7 @@ namespace dotHashd
                 try
                 {
                     statsWC.Headers["Cache-Control"] = "no-cache";
-                    var url = String.Format(channelInfoUrl, channel);
+                    var url = String.Format(channelInfoUrl, channel.ToLower());
                     using (var stream = statsWC.downloadURL(url))
                     {
                         if (statsWC.LastWebError == "ProtocolError")

@@ -33,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,10 +46,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dotUtilities\dotUtilities.csproj">
+      <Project>{ED6C0B9C-608A-4325-8F98-5E23C7DC52CD}</Project>
+      <Name>dotUtilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebClient\dotWebClient.csproj">
       <Project>{E7DD099E-384E-4EDB-B217-D4850ACE32BC}</Project>
       <Name>dotWebClient</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

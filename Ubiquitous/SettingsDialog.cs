@@ -62,11 +62,18 @@ namespace Ubiquitous
         {
             textFontName.Text = settings.globalChatFont.ToString();
             textCounterFont.Text = settings.globalCounterFont.ToString();
+            textPersonalMsgFont.Text = settings.globalPersonalMessageFont.ToString();
+            twitchMeFont.Text = settings.twitchMeFont.ToString();
 
             buttonBackColor.BackColor = settings.globalChatBackground;
             buttonForeColor.BackColor = settings.globalChatTextColor;
             buttonCounterBackColor.BackColor = settings.globalCounterBackColor;
             buttonCounterForeColor.BackColor = settings.globalCounterTextColor;
+            buttonPersonalMsgColor.BackColor = settings.personalMessageColor;
+            buttonPersonalMsgBack.BackColor = settings.globalPersonalMessageBack;
+            buttonTwitchMeForecolor.BackColor = settings.twitchMeForeColor;
+            buttonTwitchMeBackcolor.BackColor = settings.twitchMeBackcolor;
+
 
         }
 
@@ -245,6 +252,88 @@ namespace Ubiquitous
             }
         }
 
+        private void buttonPersonalMsgColor_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.personalMessageColor = colorDialog.Color;
+                buttonPersonalMsgColor.BackColor = colorDialog.Color;
+            }
+        }
+
+        private void buttonPersonalMsgBack_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.globalPersonalMessageBack = colorDialog.Color;
+                buttonPersonalMsgBack.BackColor = colorDialog.Color;
+            }
+        }
+
+        private void buttonPersonalMsgFont_Click(object sender, EventArgs e)
+        {
+            fontDialog = new FontDialog();
+            fontDialog.Font = settings.globalPersonalMessageFont;
+            fontDialog.ShowColor = false;
+            fontDialog.ShowApply = true;
+            fontDialog.ShowEffects = true;
+            fontDialog.Apply +=new EventHandler(fontPersonalMsgDialog_Apply);
+
+            fontDialog.ShowDialog();
+
+            settings.globalPersonalMessageFont = fontDialog.Font;
+            textPersonalMsgFont.Text = settings.globalPersonalMessageFont.ToString();
+        }
+        void fontPersonalMsgDialog_Apply(object sender, EventArgs e)
+        {
+            settings.globalPersonalMessageFont = fontDialog.Font;
+            textPersonalMsgFont.Text = settings.globalPersonalMessageFont.ToString();
+        }
+
+        private void buttonTwitchMeFont_Click(object sender, EventArgs e)
+        {
+            fontDialog = new FontDialog();
+            fontDialog.Font = settings.globalPersonalMessageFont;
+            fontDialog.ShowColor = false;
+            fontDialog.ShowApply = true;
+            fontDialog.ShowEffects = true;
+            fontDialog.Apply += new EventHandler(fontTwitchMeFontDialog_Apply);
+
+            fontDialog.ShowDialog();
+
+            settings.twitchMeFont = fontDialog.Font;
+            twitchMeFont.Text = settings.twitchMeFont.ToString();
+        }
+        void fontTwitchMeFontDialog_Apply(object sender, EventArgs e)
+        {
+            settings.twitchMeFont = fontDialog.Font;
+            twitchMeFont.Text = settings.twitchMeFont.ToString();
+        }
+        private void buttonTwitchMeForecolor_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.twitchMeForeColor = colorDialog.Color;
+                buttonTwitchMeForecolor.BackColor = colorDialog.Color;
+            }
+        }
+
+        private void buttonTwitchMeBackcolor_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.twitchMeBackcolor= colorDialog.Color;
+                buttonTwitchMeBackcolor.BackColor = colorDialog.Color;
+            }
+        }
 
     }
 }

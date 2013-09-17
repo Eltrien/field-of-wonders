@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Ubiquitous;
+using System.Diagnostics;
 
 namespace SC2TV.RTFControl {
 
@@ -209,10 +210,8 @@ namespace SC2TV.RTFControl {
             SIF_ALL = SIF_RANGE + SIF_PAGE + SIF_POS + SIF_TRACKPOS
         }
 
-        
-
         // Scrolls a given textbox. handle: an handle to our textbox. pixels: number of pixels to scroll.
-        long scroll(IntPtr handle, int pixels)
+        long scroll(int pixels)
         {
             long pixelsToEnd = 0;
             IntPtr ptrLparam = new IntPtr(0);
@@ -222,33 +221,44 @@ namespace SC2TV.RTFControl {
             SCROLLINFO si = new SCROLLINFO();
             si.cbSize = (uint)Marshal.SizeOf(si);
             si.fMask = (uint)ScrollInfoMask.SIF_ALL;
-            GetScrollInfo(handle, (int)ScrollBarDirection.SB_VERT, ref si);           
+            GetScrollInfo(Handle, (int)ScrollBarDirection.SB_VERT, ref si);           
 
+            if( pixels == 0 )
+            {
+                endscroll(Handle);
+                return si.nPos;
+            }
             // Increase posion by pixles
             pixelsToEnd = (si.nMax - si.nPage) - (si.nPos + pixels);
             if (si.nPos < (si.nMax - si.nPage))
                 si.nPos += pixels;
             else
             {
-                ptrWparam = new IntPtr(SB_ENDSCROLL);
-                t.Enabled = false;
-                SendMessage(handle, WM_VSCROLL, ptrWparam, ptrLparam);                
+                endscroll(Handle);
+                return pixelsToEnd;
             }
                         
             // Reposition scroller
-            SetScrollInfo(handle, (int)ScrollBarDirection.SB_VERT, ref si, true);
+            SetScrollInfo(Handle, (int)ScrollBarDirection.SB_VERT, ref si, true);
 
             // Send a WM_VSCROLL scroll message using SB_THUMBTRACK as wParam
             // SB_THUMBTRACK: low-order word of wParam, si.nPos high-order word of wParam
             ptrWparam = new IntPtr(SB_THUMBTRACK + 0x10000 * si.nPos);            
-            SendMessage(handle, WM_VSCROLL, ptrWparam, ptrLparam);
+            SendMessage(Handle, WM_VSCROLL, ptrWparam, ptrLparam);
             return pixelsToEnd;
         }
-
+        void endscroll(IntPtr handle)
+        {
+            IntPtr ptrLparam = new IntPtr(0);
+            IntPtr ptrWparam;
+            ptrWparam = new IntPtr(SB_ENDSCROLL);
+            //t.Enabled = false;
+            SendMessage(handle, WM_VSCROLL, ptrWparam, ptrLparam);
+        }
         
         void t_Tick(object sender, EventArgs e)
         {
-            var pixelsToEnd = scroll(this.Handle, 1);
+            var pixelsToEnd = scroll(1);
             
             if (pixelsToEnd <= 0)
             {
@@ -256,6 +266,11 @@ namespace SC2TV.RTFControl {
                 //t.Stop();
             }
 
+        }
+        public UInt32 MaxLines
+        {
+            get;
+            set;
         }
         public string RTF
         {
@@ -280,13 +295,25 @@ namespace SC2TV.RTFControl {
         {
             int minScroll;
             int maxScroll;
-            GetScrollRange(this.Handle, SB_VERT, out minScroll, out maxScroll);
+            GetScrollRange(Handle, SB_VERT, out minScroll, out maxScroll);
             Point rtfPoint = Point.Empty;
-            SendMessage(this.Handle, EM_GETSCROLLPOS, 0, ref rtfPoint);
+            SendMessage(Handle, EM_GETSCROLLPOS, 0, ref rtfPoint);
 
 
             return (rtfPoint.Y + this.ClientSize.Height >= maxScroll);
         }
+        public int ScrollPos()
+        {
+            int minScroll;
+            int maxScroll;
+            GetScrollRange(Handle, SB_VERT, out minScroll, out maxScroll);
+            Point rtfPoint = Point.Empty;
+            SendMessage(Handle, EM_GETSCROLLPOS, 0, ref rtfPoint);
+
+
+            return rtfPoint.Y + this.ClientSize.Height;
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -305,6 +332,7 @@ namespace SC2TV.RTFControl {
             get;
             set;
         }
+     
         private void scrollTimer_Tick(object o)
         {
             if (InvokeRequired)
@@ -322,30 +350,37 @@ namespace SC2TV.RTFControl {
                 {
                     if (String.IsNullOrEmpty(Text))
                         return;
+                    Debug.Print(ScrollPos().ToString());
 
-                    if (!IsAtMaxScroll())
-                    {
-                        var linesToEnd = scroll(this.Handle, 1);
+                   if (!IsAtMaxScroll())
+                   {
+                        var linesToEnd = scroll(1);
                         if (linesToEnd > 15)
-                            linesToEnd = scroll(this.Handle, (int)(linesToEnd - (SlowScroll ? 15 : 0)));
+                        {
+                            linesToEnd = scroll((int)(linesToEnd - (SlowScroll ? 15 : 0)));
+                        }
 
                         while (linesToEnd > 0)
                         {
-                            linesToEnd = scroll(this.Handle, 1);
+                            linesToEnd = scroll(1);
                             Thread.Sleep(20);
                         }
                     }
-                    if (!Caret)
-                        HideCaret(this.Handle);
+//                    if (!Caret)
+                        //HideCaret(this.Handle);
 
                     ToImage();
                 }
             }
 
         }
+        private object lockScroll = new object();
         public void ScrollToEnd()
         {
-            scrollTimer.Change(350, System.Threading.Timeout.Infinite);
+            lock (lockScroll)
+            {
+                scrollTimer.Change(350, System.Threading.Timeout.Infinite);
+            }
         }
 
 
@@ -428,8 +463,24 @@ namespace SC2TV.RTFControl {
             set;
         }
 
+        public Color PersonalMessageColor
+        {
+            get;
+            set;
+
+        }
+        public Color PersonalMessageBack
+        {
+            get;
+            set;
+        }
+        public Font PersonalMessageFont
+        {
+            get;
+            set;
+        }
 		// The color of the highlight
-		public Color HiglightColor {
+		public Color HighlightColor {
 			get {return highlightColor;}
 			set {highlightColor = value;}
 		}
@@ -640,7 +691,7 @@ namespace SC2TV.RTFControl {
 		/// <param name="_color"></param>
 		public void InsertTextAsRtf(string _text, Font _font, Color _textColor, Color _backColor) {
 
-			StringBuilder _rtf = new StringBuilder();
+            StringBuilder _rtf = new StringBuilder();
 
 			// Append the RTF header
 			_rtf.Append(RTF_HEADER);
@@ -656,8 +707,23 @@ namespace SC2TV.RTFControl {
 			// Create the document area from the text to be added as RTF and append
 			// it to the RTF string.
 			_rtf.Append(GetDocumentArea(EncodeNonAsciiCharacters(_text), _font));
-
+           
 			this.SelectedRtf = _rtf.ToString();
+
+            var prevScrollPos = ScrollPos();
+            while (MaxLines > 0 && Lines.Length > MaxLines)
+            {
+                ReadOnly = false;
+                SelectionStart = 0;
+                SelectionLength = Text.IndexOf("\n", 0) + 1;
+                SelectedText = "";
+                ReadOnly = true;
+                var newScrollPos = ScrollPos();
+                Debug.Print("Old pos: {0}, new pos: {1}", prevScrollPos, newScrollPos);
+            }
+
+
+
 		}
         private string EncodeNonAsciiCharacters(string value)
         {
@@ -1198,9 +1264,16 @@ namespace SC2TV.RTFControl {
             if (!Caret)
                 HideCaret(this.Handle);
         }
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            //endscroll(this.Handle);
+            //SelectionStart = Text.Length;
+            //SelectionLength = 0;
+        }
         private void ExRichTextBox_Resize(object sender, EventArgs e)
         {
-            ScrollToEnd();
+
+            //ScrollToEnd();
         }
         protected override CreateParams CreateParams
         {
@@ -1210,11 +1283,10 @@ namespace SC2TV.RTFControl {
                 if (LoadLibrary("msftedit.dll") != IntPtr.Zero)
                     prams.ClassName = "RICHEDIT50W";
 
+                //prams.ExStyle |= 0x00000020;
                 return prams;
             }
         }
-
-
 
 
         /// <summary>

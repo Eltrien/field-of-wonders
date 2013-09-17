@@ -168,7 +168,9 @@ namespace dotBattlelog
         }
         private void Close(object sender, EventArgs e)
         {
-            pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            if( pingTimer != null )
+                pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
             Connected = false;
             Debug.Print("Battlelog: WebSocket closed");
             if (m_Close == null)

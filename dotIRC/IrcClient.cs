@@ -62,6 +62,8 @@ namespace dotIRC
 
         private static Timer disconnectTimer;
 
+        private object receiveLock = new object();
+
         static IrcClient()
         {
             regexNickName = @"(?<nick>[^!@]+)";
@@ -1898,110 +1900,120 @@ namespace dotIRC
 
         private void ReceiveCompleted(object sender, SocketAsyncEventArgs e)
         {
-            try
+            lock (receiveLock)
             {
-                if (e.SocketError != SocketError.Success)
+                try
                 {
-                    HandleSocketError(e.SocketError);
-                    return;
-                }
-
-                // Check if remote host has closed connection.
-                if (e.BytesTransferred == 0)
-                {
-                    HandleClientDisconnected();
-                    return;
-                }
-
-                // Indicate that block of data has been read into receive buffer.
-                this.receiveStream.WritePosition += e.BytesTransferred;
-                this.dataStreamReader.DiscardBufferedData();
-
-                // Read each terminated line of characters from data stream.
-                while (true)
-                {
-                    // Read next line from data stream.
-                    var line = this.dataStreamLineReader.ReadLine();
-                    if (line == null)
-                        break;
-                    if (line.Length == 0)
-                        continue;
-
-                    string prefix = null;
-                    string lineAfterPrefix = null;
-
-                    // Extract prefix from message line, if it contains one.
-                    if (line[0] == ':')
+                    if (e.SocketError != SocketError.Success)
                     {
-                        var firstSpaceIndex = line.IndexOf(' ');
-                        Debug.Assert(firstSpaceIndex != -1);
-                        prefix = line.Substring(1, firstSpaceIndex - 1);
-                        lineAfterPrefix = line.Substring(firstSpaceIndex + 1);
-                    }
-                    else
-                    {
-                        lineAfterPrefix = line;
+                        HandleSocketError(e.SocketError);
+                        return;
                     }
 
-                    // Extract command from message.
-                    var command = lineAfterPrefix.Substring(0, lineAfterPrefix.IndexOf(' '));
-                    var paramsLine = lineAfterPrefix.Substring(command.Length + 1);
-
-                    // Extract parameters from message.
-                    // Each parameter is separated by single space, except last one, which may contain spaces if it
-                    // is prefixed by colon.
-                    var parameters = new string[maxParamsCount];
-                    int paramStartIndex, paramEndIndex = -1;
-                    int lineColonIndex = paramsLine.IndexOf(" :");
-                    if (lineColonIndex == -1 && !paramsLine.StartsWith(":"))
-                        lineColonIndex = paramsLine.Length;
-                    for (int i = 0; i < parameters.Length; i++)
+                    // Check if remote host has closed connection.
+                    if (e.BytesTransferred == 0)
                     {
-                        paramStartIndex = paramEndIndex + 1;
-                        paramEndIndex = paramsLine.IndexOf(' ', paramStartIndex);
-                        if (paramEndIndex == -1)
-                            paramEndIndex = paramsLine.Length;
-                        if (paramEndIndex > lineColonIndex)
-                        {
-                            paramStartIndex++;
-                            paramEndIndex = paramsLine.Length;
-                        }
-                        parameters[i] = paramsLine.Substring(paramStartIndex, paramEndIndex - paramStartIndex);
-                        if (paramEndIndex == paramsLine.Length)
+                        HandleClientDisconnected();
+                        return;
+                    }
+
+                    // Indicate that block of data has been read into receive buffer.
+                    this.receiveStream.WritePosition += e.BytesTransferred;
+                    this.dataStreamReader.DiscardBufferedData();
+                    
+                    // Read each terminated line of characters from data stream.
+                    while (true)
+                    {
+                        // Read next line from data stream.
+                        var line = this.dataStreamLineReader.ReadLine();
+                        if (line == null)
                             break;
+                        if (line.Length == 0)
+                            continue;
+
+                        string prefix = null;
+                        string lineAfterPrefix = null;
+
+                        // Extract prefix from message line, if it contains one.
+                        if (line[0] == ':')
+                        {
+                            var firstSpaceIndex = line.IndexOf(' ');
+                            Debug.Assert(firstSpaceIndex != -1);
+                            prefix = line.Substring(1, firstSpaceIndex - 1);
+                            lineAfterPrefix = line.Substring(firstSpaceIndex + 1);
+                        }
+                        else
+                        {
+                            lineAfterPrefix = line;
+                        }
+
+                        // Extract command from message.
+                        var command = "";
+                        var paramsLine = "";
+                        if (lineAfterPrefix.IndexOf(' ') > 0)
+                        {
+                            command = lineAfterPrefix.Substring(0, lineAfterPrefix.IndexOf(' '));
+                            paramsLine = lineAfterPrefix.Substring(command.Length + 1);
+                        }
+
+                        // Extract parameters from message.
+                        // Each parameter is separated by single space, except last one, which may contain spaces if it
+                        // is prefixed by colon.
+                        var parameters = new string[maxParamsCount];
+                        int paramStartIndex, paramEndIndex = -1;
+                        int lineColonIndex = paramsLine.IndexOf(" :");
+                        if (lineColonIndex == -1 && !paramsLine.StartsWith(":"))
+                            lineColonIndex = paramsLine.Length;
+                        for (int i = 0; i < parameters.Length; i++)
+                        {
+                            paramStartIndex = paramEndIndex + 1;
+                            paramEndIndex = paramsLine.IndexOf(' ', paramStartIndex);
+                            if (paramEndIndex == -1)
+                                paramEndIndex = paramsLine.Length;
+                            if (paramEndIndex > lineColonIndex)
+                            {
+                                paramStartIndex++;
+                                paramEndIndex = paramsLine.Length;
+                            }
+                            parameters[i] = paramsLine.Substring(paramStartIndex, paramEndIndex - paramStartIndex);
+                            if (paramEndIndex == paramsLine.Length)
+                                break;
+                        }
+
+                        // Parse received IRC message.
+                        var message = new IrcMessage(this, prefix, command, parameters);
+                        var messageReceivedEventArgs = new IrcRawMessageEventArgs(message, line);
+
+                        OnRawMessageReceived(messageReceivedEventArgs);
+                        ReadMessage(message, line);
+#if DEBUG
+                        DebugUtilities.WriteIrcRawLine(this, ">>> " + messageReceivedEventArgs.RawContent);
+#endif
+               
+
                     }
 
-                    // Parse received IRC message.
-                    var message = new IrcMessage(this, prefix, command, parameters);
-                    var messageReceivedEventArgs = new IrcRawMessageEventArgs(message, line);
-                    OnRawMessageReceived(messageReceivedEventArgs);
-                    ReadMessage(message, line);
-
-#if DEBUG
-                    DebugUtilities.WriteIrcRawLine(this, ">>> " + messageReceivedEventArgs.RawContent);
-#endif
+                    // Continue reading data from socket.
+                    ReceiveAsync();
                 }
-
-                // Continue reading data from socket.
-                ReceiveAsync();
-            }
-            catch (SocketException exSocket)
-            {
-                HandleSocketError(exSocket);
-            }
-            catch (ObjectDisposedException)
-            {
-                // Ignore.
-            }
+                catch (SocketException exSocket)
+                {
+                    HandleSocketError(exSocket);
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Ignore.
+                }
 #if !DEBUG
             catch (Exception ex)
             {
                 OnError(new IrcErrorEventArgs(ex));
             }
 #endif
-            finally
-            {
-                e.Dispose();
+                finally
+                {
+                    e.Dispose();
+                }
             }
         }
 

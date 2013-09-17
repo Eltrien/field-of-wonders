@@ -65,6 +65,10 @@
       <Project>{6920447F-76B1-4739-822E-9CE3A2882718}</Project>
       <Name>WebSocket4Net</Name>
     </ProjectReference>
+    <ProjectReference Include="..\dotJson\Src\Newtonsoft.Json\dotJSON.csproj">
+      <Project>{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}</Project>
+      <Name>dotJSON</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotUtilities\dotUtilities.csproj">
       <Project>{ED6C0B9C-608A-4325-8F98-5E23C7DC52CD}</Project>
       <Name>dotUtilities</Name>

@@ -14,6 +14,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Threading;
 using dotUtilities;
+using dot.Json.Linq;
+using dot.Json;
 
 
 namespace dotSC2TV
@@ -324,39 +326,42 @@ namespace dotSC2TV
                     if (stream == null)
                         return false;
 
-                    List<object> list = JSEvaluator.EvalArrayObject(reader.ReadToEnd());
-                smiles.Clear();
-                foreach (object obj in list)
-                {
-                    Smile smile = new Smile();
-                    smile.Code = JSEvaluator.ReadPropertyValue(obj, "code");
-                    smile.Image = JSEvaluator.ReadPropertyValue(obj, "img");
-                    smile.Width = int.Parse(JSEvaluator.ReadPropertyValue(obj, "width"));
-                    smile.Height = int.Parse(JSEvaluator.ReadPropertyValue(obj, "height"));
-                    try
+                    List<object> list = JSEvaluator.EvalArrayObject(reader.ReadToEnd().Replace("private:","p:"));
+                    if (list == null)
+                        return false;
+
+                    smiles.Clear();
+                    foreach (object obj in list)
                     {
-                        Bitmap srcimage = new Bitmap(cwc.downloadURL(String.Format(smilesImagesUrl, smile.Image)));
-                        srcimage = resizeImage(srcimage,new Size(smile.Width,smile.Height));
-                        smile.bmp = new Bitmap(smile.Width, smile.Height);
-                        using (Graphics g = Graphics.FromImage(smile.bmp))
+                        Smile smile = new Smile();
+                        smile.Code = JSEvaluator.ReadPropertyValue(obj, "code");
+                        smile.Image = JSEvaluator.ReadPropertyValue(obj, "img");
+                        smile.Width = int.Parse(JSEvaluator.ReadPropertyValue(obj, "width"));
+                        smile.Height = int.Parse(JSEvaluator.ReadPropertyValue(obj, "height"));
+                        try
                         {
-                            g.DrawImage(srcimage,1,1);
+                            Bitmap srcimage = new Bitmap(cwc.downloadURL(String.Format(smilesImagesUrl, smile.Image)));
+                            srcimage = resizeImage(srcimage,new Size(smile.Width,smile.Height));
+                            smile.bmp = new Bitmap(smile.Width, smile.Height);
+                            using (Graphics g = Graphics.FromImage(smile.bmp))
+                            {
+                                g.DrawImage(srcimage,1,1);
+                            }
                         }
-                    }
-                    catch
-                    {
-                        smile.bmp = new Bitmap(30,30);
-                        using( Graphics g = Graphics.FromImage(smile.bmp) )
+                        catch
                         {
-                            g.Clear(Color.White);
-                            g.DrawRectangle(new Pen(Color.Black), new Rectangle(0,0,28,28));
-                            g.DrawString(smile.Code, new Font("Microsoft Sans Serif", 7), Brushes.Black, new RectangleF(0, 0, 28, 28));
+                            smile.bmp = new Bitmap(30,30);
+                            using( Graphics g = Graphics.FromImage(smile.bmp) )
+                            {
+                                g.Clear(Color.White);
+                                g.DrawRectangle(new Pen(Color.Black), new Rectangle(0,0,28,28));
+                                g.DrawString(smile.Code, new Font("Microsoft Sans Serif", 7), Brushes.Black, new RectangleF(0, 0, 28, 28));
+                            }
+                            Debug.Print("Exception in updateSmiles()");
                         }
-                        Debug.Print("Exception in updateSmiles()");
+                        smiles.Add(smile);
                     }
-                    smiles.Add(smile);
                 }
-            }
             
             return true;
             }
@@ -417,7 +422,7 @@ namespace dotSC2TV
                 {
                     try
                     {
-                        string loginParams = "name=" + login + "&pass=" + password + "&form_build_id=" + formBuildId + "&form_id=user_login_block";
+                        string loginParams = "name=" + HttpUtility.UrlEncode(login) + "&pass=" + HttpUtility.UrlEncode(password) + "&form_build_id=" + formBuildId + "&form_id=user_login_block";
 
                         loginWC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
                         loginWC.UploadString(loginUrl, loginParams);

@@ -11,6 +11,9 @@ using System.Collections;
 using System.IO;
 using System.Net.Sockets;
 using dotUtilities;
+using System.Net.Security;
+using System.Windows.Forms;
+
 namespace dotWebClient
 {
 
@@ -27,12 +30,14 @@ namespace dotWebClient
         private string _lastWebErrorDescription;
         private Dictionary<ContentType, string> contentTypes;
         private HttpWebResponse gResponse;
+        private object lockRequest;
 
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
         public bool stillReading = false;
         public CookieAwareWebClient()
         {
-            
+            lockRequest = new object();
+            InitiateSSLTrust();
             ServicePointManager.DefaultConnectionLimit = 5;
             ServicePointManager.Expect100Continue = false;
             ServicePointManager.UseNagleAlgorithm = false;
@@ -150,6 +155,105 @@ namespace dotWebClient
         {
             return m_container.GetCookies(new Uri(url))[name].Value;
         }
+        public string XMLHttpRequest(string url, string data)
+        {
+            lock (lockRequest)
+            {
+                var uri = new Uri(url);
+                IPHostEntry hostEntry = Dns.GetHostEntry(uri.Host);
+
+                Socket socket = null;
+                for (int i = 0; i < hostEntry.AddressList.Count();i++ )
+                {
+                    IPAddress address = hostEntry.AddressList[i];
+
+                    IPEndPoint ipEndpoint = new IPEndPoint(address, uri.Port);
+
+                    socket = new Socket(ipEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    try
+                    {
+                        socket.Connect(ipEndpoint);
+                        if (socket.Connected)
+                        {
+                            Debug.Print(String.Format("WebClient XMLHttpRequest: Connected to {0}", ipEndpoint.ToString()));
+                            break;
+                        }
+                        else
+                        {
+                            Debug.Print(String.Format("WebClient XMLHttpRequest: can't connect to {0}", ipEndpoint.ToString()));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Print("WebClient XMLHttpRequest: socket exception {0}", ex.Message);
+                    }
+                }
+                var cookielist = CookiesStrings.Select(a => String.Format("{0}={1}", a.Key, a.Value));
+                String cookies = string.Join("; ", cookielist);
+
+                String requestString = String.Format("POST {0} HTTP/1.1\r\n" +
+                    "User-Agent: {4}\r\n" +
+                    "Accept: text/html\r\n" +
+                    "Host: {1}\r\n" +
+                    "Origin: http://hashd.tv\r\n" + 
+                    "Accept-Encoding: deflate\r\n" +
+                    "Referer: http://hashd.tv/xedoc\r\n" +
+                    "Cache-Control: no-store, no-cache\r\n" +
+                    "Pragma: no-cache\r\n" +
+                    "Content-Length: {2}\r\n" +
+                    "Connection: Keep-Alive\r\n" +
+                    (Cookies.Count > 0 ? "Cookie: " + cookies + "\r\n": "") +
+                    "Content-Type: application/xml\r\n\r\n"
+                    + "{3}", uri.AbsolutePath, uri.Host, Encoding.UTF8.GetBytes(data).Length, data, userAgent);
+                Debug.Print(requestString);
+                byte[] request = Encoding.ASCII.GetBytes(requestString);
+
+                Byte[] bytesReceived = new Byte[1024];
+                try
+                {
+                    socket.Send(request, request.Length, 0);
+                }
+                catch (Exception ex)
+                {
+                    Debug.Print("WebClient XMLHttpRequest: socket exception {0}", ex.Message);
+                }
+
+                string result = String.Empty;
+                int bytes = 0;
+                try
+                {
+                    do
+                    {
+                        bytes = socket.Receive(bytesReceived, bytesReceived.Length, 0);
+                        result = result + Encoding.ASCII.GetString(bytesReceived, 0, bytes);
+                    }
+                    while (bytes > 0);
+                }
+                catch( Exception ex )
+                {
+                    Debug.Print("WebClient XMLHttpRequest: socket exception {0}", ex.Message);
+                }
+                Debug.Print(result);
+                bool found = true;
+                var tmpResult = result;
+                while (found)
+                {
+                    var pair = Re.GetSubString(tmpResult, @"Set-Cookie:\s([^;]+)?;", 1);
+                    if (String.IsNullOrEmpty(pair))
+                    {
+                        found = false;
+                        break;
+                    }
+                    var re = @"(.*)?=(.*)";
+                    var name = Re.GetSubString(pair, re, 1);
+                    var value = Re.GetSubString(pair, re, 2);
+                    setCookie(name, value, uri.DnsSafeHost);
+                    tmpResult = tmpResult.Replace(String.Format(@"Set-Cookie: {0}", name), "");
+                }
+
+                return result;
+            }
+        }
         public string postFormDataLowLevel(string formActionUrl, string postData)
         {
             var uri = new Uri(formActionUrl);
@@ -261,7 +365,22 @@ namespace dotWebClient
             }
             return string.Empty;
         }
-
+        public static void InitiateSSLTrust()
+        {
+            try
+            {
+                //Change SSL checks so that all checks pass
+                ServicePointManager.ServerCertificateValidationCallback =
+                    new RemoteCertificateValidationCallback(
+                        delegate
+                        { return true; }
+                    );
+            }
+            catch (Exception ex)
+            {
+                
+            }
+        }
         public System.IO.Stream downloadURL(string url)
         {
             _lastWebError = WebExceptionStatus.Success;

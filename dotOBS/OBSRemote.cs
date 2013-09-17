@@ -6,6 +6,7 @@ using WebSocket4Net;
 using System.Diagnostics;
 using dotUtilities;
 using System.Threading;
+
 namespace dotOBS
 {
 
@@ -55,6 +56,26 @@ namespace dotOBS
             var msg = "{\"request-type\":\"SetSourceRender\",\"source\":\"" + sourceName + "\",\"render\":" + enable.ToString().ToLower() +",\"message-id\":\"" + MessageId + "\"}";
             socket.Send(msg);
         }
+        public void SetSourceRendererPart(String sourceName, bool enable)
+        {
+            if( SceneStatus != null )
+            {
+                var curSceneName = SceneStatus.currentScene;
+                if( !String.IsNullOrEmpty(curSceneName) )
+                {
+                    Scene curScene = Scenes.FirstOrDefault( scene => scene.name == curSceneName );
+                    Source switchSource = curScene.sources.FirstOrDefault(source => source.name.ToLower().StartsWith(sourceName.ToLower()));
+                    if( switchSource != null && !String.IsNullOrEmpty(switchSource.name))
+                    {
+                        SetSourceRenderer(switchSource.name, enable);
+                    }
+                }
+            }
+        }
+        public SceneStatus SceneStatus
+        {
+            get;set;
+        }
         public bool Opened
         {
             get { return socket.State == WebSocketState.Open; }
@@ -67,7 +88,6 @@ namespace dotOBS
         void socket_DataReceived(object sender, WebSocket4Net.DataReceivedEventArgs e)
         {
         }
-
 
         public List<Scene> Scenes
         {
@@ -136,6 +156,7 @@ namespace dotOBS
                 var sceneStatus = JsonGenerics.ParseJson<SceneStatus>.ReadObject(e.Message);
                 if (sceneStatus != null)
                 {
+                    SceneStatus = sceneStatus;
                     if (sceneStatus.scenes.Count > 0)
                         Scenes = sceneStatus.scenes;
                     if (OnSceneList != null)
@@ -245,3 +266,43 @@ namespace dotOBS
         public Source Source { get; private set; }
     }
 }
+
+
+
+/* Authentication routines
+
+bool Config::checkChallengeAuth(const char *response, const char *challenge)
+{
+    size_t challengeLength = strlen(challenge);
+    size_t authHashLength = this->authHash.length();
+    size_t authPlusChallengeSize = authHashLength + challengeLength;
+    char* authPlusChallenge = (char*)malloc(authPlusChallengeSize);
+
+    //concat authHash and challenge string
+    memcpy(authPlusChallenge, this->authHash.c_str(), authHashLength);
+    memcpy(authPlusChallenge + authHashLength, challenge, challengeLength);
+
+    unsigned char respHash[32];
+    unsigned char respHash64[64];
+    size_t respHash64Size = 64;
+
+    //hash concatenated authHash and string and base 64 encode
+    sha2((unsigned char *)authPlusChallenge, authPlusChallengeSize, respHash, 0);
+    base64_encode(respHash64, &respHash64Size, respHash, 32);
+    respHash64[respHash64Size] = 0;
+
+    free(authPlusChallenge);
+
+    //compare against response
+    return strcmp((char*)respHash64, response) == 0;
+}
+      public static string CreateSHAHash(string Phrase)
+    {
+        SHA512Managed HashTool = new SHA512Managed();
+        Byte[] PhraseAsByte = System.Text.Encoding.UTF8.GetBytes(string.Concat(Phrase));
+        Byte[] EncryptedBytes = HashTool.ComputeHash(PhraseAsByte);
+        HashTool.Clear();
+        return Convert.ToBase64String(EncryptedBytes);
+    }
+
+*/

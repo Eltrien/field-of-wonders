@@ -31,7 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.JScript" />
+    <Reference Include="SuperSocket.ClientEngine.Common">
+      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.ClientEngine.Core">
+      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.ClientEngine.Protocol">
+      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Protocol.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.ClientEngine.Proxy">
+      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Proxy.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
@@ -45,13 +56,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Goodgame.cs" />
-    <Compile Include="JScript.cs" />
+    <Compile Include="GoodgameJson.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dotFlex4\FluorineFx\dotFlex.csproj">
-      <Project>{A9B8375B-579D-4F8A-B00C-F2828DB58F3A}</Project>
-      <Name>dotFlex</Name>
+    <ProjectReference Include="..\dotBattlelog\websocket.net.client2\WebSocket4Net\WebSocket4Net.csproj">
+      <Project>{6920447F-76B1-4739-822E-9CE3A2882718}</Project>
+      <Name>WebSocket4Net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dotJson\Src\Newtonsoft.Json\dotJSON.csproj">
+      <Project>{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}</Project>
+      <Name>dotJSON</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dotUtilities\dotUtilities.csproj">
+      <Project>{ED6C0B9C-608A-4325-8F98-5E23C7DC52CD}</Project>
+      <Name>dotUtilities</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebClient\dotWebClient.csproj">
       <Project>{E7DD099E-384E-4EDB-B217-D4850ACE32BC}</Project>

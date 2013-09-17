@@ -174,7 +174,13 @@ namespace dotEmpireTV
         {
             lock (loginLock)
             {
-                var result = loginWC.DownloadString(empireDomain);
+                var result = String.Empty;
+                try
+                {
+                    result = loginWC.DownloadString(empireDomain);
+                }
+                catch { }
+
                 if (String.IsNullOrEmpty(result))
                     return false;
 

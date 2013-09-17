@@ -380,5 +380,41 @@
     <Setting Name="twitchChannel" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="globalCounterGoodgame" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="globalCounterPosGoodgame" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 72</Value>
+    </Setting>
+    <Setting Name="globalPersonalMessageBack" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="personalMessageColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Yellow</Value>
+    </Setting>
+    <Setting Name="globalPersonalMessageFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Tahoma, 9.75pt, style=Bold</Value>
+    </Setting>
+    <Setting Name="obsChatSwitch" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="obsChatSourceName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">chat</Value>
+    </Setting>
+    <Setting Name="obsChatTimeout" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="twitchMeForeColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Gold</Value>
+    </Setting>
+    <Setting Name="twitchMeBackcolor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="twitchMeFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Tahoma, 9.75pt, style=Bold</Value>
+    </Setting>
+    <Setting Name="generalHistoryLines" Type="System.String" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

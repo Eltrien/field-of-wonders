@@ -32,10 +32,9 @@ namespace Ubiquitous
     public class Log
     {
         private ExRichTextBox tb;
-        delegate void SetTextCallback(string text, ChatIcon icon);
+        delegate void SetTextCallback(string text, ChatIcon icon, bool highlight = false, Color? foreColor = null, Color? backColor = null);
         delegate void ReplaceSmileCodeCB(String code, Bitmap bmp);
-
-
+        private object lockWriteLine;
         /// <summary>
         /// Provied Textbox object to the constructor
         /// </summary>
@@ -43,6 +42,7 @@ namespace Ubiquitous
         /// 
         public Log(ExRichTextBox logTb)
         {
+            lockWriteLine = new object();
             tb = logTb;
             tb.Clear();
         }
@@ -104,11 +104,12 @@ namespace Ubiquitous
             }
         }
 
+
         /// <summary>
         /// Writes a line to the textbox. Automaticall adds newline character
         /// </summary>
         /// <param name="text"></param>
-        public void WriteLine(string text, ChatIcon icon = ChatIcon.Default)
+        public void WriteLine(string text, ChatIcon icon = ChatIcon.Default, bool highlight = false, Color? foreColor = null, Color? backColor = null)
         {
             if (tb == null)
                 return;
@@ -117,16 +118,17 @@ namespace Ubiquitous
                 SetTextCallback d = new SetTextCallback(WriteLine);
                 try
                 {
-                    tb.Parent.Invoke(d, new object[] { text, icon});
+                    tb.Parent.Invoke(d, new object[] { text, icon, highlight, foreColor, backColor });
                 }
                 catch { }
             }
             else
             {
+
                 Bitmap chatIcon = GetChatBitmap(icon);
 
 
-                if( tb.Text.Length > 0 )
+                if (tb.Text.Length > 0)
                     tb.AppendText(Environment.NewLine);
 
 
@@ -134,20 +136,24 @@ namespace Ubiquitous
                 {
                     if (tb.TimeStamp)
                         tb.AppendTextAsRtf(DateTime.Now.GetDateTimeFormats('T')[0] + " ", tb.Font, tb.TimeColor);
-                        //tb.AppendText(DateTime.Now.GetDateTimeFormats('T')[0] + " ");
+                    //tb.AppendText(DateTime.Now.GetDateTimeFormats('T')[0] + " ");
 
-                    if(chatIcon != null)
-                        tb.InsertImage( chatIcon );
+                    if (chatIcon != null)
+                        tb.InsertImage(chatIcon);
 
-                    tb.AppendTextAsRtf(" " + text, tb.Font, tb.TextColor);
-                    
+                    if (highlight)
+                        tb.AppendTextAsRtf(" " + text, tb.PersonalMessageFont, tb.PersonalMessageColor, tb.PersonalMessageBack);
+                    else if (foreColor.HasValue && backColor.HasValue)
+                        tb.AppendTextAsRtf(" " + text, tb.Font, foreColor.Value, backColor.Value);
+                    else
+                        tb.AppendTextAsRtf(" " + text, tb.Font, tb.TextColor);
+
                     //tb.AppendText(" " + text);
                 }
                 tb.SelectionStart = tb.Text.Length;
                 tb.SelectionLength = 0;
-
                 tb.ScrollToEnd();
-                
+
             }
         }
     }

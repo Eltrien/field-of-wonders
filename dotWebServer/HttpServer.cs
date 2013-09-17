@@ -76,7 +76,13 @@ namespace dotWebServer
                 Debug.Print("Exception: " + e.ToString());
                 writeFailure();
             }
-            outputStream.Flush();
+            try
+            {
+                outputStream.Flush();
+            }
+            catch
+            {
+            }
             // bs.Flush(); // flush any remaining output
             inputStream = null; outputStream = null; // bs = null;            
             socket.Close();

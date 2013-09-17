@@ -3,188 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
-using dotFlex;
-using dotFlex.Net;
-using dotFlex.Messaging;
-using dotFlex.Messaging.Rtmp;
-using dotFlex.Messaging.Api;
-using dotFlex.Messaging.Api.Service;
 using System.Security.Cryptography;
-using Microsoft.JScript;
 using dotWebClient;
 using System.Text.RegularExpressions;
+using System.Net;
+using System.IO;
+using System.Threading;     
+using WebSocket4Net;
+using dotUtilities;
+using System.Diagnostics;
+using dot.Json.Linq;
+using dot.Json;
+
 namespace dotGoodgame
 {
     public class Goodgame
     {
-        private NetConnection _netConnection;
-        private const string _chatUrl = "rtmp://www.goodgame.ru/chat";
-        private const string _channelUrl = @"http://www.goodgame.ru/channel/{0}";
-        private string _chatId;
+        private const string domain = "goodgame.ru";
+        private const string chatUrl = "http://www." + domain + "/chat/{0}/";
+        private const string channelUrl = @"http://www." + domain + "/channel/{0}";
+        private const string loginUrl = @"http://" + domain + "/ajax/login/";
+        private const string statsUrl = @"http://goodgame.ru/api/getchannelstatus?id={0}&fmt=json";
+        private const int maxServerNum = 0x1e3;
+        private const int pollInterval = 20000;
+        private int _chatId;
         private int _userId;
         private string _user;
         private string _userToken;
-        private List<GGChannel> _channels;
+        private string _channel;
+        private string _password;
         private bool _loadHistory;
-        public GGChat _sharedObject;
-        public CookieAwareWebClient cwc;
-        public class GGChannel
-        {
-            private int _id, _viewers;
-            private string _title;
-            public GGChannel(int id, string title, int viewers)
-            {
-                _id = id;
-                Title = title; 
-                _viewers = viewers;
-            }
-            public int Id
-            {
-                get { return _id; }
-            }
-            public string Title
-            {
-                get { return _title;  }
-                set { _title = HttpUtility.HtmlDecode(value); }
-            }
-            public string TitleAndViewers
-            {
-                get { return String.Format("{0} ({1})", _title, _viewers); }
-            }
-            public int Viewers
-            {
-                get { return _viewers; }
-                set {_viewers = value; }
-            }
-        }
-        public class GGChatUser
-        {
-            private bool _banned;
-            private string _color;
-            private int _id;
-            private int _level;
-            private string _name;
-            private int _gender;
+        private object loginLock = new object();
+        private object statsLock = new object();
+        private object messageLock = new object();
+        private int viewers;
+        private CookieAwareWebClient loginWC, statsWC, chatWC;
+        private Timer statsDownloader;
+        private WebSocket socket;
 
-            public GGChatUser(ASObject user)
-            {
-                try
-                {
-                    if( user.ContainsKey("banned") )
-                        _banned = bool.Parse(user["banned"].ToString());
-                    if (user.ContainsKey("color"))
-                        _color = (string)user["color"];
-                    if (user.ContainsKey("id"))
-                        _id = int.Parse(user["id"].ToString());
-                    if (user.ContainsKey("level"))
-                        _level = int.Parse(user["level"].ToString());
-                    if (user.ContainsKey("name"))
-                        _name = (string)user["name"];
-                    if (user.ContainsKey("sex"))
-                        _gender = int.Parse(user["sex"].ToString());
-                }
-                catch { }
-            }
-            public bool Banned
-            {
-                get { return _banned; }
-            }
-            public string Color
-            {
-                get { return _color; }
-            }
-            public int Level
-            {
-                get { return _level; }
-            }
-            public string Name
-            {
-                get { return _name; }
-            }
-            public int Gender
-            {
-                get { return _gender; }
-            }
-        }
-        public class GGChatMessage
-        {
-                public const int MSG_PRIVACY_ADMIN= 2;
-                public const int MSG_PRIVACY_PRIVATE = 3;
-                public const int MSG_PRIVACY_PUBLIC = 0;
-                public const int MSG_PRIVACY_SELF = 1;
-                public const int MSG_STATUS_ADMIN = 2;
-                public const int MSG_STATUS_ERROR = 3;
-                public const int MSG_STATUS_REGULAR = 0;
-                public const int MSG_STATUS_STATUS = 1;
-
-                private int _id = -1;
-                private int _privacy = 0;
-                private String _recipient;
-                private GGChatUser _sender;
-                private int _status = 0;
-                private String _text = "";
-                private String _time = "";
-                public GGChatMessage(ASObject msg)
-                {
-                    if (msg.ContainsKey("id"))
-                        _id = int.Parse(msg["id"].ToString());
-                    if (msg.ContainsKey("privacy"))
-                        _privacy = int.Parse(msg["privacy"].ToString());
-                    if (msg.ContainsKey("recipient"))
-                    {
-                        var tmprec = msg["recipient"].ToString();
-                        _recipient = (tmprec == "0" ? "" : tmprec);
-                    }
-                    if (msg.ContainsKey("sender"))
-                        _sender = new GGChatUser((ASObject)msg["sender"]);
-                    if (msg.ContainsKey("status"))
-                        _status = int.Parse(msg["status"].ToString());
-                    if (msg.ContainsKey("text"))
-                        _text = (string)msg["text"];
-                    if (msg.ContainsKey("time"))
-                        _time = (string)msg["time"];                   
-                }
-                public int Id
-                {
-                    get { return _id; }
-                }
-                public int Privacy
-                {
-                    get { return _privacy; }
-                }
-                public string Recipient
-                {
-                    get { return _recipient; }
-                }
-                public GGChatUser Sender
-                {
-                    get { return _sender; }
-                }
-                public int Status
-                {
-                    get { return _status; }
-                }
-                public string Text
-                {
-                    get { return _text; }
-                }
-                public string Time
-                {
-                    get { return _time; }
-                }
-        }
-        public class GGMessageEventArgs : EventArgs
-        {
-            private GGChatMessage _message;
-            public GGChatMessage Message
-            {
-                get { return _message; }
-            }
-            public GGMessageEventArgs(GGChatMessage message)
-            {
-                _message = message;
-            }
-        }
         public class TextEventArgs : EventArgs
         {
             private string _text;
@@ -200,292 +56,317 @@ namespace dotGoodgame
 
         public Goodgame( string user, string password, bool loadHistory = false )
         {
-            cwc = new CookieAwareWebClient();
+            loginWC = new CookieAwareWebClient();
+            statsWC = new CookieAwareWebClient();
+            chatWC = new CookieAwareWebClient();
+
             _loadHistory = loadHistory;
-            _chatId = null;
+            _chatId = -1;
             _userId = -1;
+            _userToken = null;
             _user = user;
-            _channels = new List<GGChannel>();
+            _password = password;
+            viewers = 0;
+            FlashViewers = "0";
+            
+            statsDownloader = new Timer(new TimerCallback(statsDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
 
-            if( !String.IsNullOrEmpty(user) )
-            {
-                _userToken = GetMd5Hash(MD5.Create(), password);
-            }
-            updateChannelList();
-
-
-        }
-
-        public class GGChat : RemoteSharedObject
-        {
-            public  GGChat()
-            {
-            }
-            public event EventHandler<GGMessageEventArgs> MessageReceived;
-            private void MessageEvent(EventHandler<GGMessageEventArgs> evnt, GGMessageEventArgs e)
-            {
-                var handler = evnt;
-                if (handler != null)
-                {
-                    handler(this, e);
-                }
-            }
-            public void ClearEvents()
-            {
-                MessageReceived= null;
-            }
-            public void msgFromSrvr(ASObject msg)
-            {
-                if( MessageReceived != null )
-                    MessageEvent(MessageReceived, new GGMessageEventArgs(new GGChatMessage(msg)));
-            }
         }
 
         #region Goodgame Events
-        public event EventHandler<EventArgs> OnConnect;
+        public event EventHandler<EventArgs> OnLogin;
         public event EventHandler<EventArgs> OnDisconnect;
-        public event EventHandler<GGMessageEventArgs> OnMessageReceived;
-        public event EventHandler<EventArgs> OnChannelListReceived;
+        public event EventHandler<Message> OnMessageReceived;
         public event EventHandler<TextEventArgs> OnError;
-        
-        private void DefaultEvent(EventHandler<EventArgs> evnt, EventArgs e)
-        {
-            var handler = evnt;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-        private void MessageEvent(EventHandler<GGMessageEventArgs> evnt, GGMessageEventArgs e)
-        {
-            var handler = evnt;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-        private void ErrorEvent(EventHandler<TextEventArgs> evnt, TextEventArgs e)
-        {
-            var handler = evnt;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-        #endregion
 
-        #region Functions called from server
-        public void setAuth(object arg0, object arg1)
-        {
-        }
-        #endregion
-
-        #region NetConnection events
-        void _netConnection_OnConnect(object sender, EventArgs e)
-        {
-            if( _loadHistory )
-                _netConnection.Call("getHistory", new Responder<object[]>(addHistory), 0);
-            _sharedObject.Connect(_netConnection);
-            
-            if( OnConnect != null )
-                DefaultEvent(OnConnect, new EventArgs());
-
-            //_netConnection.Call("msgFromClient", new Responder<object[]>(msgFromClient), new object[] { 0, null, "test3", "2304" });
-        }
-        void _netConnection_NetStatus(object sender, NetStatusEventArgs e)
-        {
-            string level = null;
-            foreach (var i in e.Info)
-            {
-
-            }
-            if (e.Info.ContainsKey("level"))
-                level = e.Info["level"] as string;
-                        
-            if (level == "error")   
-            {
-                if (e.Info.ContainsKey("description"))
-                {
-                    if( OnError != null )
-                        ErrorEvent(OnError, new TextEventArgs(String.Format("Goodgame error: {0}", e.Info["description"].ToString())));
-                }
-            }
-            if (level == "status")
-            {
-
-            }
-        }
-        void _netConnection_OnDisconnect(object sender, EventArgs e)
-        {
-            if( OnDisconnect != null )
-                DefaultEvent(OnDisconnect, new EventArgs());
-        }
-        #endregion
-
-        #region SharedObject events
-        void _sharedObject_NewMessage(object sender, SendMessageEventArgs e)
-        {
-
-        }
-        void _sharedObject_OnConnect(object sender, EventArgs e)
-        {
-
-        }
-        void _sharedObject_OnDisconnect(object sender, EventArgs e)
-        {
-
-        }
-        void _sharedObject_Sync(object sender, SyncEventArgs e)
-        {
-            ASObject[] changeList = e.ChangeList;
-            var s = _sharedObject;
-            return;
-        }
         #endregion
 
         #region Public methods
-        public void updateChannelList()
+
+        private void statsDownloader_Tick(object o)
         {
-            //Channel list isn't available after site update.
+            DownloadStats(_user);
         }
-        public void msgFromClient(object[] result)
+        public bool isLoggedIn
         {
-
+            get;
+            set;
         }
-        public void addHistory(object[] history)
+        public void Start()
         {
-            foreach (var a in history)
-            {
-                GGChatMessage msg = new GGChatMessage( (ASObject)a );
-                if( OnMessageReceived != null )
-                    MessageEvent(OnMessageReceived, new GGMessageEventArgs(msg));
-            }
-        }
-        private void ClearEvents()
-        {
-            OnConnect = null;
-            OnDisconnect = null;
-            OnMessageReceived = null;
-            OnChannelListReceived = null;
-            OnError = null;
-        }
-        public void Connect()
-        {
-
-            cwc.setCookie("token", _userToken , "goodgame.ru");
-            var result = cwc.DownloadString(String.Format(_channelUrl,_user));
-            if (string.IsNullOrEmpty(result))
-                return;
-
-            ChatId = GetSubString(result, @"var User = '(.*?)';", 1);
-
-            if (string.IsNullOrEmpty(ChatId))
-                return;             
-
-            _netConnection = new NetConnection();
-            _netConnection.ObjectEncoding = ObjectEncoding.AMF0;
-            _netConnection.OnConnect += _netConnection_OnConnect;
-            _netConnection.NetStatus += _netConnection_NetStatus;
-            _netConnection.Client = this;
-            try
-            {
-                _netConnection.Connect(_chatUrl, _userId, _userToken, ChatId);
-            }
-            catch(Exception e)
-            {
-                if( OnError != null)
-                    OnError(this, new TextEventArgs(e.Message));
-            }
-            _sharedObject = (GGChat)RemoteSharedObject.GetRemote(typeof(GGChat), "chat" + ChatId, _chatUrl, true);
-            _sharedObject.ClearEvents();
-            _sharedObject.MessageReceived += OnMessageReceived;
-            _sharedObject.ObjectEncoding = ObjectEncoding.AMF0;
-            _sharedObject.OnConnect += new ConnectHandler(_sharedObject_OnConnect);
-            _sharedObject.OnDisconnect += new DisconnectHandler(_sharedObject_OnDisconnect);
-            _sharedObject.NetStatus += new NetStatusHandler(_netConnection_NetStatus);
-            _sharedObject.Sync += new SyncHandler(_sharedObject_Sync);
-            _sharedObject.SendMessage += new SendMessageHandler(_sharedObject_NewMessage);
-
-        }
-
-        public string ChatId
-        {
-            get { return _chatId; }
-            set
-            {
-                if (_chatId != value )
-                {
-                    _chatId = value;
-                    if (!string.IsNullOrEmpty(_chatId) && _netConnection != null)
-                    {
-                        Disconnect();
-                        Connect();
-                    }
-                }
-            }
-        }
-        public void Disconnect()
-        {
-            if (_sharedObject != null)
-            {
-                _sharedObject.ClearEvents();
-                _sharedObject.Close();
-            }
-            if (_netConnection != null)
-            {
-                _netConnection.close();
-                _netConnection.Close();
-            }
-            
+            ConnectWebsocket();
         }
         public void Stop()
         {
-            Disconnect();
-            _sharedObject.Dispose();
-            cwc.Dispose(); 
-            _netConnection = null;
-            _sharedObject = null;        
+            statsDownloader.Change(Timeout.Infinite, Timeout.Infinite);
         }
-        public void ResultDisconnect(String obj)
+        public bool Login()
         {
-        }
-        public void ResultReceived(IPendingServiceCall call)
-        {
-            object result = call.Result;
-        }
-        
-        private string GetMd5Hash(MD5 md5Hash, string input)
-        {        
-            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-            StringBuilder sBuilder = new StringBuilder();
-            for (int i = 0; i < data.Length; i++)
+            lock (loginLock)
             {
-                sBuilder.Append(data[i].ToString("x2"));
+                isLoggedIn = false;
+
+                if (String.IsNullOrEmpty(_user) || String.IsNullOrEmpty(_password))
+                    return false;
+
+                var result = loginWC.DownloadString(String.Format(chatUrl, _user.Replace(".","")));
+
+                string loginParams = "login=" + _user + "&password=" + _password + "&remember=1";
+                loginWC.setCookie("fixed", "1", domain);
+                loginWC.setCookie("auto_login_name", _user, domain);
+
+                loginWC.ContentType = ContentType.UrlEncoded;
+                loginWC.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+                loginWC.UploadString(loginUrl, loginParams);
+
+                result = loginWC.DownloadString(String.Format(chatUrl, _user.Replace(".","")));
+                if (String.IsNullOrEmpty(result))
+                    return false;
+                
+                int.TryParse(loginWC.CookieValue("uid", "http://" + domain), out _userId);
+                int.TryParse(Re.GetSubString(result, @"channelId: (\d+?),", 1), out _chatId);
+                _channel = _chatId.ToString();
+                _userToken = Re.GetSubString(result, @"token: '(.*?)',", 1);
+                
+                isLoggedIn = true;
+
+                return true;
             }
-            return sBuilder.ToString();
-        }
-        public List<GGChannel> Channels
-        {
-            get { return _channels; }
         }
 
-        private string GetSubString(string input, string re, int index)
+        private void ConnectWebsocket()
         {
-            var match = Regex.Match(input, re);
-            if (!match.Success)
-                return null;
+            socket = new WebSocket(
+                String.Format("ws://{0}:443/chat/{1}/{2}/websocket", domain, random_number(), random_string()),
+                "",
+                loginWC.CookiesStrings,
+                null,
+                null,
+                @"http://" + domain,
+                WebSocketVersion.DraftHybi10
+                );
+            socket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(socket_MessageReceived);
+            socket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(socket_Error);
+            socket.Open();
+        }
 
-            if (match.Groups.Count <= index)
-                return null;
+        void socket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
+        {
+            try
+            {
+                this.Stop();
+                Debug.Print(e.Exception.InnerException.Message);
+                if (OnError != null)
+                    OnError(this, new TextEventArgs(e.Exception.ToString()));
 
-            var result = match.Groups[index].Value;
+                if (OnDisconnect != null)
+                    OnDisconnect(this, EventArgs.Empty);
+            }
+            catch { }
+            
+        }
+        private void SendAuth()
+        {
+            var command = @"[""{\""type\"":\""auth\"",\""data\"":{\""user_id\"":\""" + _userId.ToString() + @"\"",\""token\"":\""" + _userToken + @"\""}}""]";
+            socket.Send(command);
+        }
+        private void SwitchChannel( )
+        { 
+            var command = @"[""{\""type\"":\""join\"",\""data\"":{\""channel_id\"":" + _channel + @"}}""]";
+            socket.Send(command);
+        }
+        private void GetHistory()
+        {
+            var command = @"[""{\""type\"":\""get_channel_history\"",\""data\"":{\""channel_id\"":" + _channel + @"}}""]";
+            socket.Send(command);
+        }
+        private void GetFlashCounters()
+        {
 
-            if (String.IsNullOrEmpty(result))
-                return null;
+            lock( statsLock )
+            {
+                var flashViewers = 0;
+                try
+                {
+                    var jsonStats = JObject.Parse(statsWC.DownloadString(String.Format(statsUrl, _channel)));
+                    if (jsonStats != null)
+                    {
+                        var userStats = (JObject)jsonStats[_channel.ToString()];
+                        FlashViewers = userStats["viewers"].ToString();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.Print(String.Format("Goodgame: can't parse channel stats json. Error: {0}", e.Message));
+                }
 
-            return result;
 
+            }
+        }
+
+        private void GetWSCounters()
+        {
+            var command = @"[""{\""type\"":\""get_channel_counters\"",\""data\"":{\""channel_id\"":" + _channel + @"}}""]";
+            socket.Send(command);
+        }
+        public void SendMessage(string message)
+        {
+            var command = @"[""{\""type\"":\""send_message\"",\""data\"":{\""channel_id\"":" + _channel + @",\""text\"":\""" + message + @"\""}}""]";
+            socket.Send(command);
+        }
+        public string User
+        {
+            get { return _user; }
+        }
+        void socket_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            lock( messageLock )
+            {
+                if (string.IsNullOrEmpty(e.Message))
+                    return;
+
+                if( e.Message == "o")
+                {
+                    SendAuth();
+                    return;
+                }
+                Debug.Print(e.Message); 
+                if (e.Message.Contains(@"a[""{\""type\"":\"""))
+                {
+                    String type = null;
+                    JObject data = null;
+                    try
+                    {
+                        var first = JArray.Parse(e.Message.Substring(1));
+                        if (first != null)
+                        {
+                            var pair = JObject.Parse((String)first[0]);
+                            if (pair != null)
+                            {
+                                type = (String)pair["type"];
+                                data = (JObject)pair["data"];
+                                switch (type.ToLower())
+                                {
+                                    case "channel_counters":
+                                        var channel_id = data["channel_id"].ToString();
+                                        var clients_in_channel = data["clients_in_channel"].ToString();
+                                        var users_in_channel = data["users_in_channel"].ToString();
+                                        int.TryParse(clients_in_channel, out viewers);
+                                        break;
+                                    case "success_auth":
+                                        SwitchChannel();
+                                        break;
+                                    case "success_join":
+                                        if (OnLogin != null)
+                                            OnLogin(this, EventArgs.Empty);
+                                        GetHistory();
+                                        statsDownloader.Change(0, pollInterval);
+                                        break;
+                                    case "message":
+                                        var user = data["user_name"].ToString();
+                                        var text = HttpUtility.HtmlDecode(data["text"].ToString());
+                                        if (user != _user)
+                                        {
+                                            Message msg = new Message() { Text = text, User = user };
+
+                                            if (text.Length > user.Length && 
+                                                text.Substring(0, user.Length).ToLower() + "," == user.ToLower() + ",")
+                                            {
+                                                msg.ToName = user.ToLower();
+                                            }
+
+                                            if (OnMessageReceived != null)
+                                                OnMessageReceived(this, new Message() { Text = text, User = user });
+                                        }
+
+                                        break;
+                                    case "private_message":
+                                        {
+                                            var private_user = data["user_name"].ToString();
+                                            var private_text = HttpUtility.HtmlDecode(data["text"].ToString());
+                                            var to_name = data["target_name"].ToString();
+
+                                            if (private_user != _user)
+                                            {
+                                                Message msg = new Message() { Text = private_text, User = private_user, ToName = to_name};
+
+                                                if (OnMessageReceived != null)
+                                                    OnMessageReceived(this, msg);
+                                            }
+
+                                        }
+                                        break;
+
+                                }
+                            }
+
+                        }
+                    }
+                    catch { }
+                }
+            }
+
+        }
+
+        private void DownloadStats(string channel)
+        {
+            if (String.IsNullOrEmpty(_user))
+                return;
+
+            lock (statsLock)
+            {
+                GetWSCounters();
+                GetFlashCounters();
+
+            }
+        }
+        private string random_number()
+        {
+            var num = new Random();
+            return (num.Next(0, maxServerNum)).ToString("000");
+        }
+        private string random_string()
+        {
+            var chars = "abcdefghijklmnopqrstuvwxyz0123456789_";
+            StringBuilder builder = new StringBuilder();
+            var random = new Random();
+            
+            for (var i = 0; i < 8; i++)
+                builder.Append(chars[random.Next(0, chars.Length - 1)]);
+
+            return builder.ToString();
         }
         #endregion
+        #region Public properties
+        public string FlashViewers
+        {
+            get;set;
+        }
+        public string Viewers
+        {
+            get { return viewers.ToString(); }
+            set { }
+        }
+        #endregion
+
+        public class Message : EventArgs
+        {
+            public string Text
+            {
+                get;
+                set;
+            }
+            public string User
+            {
+                get;
+                set;
+            }
+            public string ToName
+            {
+                get;
+                set;
+            }
+        }
     }
 }

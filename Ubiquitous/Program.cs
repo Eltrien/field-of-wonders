@@ -25,6 +25,7 @@ namespace Ubiquitous
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
                 Application.Run(new MainForm());
             }
             catch (Exception ex)

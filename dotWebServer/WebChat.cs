@@ -26,6 +26,7 @@ namespace dotWebServer
         public string time;
         public string fromToSeparator;
         public string chatId;
+        public bool highlight;
 
         public string ParseTemplate(string content)
         {
@@ -40,6 +41,7 @@ namespace dotWebServer
             content = content.Replace("<!--FROM_TO_SEPARATOR-->", fromToSeparator);
             content = content.Replace("<!--TO-->", to);
             content = content.Replace("<!--CHAT_ID-->", chatId);
+            content = content.Replace("<!--HIGHLIGHT-->", highlight ? " personalmsg" : "");
             return content;
 
         }
@@ -70,7 +72,7 @@ namespace dotWebServer
             Messages = new List<ChatLine>();
             ThreadPool.QueueUserWorkItem(f => this.listen());
         }
-        public void AddMessage( string image, string text, string from, string to, string time, string fromToSeparator, string chatId)
+        public void AddMessage( string image, string text, string from, string to, string time, string fromToSeparator, string chatId, bool highlight = false)
         {
             if (Messages.Count >= lineNumber)
             {
@@ -84,7 +86,8 @@ namespace dotWebServer
                     to = to, 
                     time = time, 
                     fromToSeparator = fromToSeparator, 
-                    chatId = chatId }
+                    chatId = chatId,
+                    highlight = highlight}
             );
         }
         private List<ChatLine> Messages
