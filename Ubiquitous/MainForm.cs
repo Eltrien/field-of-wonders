@@ -1831,7 +1831,7 @@ namespace Ubiquitous
                     youtubeViewers = youtube.Viewers;
             
 
-                if (ggChat != null)
+                if (ggChat != null && ggChat.isLoggedIn)
                 {
                     UInt32.TryParse(ggChat.FlashViewers, out goodgameViewers);
 
@@ -3002,8 +3002,8 @@ namespace Ubiquitous
         }
         public void OnGGDisconnect(object sender, EventArgs e)
         {
-            goodgameBW.Stop();
-            goodgameBW = new BGWorker(ConnectGoodgame, null);
+            //goodgameBW.Stop();
+            //goodgameBW = new BGWorker(ConnectGoodgame, null);
             checkMark.SetOff(pictureGoodgame);
         }
         private void OnGGError(object sender, Goodgame.TextEventArgs e)

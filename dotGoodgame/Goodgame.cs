@@ -27,6 +27,7 @@ namespace dotGoodgame
         private const string statsUrl = @"http://goodgame.ru/api/getchannelstatus?id={0}&fmt=json";
         private const int maxServerNum = 0x1e3;
         private const int pollInterval = 20000;
+        private String[] urlReplace = new String[] { ".", "-" };
         private int _chatId;
         private int _userId;
         private string _user;
@@ -83,7 +84,11 @@ namespace dotGoodgame
         #endregion
 
         #region Public methods
-
+        public bool Started
+        {
+            get;
+            set;
+        }
         private void statsDownloader_Tick(object o)
         {
             DownloadStats(_user);
@@ -96,10 +101,32 @@ namespace dotGoodgame
         public void Start()
         {
             ConnectWebsocket();
+            Started = true;
         }
         public void Stop()
         {
             statsDownloader.Change(Timeout.Infinite, Timeout.Infinite);
+            try
+            {
+                socket.Close();
+            }
+            catch { }
+            Started = false;
+        }
+        public String URLUser
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_user))
+                    return String.Empty;
+
+                var result = _user;
+                foreach (var c in urlReplace)
+                {
+                    _user = _user.Replace(c, "");
+                }
+                return _user;
+            }
         }
         public bool Login()
         {
@@ -110,7 +137,7 @@ namespace dotGoodgame
                 if (String.IsNullOrEmpty(_user) || String.IsNullOrEmpty(_password))
                     return false;
 
-                var result = loginWC.DownloadString(String.Format(chatUrl, _user.Replace(".","")));
+                var result = loginWC.DownloadString(String.Format(chatUrl, URLUser));
 
                 string loginParams = "login=" + _user + "&password=" + _password + "&remember=1";
                 loginWC.setCookie("fixed", "1", domain);
@@ -121,7 +148,7 @@ namespace dotGoodgame
 
                 loginWC.UploadString(loginUrl, loginParams);
 
-                result = loginWC.DownloadString(String.Format(chatUrl, _user.Replace(".","")));
+                result = loginWC.DownloadString(String.Format(chatUrl, URLUser));
                 if (String.IsNullOrEmpty(result))
                     return false;
                 
@@ -130,7 +157,7 @@ namespace dotGoodgame
                 _channel = _chatId.ToString();
                 _userToken = Re.GetSubString(result, @"token: '(.*?)',", 1);
 
-                var editContent = loginWC.DownloadString(String.Format(editUlr, _user.Replace(".", "")));
+                var editContent = loginWC.DownloadString(String.Format(editUlr, URLUser));
                 var serviceUrls = new String[] { "twitch.tv", "cybergame.tv", "hashd.tv", "youtube.com" };
                 //<input type="text" name="video_urls[22473]" value="http://twitch.tv/xedoc"
 
@@ -191,6 +218,8 @@ namespace dotGoodgame
 
                 if (OnDisconnect != null)
                     OnDisconnect(this, EventArgs.Empty);
+
+                this.Start();
             }
             catch { }
             
@@ -348,6 +377,11 @@ namespace dotGoodgame
                 GetWSCounters();
                 GetFlashCounters();
 
+            }
+            if (socket == null || !socket.Handshaked)
+            {
+                Started = false;
+                Start();
             }
         }
         private string random_number()
