@@ -28,35 +28,41 @@ namespace dotWebServer
         public string chatId;
         public bool highlight;
 
-        public string ParseTemplate(string content)
+        public string ParseChatTemplate(string content)
         {
             //<!--ICON--><!--TEXT--><!--FROM--><!--FROM_TO_SEPARATOR--><!--TO--><!--CHAT_ID-->
             content = content.Replace("<!--ICON-->", image);
-            if( chatId == "TwitchTV" )
-                content = content.Replace("<!--TEXT-->", ReplaceSmiles(text));
-            else
-                content = content.Replace("<!--TEXT-->", text);
-
-            content = content.Replace("<!--FROM-->", from);
+            content = content.Replace("<!--TEXT-->", ReplaceSmiles(text));
+            content = content.Replace("<!--FROM-->", String.IsNullOrEmpty(from) ? String.Empty : "("+ from);
             content = content.Replace("<!--FROM_TO_SEPARATOR-->", fromToSeparator);
-            content = content.Replace("<!--TO-->", to);
+            content = content.Replace("<!--TO-->", String.IsNullOrEmpty(to) ? (String.IsNullOrEmpty(from)?String.Empty:")") :"->" + to + ")");
             content = content.Replace("<!--CHAT_ID-->", chatId);
             content = content.Replace("<!--HIGHLIGHT-->", highlight ? " personalmsg" : "");
             return content;
 
         }
 
+
         private string ReplaceSmiles(string content)
         {
-            var regex = new Regex(@"[\s\t\r\n]");
-            var words = regex.Split(content).Where(x => !string.IsNullOrEmpty(x));
-            foreach (var w in words)
+            if (chatId.ToLower() == "twitchtv")
             {
-                Bitmap smile = TwitchSmile.Smile(w);
-                if( smile != null )
+                var regex = new Regex(@"[\s\t\r\n]");
+                var words = regex.Split(content).Where(x => !string.IsNullOrEmpty(x));
+                List<String> smileImages = new List<string>();
+                UInt32 smileIndex = 0;
+
+                foreach (var smile in TwitchSmiles.Smiles)
                 {
-                    content = content.Replace(w, Base64Image.ToBase64ImageTag(smile, ImageFormat.Png));
+                    if (content.Contains(smile.Code))
+                    {
+                        content = content.Replace(smile.Code, String.Format("{{0}}",smileIndex));
+                        smileImages.Add(Base64Image.ToBase64ImageTag(smile.Smile, ImageFormat.Png));
+                        smileIndex++;
+                    }
                 }
+                if (smileImages.Count > 0)
+                    content = String.Format(content, smileImages.ToArray());
             }
             return content;
         }
@@ -90,6 +96,34 @@ namespace dotWebServer
                     highlight = highlight}
             );
         }
+        public string ParseStatusBarTemplate(string content)
+        {
+            content = content.Replace("<!--TOTALVIEWERS-->", Viewers);
+            content = content.Replace("<!--OBSMICSTATUS-->", MicOn ? "MicOn" : "MicOff");
+            content = content.Replace("<!--OBSBITRATE-->", ObsBitrate);
+            content = content.Replace("<!--OBSFRAMEDROPS-->", ObsFrameDrops);
+            return content;
+        }
+        public String ObsFrameDrops
+        {
+            get;
+            set;
+        }
+        public String ObsBitrate
+        {
+            get;
+            set;
+        }
+        public Boolean MicOn
+        {
+            get;
+            set;
+        }
+        public String Viewers
+        {
+            get;
+            set;
+        }
         private List<ChatLine> Messages
         {
             get;
@@ -104,6 +138,7 @@ namespace dotWebServer
                 new KeyValuePair<string,string>(".js", "application/javascript"),
                 new KeyValuePair<string,string>(".html", "text/html"),
                 new KeyValuePair<string,string>(".htm", "text/html"),
+                new KeyValuePair<string,string>(".map", "text/html"),
                 new KeyValuePair<string,string>(".css", "text/css")
         
         };
@@ -134,16 +169,25 @@ namespace dotWebServer
                         var loopcontent = "";
                         foreach (var line in Messages)
                         {
-                            loopcontent += line.ParseTemplate(loopblock);
+                            loopcontent += line.ParseChatTemplate(loopblock);
                         }
                         p.outputStream.Write(header + loopcontent + footer);
+                    }
+                    else if (requestUrl.Contains("statusbar.htm"))
+                    {
+                        content = ParseStatusBarTemplate(content);
+                        try
+                        {
+                            p.outputStream.Write(content);
+                        }
+                        catch { }
                     }
                     else
                     {
                         using (Stream fs = File.Open(path, FileMode.Open))
                         {
                             fs.CopyTo(p.outputStream.BaseStream);
-                        }                        
+                        }
                     }
                 }
                 else

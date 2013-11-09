@@ -31,8 +31,8 @@ namespace Ubiquitous
 
         private void SettingsDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
+            ValidateChildren();
             settings.Save();
-
         }
 
         private void settingsPage9_Paint(object sender, PaintEventArgs e)
@@ -333,6 +333,11 @@ namespace Ubiquitous
                 settings.twitchMeBackcolor= colorDialog.Color;
                 buttonTwitchMeBackcolor.BackColor = colorDialog.Color;
             }
+        }
+
+        private void label63_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

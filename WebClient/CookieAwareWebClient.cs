@@ -141,13 +141,13 @@ namespace dotWebClient
         }
         public bool gotCookies(string name, string url)
         {
-            if (String.IsNullOrEmpty(name) || string.IsNullOrEmpty(url) )
+            if (String.IsNullOrEmpty(name) || string.IsNullOrEmpty(url))
                 return false;
 
             if (m_container == null || m_container.Count == 0)
                 return false;
-            
-            
+
+
             string value = m_container.GetCookies(new Uri(url))[name].Value;
             return value == null ? false : true;
         }
@@ -254,6 +254,14 @@ namespace dotWebClient
                 return result;
             }
         }
+        public string CookieParamString
+        {
+            get
+            {
+                var strings = CookiesStrings.Select(kvp => string.Format("{0}={1}", kvp.Key, kvp.Value));
+                return string.Join("; ", strings);
+            }
+        }
         public string postFormDataLowLevel(string formActionUrl, string postData)
         {
             var uri = new Uri(formActionUrl);
@@ -282,14 +290,19 @@ namespace dotWebClient
 
             String requestString = String.Format("POST {0} HTTP/1.1\r\n" +
                 "User-Agent: {4}\r\n" +
-                "Accept: text/html\r\n" +
+                "Accept: text/html,application/xhtml+xml,application/xml\r\n" +
+                "Accept-Encoding: deflate\r\n" +
                 "Host: {1}\r\n" +
+                "Origin: http://{1}\r\n" +
+                "Referer: http://{1}\r\n" +
                 "Cache-Control: no-store, no-cache\r\n" +
                 "Pragma: no-cache\r\n" +
                 "Content-Length: {2}\r\n" +
                 "Connection: Keep-Alive\r\n" +
+                "Accept-Language: en-US\r\n" +
+                "Cookie: {5}\r\n" +
                 "Content-Type: application/x-www-form-urlencoded\r\n\r\n"
-                + "{3}", uri.AbsolutePath, uri.Host, Encoding.UTF8.GetBytes(postData).Length, postData, userAgent);
+                + "{3}", uri.AbsolutePath, uri.Host, Encoding.UTF8.GetBytes(postData).Length, postData, userAgent, CookieParamString);
 
             byte[] request = Encoding.UTF8.GetBytes(requestString);
 

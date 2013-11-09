@@ -1345,7 +1345,7 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 18")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 1")]
         public global::System.Drawing.Point globalCounterPosTwitch {
             get {
                 return ((global::System.Drawing.Point)(this["globalCounterPosTwitch"]));
@@ -1357,7 +1357,7 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 36")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 21")]
         public global::System.Drawing.Point globalCounterPosHashd {
             get {
                 return ((global::System.Drawing.Point)(this["globalCounterPosHashd"]));
@@ -1369,7 +1369,7 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 54")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 41")]
         public global::System.Drawing.Point globalCounterPosCybergame {
             get {
                 return ((global::System.Drawing.Point)(this["globalCounterPosCybergame"]));
@@ -1381,7 +1381,7 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 101")]
         public global::System.Drawing.Point globalCounterPosTotal {
             get {
                 return ((global::System.Drawing.Point)(this["globalCounterPosTotal"]));
@@ -1417,7 +1417,7 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Arial Narrow, 9pt, style=Bold")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Times New Roman, 9.75pt, style=Bold")]
         public global::System.Drawing.Font globalCounterFont {
             get {
                 return ((global::System.Drawing.Font)(this["globalCounterFont"]));
@@ -1549,7 +1549,7 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 72")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 81")]
         public global::System.Drawing.Point globalCounterPosGoodgame {
             get {
                 return ((global::System.Drawing.Point)(this["globalCounterPosGoodgame"]));
@@ -1676,6 +1676,186 @@ namespace Ubiquitous.Properties {
             }
             set {
                 this["generalHistoryLines"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string youtubeID {
+            get {
+                return ((string)(this["youtubeID"]));
+            }
+            set {
+                this["youtubeID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool youtubeEnable {
+            get {
+                return ((bool)(this["youtubeEnable"]));
+            }
+            set {
+                this["youtubeEnable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("@you")]
+        public string youtubeAlias {
+            get {
+                return ((string)(this["youtubeAlias"]));
+            }
+            set {
+                this["youtubeAlias"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string youtubeLastTime {
+            get {
+                return ((string)(this["youtubeLastTime"]));
+            }
+            set {
+                this["youtubeLastTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 61")]
+        public global::System.Drawing.Point globalCounterPosYoutube {
+            get {
+                return ((global::System.Drawing.Point)(this["globalCounterPosYoutube"]));
+            }
+            set {
+                this["globalCounterPosYoutube"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool globalCounterYoutube {
+            get {
+                return ((bool)(this["globalCounterYoutube"]));
+            }
+            set {
+                this["globalCounterYoutube"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string twitchOAuthKey {
+            get {
+                return ((string)(this["twitchOAuthKey"]));
+            }
+            set {
+                this["twitchOAuthKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("128, 255, 128")]
+        public global::System.Drawing.Color cyberNickColor {
+            get {
+                return ((global::System.Drawing.Color)(this["cyberNickColor"]));
+            }
+            set {
+                this["cyberNickColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("148, 17, 30")]
+        public global::System.Drawing.Color empireNickColor {
+            get {
+                return ((global::System.Drawing.Color)(this["empireNickColor"]));
+            }
+            set {
+                this["empireNickColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("212, 208, 200")]
+        public global::System.Drawing.Color gohaNickColor {
+            get {
+                return ((global::System.Drawing.Color)(this["gohaNickColor"]));
+            }
+            set {
+                this["gohaNickColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("82, 112, 156")]
+        public global::System.Drawing.Color goodgameNickColor {
+            get {
+                return ((global::System.Drawing.Color)(this["goodgameNickColor"]));
+            }
+            set {
+                this["goodgameNickColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("54, 127, 194")]
+        public global::System.Drawing.Color hashdNickColor {
+            get {
+                return ((global::System.Drawing.Color)(this["hashdNickColor"]));
+            }
+            set {
+                this["hashdNickColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("187, 17, 10")]
+        public global::System.Drawing.Color youtubeNickColor {
+            get {
+                return ((global::System.Drawing.Color)(this["youtubeNickColor"]));
+            }
+            set {
+                this["youtubeNickColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("99, 64, 164")]
+        public global::System.Drawing.Color twitchNickColor {
+            get {
+                return ((global::System.Drawing.Color)(this["twitchNickColor"]));
+            }
+            set {
+                this["twitchNickColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("105, 210, 255")]
+        public global::System.Drawing.Color sc2NickColor {
+            get {
+                return ((global::System.Drawing.Color)(this["sc2NickColor"]));
+            }
+            set {
+                this["sc2NickColor"] = value;
             }
         }
     }

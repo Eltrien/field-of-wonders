@@ -32,8 +32,8 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>29</ApplicationRevision>
-    <ApplicationVersion>1.0.2.%2a</ApplicationVersion>
+    <ApplicationRevision>8</ApplicationRevision>
+    <ApplicationVersion>1.0.4.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -90,6 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BGWorker.cs" />
+    <Compile Include="ColorPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ColorPicker.Designer.cs">
+      <DependentUpon>ColorPicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="ComboBoxWithId.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -149,6 +155,9 @@
     <Compile Include="StatusImage.cs" />
     <Compile Include="StatusServer.cs" />
     <Compile Include="TwitchAPI.cs" />
+    <EmbeddedResource Include="ColorPicker.resx">
+      <DependentUpon>ColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CounterPanel.resx">
       <DependentUpon>CounterPanel.cs</DependentUpon>
     </EmbeddedResource>
@@ -191,6 +200,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Ubiquitous_TemporaryKey.pfx" />
+    <None Include="web\js\jquery-1.10.2.min.map">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\dotBattlelog\dotBattlelog.csproj">
@@ -256,6 +268,10 @@
     <ProjectReference Include="..\dotXSplit\dotXSplit\dotXSplit.csproj">
       <Project>{75B0D174-732F-4A64-82FB-21016CD8DAA7}</Project>
       <Name>dotXSplit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dotYoutube\dotYoutube.csproj">
+      <Project>{8B84A30B-54E5-420D-93F6-6AE1BAD9830E}</Project>
+      <Name>dotYoutube</Name>
     </ProjectReference>
     <ProjectReference Include="..\mycontrol\mycontrol\mycontrol.csproj">
       <Project>{3E26D5F2-9EFF-4F76-9711-79E611F61ACB}</Project>
@@ -362,8 +378,30 @@
     <Content Include="Resources\music.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="web\images\micoff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\micon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\statusbar.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\js\jquery-1.10.2.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\js\jquery-ui.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\js\jquery.cookie.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\js\jquery.ui.touch-punch.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\peka.bmp" />
     <None Include="Resources\peka.png" />
+    <None Include="Resources\youtube.png" />
     <Content Include="web\css\chat.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -373,9 +411,9 @@
     <Content Include="web\images\cybergame.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="web\images\goha.bmp">
+    <Content Include="web\images\goha.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Content Include="web\images\hashd.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -383,6 +421,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="web\images\music.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\youtube.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="web\index.htm">

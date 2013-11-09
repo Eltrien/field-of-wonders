@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Browser.cs" />
     <Compile Include="ColorUtils.cs" />
     <Compile Include="JScript.cs" />
     <Compile Include="JsonGenerics.cs" />

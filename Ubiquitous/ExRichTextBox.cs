@@ -350,7 +350,7 @@ namespace SC2TV.RTFControl {
                 {
                     if (String.IsNullOrEmpty(Text))
                         return;
-                    Debug.Print(ScrollPos().ToString());
+
 
                    if (!IsAtMaxScroll())
                    {
@@ -719,7 +719,6 @@ namespace SC2TV.RTFControl {
                 SelectedText = "";
                 ReadOnly = true;
                 var newScrollPos = ScrollPos();
-                Debug.Print("Old pos: {0}, new pos: {1}", prevScrollPos, newScrollPos);
             }
 
 

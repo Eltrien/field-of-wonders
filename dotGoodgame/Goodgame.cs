@@ -23,6 +23,7 @@ namespace dotGoodgame
         private const string chatUrl = "http://www." + domain + "/chat/{0}/";
         private const string channelUrl = @"http://www." + domain + "/channel/{0}";
         private const string loginUrl = @"http://" + domain + "/ajax/login/";
+        private const string editUlr = @"http://" + domain + "/channel/{0}/edit/";
         private const string statsUrl = @"http://goodgame.ru/api/getchannelstatus?id={0}&fmt=json";
         private const int maxServerNum = 0x1e3;
         private const int pollInterval = 20000;
@@ -128,27 +129,55 @@ namespace dotGoodgame
                 int.TryParse(Re.GetSubString(result, @"channelId: (\d+?),", 1), out _chatId);
                 _channel = _chatId.ToString();
                 _userToken = Re.GetSubString(result, @"token: '(.*?)',", 1);
+
+                var editContent = loginWC.DownloadString(String.Format(editUlr, _user.Replace(".", "")));
+                var serviceUrls = new String[] { "twitch.tv", "cybergame.tv", "hashd.tv", "youtube.com" };
+                //<input type="text" name="video_urls[22473]" value="http://twitch.tv/xedoc"
+
+                ServiceNames = String.Empty;
+                foreach( var service in serviceUrls )
+                {
+                    var substr = Re.GetSubString(editContent, @"<input.*?video_urls\[.*?value=.*?(" + service + @")[^\""]*",1);
+                    if (!String.IsNullOrEmpty(substr))
+                    {
+                        ServiceNames = ServiceNames + substr;
+                    }
+                }
                 
+
+
                 isLoggedIn = true;
 
                 return true;
             }
         }
 
+        public String ServiceNames
+        {
+            get;
+            set;
+        }
         private void ConnectWebsocket()
         {
-            socket = new WebSocket(
-                String.Format("ws://{0}:443/chat/{1}/{2}/websocket", domain, random_number(), random_string()),
-                "",
-                loginWC.CookiesStrings,
-                null,
-                null,
-                @"http://" + domain,
-                WebSocketVersion.DraftHybi10
-                );
-            socket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(socket_MessageReceived);
-            socket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(socket_Error);
-            socket.Open();
+            try
+            {
+                socket = new WebSocket(
+                    String.Format("ws://{0}:8080/chat/{1}/{2}/websocket", domain, random_number(), random_string()),
+                    "",
+                    loginWC.CookiesStrings,
+                    null,
+                    null,
+                    @"http://" + domain,
+                    WebSocketVersion.DraftHybi10
+                    );
+                socket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(socket_MessageReceived);
+                socket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(socket_Error);
+                socket.Open();
+            }
+            catch(Exception e) {
+
+                Debug.Print(String.Format("Goodgame websocket connection failed. {0}", e.Message));
+            }
         }
 
         void socket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)

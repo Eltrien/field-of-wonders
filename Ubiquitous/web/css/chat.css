@@ -65,6 +65,9 @@ li.Empiretv {
 li.Gohatv {
     list-style-image: url('/images/goha.bmp');
 }
+li.Youtube {
+    list-style-image: url('/images/youtube.png');
+}
 li.Cybergame {
     list-style-image: url('/images/cybergame.gif');
 }
@@ -74,3 +77,48 @@ li.Hashd {
 li.Music {
     list-style-image: url('/images/music.png');
 }
+
+h3 {
+	margin-top:1px;
+	padding:0px;
+	height:100%;
+
+}
+span {
+	height:100%;
+	float:left;
+	margin-top:1px;
+	margin-left:5px;
+}
+span.MicOff 
+{
+	background-image: url('/images/micoff.png');
+	padding-left:16px;
+}
+span.MicOn
+{
+    background-image: url('/images/micon.png');
+	padding-left:16px;
+}
+span.Bot {
+	background-image: url('/images/adminicon.png');
+	background-repeat: no-repeat;
+	padding-left:18px;
+	margin-left:0px;
+}
+
+.fixedblock 
+{
+	position:fixed;	
+	
+}
+#statusbar
+{
+	background-color:rgba(70,70,70,0.75);
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	width:320px;
+	padding:5px;
+	height:18px;	
+}
+

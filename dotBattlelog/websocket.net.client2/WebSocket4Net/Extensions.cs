@@ -67,7 +67,7 @@ namespace WebSocket4Net
                 }
 
                 int pos = line.IndexOf(m_Colon);
-
+                
                 string key = line.Substring(0, pos);
 
                 if (!string.IsNullOrEmpty(key))

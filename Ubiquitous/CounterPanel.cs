@@ -75,7 +75,7 @@ namespace Ubiquitous
             set
             {
                 base.ForeColor = value;
-                labelViewers.ForeColor = value;                
+                labelViewers.ForeColor = value;
             }
         }
         public String Counter
@@ -126,6 +126,11 @@ namespace Ubiquitous
                 _Offset = Point.Empty;
                 Cursor = Cursors.Default;
             }
+        }
+
+        private void labelViewers_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

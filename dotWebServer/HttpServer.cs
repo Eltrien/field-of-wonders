@@ -75,6 +75,8 @@ namespace dotWebServer
             {
                 Debug.Print("Exception: " + e.ToString());
                 writeFailure();
+                
+
             }
             try
             {
@@ -105,13 +107,13 @@ namespace dotWebServer
 
         public void readHeaders()
         {
-            Debug.Print("readHeaders()");
+            //Debug.Print("readHeaders()");
             String line;
             while ((line = streamReadLine(inputStream)) != null)
             {
                 if (line.Equals(""))
                 {
-                    Debug.Print("got headers");
+                    //Debug.Print("got headers");
                     return;
                 }
 
@@ -128,7 +130,7 @@ namespace dotWebServer
                 }
 
                 string value = line.Substring(pos, line.Length - pos);
-                Debug.Print("header: {0}:{1}", name, value);
+                //Debug.Print("header: {0}:{1}", name, value);
                 httpHeaders[name] = value;
             }
         }
@@ -190,17 +192,29 @@ namespace dotWebServer
 
         public void writeSuccess(string content_type = "text/html")
         {
-            outputStream.WriteLine("HTTP/1.0 200 OK");
-            outputStream.WriteLine("Content-Type: " + content_type);
-            outputStream.WriteLine("Connection: close");
-            outputStream.WriteLine("");
+            try
+            {
+                outputStream.WriteLine("HTTP/1.0 200 OK");
+                outputStream.WriteLine("Content-Type: " + content_type);
+                outputStream.WriteLine("Connection: close");
+                outputStream.WriteLine("");
+            }
+            catch { }
         }
 
         public void writeFailure()
         {
-            outputStream.WriteLine("HTTP/1.0 404 File not found");
-            outputStream.WriteLine("Connection: close");
-            outputStream.WriteLine("");
+            Debug.Print("Error 404");
+            try
+            {
+                outputStream.WriteLine("HTTP/1.0 404 File not found");
+                outputStream.WriteLine("Connection: close");
+                outputStream.WriteLine("");
+            }
+            catch
+            {
+            }
+
         }
     }
 

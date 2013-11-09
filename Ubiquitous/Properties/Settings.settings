@@ -333,16 +333,16 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="globalCounterPosTwitch" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 18</Value>
+      <Value Profile="(Default)">0, 1</Value>
     </Setting>
     <Setting Name="globalCounterPosHashd" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 36</Value>
+      <Value Profile="(Default)">0, 21</Value>
     </Setting>
     <Setting Name="globalCounterPosCybergame" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 54</Value>
+      <Value Profile="(Default)">0, 41</Value>
     </Setting>
     <Setting Name="globalCounterPosTotal" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 0</Value>
+      <Value Profile="(Default)">0, 101</Value>
     </Setting>
     <Setting Name="globalCounterTextColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">White</Value>
@@ -351,7 +351,7 @@
       <Value Profile="(Default)">64, 64, 64</Value>
     </Setting>
     <Setting Name="globalCounterFont" Type="System.Drawing.Font" Scope="User">
-      <Value Profile="(Default)">Arial Narrow, 9pt, style=Bold</Value>
+      <Value Profile="(Default)">Times New Roman, 9.75pt, style=Bold</Value>
     </Setting>
     <Setting Name="appearanceMsgFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">%t (%s%d@%c)</Value>
@@ -384,7 +384,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="globalCounterPosGoodgame" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 72</Value>
+      <Value Profile="(Default)">0, 81</Value>
     </Setting>
     <Setting Name="globalPersonalMessageBack" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
@@ -415,6 +415,51 @@
     </Setting>
     <Setting Name="generalHistoryLines" Type="System.String" Scope="User">
       <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="youtubeID" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="youtubeEnable" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="youtubeAlias" Type="System.String" Scope="User">
+      <Value Profile="(Default)">@you</Value>
+    </Setting>
+    <Setting Name="youtubeLastTime" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="globalCounterPosYoutube" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 61</Value>
+    </Setting>
+    <Setting Name="globalCounterYoutube" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="twitchOAuthKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="cyberNickColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">128, 255, 128</Value>
+    </Setting>
+    <Setting Name="empireNickColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">148, 17, 30</Value>
+    </Setting>
+    <Setting Name="gohaNickColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">212, 208, 200</Value>
+    </Setting>
+    <Setting Name="goodgameNickColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">82, 112, 156</Value>
+    </Setting>
+    <Setting Name="hashdNickColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">54, 127, 194</Value>
+    </Setting>
+    <Setting Name="youtubeNickColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">187, 17, 10</Value>
+    </Setting>
+    <Setting Name="twitchNickColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">99, 64, 164</Value>
+    </Setting>
+    <Setting Name="sc2NickColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">105, 210, 255</Value>
     </Setting>
   </Settings>
 </SettingsFile>

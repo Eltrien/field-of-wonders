@@ -28,12 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugForm));
             this.exRichTextBoxDebug = new SC2TV.RTFControl.ExRichTextBox();
             this.SuspendLayout();
             // 
             // exRichTextBoxDebug
             // 
             this.exRichTextBoxDebug.BackColor = global::Ubiquitous.Properties.Settings.Default.globalChatBackground;
+            this.exRichTextBoxDebug.Caret = false;
             this.exRichTextBoxDebug.DataBindings.Add(new System.Windows.Forms.Binding("TextColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.exRichTextBoxDebug.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalChatBackground", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.exRichTextBoxDebug.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -41,12 +43,19 @@
             this.exRichTextBoxDebug.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
             this.exRichTextBoxDebug.HighlightColor = System.Drawing.Color.White;
             this.exRichTextBoxDebug.Location = new System.Drawing.Point(0, 0);
+            this.exRichTextBoxDebug.MaxLines = ((uint)(0u));
             this.exRichTextBoxDebug.Name = "exRichTextBoxDebug";
+            this.exRichTextBoxDebug.PersonalMessageBack = System.Drawing.Color.Empty;
+            this.exRichTextBoxDebug.PersonalMessageColor = System.Drawing.Color.Empty;
+            this.exRichTextBoxDebug.PersonalMessageFont = null;
             this.exRichTextBoxDebug.RawTextColor = null;
+            this.exRichTextBoxDebug.RTF = resources.GetString("exRichTextBoxDebug.RTF");
             this.exRichTextBoxDebug.SaveToImage = false;
             this.exRichTextBoxDebug.SaveToImageFileName = null;
             this.exRichTextBoxDebug.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.exRichTextBoxDebug.SelectionAlignment = SC2TV.RTFControl.ExRichTextBox.TextAlign.Left;
             this.exRichTextBoxDebug.Size = new System.Drawing.Size(711, 458);
+            this.exRichTextBoxDebug.SlowScroll = false;
             this.exRichTextBoxDebug.TabIndex = 0;
             this.exRichTextBoxDebug.Text = "";
             this.exRichTextBoxDebug.TextColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
@@ -57,8 +66,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(711, 458);
             this.Controls.Add(this.exRichTextBoxDebug);
+            this.ForeColor = System.Drawing.Color.White;
             this.Name = "DebugForm";
             this.Text = "Debug messages";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DebugForm_FormClosing);

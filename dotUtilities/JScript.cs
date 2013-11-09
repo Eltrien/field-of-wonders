@@ -6,7 +6,7 @@ using Microsoft.JScript;
 
 namespace dotUtilities
 {
-    class JSEvaluator
+    public class JSEvaluator
     {
 
         #region Private Members

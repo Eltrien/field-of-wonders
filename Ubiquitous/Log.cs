@@ -24,6 +24,7 @@ namespace Ubiquitous
         Cybergame,
         Goha,
         Music,
+        Youtube,
         Hashd
     }
     /// <summary>
@@ -32,9 +33,10 @@ namespace Ubiquitous
     public class Log
     {
         private ExRichTextBox tb;
-        delegate void SetTextCallback(string text, ChatIcon icon, bool highlight = false, Color? foreColor = null, Color? backColor = null);
+        delegate void SetTextCallback(MainForm.UbiMessage message, ChatIcon icon, bool highlight = false, Color? foreColor = null, Color? backColor = null);
         delegate void ReplaceSmileCodeCB(String code, Bitmap bmp);
         private object lockWriteLine;
+        private Properties.Settings settings;
         /// <summary>
         /// Provied Textbox object to the constructor
         /// </summary>
@@ -42,6 +44,7 @@ namespace Ubiquitous
         /// 
         public Log(ExRichTextBox logTb)
         {
+            settings = Properties.Settings.Default;
             lockWriteLine = new object();
             tb = logTb;
             tb.Clear();
@@ -60,12 +63,16 @@ namespace Ubiquitous
             else
             {
                 int start = tb.Text.Substring(0).IndexOf(code);
-                if (start > 0)
+                while (start > 0)
                 {
-                    tb.SelectionStart = start;
-                    tb.SelectionLength = code.Length;
-                    //tb.Cut();
-                    tb.InsertImage(bmp);
+                    if (start > 0)
+                    {
+                        tb.SelectionStart = start;
+                        tb.SelectionLength = code.Length;
+                        //tb.Cut();
+                        tb.InsertImage(bmp);
+                    }
+                    start = tb.Text.Substring(0).IndexOf(code);
                 }
             }
         }
@@ -99,6 +106,8 @@ namespace Ubiquitous
                     return Properties.Resources.hashd;
                 case ChatIcon.Music:
                     return Properties.Resources.music;
+                case ChatIcon.Youtube:
+                    return Properties.Resources.youtube;
                 default:
                     return null;
             }
@@ -109,7 +118,7 @@ namespace Ubiquitous
         /// Writes a line to the textbox. Automaticall adds newline character
         /// </summary>
         /// <param name="text"></param>
-        public void WriteLine(string text, ChatIcon icon = ChatIcon.Default, bool highlight = false, Color? foreColor = null, Color? backColor = null)
+        public void WriteLine(Ubiquitous.MainForm.UbiMessage message, ChatIcon icon = ChatIcon.Default, bool highlight = false, Color? foreColor = null, Color? backColor = null)
         {
             if (tb == null)
                 return;
@@ -118,7 +127,7 @@ namespace Ubiquitous
                 SetTextCallback d = new SetTextCallback(WriteLine);
                 try
                 {
-                    tb.Parent.Invoke(d, new object[] { text, icon, highlight, foreColor, backColor });
+                    tb.Parent.Invoke(d, new object[] { message, icon, highlight, foreColor, backColor });
                 }
                 catch { }
             }
@@ -130,9 +139,9 @@ namespace Ubiquitous
 
                 if (tb.Text.Length > 0)
                     tb.AppendText(Environment.NewLine);
+                
 
-
-                if (text != null)
+                if (!string.IsNullOrEmpty(message.Text))
                 {
                     if (tb.TimeStamp)
                         tb.AppendTextAsRtf(DateTime.Now.GetDateTimeFormats('T')[0] + " ", tb.Font, tb.TimeColor);
@@ -141,12 +150,78 @@ namespace Ubiquitous
                     if (chatIcon != null)
                         tb.InsertImage(chatIcon);
 
-                    if (highlight)
-                        tb.AppendTextAsRtf(" " + text, tb.PersonalMessageFont, tb.PersonalMessageColor, tb.PersonalMessageBack);
-                    else if (foreColor.HasValue && backColor.HasValue)
-                        tb.AppendTextAsRtf(" " + text, tb.Font, foreColor.Value, backColor.Value);
+                    tb.AppendTextAsRtf(" ", tb.Font, tb.TextColor);
+
+                    if (message.TextOnly)
+                    {
+                        if (highlight)
+                            tb.AppendTextAsRtf(message.Text, tb.PersonalMessageFont, tb.PersonalMessageColor, tb.PersonalMessageBack);
+                        else if (foreColor.HasValue && backColor.HasValue)
+                            tb.AppendTextAsRtf(message.Text, tb.Font, foreColor.Value, backColor.Value);
+                        else
+                            tb.AppendTextAsRtf(message.Text, tb.Font, tb.TextColor);
+                    }
                     else
-                        tb.AppendTextAsRtf(" " + text, tb.Font, tb.TextColor);
+                    {
+                        String messageFormat = String.Empty;
+
+                        if (!String.IsNullOrEmpty(message.FromGroupName))
+                            messageFormat = settings.appearanceGrpMessageFormat;
+                        else if (!String.IsNullOrEmpty(message.FromName))
+                            messageFormat = settings.appearanceMsgFormat;
+
+                        String[] messageFormatParts = messageFormat.Split('%');
+                        String suffix = String.Empty;
+                        foreach (String messageFormatPart in messageFormatParts)
+                        {
+                            if( messageFormatPart.StartsWith("t") )
+                            {
+                                suffix = messageFormatPart.Length > 1 ? messageFormatPart.Substring(1) : String.Empty;
+
+                                if (highlight)
+                                    tb.AppendTextAsRtf(message.Text, tb.PersonalMessageFont, tb.PersonalMessageColor, tb.PersonalMessageBack);
+                                else if (foreColor.HasValue && backColor.HasValue)
+                                    tb.AppendTextAsRtf(message.Text, tb.Font, foreColor.Value, backColor.Value);
+                                else
+                                    tb.AppendTextAsRtf(message.Text, tb.Font, tb.TextColor);
+
+                                if (!String.IsNullOrEmpty(suffix))
+                                    tb.AppendTextAsRtf(suffix, tb.Font, tb.TextColor);
+                            }
+                            else if (messageFormatPart.StartsWith("sg"))
+                            {
+                                suffix = messageFormatPart.Length > 2 ? messageFormatPart.Substring(2) : String.Empty;
+                                tb.AppendTextAsRtf(message.FromGroupName == null ? String.Empty : message.FromGroupName, tb.Font, message.NickColor);
+                                if (!String.IsNullOrEmpty(suffix))
+                                    tb.AppendTextAsRtf(suffix, tb.Font, tb.TextColor);
+                            }
+                            else if (messageFormatPart.StartsWith("s"))
+                            {
+                                suffix = messageFormatPart.Length > 1 ? messageFormatPart.Substring(1) : String.Empty;
+                                tb.AppendTextAsRtf(message.FromName == null ? String.Empty : message.FromName, tb.Font, message.NickColor);
+                                if (!String.IsNullOrEmpty(suffix))
+                                    tb.AppendTextAsRtf(suffix, tb.Font, tb.TextColor);
+                            }
+                            else if( messageFormatPart.StartsWith("d") )
+                            {
+                                suffix = messageFormatPart.Length > 1 ? messageFormatPart.Substring(1) : String.Empty;
+                                tb.AppendTextAsRtf(message.ToName == null ? String.Empty : "->" + message.ToName, tb.Font, message.NickColor);
+                                
+                                if( !String.IsNullOrEmpty(suffix))
+                                    tb.AppendTextAsRtf(suffix, tb.Font, tb.TextColor);
+                            }
+                            else if( messageFormatPart.StartsWith("c") )
+                            {
+                                suffix = messageFormatPart.Length > 1 ? messageFormatPart.Substring(1) : String.Empty;
+                                tb.AppendTextAsRtf(message.FromEndPoint.ToString(), tb.Font, message.NickColor);
+                                if (!String.IsNullOrEmpty(suffix))
+                                    tb.AppendTextAsRtf(suffix, tb.Font, tb.TextColor);
+                            }
+                            
+                        }
+
+                    }
+
 
                     //tb.AppendText(" " + text);
                 }

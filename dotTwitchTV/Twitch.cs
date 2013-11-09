@@ -133,206 +133,122 @@ namespace dotTwitchTV
         #endregion
 
     }
+    public static class TwitchSmiles
+    {
+
+        public static TwitchSmile[] Smiles = {
+                new TwitchSmile( "4Head",Properties.Resources._4Head ),
+                new TwitchSmile( ">(", Properties.Resources.anger),
+                new TwitchSmile( "ArsonNoSexy", Properties.Resources.ArsonNoSexy),
+                new TwitchSmile( "AsianGlow", Properties.Resources.AsianGlow),
+                new TwitchSmile( "BCWarrior", Properties.Resources.BCWarror),
+                new TwitchSmile( "BibleThump", Properties.Resources.BibleThump),
+                new TwitchSmile( "BionicBunion", Properties.Resources.BionicBunion),
+                new TwitchSmile( "BlargNaut", Properties.Resources.BlargNaut),
+                new TwitchSmile( "BloodTrail", Properties.Resources.BloodTrail),
+                new TwitchSmile( "BORT", Properties.Resources.BORT),
+                new TwitchSmile( "BrainSlug", Properties.Resources.BrainSlug),
+                new TwitchSmile( "BrokeBack", Properties.Resources.BrokeBack),
+                new TwitchSmile( "B)", Properties.Resources.cool),
+                new TwitchSmile( "CougarHunt", Properties.Resources.CougarHunt),
+                new TwitchSmile( "DansGame", Properties.Resources.DansGame),
+                new TwitchSmile( "DatSheffy", Properties.Resources.DatSheffy),
+                new TwitchSmile( "DBstyle", Properties.Resources.DBStyle),
+                new TwitchSmile( "EagleEye",Properties.Resources.EagleEye),
+                new TwitchSmile( "EvilFetus",Properties.Resources.EvilFetus),
+                new TwitchSmile( "FailFish",Properties.Resources.FailFish),
+                new TwitchSmile( "FPSMarksman",Properties.Resources.FPSMarksman),
+                new TwitchSmile( "FrankerZ", Properties.Resources.FrankerZ),
+                new TwitchSmile( "FreakinStinkin", Properties.Resources.FreakinStinkin),
+                new TwitchSmile( ":(", Properties.Resources.frown),
+                new TwitchSmile( "FUNgineer",Properties.Resources.FUNgineer),
+                new TwitchSmile( "FuzzyOtterOO",Properties.Resources.FuzzyOtterOO),
+                new TwitchSmile( "GingerPower",Properties.Resources.GingerPower),
+                new TwitchSmile( "HassanChop",Properties.Resources.HassanChop),
+                new TwitchSmile( "<3",Properties.Resources.heart),
+                new TwitchSmile( "HotPokket",Properties.Resources.HotPokket),
+                new TwitchSmile( "ItsBoshyTime",Properties.Resources.ItsBoshyTime),
+                new TwitchSmile( "Jebaited",Properties.Resources.Jebaited),
+                new TwitchSmile( "JKanStyle",Properties.Resources.JKanStyle),
+                new TwitchSmile( "JonCarnage",Properties.Resources.JonCarnage),
+                new TwitchSmile( "Kappa",Properties.Resources.Kappa),
+                new TwitchSmile( "KevinTurtle", Properties.Resources.KevinTurtle),
+                new TwitchSmile( "Kreygasm", Properties.Resources.Kreygasm),
+                new TwitchSmile( "MrDestructoid", Properties.Resources.MrDestructoid),
+                new TwitchSmile( "MVGame", Properties.Resources.MVGame),
+                new TwitchSmile( "NinjaTroll", Properties.Resources.NinjaTroll),
+                new TwitchSmile( "NoNoSpot",Properties.Resources.NoNoSpot),
+                new TwitchSmile( "OMGScoots",Properties.Resources.OMGScoots),
+                new TwitchSmile( "OneHand",Properties.Resources.OneHand),
+                new TwitchSmile( "OpieOP",Properties.Resources.OpieOP),
+                new TwitchSmile( "OptimizePrime",Properties.Resources.OptimizePrime),
+                new TwitchSmile( "PazPazowitz", Properties.Resources.PazPazowitz),
+                new TwitchSmile( "PicoMause", Properties.Resources.PicoMause),
+                new TwitchSmile( "PJSalt", Properties.Resources.PJSalt),
+                new TwitchSmile( "PMSTwin",Properties.Resources.PMSTwin),
+                new TwitchSmile( "PogChamp", Properties.Resources.PogChamp),
+                new TwitchSmile( "Poooound", Properties.Resources.Poooound),
+                new TwitchSmile( "PunchTrees", Properties.Resources.PunchTrees),
+                new TwitchSmile( "R)", Properties.Resources.R),
+                new TwitchSmile( "RedCoat", Properties.Resources.RedCoat),
+                new TwitchSmile( "ResidentSleeper", Properties.Resources.ResidentSleeper),
+                new TwitchSmile( "RuleFive", Properties.Resources.RuleFive),
+                new TwitchSmile( "ShazBotstix", Properties.Resources.ShazBotstix),
+                new TwitchSmile( ":\\", Properties.Resources.slant),
+                new TwitchSmile( ":/", Properties.Resources.slant),
+                new TwitchSmile( ":)", Properties.Resources.smile),
+                new TwitchSmile( "SMOrc", Properties.Resources.SMOrc),
+                new TwitchSmile( "SMSkull", Properties.Resources.SMSkull),
+                new TwitchSmile( "SoBayed", Properties.Resources.SoBayed),
+                new TwitchSmile( "SoonerLater", Properties.Resources.SoonerLater),
+                new TwitchSmile( "SSSsss", Properties.Resources.SSSsss),
+                new TwitchSmile( "StoneLightning", Properties.Resources.StoneLightning),
+                new TwitchSmile( "StrawBeary", Properties.Resources.StrawBeary),
+                new TwitchSmile( "SuperVinlin", Properties.Resources.SuperVinlin),
+                new TwitchSmile( "SwiftRage", Properties.Resources.SwiftRage),
+                new TwitchSmile( "TehFunrun", Properties.Resources.TehFunrun),
+                new TwitchSmile( "TheRinger", Properties.Resources.TheRinger),
+                new TwitchSmile( "TheTarFu", Properties.Resources.TheTarFu),
+                new TwitchSmile( "TinyFace", Properties.Resources.TinyFace),
+                new TwitchSmile( "TooSpicy", Properties.Resources.TooSpicy),
+                new TwitchSmile( "TriHard", Properties.Resources.TriHard),
+                new TwitchSmile( "UleetBackup", Properties.Resources.UleetBackup),
+                new TwitchSmile( "UnSane", Properties.Resources.UnSane),
+                new TwitchSmile( ":D", Properties.Resources.vhappy),
+                new TwitchSmile( "Volcania", Properties.Resources.Volcania),
+                new TwitchSmile( ";)", Properties.Resources.wink),
+                new TwitchSmile( "WinWaker", Properties.Resources.WinWaker),
+                new TwitchSmile( "o_o", Properties.Resources.eyes),
+                new TwitchSmile( ":z", Properties.Resources.bored),
+                new TwitchSmile( ":o", Properties.Resources.surprised),
+                new TwitchSmile( ":p", Properties.Resources.tongue),
+                new TwitchSmile( ";p", Properties.Resources.tonguewink),
+                new TwitchSmile( ":peka:", Properties.Resources.peka),
+                new TwitchSmile( "peka", Properties.Resources.peka),
+                new TwitchSmile( "пека", Properties.Resources.peka),
+                new TwitchSmile( ":fp:", Properties.Resources.facepalm),
+                new TwitchSmile( "facepalm", Properties.Resources.facepalm),
+                new TwitchSmile( "фейспалм", Properties.Resources.facepalm)
+               };
+    }
 
     public class TwitchSmile
     {
-        public static Bitmap Smile(String code)
+        public Bitmap Smile
         {
-            switch (code)
-            {
-                case "4Head":
-                    return Properties.Resources._4Head;
-                case ">(":
-                    return Properties.Resources.anger;
-                case "ArsonNoSexy":
-                    return Properties.Resources.ArsonNoSexy;
-                case "AsianGlow":
-                    return Properties.Resources.AsianGlow;
-                case "BCWarrior":
-                    return Properties.Resources.BCWarror;
-                case "BibleThump":
-                    return Properties.Resources.BibleThump;
-                case "BionicBunion":
-                    return Properties.Resources.BionicBunion;
-                case "BlargNaut":
-                    return Properties.Resources.BlargNaut;
-                case "BloodTrail":
-                    return Properties.Resources.BloodTrail;
-                case "BORT":
-                    return Properties.Resources.BORT;
-                case "BrainSlug":
-                    return Properties.Resources.BrainSlug;
-                case "BrokeBack":
-                    return Properties.Resources.BrokeBack;
-                case "B)":
-                    return Properties.Resources.cool;
-                case "CougarHunt":
-                    return Properties.Resources.CougarHunt;
-                case "DansGame":
-                    return Properties.Resources.DansGame;
-                case "DatSheffy":
-                    return Properties.Resources.DatSheffy;
-                case "DBstyle":
-                    return Properties.Resources.DBStyle;
-                case "EagleEye":
-                    return Properties.Resources.EagleEye;
-                case "EvilFetus":
-                    return Properties.Resources.EvilFetus;
-                case "FailFish":
-                    return Properties.Resources.FailFish;
-                case "FPSMarksman":
-                    return Properties.Resources.FPSMarksman;
-                case "FrankerZ":
-                    return Properties.Resources.FrankerZ;
-                case "FreakinStinkin":
-                    return Properties.Resources.FreakinStinkin;
-                case ":(":
-                    return Properties.Resources.frown;
-                case "FUNgineer":
-                    return Properties.Resources.FUNgineer;
-                case "FuzzyOtterOO":
-                    return Properties.Resources.FuzzyOtterOO;
-                case "GingerPower":
-                    return Properties.Resources.GingerPower;
-                case "HassanChop":
-                    return Properties.Resources.HassanChop;
-                case "<3":
-                    return Properties.Resources.heart;
-                case "HotPokket":
-                    return Properties.Resources.HotPokket;
-                case "ItsBoshyTime":
-                    return Properties.Resources.ItsBoshyTime;
-                case "Jebaited":
-                    return Properties.Resources.Jebaited;
-                case "JKanStyle":
-                    return Properties.Resources.JKanStyle;
-                case "JonCarnage":
-                    return Properties.Resources.JonCarnage;
-                case "Kappa":
-                    return Properties.Resources.Kappa;
-                case "KevinTurtle":
-                    return Properties.Resources.KevinTurtle;
-                case "Kreygasm":
-                    return Properties.Resources.Kreygasm;
-                case "MrDestructoid":
-                    return Properties.Resources.MrDestructoid;
-                case "MVGame":
-                    return Properties.Resources.MVGame;
-                case "NinjaTroll":
-                    return Properties.Resources.NinjaTroll;
-                case "NoNoSpot":
-                    return Properties.Resources.NoNoSpot;
-                case "OMGScoots":
-                    return Properties.Resources.OMGScoots;
-                case "OneHand":
-                    return Properties.Resources.OneHand;
-                case "OpieOP":
-                    return Properties.Resources.OpieOP;
-                case "OptimizePrime":
-                    return Properties.Resources.OptimizePrime;
-                case "PazPazowitz":
-                    return Properties.Resources.PazPazowitz;
-                case "PicoMause":
-                    return Properties.Resources.PicoMause;
-                case "PJSalt":
-                    return Properties.Resources.PJSalt;
-                case "PMSTwin":
-                    return Properties.Resources.PMSTwin;
-                case "PogChamp":
-                    return Properties.Resources.PogChamp;
-                case "Poooound":
-                    return Properties.Resources.Poooound;
-                case "PunchTrees":
-                    return Properties.Resources.PunchTrees;
-                case "R)":
-                    return Properties.Resources.R;
-                case "RedCoat":
-                    return Properties.Resources.RedCoat;
-                case "ResidentSleeper":
-                    return Properties.Resources.ResidentSleeper;
-                case "RuleFive":
-                    return Properties.Resources.RuleFive;
-                case "ShazBotstix":
-                    return Properties.Resources.ShazBotstix;
-                case ":\\":
-                    return Properties.Resources.slant;
-                case ":/":
-                    return Properties.Resources.slant;
-                case ":)":
-                    return Properties.Resources.smile;
-                case "SMOrc":
-                    return Properties.Resources.SMOrc;
-                case "SMSkull":
-                    return Properties.Resources.SMSkull;
-                case "SoBayed":
-                    return Properties.Resources.SoBayed;
-                case "SoonerLater":
-                    return Properties.Resources.SoonerLater;
-                case "SSSsss":
-                    return Properties.Resources.SSSsss;
-                case "StoneLightning":
-                    return Properties.Resources.StoneLightning;
-                case "StrawBeary":
-                    return Properties.Resources.StrawBeary;
-                case "SuperVinlin":
-                    return Properties.Resources.SuperVinlin;
-                case "SwiftRage":
-                    return Properties.Resources.SwiftRage;
-                case "TehFunrun":
-                    return Properties.Resources.TehFunrun;
-                case "TheRinger":
-                    return Properties.Resources.TheRinger;
-                case "TheTarFu":
-                    return Properties.Resources.TheTarFu;
-                case "TinyFace":
-                    return Properties.Resources.TinyFace;
-                case "TooSpicy":
-                    return Properties.Resources.TooSpicy;
-                case "TriHard":
-                    return Properties.Resources.TriHard;
-                case "UleetBackup":
-                    return Properties.Resources.UleetBackup;
-                case "UnSane":
-                    return Properties.Resources.UnSane;
-                case ":D":
-                    return Properties.Resources.vhappy;
-                case "Volcania":
-                    return Properties.Resources.Volcania;
-                case ";)":
-                    return Properties.Resources.wink;
-                case "WinWaker":
-                    return Properties.Resources.WinWaker;
-
-            }
-
-            switch (code.ToLower())
-            {
-                case "o_o":
-                    return Properties.Resources.eyes;
-                case ":z":
-                    return Properties.Resources.bored;
-                case ":o":
-                    return Properties.Resources.surprised;
-                case ":p":
-                    return Properties.Resources.tongue;
-                case ";p":
-                    return Properties.Resources.tonguewink;
-                case ":peka:":
-                    return Properties.Resources.peka;
-                case "peka":
-                    return Properties.Resources.peka;
-                case "пека":
-                    return Properties.Resources.peka;
-                case ":fp:":
-                    return Properties.Resources.facepalm;
-                case "facepalm":
-                    return Properties.Resources.facepalm;
-                case "fp":
-                    return Properties.Resources.facepalm;
-                case "фейспалм":
-                    return Properties.Resources.facepalm;
-            }
-            return null;
+            get;
+            set;
         }
+        public String Code
+        {
+            get;
+            set;
+        }
+        public TwitchSmile(String code, Bitmap image)
+        {
+            Code = code;
+            Smile = image;
+        }
+
     }
 }

@@ -17,10 +17,14 @@ namespace dotCybergame
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
         private const string channelInfoUrl = "http://api.cybergame.tv/p/statusv2/?channel={0}";
         private const string channelUrl = "http://cybergame.tv/{0}";
-        private const string adminAjaxUrl = "http://cybergame.tv/wp-admin/admin-ajax.php";
-        private const string loginUrl = "http://cybergame.tv/cabinet_login.php";
+        private const string chatUrl = "http://cybergame.tv/v1/{0}/?chatonly=1";
+        private const string adminAjaxUrlNew = "http://cybergame.tv/v1/wp-admin";
+        private const string adminAjaxUrl = "http://cybergame.tv/v1/wp-admin/admin-ajax.php";
+
+        private const string loginUrl = "http://cybergame.tv/login.php";
+        private const string oldLoginUrl = "http://cybergame.tv/v1/cabinet_login.php";
         private const string cabinetUrl = "http://cybergame.tv/cabinet.php";
-        private const string sendMessageUrl = "http://cybergame.tv/wp-admin/admin-ajax.php";
+        private const string sendMessageUrl = "http://cybergame.tv/v1/wp-admin/admin-ajax.php";
         private const string reChatUpdateMessageNonce = @",""quick_chat_update_messages_nonce"":""([^""]+)"",";
         private const string reChatNewMessageNonce = @",""quick_chat_new_message_nonce"":""([^""]+)""";
         private const string reChatLastTimestamp = @",""quick_chat_last_timestamp"":(\d+),";
@@ -110,7 +114,7 @@ namespace dotCybergame
         }
         public bool Login()
         {
-            lock (loginLock)
+            lock (chatLock)
             {
                 isLoggedIn = false;
                 if (String.IsNullOrEmpty(_user) || String.IsNullOrEmpty(_password))
@@ -119,18 +123,29 @@ namespace dotCybergame
                 chatWC = new CookieAwareWebClient();
 
                 chatWC.Headers["Cache-Control"] = "no-cache";
-                string loginParams = String.Format("rememberme={0}&redirect_to=/{1}&log={1}&pwd={2}&submit=Войти", "forever", _user, _password);
+                chatWC.DownloadString(loginUrl);
+                chatWC.setCookie("kt_is_visited", "1", ".cybergame.tv" );
+                chatWC.setCookie("kt_tcookie", "1", ".cybergame.tv");
+                chatWC.setCookie("quick_chat_alias", _user, ".cybergame.tv");
+                //string loginParams = String.Format("rememberme={0}&redirect_to=/{1}&log={1}&pwd={2}&submit=Войти", "forever", _user, _password);
+                string loginParams = String.Format("action=login&username={0}&pass={1}", _user, _password);
 
-                chatWC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                //chatWC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+
+
                 var res = chatWC.postFormDataLowLevel(loginUrl, loginParams);
-
+                //var res = chatWC.UploadString(loginUrl, loginParams);
                 if (string.IsNullOrEmpty(res))
                     return false;
 
-                if (!res.Contains("wordpress_logged_in_"))
+                res = chatWC.DownloadString(loginUrl);
+                if (!res.Contains("logout.php"))
                     return false;
 
-                var result = chatWC.DownloadString(String.Format(channelUrl, _user));
+                oldLogin();
+
+                var result = chatWC.DownloadString(String.Format(chatUrl, _user));
+
                 lastTimestamp = TimeUtils.UnixTimestamp();
                 chatUpdateNonce = Re.GetSubString(result, reChatUpdateMessageNonce, 1);
                 chatNewMessageNonce = Re.GetSubString(result, reChatNewMessageNonce, 1);
@@ -140,17 +155,25 @@ namespace dotCybergame
                 if (OnLogin != null)
                     OnLogin(this, EventArgs.Empty);
 
-                chatWC.Cookies = loginWC.Cookies;
-                statsWC.Cookies = loginWC.Cookies;
+                //chatWC.Cookies = loginWC.Cookies;
+                statsWC.Cookies = chatWC.Cookies;
 
                 isLoggedIn = true;
 
                 return true;
             }
         }
+        public void oldLogin()
+        {
+            string loginParams = String.Format("rememberme={0}&redirect_to=/{1}&log={1}&pwd={2}&submit=Войти", "forever", _user, _password);
+            lock (chatLock)
+            {
+                var res = chatWC.postFormDataLowLevel(oldLoginUrl, loginParams);
+            }
+        }
         public bool SendMessage(string message)
         {
-            lock (messageLock)
+            lock (chatLock)
             {
                 if (!isLoggedIn)
                     return false;
@@ -178,9 +201,9 @@ namespace dotCybergame
 
                     Debug.Print("{0} {1}", messageParams, result);
                 }
-                catch
+                catch(Exception e)
                 {
-                    Debug.Print("Exception in Cybergame SendMessage()");
+                    Debug.Print("Exception in Cybergame SendMessage(): {0}", e.Message);
                 }
 
                 return true;
@@ -199,9 +222,9 @@ namespace dotCybergame
                 string adsParams = String.Format("xjxfun=start_ad&xjxr={0}", TimeUtils.UnixTimestamp());
                 var result = loginWC.UploadString(cabinetUrl, adsParams);
             }
-            catch
+            catch( Exception e )
             {
-                Debug.Print("Exception in Cybergame StartAdvertising()");
+                Debug.Print("Exception in Cybergame StartAdvertising(): {0}", e.Message);
             }
 
             return true;
@@ -210,8 +233,8 @@ namespace dotCybergame
         {
             lock (chatLock)
             {
-                if (!isLoggedIn)
-                    return;
+                //if (!isLoggedIn)
+                //    return;
 
                 if (String.IsNullOrEmpty(chatUpdateNonce))
                     return;
@@ -233,7 +256,9 @@ namespace dotCybergame
                 {
                     result = chatWC.UploadString(adminAjaxUrl, updateChatParams);
                 }
-                catch { }
+                catch( Exception e ) {
+                    Debug.Print("Cybergame chat update exception: {0}", e.Message);
+                }
 
                 if (String.IsNullOrEmpty(result))
                     return;

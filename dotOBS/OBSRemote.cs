@@ -6,6 +6,8 @@ using WebSocket4Net;
 using System.Diagnostics;
 using dotUtilities;
 using System.Threading;
+using dot.Json;
+using dot.Json.Linq;
 
 namespace dotOBS
 {
@@ -64,10 +66,13 @@ namespace dotOBS
                 if( !String.IsNullOrEmpty(curSceneName) )
                 {
                     Scene curScene = Scenes.FirstOrDefault( scene => scene.name == curSceneName );
-                    Source switchSource = curScene.sources.FirstOrDefault(source => source.name.ToLower().StartsWith(sourceName.ToLower()));
-                    if( switchSource != null && !String.IsNullOrEmpty(switchSource.name))
+                    Source[] switchSources = curScene.sources.Where(source => source.name.ToLower().StartsWith(sourceName.ToLower())).ToArray();
+                    foreach (var sws in switchSources)
                     {
-                        SetSourceRenderer(switchSource.name, enable);
+                        if (sws != null && !String.IsNullOrEmpty(sws.name))
+                        {
+                            SetSourceRenderer(sws.name, enable);
+                        }
                     }
                 }
             }
@@ -78,7 +83,7 @@ namespace dotOBS
         }
         public bool Opened
         {
-            get { return socket.State == WebSocketState.Open; }
+            get { if (socket == null) return false; else return socket.State == WebSocketState.Open; }
         }
         public StreamStatus Status
         {
@@ -112,6 +117,7 @@ namespace dotOBS
 
             if (e.Message.Contains("StreamStatus"))
             {
+                Debug.Print(e.Message);
                 var streamStatus = JsonGenerics.ParseJson<StreamStatus>.ReadObject(e.Message);
                 if (Status != null)
                 {
@@ -185,6 +191,49 @@ namespace dotOBS
                     OnSourceChange(this, new OBSSourceEventArgs(sourceChange.source));
                 }
             }
+            else if (e.Message.Contains("desktop-volume"))
+            {
+                try
+                {
+                    JObject volume = JObject.Parse(e.Message);
+                    if (volume == null)
+                        return;
+
+                    var micmuted = volume["mic-muted"].ToString();
+                    if (!String.IsNullOrEmpty(micmuted))
+                        MicMuted = bool.Parse(micmuted);
+                }
+                catch { }
+            }
+            else if (e.Message.Contains("VolumeChanged"))
+            {
+                try
+                {
+                    JObject volChange = JObject.Parse(e.Message);
+                    if (volChange == null)
+                        return;
+
+                    var channel = volChange["channel"].ToString();
+                    if (String.IsNullOrEmpty(channel))
+                        return;
+
+                    var finalValue = volChange["finalValue"].ToString();
+                    double volume = 0;
+                    double.TryParse(volChange["volume"].ToString(), out volume);
+                    bool muted = (bool)(volChange["muted"]);
+
+                    if (channel == "microphone")
+                    {
+                        MicMuted = muted;
+                    }
+                    else
+                    {
+                        //speakers
+                    }
+                }
+                catch { }
+
+            }
             else
             {
                 Debug.Print(e.Message);
@@ -194,7 +243,11 @@ namespace dotOBS
                 OnMessage(this, new OBSMessageEventArgs(e.Message));
             //throw new NotImplementedException();
         }
-
+        public bool MicMuted
+        {
+            get;
+            set;
+        }
         void socket_Opened(object sender, EventArgs e)
         {
             //throw new NotImplementedException();

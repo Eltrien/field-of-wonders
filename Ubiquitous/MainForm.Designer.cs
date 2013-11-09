@@ -49,11 +49,20 @@
             this.checkBoxOnTop = new System.Windows.Forms.CheckBox();
             this.trackBarTransparency = new System.Windows.Forms.TrackBar();
             this.panelMessages = new System.Windows.Forms.Panel();
+            this.counterYoutube = new Ubiquitous.CounterPanel();
+            this.counterGoodgame = new Ubiquitous.CounterPanel();
+            this.counterCybergame = new Ubiquitous.CounterPanel();
+            this.counterHash = new Ubiquitous.CounterPanel();
+            this.counterTwitch = new Ubiquitous.CounterPanel();
+            this.labelViewers = new Ubiquitous.CounterPanel();
+            this.textMessages = new SC2TV.RTFControl.ExRichTextBox();
             this.pictureCurrentChat = new System.Windows.Forms.PictureBox();
             this.buttonFullscreen = new System.Windows.Forms.Button();
             this.imageListChatSize = new System.Windows.Forms.ImageList(this.components);
             this.textCommand = new System.Windows.Forms.TextBox();
             this.buttonInvisible = new System.Windows.Forms.Button();
+            this.comboSc2Channels = new Ubiquitous.ComboBoxWithId();
+            this.comboGGChannels = new Ubiquitous.ComboBoxWithId();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label19 = new System.Windows.Forms.Label();
             this.pictureHashd = new System.Windows.Forms.PictureBox();
@@ -96,14 +105,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.timerEverySecond = new System.Windows.Forms.Timer(this.components);
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.counterGoodgame = new Ubiquitous.CounterPanel();
-            this.counterCybergame = new Ubiquitous.CounterPanel();
-            this.counterHash = new Ubiquitous.CounterPanel();
-            this.counterTwitch = new Ubiquitous.CounterPanel();
-            this.labelViewers = new Ubiquitous.CounterPanel();
-            this.textMessages = new SC2TV.RTFControl.ExRichTextBox();
-            this.comboSc2Channels = new Ubiquitous.ComboBoxWithId();
-            this.comboGGChannels = new Ubiquitous.ComboBoxWithId();
             this.contextMenuChat.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panelTools.SuspendLayout();
@@ -227,7 +228,6 @@
             // 
             // pictureBoxMoveTools
             // 
-            this.pictureBoxMoveTools.Cursor = System.Windows.Forms.Cursors.SizeAll;
             this.pictureBoxMoveTools.Image = global::Ubiquitous.Properties.Resources.dots;
             this.pictureBoxMoveTools.Location = new System.Drawing.Point(0, 2);
             this.pictureBoxMoveTools.Name = "pictureBoxMoveTools";
@@ -359,6 +359,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelMessages.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.panelMessages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMessages.Controls.Add(this.counterYoutube);
             this.panelMessages.Controls.Add(this.counterGoodgame);
             this.panelMessages.Controls.Add(this.counterCybergame);
             this.panelMessages.Controls.Add(this.counterHash);
@@ -371,6 +372,168 @@
             this.panelMessages.Name = "panelMessages";
             this.panelMessages.Size = new System.Drawing.Size(771, 341);
             this.panelMessages.TabIndex = 36;
+            // 
+            // counterYoutube
+            // 
+            this.counterYoutube.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
+            this.counterYoutube.Counter = "0";
+            this.counterYoutube.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterYoutube.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterYoutube.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterYoutube.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosYoutube", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterYoutube.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterYoutube", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterYoutube.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.counterYoutube.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
+            this.counterYoutube.Image = global::Ubiquitous.Properties.Resources.youtube;
+            this.counterYoutube.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosYoutube;
+            this.counterYoutube.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.counterYoutube.Name = "counterYoutube";
+            this.counterYoutube.Size = new System.Drawing.Size(45, 17);
+            this.counterYoutube.TabIndex = 28;
+            this.counterYoutube.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterYoutube;
+            // 
+            // counterGoodgame
+            // 
+            this.counterGoodgame.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
+            this.counterGoodgame.Counter = "0";
+            this.counterGoodgame.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterGoodgame.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterGoodgame.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterGoodgame.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterGoodgame", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterGoodgame.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosGoodgame", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterGoodgame.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.counterGoodgame.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
+            this.counterGoodgame.Image = global::Ubiquitous.Properties.Resources.goodgameicon;
+            this.counterGoodgame.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosGoodgame;
+            this.counterGoodgame.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.counterGoodgame.Name = "counterGoodgame";
+            this.counterGoodgame.Size = new System.Drawing.Size(45, 17);
+            this.counterGoodgame.TabIndex = 27;
+            this.counterGoodgame.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterGoodgame;
+            // 
+            // counterCybergame
+            // 
+            this.counterCybergame.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
+            this.counterCybergame.Counter = "0";
+            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterCybergame", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosCybergame", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterCybergame.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.counterCybergame.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
+            this.counterCybergame.Image = global::Ubiquitous.Properties.Resources.cybergame;
+            this.counterCybergame.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosCybergame;
+            this.counterCybergame.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.counterCybergame.Name = "counterCybergame";
+            this.counterCybergame.Size = new System.Drawing.Size(45, 17);
+            this.counterCybergame.TabIndex = 27;
+            this.counterCybergame.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterCybergame;
+            // 
+            // counterHash
+            // 
+            this.counterHash.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
+            this.counterHash.Counter = "0";
+            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterHashd", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosHashd", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHash.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.counterHash.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
+            this.counterHash.Image = global::Ubiquitous.Properties.Resources.hashd;
+            this.counterHash.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosHashd;
+            this.counterHash.Margin = new System.Windows.Forms.Padding(0);
+            this.counterHash.Name = "counterHash";
+            this.counterHash.Size = new System.Drawing.Size(45, 17);
+            this.counterHash.TabIndex = 26;
+            this.counterHash.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterHashd;
+            // 
+            // counterTwitch
+            // 
+            this.counterTwitch.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
+            this.counterTwitch.Counter = "0";
+            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterTwitch", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosTwitch", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterTwitch.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.counterTwitch.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
+            this.counterTwitch.Image = global::Ubiquitous.Properties.Resources.twitchicon;
+            this.counterTwitch.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosTwitch;
+            this.counterTwitch.Margin = new System.Windows.Forms.Padding(0);
+            this.counterTwitch.Name = "counterTwitch";
+            this.counterTwitch.Size = new System.Drawing.Size(45, 17);
+            this.counterTwitch.TabIndex = 25;
+            this.counterTwitch.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterTwitch;
+            // 
+            // labelViewers
+            // 
+            this.labelViewers.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
+            this.labelViewers.Counter = "0";
+            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterTotal", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosTotal", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.labelViewers.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.labelViewers.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
+            this.labelViewers.Image = global::Ubiquitous.Properties.Resources.adminicon;
+            this.labelViewers.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosTotal;
+            this.labelViewers.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.labelViewers.Name = "labelViewers";
+            this.labelViewers.Size = new System.Drawing.Size(45, 17);
+            this.labelViewers.TabIndex = 24;
+            this.labelViewers.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterTotal;
+            // 
+            // textMessages
+            // 
+            this.textMessages.BackColor = System.Drawing.Color.Black;
+            this.textMessages.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textMessages.Caret = false;
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("TimeColor", global::Ubiquitous.Properties.Settings.Default, "globalTimestampForeground", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("HighlightColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("SaveToImageFileName", global::Ubiquitous.Properties.Settings.Default, "globalChatImageFilename", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("SaveToImage", global::Ubiquitous.Properties.Settings.Default, "globalChat2Image", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("TextColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("SlowScroll", global::Ubiquitous.Properties.Settings.Default, "globalSmoothScroll", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("PersonalMessageBack", global::Ubiquitous.Properties.Settings.Default, "globalPersonalMessageBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("PersonalMessageFont", global::Ubiquitous.Properties.Settings.Default, "globalPersonalMessageFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("PersonalMessageColor", global::Ubiquitous.Properties.Settings.Default, "personalMessageColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textMessages.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
+            this.textMessages.HighlightColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
+            this.textMessages.Location = new System.Drawing.Point(0, 0);
+            this.textMessages.Margin = new System.Windows.Forms.Padding(20);
+            this.textMessages.MaxLines = ((uint)(4u));
+            this.textMessages.Name = "textMessages";
+            this.textMessages.PersonalMessageBack = global::Ubiquitous.Properties.Settings.Default.globalPersonalMessageBack;
+            this.textMessages.PersonalMessageColor = global::Ubiquitous.Properties.Settings.Default.personalMessageColor;
+            this.textMessages.PersonalMessageFont = global::Ubiquitous.Properties.Settings.Default.globalPersonalMessageFont;
+            this.textMessages.RawTextColor = null;
+            this.textMessages.ReadOnly = true;
+            this.textMessages.RTF = resources.GetString("textMessages.RTF");
+            this.textMessages.SaveToImage = global::Ubiquitous.Properties.Settings.Default.globalChat2Image;
+            this.textMessages.SaveToImageFileName = global::Ubiquitous.Properties.Settings.Default.globalChatImageFilename;
+            this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.textMessages.SelectionAlignment = SC2TV.RTFControl.ExRichTextBox.TextAlign.Left;
+            this.textMessages.Size = new System.Drawing.Size(769, 339);
+            this.textMessages.SlowScroll = global::Ubiquitous.Properties.Settings.Default.globalSmoothScroll;
+            this.textMessages.TabIndex = 23;
+            this.textMessages.Text = "";
+            this.textMessages.TextColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
+            this.textMessages.TimeColor = global::Ubiquitous.Properties.Settings.Default.globalTimestampForeground;
+            this.textMessages.TimeStamp = false;
+            this.textMessages.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textMessages_LinkClicked);
+            this.textMessages.SelectionChanged += new System.EventHandler(this.textMessages_SelectionChanged);
+            this.textMessages.SizeChanged += new System.EventHandler(this.textMessages_SizeChanged);
+            this.textMessages.TextChanged += new System.EventHandler(this.textMessages_TextChanged);
+            this.textMessages.DoubleClick += new System.EventHandler(this.textMessages_DoubleClick);
+            this.textMessages.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseDown);
+            this.textMessages.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseMove);
+            this.textMessages.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseUp);
             // 
             // pictureCurrentChat
             // 
@@ -434,6 +597,34 @@
             this.buttonInvisible.Text = "Invisible";
             this.buttonInvisible.UseVisualStyleBackColor = true;
             this.buttonInvisible.Visible = false;
+            // 
+            // comboSc2Channels
+            // 
+            this.comboSc2Channels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboSc2Channels.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.comboSc2Channels.DropDownWidth = 300;
+            this.comboSc2Channels.ForeColor = System.Drawing.SystemColors.Window;
+            this.comboSc2Channels.FormattingEnabled = true;
+            this.comboSc2Channels.Location = new System.Drawing.Point(740, 552);
+            this.comboSc2Channels.Name = "comboSc2Channels";
+            this.comboSc2Channels.Size = new System.Drawing.Size(86, 21);
+            this.comboSc2Channels.TabIndex = 3;
+            this.comboSc2Channels.Visible = false;
+            this.comboSc2Channels.DropDown += new System.EventHandler(this.comboSc2Channels_DropDown);
+            this.comboSc2Channels.SelectionChangeCommitted += new System.EventHandler(this.comboSc2Channels_SelectionChangeCommitted);
+            // 
+            // comboGGChannels
+            // 
+            this.comboGGChannels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboGGChannels.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.comboGGChannels.DropDownWidth = 300;
+            this.comboGGChannels.ForeColor = System.Drawing.SystemColors.Window;
+            this.comboGGChannels.FormattingEnabled = true;
+            this.comboGGChannels.Location = new System.Drawing.Point(739, 595);
+            this.comboGGChannels.Name = "comboGGChannels";
+            this.comboGGChannels.Size = new System.Drawing.Size(121, 21);
+            this.comboGGChannels.TabIndex = 4;
+            this.comboGGChannels.Visible = false;
             // 
             // groupBox1
             // 
@@ -912,177 +1103,6 @@
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // counterGoodgame
-            // 
-            this.counterGoodgame.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
-            this.counterGoodgame.Counter = "0";
-            this.counterGoodgame.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterGoodgame.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterGoodgame.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterGoodgame.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterGoodgame", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterGoodgame.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosGoodgame", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterGoodgame.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
-            this.counterGoodgame.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
-            this.counterGoodgame.Image = global::Ubiquitous.Properties.Resources.goodgameicon;
-            this.counterGoodgame.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosGoodgame;
-            this.counterGoodgame.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.counterGoodgame.Name = "counterGoodgame";
-            this.counterGoodgame.Size = new System.Drawing.Size(44, 17);
-            this.counterGoodgame.TabIndex = 27;
-            this.counterGoodgame.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterGoodgame;
-            // 
-            // counterCybergame
-            // 
-            this.counterCybergame.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
-            this.counterCybergame.Counter = "0";
-            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterCybergame", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosCybergame", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterCybergame.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterCybergame.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
-            this.counterCybergame.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
-            this.counterCybergame.Image = global::Ubiquitous.Properties.Resources.cybergame;
-            this.counterCybergame.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosCybergame;
-            this.counterCybergame.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.counterCybergame.Name = "counterCybergame";
-            this.counterCybergame.Size = new System.Drawing.Size(44, 17);
-            this.counterCybergame.TabIndex = 27;
-            this.counterCybergame.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterCybergame;
-            // 
-            // counterHash
-            // 
-            this.counterHash.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
-            this.counterHash.Counter = "0";
-            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterHashd", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosHashd", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterHash.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterHash.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
-            this.counterHash.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
-            this.counterHash.Image = global::Ubiquitous.Properties.Resources.hashd;
-            this.counterHash.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosHashd;
-            this.counterHash.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.counterHash.Name = "counterHash";
-            this.counterHash.Size = new System.Drawing.Size(44, 17);
-            this.counterHash.TabIndex = 26;
-            this.counterHash.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterHashd;
-            // 
-            // counterTwitch
-            // 
-            this.counterTwitch.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
-            this.counterTwitch.Counter = "0";
-            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterTwitch", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosTwitch", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterTwitch.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.counterTwitch.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
-            this.counterTwitch.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
-            this.counterTwitch.Image = global::Ubiquitous.Properties.Resources.twitchicon;
-            this.counterTwitch.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosTwitch;
-            this.counterTwitch.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.counterTwitch.Name = "counterTwitch";
-            this.counterTwitch.Size = new System.Drawing.Size(44, 17);
-            this.counterTwitch.TabIndex = 25;
-            this.counterTwitch.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterTwitch;
-            // 
-            // labelViewers
-            // 
-            this.labelViewers.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
-            this.labelViewers.Counter = "0";
-            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterTotal", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosTotal", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.labelViewers.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.labelViewers.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
-            this.labelViewers.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
-            this.labelViewers.Image = global::Ubiquitous.Properties.Resources.adminicon;
-            this.labelViewers.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosTotal;
-            this.labelViewers.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.labelViewers.Name = "labelViewers";
-            this.labelViewers.Size = new System.Drawing.Size(44, 17);
-            this.labelViewers.TabIndex = 24;
-            this.labelViewers.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterTotal;
-            // 
-            // textMessages
-            // 
-            this.textMessages.BackColor = System.Drawing.Color.Black;
-            this.textMessages.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textMessages.Caret = false;
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("TimeColor", global::Ubiquitous.Properties.Settings.Default, "globalTimestampForeground", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("HighlightColor", global::Ubiquitous.Properties.Settings.Default, "globalToolBoxBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("SaveToImageFileName", global::Ubiquitous.Properties.Settings.Default, "globalChatImageFilename", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("SaveToImage", global::Ubiquitous.Properties.Settings.Default, "globalChat2Image", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("TextColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalChatTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("SlowScroll", global::Ubiquitous.Properties.Settings.Default, "globalSmoothScroll", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("PersonalMessageBack", global::Ubiquitous.Properties.Settings.Default, "globalPersonalMessageBack", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("PersonalMessageFont", global::Ubiquitous.Properties.Settings.Default, "globalPersonalMessageFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("PersonalMessageColor", global::Ubiquitous.Properties.Settings.Default, "personalMessageColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textMessages.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
-            this.textMessages.HighlightColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
-            this.textMessages.Location = new System.Drawing.Point(0, 0);
-            this.textMessages.Margin = new System.Windows.Forms.Padding(20);
-            this.textMessages.MaxLines = ((uint)(4u));
-            this.textMessages.Name = "textMessages";
-            this.textMessages.PersonalMessageBack = global::Ubiquitous.Properties.Settings.Default.globalPersonalMessageBack;
-            this.textMessages.PersonalMessageColor = global::Ubiquitous.Properties.Settings.Default.personalMessageColor;
-            this.textMessages.PersonalMessageFont = global::Ubiquitous.Properties.Settings.Default.globalPersonalMessageFont;
-            this.textMessages.RawTextColor = null;
-            this.textMessages.ReadOnly = true;
-            this.textMessages.RTF = resources.GetString("textMessages.RTF");
-            this.textMessages.SaveToImage = global::Ubiquitous.Properties.Settings.Default.globalChat2Image;
-            this.textMessages.SaveToImageFileName = global::Ubiquitous.Properties.Settings.Default.globalChatImageFilename;
-            this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.textMessages.SelectionAlignment = SC2TV.RTFControl.ExRichTextBox.TextAlign.Left;
-            this.textMessages.Size = new System.Drawing.Size(769, 339);
-            this.textMessages.SlowScroll = global::Ubiquitous.Properties.Settings.Default.globalSmoothScroll;
-            this.textMessages.TabIndex = 23;
-            this.textMessages.Text = "";
-            this.textMessages.TextColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
-            this.textMessages.TimeColor = global::Ubiquitous.Properties.Settings.Default.globalTimestampForeground;
-            this.textMessages.TimeStamp = false;
-            this.textMessages.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textMessages_LinkClicked);
-            this.textMessages.SelectionChanged += new System.EventHandler(this.textMessages_SelectionChanged);
-            this.textMessages.SizeChanged += new System.EventHandler(this.textMessages_SizeChanged);
-            this.textMessages.TextChanged += new System.EventHandler(this.textMessages_TextChanged);
-            this.textMessages.DoubleClick += new System.EventHandler(this.textMessages_DoubleClick);
-            this.textMessages.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseDown);
-            this.textMessages.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseMove);
-            this.textMessages.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textMessages_MouseUp);
-            // 
-            // comboSc2Channels
-            // 
-            this.comboSc2Channels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboSc2Channels.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.comboSc2Channels.DropDownWidth = 300;
-            this.comboSc2Channels.ForeColor = System.Drawing.SystemColors.Window;
-            this.comboSc2Channels.FormattingEnabled = true;
-            this.comboSc2Channels.Location = new System.Drawing.Point(740, 552);
-            this.comboSc2Channels.Name = "comboSc2Channels";
-            this.comboSc2Channels.Size = new System.Drawing.Size(86, 21);
-            this.comboSc2Channels.TabIndex = 3;
-            this.comboSc2Channels.Visible = false;
-            this.comboSc2Channels.DropDown += new System.EventHandler(this.comboSc2Channels_DropDown);
-            this.comboSc2Channels.SelectionChangeCommitted += new System.EventHandler(this.comboSc2Channels_SelectionChangeCommitted);
-            // 
-            // comboGGChannels
-            // 
-            this.comboGGChannels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboGGChannels.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.comboGGChannels.DropDownWidth = 300;
-            this.comboGGChannels.ForeColor = System.Drawing.SystemColors.Window;
-            this.comboGGChannels.FormattingEnabled = true;
-            this.comboGGChannels.Location = new System.Drawing.Point(739, 595);
-            this.comboGGChannels.Name = "comboGGChannels";
-            this.comboGGChannels.Size = new System.Drawing.Size(121, 21);
-            this.comboGGChannels.TabIndex = 4;
-            this.comboGGChannels.Visible = false;
-            // 
             // MainForm
             // 
             this.AcceptButton = this.buttonInvisible;
@@ -1216,6 +1236,7 @@
         private CounterPanel counterTwitch;
         private System.Windows.Forms.CheckBox checkBox1;
         private CounterPanel counterGoodgame;
+        private CounterPanel counterYoutube;
     }
 }
 

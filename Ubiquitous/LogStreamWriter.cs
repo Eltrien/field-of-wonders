@@ -28,7 +28,7 @@ namespace Ubiquitous
             }
 
             base.WriteLine(value);
-            _output.WriteLine(value.ToString());
+            _output.WriteLine(new Ubiquitous.MainForm.UbiMessage( value.ToString()));
         }
         public override Encoding Encoding
         {
