@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Ubiquitous">
+</Property><Property Name="Solution File" Value="C:\Users\meshkov\Documents\GitHub\Ubiquitous\Ubiquitous.sln">
+</Property><Property Name="Date" Value="27 декабря 2013 г.">
+</Property><Property Name="Time" Value="10:42:57">
+</Property><Property Name="Log Number" Value="2">
+</Property></Properties><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\PatchIat.csproj" Description="Project file successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\PatchIat.csproj">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\Argument.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\Argument.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageArchitecture.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageArchitecture.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageDataDirectory.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageDataDirectory.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageDirectoryEntry.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageDirectoryEntry.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageDosHeader.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageDosHeader.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageDosSignature.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageDosSignature.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageFileHeader.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageFileHeader.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageHeaderType.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageHeaderType.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageImportByName.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageImportByName.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageImportDescriptor.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageImportDescriptor.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageNTHeaders.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageNTHeaders.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageNTSignature.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageNTSignature.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageOptionalHeader.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageOptionalHeader.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageOrdinal.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageOrdinal.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImageThunkData.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImageThunkData.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\ImportAddressTable.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\ImportAddressTable.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\IntPtrExtensions.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\IntPtrExtensions.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\MemoryBasicInformation.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\MemoryBasicInformation.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\MemoryProtectionOptions.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\MemoryProtectionOptions.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\Properties\AssemblyInfo.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\UnsafeNativeMethods.cs" Description="File successfully backed up as C:\Users\meshkov\Documents\GitHub\Ubiquitous\Backup1\UnsafeNativeMethods.cs">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\PatchIat.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="PatchIat" Source="dotIatPatch\PatchIat.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="PatchIat" Source="dotIatPatch\PatchIat.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

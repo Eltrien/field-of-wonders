@@ -21,6 +21,8 @@ namespace dotCybergame
         public string viewers;
         [DataMember(Name = "donates")]
         public object donates;
+        [DataMember(Name = "followers")]
+        public object followers;
     }
 
     [DataContract]

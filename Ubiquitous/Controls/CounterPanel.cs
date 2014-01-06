@@ -12,10 +12,22 @@ namespace Ubiquitous
 {
     public partial class CounterPanel : UserControl
     {
+        #region Constants
+        private const int WM_NCHITTEST = 0x84;
+        private const int HTTRANSPARENT = -1;
+        #endregion
+
         private Point _Offset = Point.Empty;
+
         public CounterPanel()
         {
             InitializeComponent();
+        }
+
+        public bool MouseTransparent
+        {
+            get;
+            set;
         }
 
         private void labelViewers_MouseDown(object sender, MouseEventArgs e)

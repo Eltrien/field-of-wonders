@@ -25,6 +25,8 @@ namespace Ubiquitous
         Goha,
         Music,
         Youtube,
+        GamersTv,
+        JetSet,
         Hashd
     }
     /// <summary>
@@ -108,6 +110,10 @@ namespace Ubiquitous
                     return Properties.Resources.music;
                 case ChatIcon.Youtube:
                     return Properties.Resources.youtube;
+                case ChatIcon.GamersTv:
+                    return Properties.Resources.gamerstvicon;
+                case ChatIcon.JetSet:
+                    return Properties.Resources.jetset;
                 default:
                     return null;
             }

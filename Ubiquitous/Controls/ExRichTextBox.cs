@@ -25,6 +25,10 @@ namespace SC2TV.RTFControl {
 	#endregion
 
 	public class ExRichTextBox : System.Windows.Forms.RichTextBox {
+        #region Constants
+        private const int WM_NCHITTEST = 0x84;
+        private const int HTTRANSPARENT = -1;
+        #endregion
 
 		#region My Enums
 
@@ -179,7 +183,43 @@ namespace SC2TV.RTFControl {
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         static extern IntPtr LoadLibrary(string lpFileName);
 
+        private const int WM_SETFONT = 0x30;
+        private const int WM_GETFONT = 0x31;
+        private delegate bool EnumThreadWndProc(IntPtr hWnd, IntPtr lp);
+        [DllImport("user32.dll")]
+        private static extern bool EnumThreadWindows(int tid, EnumThreadWndProc callback, IntPtr lp);
+        [DllImport("kernel32.dll")]
+        private static extern int GetCurrentThreadId();
+        [DllImport("user32.dll")]
+        private static extern int GetClassName(IntPtr hWnd, StringBuilder buffer, int buflen);
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetDlgItem(IntPtr hWnd, int item);
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
+
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr CreateFontIndirect(ref LOGFONT lplf);
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public class LOGFONT
+        {
+            public int lfHeight = 0;
+            public int lfWidth = 0;
+            public int lfEscapement = 0;
+            public int lfOrientation = 0;
+            public int lfWeight = 0;
+            public byte lfItalic = 0;
+            public byte lfUnderline = 0;
+            public byte lfStrikeOut = 0;
+            public byte lfCharSet = 0;
+            public byte lfOutPrecision = 0;
+            public byte lfClipPrecision = 0;
+            public byte lfQuality = 0;
+            public byte lfPitchAndFamily = 0;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            public string lfFaceName = string.Empty;
+        }
 
         struct SCROLLINFO
         {
@@ -267,11 +307,25 @@ namespace SC2TV.RTFControl {
             }
 
         }
+        
         public UInt32 MaxLines
         {
             get;
             set;
         }
+        public bool MouseTransparent
+        {
+            get;
+            set;
+        }
+/*        protected override void WndProc(ref System.Windows.Forms.Message m)
+        {
+            if (m.Msg == (int)WM_NCHITTEST && MouseTransparent && ModifierKeys != Keys.Control)
+                m.Result = (IntPtr)HTTRANSPARENT;
+            else
+                base.WndProc(ref m);
+        }*/
+        
         public string RTF
         {
             get { return Rtf; }
@@ -1386,7 +1440,27 @@ namespace SC2TV.RTFControl {
                              SCF_SELECTION, ref fmt );
             }
         }
-    
+
+        public bool Antialias
+        {
+            get { return true; }
+            set {
+
+                //IntPtr hFont = SendMessage(this.Handle, WM_GETFONT, IntPtr.Zero, IntPtr.Zero);
+                //Font font = Font.FromHfont(hFont);
+                // And make it bold (note the size change to keep enough space!!)
+                //var mFont = new Font(font.FontFamily, font.SizeInPoints - 1f,FontStyle.Bold);
+
+                LOGFONT f = new LOGFONT();
+                this.Font.ToLogFont(f);
+                f.lfQuality = 3;
+                //Font aaFont = Font.FromLogFont(f);
+
+                SendMessage(this.Handle, WM_SETFONT, Font.FromLogFont(f).ToHfont(), (IntPtr)1);
+            }
+            
+        }
+
         /// <summary>
         /// This member overrides
         /// <see cref="Control"/>.OnHandleCreated.

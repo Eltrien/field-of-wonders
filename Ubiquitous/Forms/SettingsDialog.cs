@@ -19,9 +19,25 @@ namespace Ubiquitous
         private FontDialog fontDialog, fontDialogTime;
 
         public SettingsDialog()
-        {
+        {            
             settings = Properties.Settings.Default;
             InitializeComponent();
+
+
+            //comboSc2Channels.SetDataSource(null);
+            //comboSc2Channels.SetDataSource(channelsSC2, "Title", "Id");
+            
+        }
+        public BindingSource EndPointList
+        {
+            get;
+            set;
+        }
+        private void ComboSetupProfiles()
+        {
+
+            //comboProfileLanguages.DataBindings.Add("Text", settings.languages, "Name");
+
         }
 
         private void settingsTree1_Load(object sender, EventArgs e)
@@ -336,6 +352,11 @@ namespace Ubiquitous
         }
 
         private void label63_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label68_Click(object sender, EventArgs e)
         {
 
         }

@@ -96,7 +96,7 @@ namespace mycontrol
 
         private void treeSettings_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            CurrentPage = Pages.FirstOrDefault(p => p.ParentNode == e.Node);
+            CurrentPage = Pages.FirstOrDefault(p => p.ParentNode.Text == e.Node.Text);
         }
         #endregion
 

@@ -16,7 +16,7 @@ using System.Threading;
 using dotUtilities;
 using dot.Json.Linq;
 using dot.Json;
-
+using dotInterfaces;
 
 namespace dotSC2TV
 {
@@ -29,7 +29,7 @@ namespace dotSC2TV
         public int Height;
         public Bitmap bmp;
     }
-    public class Sc2Chat
+    public class Sc2Chat : IChatDescription
     {
         #region "Private constants and properties"
         private const int pollInterval = 5000;
@@ -299,7 +299,7 @@ namespace dotSC2TV
                 // Put "to" nickname into separate property
                 foreach (var m in newmessages)
                 {
-                    var re = @"<b>(.*)?</b>,";
+                    var re = @"\[b\](.*)?\[/b\],";
                     var matchesToUser = Regex.Matches(m.message, re, RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
                     if (matchesToUser.Count > 0)
@@ -325,8 +325,9 @@ namespace dotSC2TV
                 {
                     if (stream == null)
                         return false;
-
-                    List<object> list = JSEvaluator.EvalArrayObject(reader.ReadToEnd().Replace("private:","p:"));
+                    var content = reader.ReadToEnd().Replace("private:", "p:");
+                    content = Re.GetSubString( content, "^(.*?];).*$", 1 );
+                    List<object> list = JSEvaluator.EvalArrayObject(content);
                     if (list == null)
                         return false;
 
@@ -538,6 +539,7 @@ namespace dotSC2TV
                 var url = String.Format("{0}?_={1}", channelEditUrl, (new DateTime(1970, 1, 1)).Ticks);
                 try
                 {
+                    settingsWC.ContentType = ContentType.UrlEncodedUTF8;
                     html = settingsWC.DownloadString(url);
                 }
                 catch (WebException e)
@@ -546,7 +548,7 @@ namespace dotSC2TV
                     return;
                 }
                 //MatchCollection reChannelStatusValue = Regex.Matches(html, reChannelIsLive, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-                ChannelTitle = GetSubString(html, reChannelTitle, 1);
+                ChannelTitle = HttpUtility.HtmlDecode(GetSubString(html, reChannelTitle, 1));
                 ChannelType = GetSubString(html, reChannelType, 1);
                 ChannelName = GetSubString(html, reChannelName, 1);
                 ChannelAutoUpdate = GetSubString(html, reChannelAutoUpdate, 1) == "1";
@@ -554,7 +556,7 @@ namespace dotSC2TV
                 ChannelIsLive = GetSubString(html, reChannelIsLive, 1) != "0";
                 ChannelGame = GetSubString(html, reChannelGame, 1);
                 ChannelLongInfo = GetSubString(html, reChannelLongInfo, 1);
-                ChannelShortInfo = GetSubString(html, reChannelShortInfo, 1);
+                ChannelShortInfo = HttpUtility.HtmlDecode(GetSubString(html, reChannelShortInfo, 1));
                 ChannelURLAlias = GetSubString(html, reChannelURLAlias, 1) == "1";
                 ChannelURLPath = GetSubString(html, reChannelURLPath, 1);
                 ChannelChanged = GetSubString(html, reChannelChanged, 1);
@@ -569,7 +571,7 @@ namespace dotSC2TV
             if (ChannelId == 0)
                 return;
             var postData = new PostData();
-            postData.Params.Add(new PostDataParam( "title",ChannelTitle,PostDataParamType.Field));
+            postData.Params.Add(new PostDataParam( "title",UTF8(ChannelTitle),PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "field_channel_type[value]",ChannelType,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "field_channel_name[0][value]",ChannelName,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam("field_channel_status[value]", _channelIsLive ? "1" : "0", PostDataParamType.Field));
@@ -582,10 +584,10 @@ namespace dotSC2TV
             postData.Params.Add(new PostDataParam( "form_build_id",ChannelFormBuildId,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "form_token",ChannelFormToken,PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "form_id",ChannelFormId,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam( "body",HttpUtility.HtmlDecode( ChannelLongInfo ),PostDataParamType.Field ));
-            postData.Params.Add(new PostDataParam( "teaser",HttpUtility.HtmlDecode( ChannelShortInfo ),PostDataParamType.Field));
+            postData.Params.Add(new PostDataParam( "body",HttpUtility.HtmlDecode( UTF8(ChannelLongInfo) ),PostDataParamType.Field ));
+            postData.Params.Add(new PostDataParam( "teaser",HttpUtility.HtmlDecode( UTF8(ChannelShortInfo) ),PostDataParamType.Field));
             postData.Params.Add(new PostDataParam( "path",ChannelURLPath,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam("op", "Сохранить", PostDataParamType.Field));
+            postData.Params.Add(new PostDataParam("op", UTF8("Сохранить"), PostDataParamType.Field));
             if (ChannelAutoUpdate)
                 postData.Params.Add(new PostDataParam("field_channel_autoupdate[value]", "1", PostDataParamType.Field));
             if (ChannelWithoutComments)
@@ -596,6 +598,10 @@ namespace dotSC2TV
             Debug.Print(loginWC.PostMultipart(String.Format(channelEditUrl2, ChannelId), postData.GetPostData(), postData.Boundary));
             Debug.Print("Sc2tv: Settings saved");
 
+        }
+        private String UTF8(String original)
+        {
+            return Encoding.Default.GetString(Encoding.UTF8.GetBytes(original));
         }
         public void setLiveStatus(bool status)
         {
@@ -705,6 +711,34 @@ namespace dotSC2TV
         }
         #endregion
 
+
+        public string Game
+        {
+            get { return ChannelGame; }
+            set { ChannelGame = value; }
+        }
+
+        public string ShortDescription
+        {
+            get { return ChannelTitle; }
+            set { ChannelTitle = value; }
+        }
+
+        public string LongDescription
+        {
+            get { return ChannelShortInfo; }
+            set { ChannelShortInfo = value; }
+        }
+
+        public void GetDescription()
+        {
+            LoadStreamSettings();
+        }
+
+        public void SetDescription()
+        {
+            SaveStreamSettings();
+        }
     }
 
 

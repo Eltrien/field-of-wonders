@@ -10,6 +10,11 @@ namespace dotUtilities
 {
     public static class Utils
     {
+        #region Constants
+        private const int WM_NCHITTEST = 0x84;
+        private const int HTTRANSPARENT = -1;
+        #endregion
+
         public delegate void SetPropCallback(Control ctrl, string propName, object value);
         public delegate void SetPropCallback2(UserControl ctrl, string propName, object value);
         public static T CloneObject<T>(T obj)

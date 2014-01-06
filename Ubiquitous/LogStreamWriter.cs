@@ -28,7 +28,7 @@ namespace Ubiquitous
             }
 
             base.WriteLine(value);
-            _output.WriteLine(new Ubiquitous.MainForm.UbiMessage( value.ToString()));
+            _output.WriteLine(new Ubiquitous.MainForm.UbiMessage( value.ToString()),ChatIcon.Default, false, System.Drawing.Color.White, System.Drawing.Color.Black);
         }
         public override Encoding Encoding
         {

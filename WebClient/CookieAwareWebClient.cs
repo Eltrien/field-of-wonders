@@ -47,6 +47,7 @@ namespace dotWebClient
             contentTypes.Add(ContentType.Multipart, "multipart/form-data");
             
         }
+        
         public string LastWebError
         {
             get { return _lastWebError.ToString(); }
@@ -153,6 +154,7 @@ namespace dotWebClient
         }
         public string CookieValue(string name, string url)
         {
+            Debug.Print(name + " " + url);
             return m_container.GetCookies(new Uri(url))[name].Value;
         }
         public string XMLHttpRequest(string url, string data)

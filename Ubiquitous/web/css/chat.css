@@ -77,7 +77,12 @@ li.Hashd {
 li.Music {
     list-style-image: url('/images/music.png');
 }
-
+li.GamersTV {
+    list-style-image: url('/images/gamerstvicon.png');
+}
+li.JetSet {
+    list-style-image: url('/images/jetset.png');
+}
 h3 {
 	margin-top:1px;
 	padding:0px;

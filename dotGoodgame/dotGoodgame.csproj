@@ -60,6 +60,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\dotInterfaces.csproj">
+      <Project>{1A54B385-3797-403B-B51E-EEE089C13B08}</Project>
+      <Name>dotInterfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotBattlelog\websocket.net.client2\WebSocket4Net\WebSocket4Net.csproj">
       <Project>{6920447F-76B1-4739-822E-9CE3A2882718}</Project>
       <Name>WebSocket4Net</Name>

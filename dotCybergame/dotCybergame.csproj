@@ -48,9 +48,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\dotInterfaces.csproj">
+      <Project>{1A54B385-3797-403B-B51E-EEE089C13B08}</Project>
+      <Name>dotInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dotJson\Src\Newtonsoft.Json\dotJSON.csproj">
+      <Project>{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}</Project>
+      <Name>dotJSON</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotUtilities\dotUtilities.csproj">
       <Project>{ED6C0B9C-608A-4325-8F98-5E23C7DC52CD}</Project>
       <Name>dotUtilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dotWebSocket\dotWebSocket.csproj">
+      <Project>{01E0BDDF-E95B-4BF0-88EB-42A4410F9F8A}</Project>
+      <Name>dotWebSocket</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebClient\dotWebClient.csproj">
       <Project>{E7DD099E-384E-4EDB-B217-D4850ACE32BC}</Project>

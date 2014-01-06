@@ -14,10 +14,11 @@ using dotUtilities;
 using System.Diagnostics;
 using dot.Json.Linq;
 using dot.Json;
+using dotInterfaces;
 
 namespace dotGoodgame
 {
-    public class Goodgame
+    public class Goodgame : IChatDescription
     {
         private const string domain = "goodgame.ru";
         private const string chatUrl = "http://www." + domain + "/chat/{0}/";
@@ -27,6 +28,7 @@ namespace dotGoodgame
         private const string statsUrl = @"http://goodgame.ru/api/getchannelstatus?id={0}&fmt=json";
         private const int maxServerNum = 0x1e3;
         private const int pollInterval = 20000;
+        private const int disconnectCheckInterval = 21000;
         private String[] urlReplace = new String[] { ".", "-" };
         private int _chatId;
         private int _userId;
@@ -41,6 +43,7 @@ namespace dotGoodgame
         private int viewers;
         private CookieAwareWebClient loginWC, statsWC, chatWC;
         private Timer statsDownloader;
+        private Timer restartTimer;
         private WebSocket socket;
 
         public class TextEventArgs : EventArgs
@@ -72,6 +75,7 @@ namespace dotGoodgame
             FlashViewers = "0";
             
             statsDownloader = new Timer(new TimerCallback(statsDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
+            restartTimer = new Timer(restartTimer_Tick, null, Timeout.Infinite, Timeout.Infinite);
 
         }
 
@@ -89,6 +93,12 @@ namespace dotGoodgame
             get;
             set;
         }
+        private void restartTimer_Tick(object o)
+        {
+            Debug.Print("Goodgame: restart by disconnect timer");
+            Stop();
+            Start();
+        }
         private void statsDownloader_Tick(object o)
         {
             DownloadStats(_user);
@@ -100,15 +110,18 @@ namespace dotGoodgame
         }
         public void Start()
         {
+            Debug.Print("Goodgame: connecting websocket ...");
             ConnectWebsocket();
             Started = true;
         }
         public void Stop()
         {
+            Debug.Print("Goodgame: closing websocket ...");
             statsDownloader.Change(Timeout.Infinite, Timeout.Infinite);
             try
             {
                 socket.Close();
+                socket = null;
             }
             catch { }
             Started = false;
@@ -123,57 +136,71 @@ namespace dotGoodgame
                 var result = _user;
                 foreach (var c in urlReplace)
                 {
-                    _user = _user.Replace(c, "");
+                    result = result.Replace(c, "").ToLower();
                 }
-                return _user;
+                return result;
             }
         }
         public bool Login()
         {
+            Debug.Print("Goodgame logging in");
             lock (loginLock)
             {
-                isLoggedIn = false;
-
-                if (String.IsNullOrEmpty(_user) || String.IsNullOrEmpty(_password))
-                    return false;
-
-                var result = loginWC.DownloadString(String.Format(chatUrl, URLUser));
-
-                string loginParams = "login=" + _user + "&password=" + _password + "&remember=1";
-                loginWC.setCookie("fixed", "1", domain);
-                loginWC.setCookie("auto_login_name", _user, domain);
-
-                loginWC.ContentType = ContentType.UrlEncoded;
-                loginWC.Headers["X-Requested-With"] = "XMLHttpRequest";
-
-                loginWC.UploadString(loginUrl, loginParams);
-
-                result = loginWC.DownloadString(String.Format(chatUrl, URLUser));
-                if (String.IsNullOrEmpty(result))
-                    return false;
-                
-                int.TryParse(loginWC.CookieValue("uid", "http://" + domain), out _userId);
-                int.TryParse(Re.GetSubString(result, @"channelId: (\d+?),", 1), out _chatId);
-                _channel = _chatId.ToString();
-                _userToken = Re.GetSubString(result, @"token: '(.*?)',", 1);
-
-                var editContent = loginWC.DownloadString(String.Format(editUlr, URLUser));
-                var serviceUrls = new String[] { "twitch.tv", "cybergame.tv", "hashd.tv", "youtube.com" };
-                //<input type="text" name="video_urls[22473]" value="http://twitch.tv/xedoc"
-
-                ServiceNames = String.Empty;
-                foreach( var service in serviceUrls )
+                try
                 {
-                    var substr = Re.GetSubString(editContent, @"<input.*?video_urls\[.*?value=.*?(" + service + @")[^\""]*",1);
-                    if (!String.IsNullOrEmpty(substr))
+
+                    isLoggedIn = false;
+
+                    if (String.IsNullOrEmpty(_user) || String.IsNullOrEmpty(_password))
                     {
-                        ServiceNames = ServiceNames + substr;
+                        Debug.Print("Goodgame: Username or password is empty");
+                        return false;
                     }
-                }
+
+                    var result = loginWC.DownloadString(String.Format(chatUrl, URLUser));
+
+                    string loginParams = "login=" + _user + "&password=" + _password + "&remember=1";
+                    loginWC.setCookie("fixed", "1", domain);
+                    loginWC.setCookie("auto_login_name", _user, domain);
+
+                    loginWC.ContentType = ContentType.UrlEncoded;
+                    loginWC.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+                    loginWC.UploadString(loginUrl, loginParams);
+
+                    result = loginWC.DownloadString(String.Format(chatUrl, URLUser));
+                    if (String.IsNullOrEmpty(result))
+                    {
+                        Debug.Print("Goodgame: Could not fetch " + String.Format(chatUrl, URLUser));
+                        return false;
+                    }
+                
+                    int.TryParse(loginWC.CookieValue("uid", "http://" + domain), out _userId);
+                    int.TryParse(Re.GetSubString(result, @"channelId: (\d+?),", 1), out _chatId);
+                    _channel = _chatId.ToString();
+                    _userToken = Re.GetSubString(result, @"token: '(.*?)',", 1);
+
+                    var editContent = loginWC.DownloadString(String.Format(editUlr, URLUser));
+                    var serviceUrls = new String[] { "twitch.tv", "cybergame.tv", "hashd.tv", "youtube.com" };
+                    //<input type="text" name="video_urls[22473]" value="http://twitch.tv/xedoc"
+
+                    ServiceNames = String.Empty;
+                    foreach( var service in serviceUrls )
+                    {
+                        var substr = Re.GetSubString(editContent, @"<input.*?video_urls\[.*?value=.*?(" + service + @")[^\""]*",1);
+                        if (!String.IsNullOrEmpty(substr))
+                        {
+                            ServiceNames = ServiceNames + substr;
+                        }
+                    }
                 
 
-
-                isLoggedIn = true;
+                
+                    isLoggedIn = true;
+                }
+                catch (Exception e ){
+                    Debug.Print("Goodgame: login exception " + e.Data + " " + e.StackTrace.ToString() );
+                }
 
                 return true;
             }
@@ -211,15 +238,13 @@ namespace dotGoodgame
         {
             try
             {
-                this.Stop();
-                Debug.Print(e.Exception.InnerException.Message);
+                Debug.Print("Goodgame: " + e.Exception.InnerException.Message);
                 if (OnError != null)
                     OnError(this, new TextEventArgs(e.Exception.ToString()));
 
                 if (OnDisconnect != null)
                     OnDisconnect(this, EventArgs.Empty);
 
-                this.Start();
             }
             catch { }
             
@@ -289,7 +314,6 @@ namespace dotGoodgame
                     SendAuth();
                     return;
                 }
-                Debug.Print(e.Message); 
                 if (e.Message.Contains(@"a[""{\""type\"":\"""))
                 {
                     String type = null;
@@ -311,6 +335,7 @@ namespace dotGoodgame
                                         var clients_in_channel = data["clients_in_channel"].ToString();
                                         var users_in_channel = data["users_in_channel"].ToString();
                                         int.TryParse(clients_in_channel, out viewers);
+                                        restartTimer.Change(disconnectCheckInterval, Timeout.Infinite);
                                         break;
                                     case "success_auth":
                                         SwitchChannel();
@@ -354,6 +379,9 @@ namespace dotGoodgame
                                             }
 
                                         }
+                                        break;
+                                    default:
+                                        Debug.Print("Goodgame unparsed message: " + e.Message); 
                                         break;
 
                                 }
@@ -430,6 +458,34 @@ namespace dotGoodgame
                 get;
                 set;
             }
+        }
+
+        public string Game
+        {
+            get;
+            set;
+        }
+
+        public string ShortDescription
+        {
+            get;
+            set;
+        }
+
+        public string LongDescription
+        {
+            get;
+            set;
+        }
+
+        public void GetDescription()
+        {
+            
+        }
+
+        public void SetDescription()
+        {
+            
         }
     }
 }

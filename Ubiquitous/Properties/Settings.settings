@@ -461,5 +461,65 @@
     <Setting Name="sc2NickColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">105, 210, 255</Value>
     </Setting>
+    <Setting Name="globalMouseTransparent" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="gmtvEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="gmtvAlias" Type="System.String" Scope="User">
+      <Value Profile="(Default)">@gmt</Value>
+    </Setting>
+    <Setting Name="gmtvUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="gmtvPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="gmtvColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">51, 111, 255</Value>
+    </Setting>
+    <Setting Name="gmtChannelUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="gmtLastdate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">undefined</Value>
+    </Setting>
+    <Setting Name="jetsetEnable" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="jetsetAlias" Type="System.String" Scope="User">
+      <Value Profile="(Default)">@jet</Value>
+    </Setting>
+    <Setting Name="jetsetUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="jetsetPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="jetsetNickColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">98, 149, 156</Value>
+    </Setting>
+    <Setting Name="jetsetLastTimeStamp" Type="System.Int64" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="appearanceFontSmooth" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="chatProfiles" Type="Ubiquitous.ChatProfiles" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="twitchChannelTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Untitled stream</Value>
+    </Setting>
+    <Setting Name="twitchGame" Type="System.String" Scope="User">
+      <Value Profile="(Default)">War Thunder</Value>
+    </Setting>
+    <Setting Name="sc2tvChannelTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Untitled stream</Value>
+    </Setting>
+    <Setting Name="sc2tvDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Untitled stream</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

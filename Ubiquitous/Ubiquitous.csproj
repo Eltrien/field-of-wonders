@@ -32,8 +32,8 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>8</ApplicationRevision>
-    <ApplicationVersion>1.0.4.%2a</ApplicationVersion>
+    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationVersion>1.0.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -47,6 +47,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -78,6 +79,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -90,46 +92,55 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BGWorker.cs" />
-    <Compile Include="ColorPicker.cs">
+    <Compile Include="ChatProfiles.cs" />
+    <Compile Include="ComboClasses.cs" />
+    <Compile Include="Controls\ChatStatus.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ColorPicker.Designer.cs">
+    <Compile Include="Controls\ChatStatus.Designer.cs">
+      <DependentUpon>ChatStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ColorPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ColorPicker.Designer.cs">
       <DependentUpon>ColorPicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="ComboBoxWithId.cs">
+    <Compile Include="Controls\ComboBoxWithId.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Control2Image.cs" />
-    <Compile Include="CounterPanel.cs">
+    <Compile Include="Controls\CounterPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CounterPanel.Designer.cs">
+    <Compile Include="Controls\CounterPanel.Designer.cs">
       <DependentUpon>CounterPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="DebugForm.cs">
+    <Compile Include="Forms\DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DebugForm.Designer.cs">
+    <Compile Include="Forms\DebugForm.Designer.cs">
       <DependentUpon>DebugForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExRichTextBox.cs">
+    <Compile Include="Controls\ExRichTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="InputBox.cs">
+    <Compile Include="Forms\InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InputBox.Designer.cs">
+    <Compile Include="Forms\InputBox.Designer.cs">
       <DependentUpon>InputBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="IntTextBox.cs">
+    <Compile Include="Controls\IntTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="LanguageList.cs" />
     <Compile Include="LogStreamWriter.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -140,37 +151,40 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="SettingsDialog.cs">
+    <Compile Include="Forms\SettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsDialog.Designer.cs">
+    <Compile Include="Forms\SettingsDialog.Designer.cs">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="SizeBox.cs">
+    <Compile Include="Controls\SizeBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SizeBox.Designer.cs">
+    <Compile Include="Controls\SizeBox.Designer.cs">
       <DependentUpon>SizeBox.cs</DependentUpon>
     </Compile>
     <Compile Include="StatusImage.cs" />
     <Compile Include="StatusServer.cs" />
     <Compile Include="TwitchAPI.cs" />
-    <EmbeddedResource Include="ColorPicker.resx">
+    <EmbeddedResource Include="Controls\ChatStatus.resx">
+      <DependentUpon>ChatStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ColorPicker.resx">
       <DependentUpon>ColorPicker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CounterPanel.resx">
+    <EmbeddedResource Include="Controls\CounterPanel.resx">
       <DependentUpon>CounterPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DebugForm.resx">
+    <EmbeddedResource Include="Forms\DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExRichTextBox.resx">
+    <EmbeddedResource Include="Controls\ExRichTextBox.resx">
       <DependentUpon>ExRichTextBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InputBox.resx">
+    <EmbeddedResource Include="Forms\InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -184,10 +198,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SettingsDialog.resx">
+    <EmbeddedResource Include="Forms\SettingsDialog.resx">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SizeBox.resx">
+    <EmbeddedResource Include="Controls\SizeBox.resx">
       <DependentUpon>SizeBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config">
@@ -205,6 +220,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\dotInterfaces.csproj">
+      <Project>{1A54B385-3797-403B-B51E-EEE089C13B08}</Project>
+      <Name>dotInterfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotBattlelog\dotBattlelog.csproj">
       <Project>{AC4CCB95-2F7F-44BE-BCA8-6516EDA2FC38}</Project>
       <Name>dotBattlelog</Name>
@@ -216,6 +235,10 @@
     <ProjectReference Include="..\dotEmpireTV\dotEmpireTV.csproj">
       <Project>{B17F3733-0E27-4604-AD64-62F7A6B56948}</Project>
       <Name>dotEmpireTV</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dotGamersTv\dotGamersTv.csproj">
+      <Project>{A51B2C31-571D-445F-80A4-FEC15C67CE79}</Project>
+      <Name>dotGamersTv</Name>
     </ProjectReference>
     <ProjectReference Include="..\dotGohaTV\dotGohaTV.csproj">
       <Project>{F716F52E-E9B4-4B0F-A526-70CEEB7E1F59}</Project>
@@ -233,6 +256,10 @@
       <Project>{47D551DA-96ED-4EF6-96BF-4832059D4700}</Project>
       <Name>dotIRC</Name>
     </ProjectReference>
+    <ProjectReference Include="..\dotJetSetPro\dotJetSetPro.csproj">
+      <Project>{FD86A830-40E6-48EC-A34A-C3CFE52CE5C3}</Project>
+      <Name>dotJetSetPro</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotLastFm\dotLastFm.csproj">
       <Project>{91E7DBDB-431C-432F-8430-8A1E564B43DD}</Project>
       <Name>dotLastFm</Name>
@@ -240,6 +267,10 @@
     <ProjectReference Include="..\dotOBS\dotOBS.csproj">
       <Project>{C7B9B6CB-EDB0-4EC5-AD59-7643B11CC8BF}</Project>
       <Name>dotOBS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dotQWebIRC\dotQWebIRC.csproj">
+      <Project>{8A2C9377-BBC3-4FEE-81BD-03D9A4E52D09}</Project>
+      <Name>dotQWebIRC</Name>
     </ProjectReference>
     <ProjectReference Include="..\dotSC2TV\dotSC2TV.csproj">
       <Project>{E8F80B04-F23F-49F3-8749-781972C19FF2}</Project>
@@ -261,9 +292,17 @@
       <Project>{ED6C0B9C-608A-4325-8F98-5E23C7DC52CD}</Project>
       <Name>dotUtilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\dotWebPollChat\dotWebPollChat.csproj">
+      <Project>{57E82E98-1F2C-4689-A3B3-8E731A2F2DE2}</Project>
+      <Name>dotWebPollChat</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotWebServer\dotWebServer.csproj">
       <Project>{F4DE78C8-AE10-4831-A082-38A32B43E14F}</Project>
       <Name>dotWebServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dotWebSocket\dotWebSocket.csproj">
+      <Project>{01E0BDDF-E95B-4BF0-88EB-42A4410F9F8A}</Project>
+      <Name>dotWebSocket</Name>
     </ProjectReference>
     <ProjectReference Include="..\dotXSplit\dotXSplit\dotXSplit.csproj">
       <Project>{75B0D174-732F-4A64-82FB-21016CD8DAA7}</Project>
@@ -375,7 +414,16 @@
   <ItemGroup>
     <Content Include="offline.mp3" />
     <Content Include="online.mp3" />
+    <None Include="Resources\gamerstvicon.bmp" />
+    <None Include="Resources\gamerstvicon.png" />
+    <None Include="Resources\jetset.png" />
     <Content Include="Resources\music.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\gamerstvicon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\images\jetset.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="web\images\micoff.png">
