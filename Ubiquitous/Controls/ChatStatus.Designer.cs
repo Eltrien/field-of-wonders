@@ -42,6 +42,7 @@
             this.label.Size = new System.Drawing.Size(24, 13);
             this.label.TabIndex = 6;
             this.label.Text = "text";
+            this.label.Click += new System.EventHandler(this.label_Click);
             // 
             // picture
             // 
@@ -53,6 +54,7 @@
             this.picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picture.TabIndex = 5;
             this.picture.TabStop = false;
+            this.picture.Click += new System.EventHandler(this.picture_Click);
             // 
             // ChatStatus
             // 

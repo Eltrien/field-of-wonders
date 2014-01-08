@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Ubiquitous;
 using System.Diagnostics;
 
 namespace SC2TV.RTFControl {
@@ -182,20 +181,6 @@ namespace SC2TV.RTFControl {
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         static extern IntPtr LoadLibrary(string lpFileName);
-
-        private const int WM_SETFONT = 0x30;
-        private const int WM_GETFONT = 0x31;
-        private delegate bool EnumThreadWndProc(IntPtr hWnd, IntPtr lp);
-        [DllImport("user32.dll")]
-        private static extern bool EnumThreadWindows(int tid, EnumThreadWndProc callback, IntPtr lp);
-        [DllImport("kernel32.dll")]
-        private static extern int GetCurrentThreadId();
-        [DllImport("user32.dll")]
-        private static extern int GetClassName(IntPtr hWnd, StringBuilder buffer, int buflen);
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetDlgItem(IntPtr hWnd, int item);
-        [DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
@@ -441,7 +426,7 @@ namespace SC2TV.RTFControl {
         private void toimageTimer_Tick(object o)
         {
             if (SaveToImage && !String.IsNullOrEmpty(SaveToImageFileName))
-                Control2Image.RtbToBitmap(this, SaveToImageFileName);
+                global::Ubiquitous.Control2Image.RtbToBitmap(this, SaveToImageFileName);
         }
         private void ToImage()
         {
@@ -551,8 +536,8 @@ namespace SC2TV.RTFControl {
 		public ExRichTextBox() : base() {
 
 			// Initialize default text and background colors
-            textColor = this.TextColor;
-            highlightColor = this.BackColor;
+            TextColor =  this.TextColor;
+            HighlightColor = this.BackColor;
 
 			// Initialize the dictionary mapping color codes to definitions
 			rtfColor = new HybridDictionary();
@@ -1443,22 +1428,9 @@ namespace SC2TV.RTFControl {
 
         public bool Antialias
         {
-            get { return true; }
-            set {
+            get;
+            set;
 
-                //IntPtr hFont = SendMessage(this.Handle, WM_GETFONT, IntPtr.Zero, IntPtr.Zero);
-                //Font font = Font.FromHfont(hFont);
-                // And make it bold (note the size change to keep enough space!!)
-                //var mFont = new Font(font.FontFamily, font.SizeInPoints - 1f,FontStyle.Bold);
-
-                LOGFONT f = new LOGFONT();
-                this.Font.ToLogFont(f);
-                f.lfQuality = 3;
-                //Font aaFont = Font.FromLogFont(f);
-
-                SendMessage(this.Handle, WM_SETFONT, Font.FromLogFont(f).ToHfont(), (IntPtr)1);
-            }
-            
         }
 
         /// <summary>

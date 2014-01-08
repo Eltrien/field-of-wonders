@@ -2097,5 +2097,17 @@ namespace Ubiquitous.Properties {
                 this["sc2tvDescription"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("All")]
+        public string globalDefaultChat {
+            get {
+                return ((string)(this["globalDefaultChat"]));
+            }
+            set {
+                this["globalDefaultChat"] = value;
+            }
+        }
     }
 }

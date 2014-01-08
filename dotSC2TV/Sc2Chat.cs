@@ -94,9 +94,9 @@ namespace dotSC2TV
             public LambdaComparer(Func<T, T, bool> lambdaComparer, Func<T, int> lambdaHash)
             {
                 if (lambdaComparer == null)
-                    throw new ArgumentNullException("lambdaComparer");
+                    return;
                 if (lambdaHash == null)
-                    throw new ArgumentNullException("lambdaHash");
+                    return;
 
                 _lambdaComparer = lambdaComparer;
                 _lambdaHash = lambdaHash;
@@ -601,7 +601,10 @@ namespace dotSC2TV
         }
         private String UTF8(String original)
         {
-            return Encoding.Default.GetString(Encoding.UTF8.GetBytes(original));
+            if (String.IsNullOrEmpty(original))
+                return String.Empty;
+            else
+                return Encoding.Default.GetString(Encoding.UTF8.GetBytes(original));
         }
         public void setLiveStatus(bool status)
         {

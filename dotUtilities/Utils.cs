@@ -17,6 +17,7 @@ namespace dotUtilities
 
         public delegate void SetPropCallback(Control ctrl, string propName, object value);
         public delegate void SetPropCallback2(UserControl ctrl, string propName, object value);
+
         public static T CloneObject<T>(T obj)
         {
             using (var memStream = new MemoryStream())

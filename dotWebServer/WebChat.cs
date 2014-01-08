@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Imaging;
-using dotTwitchTV;
 using dotUtilities;
 
 namespace dotWebServer
@@ -52,7 +51,7 @@ namespace dotWebServer
                 List<String> smileImages = new List<string>();
                 UInt32 smileIndex = 0;
 
-                foreach (var smile in TwitchSmiles.Smiles)
+                foreach (var smile in global::dotTwitchTV.TwitchSmiles.Smiles)
                 {
                     if (content.Contains(smile.Code))
                     {

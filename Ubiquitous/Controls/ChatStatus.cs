@@ -34,8 +34,8 @@ namespace Ubiquitous
             {
                 if( ison == value )
                     return;
-
-                switch (value)
+                ison = value;
+                switch (ison)
                 {
                     case true:
                         SetOn();
@@ -75,6 +75,16 @@ namespace Ubiquitous
         {
            // if (Visible) Dock = DockStyle.Top;
            // else Dock = DockStyle.None;
+        }
+
+        private void picture_Click(object sender, EventArgs e)
+        {
+            this.OnClick(e);
+        }
+
+        private void label_Click(object sender, EventArgs e)
+        {
+            this.OnClick(e);
         }
     }
 }

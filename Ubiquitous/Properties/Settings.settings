@@ -521,5 +521,8 @@
     <Setting Name="sc2tvDescription" Type="System.String" Scope="User">
       <Value Profile="(Default)">Untitled stream</Value>
     </Setting>
+    <Setting Name="globalDefaultChat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">All</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

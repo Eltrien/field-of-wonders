@@ -34,7 +34,7 @@ namespace dotBattlelog
         private EventHandler m_Open;
         private EventHandler m_Close;
         private EventHandler<MessageReceivedEventArgs> m_Message;
-        private EventHandler<SuperSocket.ClientEngine.ErrorEventArgs> m_Error;
+        private EventHandler<Supersocket.ClientEngine.ErrorEventArgs> m_Error;
         private EventHandler<WebSocket4Net.DataReceivedEventArgs> m_Data;
         private Timer pingTimer;
         #endregion

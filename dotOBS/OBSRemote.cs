@@ -16,6 +16,7 @@ namespace dotOBS
     public class OBSRemote
     {
         public event EventHandler<OBSMessageEventArgs> OnMessage;
+        public event EventHandler<EventArgs> OnDisconnect;
         public event EventHandler<EventArgs> OnLive;
         public event EventHandler<EventArgs> OnOffline;
         public event EventHandler<EventArgs> OnError;
@@ -48,15 +49,32 @@ namespace dotOBS
             socket.Open();
             
         }
+        public void Disconnect()
+        {
+            try
+            {
+                Debug.Print("OBSRemote disconnecting...");
+                if (socket != null && (socket.State == WebSocketState.Open || socket.State == WebSocketState.Connecting))
+                    socket.Close();
+
+                if (OnDisconnect != null)
+                    OnDisconnect(this, EventArgs.Empty);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("OBSRemote disconnect error: {0}", e.Message);
+            }
+
+        }
         public void SetCurrentScene(string sceneName)
         {
             var msg = "{\"request-type\":\"SetCurrentScene\",\"scene-name\":\"" + sceneName + "\",\"message-id\":\"" + MessageId + "\"}";
-            socket.Send(msg);
+            Send(msg);
         }
         public void SetSourceRenderer(String sourceName, bool enable)
         {
             var msg = "{\"request-type\":\"SetSourceRender\",\"source\":\"" + sourceName + "\",\"render\":" + enable.ToString().ToLower() +",\"message-id\":\"" + MessageId + "\"}";
-            socket.Send(msg);
+            Send(msg);
         }
         public void SetSourceRendererPart(String sourceName, bool enable)
         {
@@ -256,26 +274,36 @@ namespace dotOBS
             RequestStreamingStatus();
             RequestVolumes();
         }
-
+        private void Send(String msg)
+        {
+            try
+            {
+                socket.Send(msg);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("OBSRemote send error: {0} while sending {1}", e.Message, msg);
+            }
+        }
         public void RequestVersion()
         {
             var msg = "{\"request-type\":\"GetVersion\",\"message-id\":\"" + MessageId + "\"}";
-            socket.Send(msg);
+            Send(msg);
         }
         public void RequestStreamingStatus()
         {
             var msg = "{\"request-type\":\"GetStreamingStatus\",\"message-id\":\"" + MessageId + "\"}";
-            socket.Send(msg);
+            Send(msg);
         }
         public void RequestSceneList()
         {
             var msg = "{\"request-type\":\"GetSceneList\",\"message-id\":\"" + MessageId + "\"}";
-            socket.Send(msg);
+            Send(msg);
         }
         public void RequestVolumes()
         {
             var msg = "{\"request-type\":\"GetVolumes\",\"message-id\":\"" + MessageId + "\"}";
-            socket.Send(msg);
+            Send(msg);
         }
         private string MessageId
         {
@@ -287,7 +315,7 @@ namespace dotOBS
         public void StartStopStream()
         {
             var msg = "{\"request-type\":\"StartStopStreaming\",\"message-id\":\"" + MessageId + "\"}";
-            socket.Send(msg);
+            Send(msg);
         }
 
     }

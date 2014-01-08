@@ -20,7 +20,6 @@ using dotSkype;
 using dotTwitchTV;
 using dotXSplit;
 using System.Web;
-using dotBattlelog;
 using System.Text.RegularExpressions;
 using dotGohaTV;
 using dotEmpireTV;
@@ -469,7 +468,7 @@ namespace Ubiquitous
         private OBSRemote obsRemote;
         private XSplit xsplit;
         private StatusServer statusServer;
-        private Battlelog battlelog;
+//        private Battlelog battlelog;
         private Cybergame cybergame;
         private List<ChatUser> chatUsers;
         private bool isClosing = false;
@@ -512,16 +511,20 @@ namespace Ubiquitous
 
             InitializeComponent();
 
+            endpointList = new ChannelList();
+            endpointListBS = new BindingSource();
+
             if( settings.globalDebug )
                 debugForm = new DebugForm();
 
-            RefreshChatProperties();
+            //RefreshChatProperties();
             log = new Log(textMessages);
 
 
             chatUsers = new List<ChatUser>();
+            
+            Enum.TryParse<EndPoint>(settings.globalDefaultChat, out currentChat);
 
-            currentChat = EndPoint.TwitchTV;
             lastMessageSent = new UbiMessage("", EndPoint.Console);
             adminCommands = new List<AdminCommand>();
             chatAliases = new List<ChatAlias>();
@@ -538,7 +541,7 @@ namespace Ubiquitous
             chatAliases.Add(new ChatAlias(settings.sc2tvChatAlias, EndPoint.Sc2Tv, ChatIcon.Sc2Tv, settings.Sc2tvUser));
             chatAliases.Add(new ChatAlias(settings.steamChatAlias, EndPoint.Steam, ChatIcon.Steam));
             chatAliases.Add(new ChatAlias(settings.skypeChatAlias, EndPoint.Skype, ChatIcon.Skype));
-            chatAliases.Add(new ChatAlias(settings.battlelogChatAlias, EndPoint.Battlelog, ChatIcon.Battlelog));
+//            chatAliases.Add(new ChatAlias(settings.battlelogChatAlias, EndPoint.Battlelog, ChatIcon.Battlelog));
             chatAliases.Add(new ChatAlias(settings.gohaChatAlias, EndPoint.Gohatv, ChatIcon.Goha, settings.GohaUser));
             chatAliases.Add(new ChatAlias(settings.empireAlias, EndPoint.Empiretv, ChatIcon.Empire, settings.empireUser.ToLower()));
             chatAliases.Add(new ChatAlias(settings.goodgameChatAlias, EndPoint.Goodgame, ChatIcon.Goodgame, settings.goodgameUser.ToLower()));
@@ -548,6 +551,10 @@ namespace Ubiquitous
             chatAliases.Add(new ChatAlias(settings.gmtvAlias, EndPoint.GamersTV, ChatIcon.GamersTv));
             chatAliases.Add(new ChatAlias(settings.jetsetAlias, EndPoint.JetSet, ChatIcon.JetSet));
             chatAliases.Add(new ChatAlias("@all", EndPoint.All, ChatIcon.Default));
+
+            var switchTo = chatAliases.FirstOrDefault( c => c.Endpoint == currentChat );
+            if( switchTo != null )
+                SwitchToChat(switchTo.Alias,false);
 
             uint.TryParse(settings.Sc2tvId, out sc2ChannelId);
             Debug.Print(String.Format("Sc2tv Channel ID: {0}",sc2ChannelId));
@@ -570,7 +577,7 @@ namespace Ubiquitous
 
 
             statusServer = new StatusServer();
-            battlelog = new Battlelog();
+            //battlelog = new Battlelog();
 
             steamBW = new BGWorker(ConnectSteamBot, null);
             sc2BW = new BGWorker(ConnectSc2tv, null);
@@ -586,7 +593,7 @@ namespace Ubiquitous
             jetsetBW = new BGWorker(ConnectJetSet, null);
  
             goodgameBW = new BGWorker(ConnectGoodgame, null);
-            battlelogBW = new BGWorker(ConnectBattlelog, null);
+//            battlelogBW = new BGWorker(ConnectBattlelog, null);
 
             if (settings.enableXSplitStats)
             {
@@ -717,6 +724,9 @@ namespace Ubiquitous
         */
         void OBSChatSwitch(object x)
         {
+            if (!settings.obsRemoteEnable)
+                return;
+
             lock (lockOBS)
             {
                 var chatSource = settings.obsChatSourceName;
@@ -753,8 +763,6 @@ namespace Ubiquitous
             this.Text = formTitle;
             contextMenuChat.Items.Clear();
 
-            endpointList = new ChannelList();
-
             foreach (ChatAlias chatAlias in chatAliases)
             {
                 contextMenuChat.Items.Add(String.Format("{0} ({1})",chatAlias.Endpoint.ToString(), chatAlias.Alias),log.GetChatBitmap(chatAlias.Icon));
@@ -762,7 +770,6 @@ namespace Ubiquitous
             }
             //TODO:! channelList bindings
 
-            endpointListBS = new BindingSource();
             endpointListBS.DataSource = endpointList.channels;
            
             if (settings.isFullscreenMode)
@@ -860,6 +867,7 @@ namespace Ubiquitous
             chatStatusSteamAdmin.Visible = settings.steamEnabled;
             chatStatusSteamBot.Visible = settings.steamEnabled;
             chatStatusTwitch.Visible = settings.twitchEnabled;
+            chatStatusOBS.Visible = settings.obsRemoteEnable;
             
             chatStatusBattlelog.Dock = settings.battlelogEnabled?DockStyle.Top:DockStyle.None;
             chatStatusCybergame.Dock = settings.cyberEnabled?DockStyle.Top:DockStyle.None;
@@ -874,6 +882,7 @@ namespace Ubiquitous
             chatStatusSteamAdmin.Dock = settings.steamEnabled?DockStyle.Top:DockStyle.None;
             chatStatusSteamBot.Dock = settings.steamEnabled?DockStyle.Top:DockStyle.None;
             chatStatusTwitch.Dock = settings.twitchEnabled?DockStyle.Top:DockStyle.None;
+            chatStatusOBS.Dock = settings.obsRemoteEnable ? DockStyle.Top : DockStyle.None;
         }
         void SetChatProperties(string propertyName)
         {
@@ -945,7 +954,14 @@ namespace Ubiquitous
                         textMessages.MouseTransparent = settings.globalMouseTransparent;
                     }
                     break;
-
+                case "globalDefaultChat":
+                    {
+                        Enum.TryParse<EndPoint>(settings.globalDefaultChat, out currentChat);
+                        var switchTo = chatAliases.FirstOrDefault(c => c.Endpoint == currentChat);
+                        if (switchTo != null)
+                            SwitchToChat(switchTo.Alias, false);
+                    }
+                    break;
                 default:
                     {
                         if (propertyName.ToLower().Contains("enable"))
@@ -1007,7 +1023,7 @@ namespace Ubiquitous
 
         void settingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ThreadPool.QueueUserWorkItem( f => SetChannelsDescription());
+            //ThreadPool.QueueUserWorkItem( f => SetChannelsDescription());
         }
         private void comboSc2Channels_DropDown(object sender, EventArgs e)
         {
@@ -1029,7 +1045,7 @@ namespace Ubiquitous
             textMessages.LinkClick(e.LinkText);
         }
 
-        private bool SwitchToChat(string alias)
+        private bool SwitchToChat(string alias, bool notice=true)
         {
             if (!String.IsNullOrEmpty(alias))
             {
@@ -1039,9 +1055,10 @@ namespace Ubiquitous
                     var knownAliases = "";
                     chatAliases.ForEach(ca => knownAliases += ca.Alias += " ");
                     knownAliases = knownAliases.Trim();
-                    SendMessage(new UbiMessage(
-                        String.Format("\"{0}\" is unknown chat alias. Use one of: {1}", alias, knownAliases),
-                        EndPoint.Bot, EndPoint.SteamAdmin)
+                    if( notice )
+                        SendMessage(new UbiMessage(
+                            String.Format("\"{0}\" is unknown chat alias. Use one of: {1}", alias, knownAliases),
+                            EndPoint.Bot, EndPoint.SteamAdmin)
                     );
                     return false;
                 }
@@ -1057,14 +1074,18 @@ namespace Ubiquitous
                         Debug.Print(ex.Message + " " + ex.StackTrace);
                     }
 
-                    var msg = new UbiMessage(String.Format("Switching to {0}...", currentChat.ToString()), EndPoint.Bot, EndPoint.SteamAdmin);
-                    if (settings.steamCurrentChatNotify && settings.steamEnabled)
+                    if (notice)
                     {
-                        if (!isFlood(msg))
-                            SendMessage(msg);
+                        var msg = new UbiMessage(String.Format("Switching to {0}...", currentChat.ToString()), EndPoint.Bot, EndPoint.SteamAdmin);
+                        if (settings.steamCurrentChatNotify && settings.steamEnabled)
+                        {
+                            if (!isFlood(msg))
+                                SendMessage(msg);
+                        }
+
+                        log.WriteLine(new UbiMessage(String.Format("Switching to {0}...", currentChat.ToString()) ));
                     }
-                    
-                    log.WriteLine(new UbiMessage(String.Format("Switching to {0}...", currentChat.ToString()) ));
+
                     lastMessageSent.FromEndPoint = chatAlias.Endpoint;
 
                     return true;
@@ -3007,7 +3028,7 @@ namespace Ubiquitous
                 settings.sc2tvChannelTitle = sc2tv.ShortDescription;
                 settings.sc2tvDescription = sc2tv.LongDescription;
 
-                if (obsRemote != null && obsRemote.Status.streaming)
+                if (obsRemote != null && settings.obsRemoteEnable && obsRemote.Status.streaming)
                 {
                     ThreadPool.QueueUserWorkItem( f=> SwitchPlayersOn(true, true) );
                 }
@@ -3363,42 +3384,42 @@ namespace Ubiquitous
 
         #region Battlelog methods and events
 
-        public void ConnectBattlelog()
-        {
-            if (isClosing)
-                return;
+        //public void ConnectBattlelog()
+        //{
+        //    if (isClosing)
+        //        return;
 
-            if( settings.battlelogEnabled && 
-                !String.IsNullOrEmpty(settings.battlelogEmail) &&
-                !String.IsNullOrEmpty(settings.battlelogPassword))
-            {
-                battlelog.OnMessageReceive += OnBattlelogMessage;
-                battlelog.OnConnect += OnBattlelogConnect;
-                battlelog.OnUnknownJson += OnBattlelogJson;
-                battlelog.Start(settings.battlelogEmail,settings.battlelogPassword);
+        //    if( settings.battlelogEnabled && 
+        //        !String.IsNullOrEmpty(settings.battlelogEmail) &&
+        //        !String.IsNullOrEmpty(settings.battlelogPassword))
+        //    {
+        //        battlelog.OnMessageReceive += OnBattlelogMessage;
+        //        battlelog.OnConnect += OnBattlelogConnect;
+        //        battlelog.OnUnknownJson += OnBattlelogJson;
+        //        battlelog.Start(settings.battlelogEmail,settings.battlelogPassword);
                 
-            }
+        //    }
 
-        }
-        public void OnBattlelogConnect(object sender, EventArgs e)
-        {
-            chatStatusBattlelog.On = true;
-            SendMessage(new UbiMessage(String.Format("Battlelog: Logged In!"), EndPoint.Battlelog, EndPoint.SteamAdmin));          
-        }
-        public void OnBattlelogJson(object sender, StringEventArgs e)
-        {
-            if( String.IsNullOrEmpty(e.Message))
-                return;
-            SendMessage(new UbiMessage(String.Format("Unknown JSON from the Battlelog: {0}", e.Message), EndPoint.Battlelog, EndPoint.SteamAdmin));
-        }
-        public void OnBattlelogMessage(object sender, BattleChatMessageArgs e)
-        {
-            if (settings.battlelogEnabled)
-            {
-                if( e.message.fromUsername != settings.battlelogNick )
-                    SendMessage(new UbiMessage(String.Format("{0}", e.message.message), EndPoint.Battlelog, EndPoint.SteamAdmin) { FromName = e.message.fromUsername });                    
-            }
-        }
+        //}
+        //public void OnBattlelogConnect(object sender, EventArgs e)
+        //{
+        //    chatStatusBattlelog.On = true;
+        //    SendMessage(new UbiMessage(String.Format("Battlelog: Logged In!"), EndPoint.Battlelog, EndPoint.SteamAdmin));          
+        //}
+        //public void OnBattlelogJson(object sender, StringEventArgs e)
+        //{
+        //    if( String.IsNullOrEmpty(e.Message))
+        //        return;
+        //    SendMessage(new UbiMessage(String.Format("Unknown JSON from the Battlelog: {0}", e.Message), EndPoint.Battlelog, EndPoint.SteamAdmin));
+        //}
+        //public void OnBattlelogMessage(object sender, BattleChatMessageArgs e)
+        //{
+        //    if (settings.battlelogEnabled)
+        //    {
+        //        if( e.message.fromUsername != settings.battlelogNick )
+        //            SendMessage(new UbiMessage(String.Format("{0}", e.message.message), EndPoint.Battlelog, EndPoint.SteamAdmin) { FromName = e.message.fromUsername });                    
+        //    }
+        //}
 
         #endregion
 
@@ -3644,16 +3665,27 @@ namespace Ubiquitous
             if (!settings.obsRemoteEnable)
                 return;
 
+            Debug.Print("OBSRemote connecting...");
+
             if (isClosing)
                 return;
             obsRemote = new OBSRemote();
             obsRemote.OnLive += new EventHandler<EventArgs>(obsRemote_OnLive);
             obsRemote.OnOffline += new EventHandler<EventArgs>(obsRemote_OnOffline);
             obsRemote.OnError += new EventHandler<EventArgs>(obsRemote_OnError);
+            obsRemote.OnDisconnect += new EventHandler<EventArgs>(obsRemote_OnDisconnect);
             obsRemote.OnSceneList += new EventHandler<OBSSceneStatusEventArgs>(obsRemote_OnSceneList);
             obsRemote.OnSceneSet += new EventHandler<OBSMessageEventArgs>(obsRemote_OnSceneSet);
             obsRemote.OnSourceChange += new EventHandler<OBSSourceEventArgs>(obsRemote_OnSourceChange);
             obsRemote.Connect(settings.obsHost);
+        }
+
+        void obsRemote_OnDisconnect(object sender, EventArgs e)
+        {
+            if (!settings.obsRemoteEnable)
+                return;
+            
+            chatStatusOBS.On = false;
         }
         void obsRemote_OnSourceChange(object sender, OBSSourceEventArgs e)
         {
@@ -3677,7 +3709,7 @@ namespace Ubiquitous
         }
         private void StartStopOBSStream()
         {
-            if (settings.obsRemoteEnable)
+            if (settings.obsRemoteEnable && obsRemote != null)
             {
                 if (obsRemote.Opened)
                 {
@@ -3688,7 +3720,7 @@ namespace Ubiquitous
                     SendMessage(new UbiMessage("No connection to OBS plugin!", EndPoint.Bot, EndPoint.SteamAdmin));
                 }
             }
-            else
+            else if( !settings.obsRemoteEnable )
             {
                 SendMessage(new UbiMessage("OBS control is not enabled. Check your settings!", EndPoint.Bot, EndPoint.SteamAdmin));
             }
@@ -3720,25 +3752,33 @@ namespace Ubiquitous
             if (!settings.obsRemoteEnable)
                 return;
 
-            contextSceneSwitch.Items.Clear();
-            if (e.Status.scenes.Count <= 0)
+            try
             {
-                contextSceneSwitch.Items.Add("No scenes");
-                return;
-            }
-
-            foreach (Scene scene in e.Status.scenes)
-            {
-                ToolStripMenuItem item = (ToolStripMenuItem)contextSceneSwitch.Items.Add(scene.name);
-                if (e.Status.currentScene == scene.name)
-                    item.Checked = true;
-
-                foreach (Source source in scene.sources)
+                contextSceneSwitch.Items.Clear();
+                if (e.Status.scenes.Count <= 0)
                 {
-                    ToolStripMenuItem subitem = (ToolStripMenuItem)item.DropDownItems.Add(source.name,null, contextSceneSwitch_onClick);                    
-                    if (source.render)
-                        subitem.Checked = true;
+                    contextSceneSwitch.Items.Add("No scenes");
+                    return;
                 }
+
+                foreach (Scene scene in e.Status.scenes)
+                {
+                    ToolStripMenuItem item = (ToolStripMenuItem)contextSceneSwitch.Items.Add(scene.name);
+                    if (e.Status.currentScene == scene.name)
+                        item.Checked = true;
+
+                    foreach (Source source in scene.sources)
+                    {
+                        ToolStripMenuItem subitem = (ToolStripMenuItem)item.DropDownItems.Add(source.name,null, contextSceneSwitch_onClick);                    
+                        if (source.render)
+                            subitem.Checked = true;
+                    }
+                }
+                            
+                chatStatusOBS.On = true;
+                }
+            catch
+            {
             }
         }
         void contextSceneSwitch_onClick(object sender, EventArgs e)
@@ -3761,7 +3801,7 @@ namespace Ubiquitous
         {
             if (!settings.obsRemoteEnable)
                 return;
-
+            chatStatusOBS.On = false;
             Thread.Sleep(3000);
             ConnectOBSRemote();
         }
@@ -3905,8 +3945,27 @@ namespace Ubiquitous
             */
         }
 
+        private void chatStatusOBS_Click(object sender, EventArgs e)
+        {
+            if( obsRemote != null )
+            {
+                if (settings.obsRemoteEnable)
+                {
+                    if (obsRemote.Opened)
+                    {
+                        ThreadPool.QueueUserWorkItem(f => obsRemote.Disconnect());
+                    }
+                    else
+                    {
+                        obsremoteBW = new BGWorker(ConnectOBSRemote, null);
+                    }
+                }
+            }
+        }
+
 
     }
 
 
 }
+

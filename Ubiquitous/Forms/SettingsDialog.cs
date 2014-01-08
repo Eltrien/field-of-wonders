@@ -23,7 +23,6 @@ namespace Ubiquitous
             settings = Properties.Settings.Default;
             InitializeComponent();
 
-
             //comboSc2Channels.SetDataSource(null);
             //comboSc2Channels.SetDataSource(channelsSC2, "Title", "Id");
             
@@ -90,6 +89,8 @@ namespace Ubiquitous
             buttonTwitchMeForecolor.BackColor = settings.twitchMeForeColor;
             buttonTwitchMeBackcolor.BackColor = settings.twitchMeBackcolor;
 
+            comboDefaultChat.SetDataSource(null);
+            comboDefaultChat.SetDataSource(EndPointList, "Title", "EndPoint");
 
         }
 
