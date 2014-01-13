@@ -32,7 +32,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>7</ApplicationRevision>
+    <ApplicationRevision>11</ApplicationRevision>
     <ApplicationVersion>1.0.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -140,12 +140,25 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Control2Image.cs" />
+    <Compile Include="Controls\ScrollableArea.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ScrollableArea.Designer.cs">
+      <DependentUpon>ScrollableArea.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WebAutocomplete.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\WebAutocomplete.Designer.cs">
+      <DependentUpon>WebAutocomplete.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CounterPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\CounterPanel.Designer.cs">
       <DependentUpon>CounterPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Event.cs" />
     <Compile Include="Forms\DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -154,6 +167,12 @@
     </Compile>
     <Compile Include="Controls\ExRichTextBox.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Descriptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Descriptions.Designer.cs">
+      <DependentUpon>Descriptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\InputBox.cs">
       <SubType>Form</SubType>
@@ -196,11 +215,18 @@
     <Compile Include="StatusImage.cs" />
     <Compile Include="StatusServer.cs" />
     <Compile Include="TwitchAPI.cs" />
+    <Compile Include="XmlSerializeable.cs" />
     <EmbeddedResource Include="Controls\ChatStatus.resx">
       <DependentUpon>ChatStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ColorPicker.resx">
       <DependentUpon>ColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ScrollableArea.resx">
+      <DependentUpon>ScrollableArea.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\WebAutocomplete.resx">
+      <DependentUpon>WebAutocomplete.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CounterPanel.resx">
       <DependentUpon>CounterPanel.cs</DependentUpon>
@@ -210,6 +236,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ExRichTextBox.resx">
       <DependentUpon>ExRichTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Descriptions.resx">
+      <DependentUpon>Descriptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
@@ -238,6 +267,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\DataSources\System.Windows.Forms.BindingSource.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

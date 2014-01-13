@@ -29,24 +29,38 @@ namespace dotOBS
         UInt32 currentMessageId = 1;
         public void Connect(string host)
         {
-            _host = host;
-            socket = new WebSocket(
-                String.Format("ws://{0}:4444", _host),
-                "obsapi",
-                null,
-                null,
-                null,
-                @"http://client.obsremote.com",
-                WebSocketVersion.DraftHybi10
-                );
+            try
+            {
+                if (socket != null && socket.State == WebSocketState.Connecting)
+                    return;
 
-            socket.Opened += new EventHandler(socket_Opened);
-            socket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(socket_MessageReceived);
-            socket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(socket_Error);
-            socket.Closed += new EventHandler(socket_Closed);
-            socket.DataReceived += new EventHandler<WebSocket4Net.DataReceivedEventArgs>(socket_DataReceived);
-            Status = new StreamStatus();
-            socket.Open();
+                _host = host;
+                socket = new WebSocket(
+                    String.Format("ws://{0}:4444", _host),
+                    "obsapi",
+                    null,
+                    null,
+                    null,
+                    @"http://client.obsremote.com",
+                    WebSocketVersion.DraftHybi10
+                    );
+
+                socket.Opened += new EventHandler(socket_Opened);
+                socket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(socket_MessageReceived);
+                socket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(socket_Error);
+                socket.Closed += new EventHandler(socket_Closed);
+                socket.DataReceived += new EventHandler<WebSocket4Net.DataReceivedEventArgs>(socket_DataReceived);
+                Status = new StreamStatus();
+
+                socket.Open();
+
+            }
+            catch(Exception e)
+            {
+                Debug.Print("OBSRemote connect error: {0}", e.Message);
+                if (OnError != null)
+                    OnError(this, EventArgs.Empty);
+            }
             
         }
         public void Disconnect()

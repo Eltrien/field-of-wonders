@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace dotInterfaces
 {
-    public interface IChatDescription
+    public interface IChatDescription 
     {
         [XmlAttribute]
         string Game
@@ -27,9 +27,20 @@ namespace dotInterfaces
             get;
             set;
         }
+        [XmlAttribute]
+        string GameId
+        {
+            get;
+            set;
+        }
 
+        [XmlIgnore]
+        List<KeyValuePair<String, String>> GameList
+        {
+            get;
+            set;
+        }
         void GetDescription();
         void SetDescription();
-
     }
 }

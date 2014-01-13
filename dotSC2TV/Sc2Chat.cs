@@ -17,6 +17,7 @@ using dotUtilities;
 using dot.Json.Linq;
 using dot.Json;
 using dotInterfaces;
+using dotHtmlParser;
 
 namespace dotSC2TV
 {
@@ -181,6 +182,7 @@ namespace dotSC2TV
             loginWC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
             chat = new ChatMessages();
             chatDownloader = new Timer(new TimerCallback(chatDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
+            GameList = new List<KeyValuePair<string, string>>();
         }
         private void chatDownloader_Tick(object o)
         {
@@ -412,7 +414,20 @@ namespace dotSC2TV
                     LoggedIn = true;
                     return;
                 }
-                string formBuildId = getLoginFormId();
+                String content = String.Empty;
+                try
+                {
+                    content = loginWC.DownloadString(loginUrl);
+                }
+                catch(Exception e)
+                {
+                    Debug.Print("Sc2tv login error: {0}", e.Message);
+                }
+
+                if (String.IsNullOrEmpty(content))
+                    return;
+
+                string formBuildId = Re.GetSubString(content, reHiddenFormId, 1);
 
                 if (String.IsNullOrEmpty(formBuildId))
                 {
@@ -529,24 +544,33 @@ namespace dotSC2TV
             get;
             set;
         }
+        public List<KeyValuePair<String, String>> GameList
+        {
+            get;
+            set;
+        }
         public void LoadStreamSettings()
         {
             if (!LoggedIn)
                 return;
-            lock (settingsLock)
+            lock (loginLock)
             {
                 String html = null;
                 var url = String.Format("{0}?_={1}", channelEditUrl, (new DateTime(1970, 1, 1)).Ticks);
                 try
                 {
-                    settingsWC.ContentType = ContentType.UrlEncodedUTF8;
-                    html = settingsWC.DownloadString(url);
+                    loginWC.ContentType = ContentType.UrlEncodedUTF8;
+                    html = loginWC.DownloadString(url);
                 }
                 catch (WebException e)
                 {
                     Debug.Print(String.Format("Exception in LoadStreamSettings() {0} {1}", e.Message, url));
                     return;
                 }
+                GameList = HtmlParser.GetOptions(@"//select[@id='edit-taxonomy-1']/option", html);
+                Game = HtmlParser.GetOptions(@"//select[@id='edit-taxonomy-1']/option[@selected='selected']", html).Select( o => o.Value).FirstOrDefault();
+                
+
                 //MatchCollection reChannelStatusValue = Regex.Matches(html, reChannelIsLive, RegexOptions.IgnoreCase | RegexOptions.Multiline);
                 ChannelTitle = HttpUtility.HtmlDecode(GetSubString(html, reChannelTitle, 1));
                 ChannelType = GetSubString(html, reChannelType, 1);
@@ -555,6 +579,7 @@ namespace dotSC2TV
                 ChannelWithoutComments = GetSubString(html, reChannelWithoutComments, 1) == "1";
                 ChannelIsLive = GetSubString(html, reChannelIsLive, 1) != "0";
                 ChannelGame = GetSubString(html, reChannelGame, 1);
+                GameId = ChannelGame;
                 ChannelLongInfo = GetSubString(html, reChannelLongInfo, 1);
                 ChannelShortInfo = HttpUtility.HtmlDecode(GetSubString(html, reChannelShortInfo, 1));
                 ChannelURLAlias = GetSubString(html, reChannelURLAlias, 1) == "1";
@@ -568,35 +593,48 @@ namespace dotSC2TV
         }
         public void SaveStreamSettings()
         {
-            if (ChannelId == 0)
-                return;
-            var postData = new PostData();
-            postData.Params.Add(new PostDataParam( "title",UTF8(ChannelTitle),PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam( "field_channel_type[value]",ChannelType,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam( "field_channel_name[0][value]",ChannelName,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam("field_channel_status[value]", _channelIsLive ? "1" : "0", PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam("field_channel_id[0]", "", PostDataParamType.Field));
-//            postData.Params.Add(new PostDataParam("field_cbg_image[0][fid]", "0", PostDataParamType.Field));
-//            postData.Params.Add(new PostDataParam("field_cbg_image[0][list]", "1", PostDataParamType.Field));
-//            postData.Params.Add(new PostDataParam("files[field_cbg_image_0]", "", PostDataParamType.File));
-            postData.Params.Add(new PostDataParam( "taxonomy[1][]",ChannelGame,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam( "changed",ChannelChanged,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam( "form_build_id",ChannelFormBuildId,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam( "form_token",ChannelFormToken,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam( "form_id",ChannelFormId,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam( "body",HttpUtility.HtmlDecode( UTF8(ChannelLongInfo) ),PostDataParamType.Field ));
-            postData.Params.Add(new PostDataParam( "teaser",HttpUtility.HtmlDecode( UTF8(ChannelShortInfo) ),PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam( "path",ChannelURLPath,PostDataParamType.Field));
-            postData.Params.Add(new PostDataParam("op", UTF8("Сохранить"), PostDataParamType.Field));
-            if (ChannelAutoUpdate)
-                postData.Params.Add(new PostDataParam("field_channel_autoupdate[value]", "1", PostDataParamType.Field));
-            if (ChannelWithoutComments)
-                postData.Params.Add(new PostDataParam("field_channel_without_comments[value]", "1", PostDataParamType.Field));
-            if (ChannelURLAlias)
-                postData.Params.Add(new PostDataParam( "pathauto_perform_alias","1",PostDataParamType.Field));
+            lock (loginLock)
+            {
+                if (ChannelId == 0)
+                    return;
 
-            Debug.Print(loginWC.PostMultipart(String.Format(channelEditUrl2, ChannelId), postData.GetPostData(), postData.Boundary));
-            Debug.Print("Sc2tv: Settings saved");
+
+
+                Debug.Print(ChannelTitle);
+                Debug.Print(ChannelType);
+                Debug.Print(ChannelName);
+                Debug.Print(ChannelGame);
+                Debug.Print(ChannelShortInfo);
+
+                var postData = new PostData();
+                postData.Params.Add(new PostDataParam("title", UTF8(ChannelTitle), PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("field_channel_type[value]", ChannelType, PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("field_channel_name[0][value]", ChannelName, PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("field_channel_status[value]", _channelIsLive ? "1" : "0", PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("field_channel_id[0]", "", PostDataParamType.Field));
+                //            postData.Params.Add(new PostDataParam("field_cbg_image[0][fid]", "0", PostDataParamType.Field));
+                //            postData.Params.Add(new PostDataParam("field_cbg_image[0][list]", "1", PostDataParamType.Field));
+                //            postData.Params.Add(new PostDataParam("files[field_cbg_image_0]", "", PostDataParamType.File));
+                postData.Params.Add(new PostDataParam("taxonomy[1][]", ChannelGame, PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("changed", ChannelChanged, PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("form_build_id", ChannelFormBuildId, PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("form_token", ChannelFormToken, PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("form_id", ChannelFormId, PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("body", HttpUtility.HtmlDecode(UTF8(ChannelLongInfo)), PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("teaser", HttpUtility.HtmlDecode(UTF8(ChannelShortInfo)), PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("path", ChannelURLPath, PostDataParamType.Field));
+                postData.Params.Add(new PostDataParam("op", UTF8("Сохранить"), PostDataParamType.Field));
+                if (ChannelAutoUpdate)
+                    postData.Params.Add(new PostDataParam("field_channel_autoupdate[value]", "1", PostDataParamType.Field));
+                if (ChannelWithoutComments)
+                    postData.Params.Add(new PostDataParam("field_channel_without_comments[value]", "1", PostDataParamType.Field));
+                if (ChannelURLAlias)
+                    postData.Params.Add(new PostDataParam("pathauto_perform_alias", "1", PostDataParamType.Field));
+                loginWC.PostMultipart(String.Format(channelEditUrl2, ChannelId), postData.GetPostData(), postData.Boundary);
+
+                Debug.Print("Sc2tv: Settings saved");
+            }
+            ThreadPool.QueueUserWorkItem(f => LoadStreamSettings() );
 
         }
         private String UTF8(String original)
@@ -621,10 +659,13 @@ namespace dotSC2TV
                     byte[] bytes = Encoding.UTF8.GetBytes(message);
                     string utf8msg = HttpUtility.UrlEncode(encoder.GetString(bytes));
 
-                    loginWC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
+                    lock (loginLock)
+                    {
+                        loginWC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded; charset=UTF-8";
 
-                    string messageParams = "task=WriteMessage&message=" + utf8msg + "&channel_id=" + ChannelId + "&token=" + loginWC.CookieValue("chat_token", chatDomain);
-                    loginWC.UploadString(String.Format(sendMessageUrl, ChannelId), messageParams);
+                        string messageParams = "task=WriteMessage&message=" + utf8msg + "&channel_id=" + ChannelId + "&token=" + loginWC.CookieValue("chat_token", chatDomain);
+                        loginWC.UploadString(String.Format(sendMessageUrl, ChannelId), messageParams);
+                    }
                     return true;
                 }
                 catch
@@ -644,7 +685,10 @@ namespace dotSC2TV
             {
                 try
                 {
-                    html = loginWC.DownloadString(loginUrl);
+                    lock (loginLock)
+                    {
+                        html = loginWC.DownloadString(loginUrl);
+                    }
                 }
                 catch
                 {
@@ -717,8 +761,19 @@ namespace dotSC2TV
 
         public string Game
         {
-            get { return ChannelGame; }
-            set { ChannelGame = value; }
+            get { 
+                if( GameList == null || String.IsNullOrEmpty(GameId))
+                    return String.Empty;
+
+                return GameList.Where(g => g.Key == GameId).Select(g => g.Value).FirstOrDefault();
+            }
+            set {
+                if (GameList != null)
+                {
+                    GameId = GameList.Where(g => g.Value == value).Select(g => g.Key).FirstOrDefault();
+                    ChannelGame = GameId;
+                }
+            }
         }
 
         public string ShortDescription
@@ -737,9 +792,18 @@ namespace dotSC2TV
         {
             LoadStreamSettings();
         }
+        public string GameId
+        {
+            get;
+            set;
+        }
 
         public void SetDescription()
         {
+            //System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
+            //foreach (var f in t.GetFrames())
+            //    Debug.Print("Sc2tv SetDescription: {0}: {1} {2}", f.GetFileLineNumber().ToString(), f.GetMethod().ToString(),f.GetMethod().GetParameters().ToString());
+
             SaveStreamSettings();
         }
     }

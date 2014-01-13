@@ -2041,60 +2041,49 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::Ubiquitous.ChatProfiles chatProfiles {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string twitch_ShortDescription {
             get {
-                return ((global::Ubiquitous.ChatProfiles)(this["chatProfiles"]));
+                return ((string)(this["twitch_ShortDescription"]));
             }
             set {
-                this["chatProfiles"] = value;
+                this["twitch_ShortDescription"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Untitled stream")]
-        public string twitchChannelTitle {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string twitch_Game {
             get {
-                return ((string)(this["twitchChannelTitle"]));
+                return ((string)(this["twitch_Game"]));
             }
             set {
-                this["twitchChannelTitle"] = value;
+                this["twitch_Game"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("War Thunder")]
-        public string twitchGame {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string sc2tv_ShortDescription {
             get {
-                return ((string)(this["twitchGame"]));
+                return ((string)(this["sc2tv_ShortDescription"]));
             }
             set {
-                this["twitchGame"] = value;
+                this["sc2tv_ShortDescription"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Untitled stream")]
-        public string sc2tvChannelTitle {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string sc2tv_LongDescription {
             get {
-                return ((string)(this["sc2tvChannelTitle"]));
+                return ((string)(this["sc2tv_LongDescription"]));
             }
             set {
-                this["sc2tvChannelTitle"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Untitled stream")]
-        public string sc2tvDescription {
-            get {
-                return ((string)(this["sc2tvDescription"]));
-            }
-            set {
-                this["sc2tvDescription"] = value;
+                this["sc2tv_LongDescription"] = value;
             }
         }
         
@@ -2107,6 +2096,185 @@ namespace Ubiquitous.Properties {
             }
             set {
                 this["globalDefaultChat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string sc2tv_Game {
+            get {
+                return ((string)(this["sc2tv_Game"]));
+            }
+            set {
+                this["sc2tv_Game"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string goodgame_ShortDescription {
+            get {
+                return ((string)(this["goodgame_ShortDescription"]));
+            }
+            set {
+                this["goodgame_ShortDescription"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string goodgame_Game {
+            get {
+                return ((string)(this["goodgame_Game"]));
+            }
+            set {
+                this["goodgame_Game"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string cybergame_ShortDescription {
+            get {
+                return ((string)(this["cybergame_ShortDescription"]));
+            }
+            set {
+                this["cybergame_ShortDescription"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string cybergame_Game {
+            get {
+                return ((string)(this["cybergame_Game"]));
+            }
+            set {
+                this["cybergame_Game"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string goha_ShortDescription {
+            get {
+                return ((string)(this["goha_ShortDescription"]));
+            }
+            set {
+                this["goha_ShortDescription"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string goha_Game {
+            get {
+                return ((string)(this["goha_Game"]));
+            }
+            set {
+                this["goha_Game"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string currentProfile {
+            get {
+                return ((string)(this["currentProfile"]));
+            }
+            set {
+                this["currentProfile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::Ubiquitous.ChatProfiles chatProfiles {
+            get {
+                return ((global::Ubiquitous.ChatProfiles)(this["chatProfiles"]));
+            }
+            set {
+                this["chatProfiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool generalSuppressErrors {
+            get {
+                return ((bool)(this["generalSuppressErrors"]));
+            }
+            set {
+                this["generalSuppressErrors"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool generalSuppressNotices {
+            get {
+                return ((bool)(this["generalSuppressNotices"]));
+            }
+            set {
+                this["generalSuppressNotices"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("White")]
+        public global::System.Drawing.Color appearTimestampColor {
+            get {
+                return ((global::System.Drawing.Color)(this["appearTimestampColor"]));
+            }
+            set {
+                this["appearTimestampColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public global::System.Drawing.Color appearTimestampBack {
+            get {
+                return ((global::System.Drawing.Color)(this["appearTimestampBack"]));
+            }
+            set {
+                this["appearTimestampBack"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Tahoma, 9.75pt")]
+        public global::System.Drawing.Font appearTimestampFont {
+            get {
+                return ((global::System.Drawing.Font)(this["appearTimestampFont"]));
+            }
+            set {
+                this["appearTimestampFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool globalShowCommandBarInCompact {
+            get {
+                return ((bool)(this["globalShowCommandBarInCompact"]));
+            }
+            set {
+                this["globalShowCommandBarInCompact"] = value;
             }
         }
     }

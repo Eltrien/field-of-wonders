@@ -62,7 +62,9 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.panelRight = new System.Windows.Forms.Panel();
+            this.comboBoxProfiles = new Ubiquitous.ComboBoxWithId();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chatStatusOBS = new Ubiquitous.ChatStatus();
             this.chatStatusJetSet = new Ubiquitous.ChatStatus();
             this.chatStatusGamerTv = new Ubiquitous.ChatStatus();
             this.chatStatusTwitch = new Ubiquitous.ChatStatus();
@@ -97,7 +99,6 @@
             this.pictureCurrentChat = new System.Windows.Forms.PictureBox();
             this.timerEverySecond = new System.Windows.Forms.Timer(this.components);
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.chatStatusOBS = new Ubiquitous.ChatStatus();
             this.contextMenuChat.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panelTools.SuspendLayout();
@@ -132,37 +133,37 @@
             this.gohatvToolStripMenuItem,
             this.allToolStripMenuItem});
             this.contextMenuChat.Name = "contextMenuChat";
-            this.contextMenuChat.Size = new System.Drawing.Size(121, 114);
+            this.contextMenuChat.Size = new System.Drawing.Size(125, 114);
             this.contextMenuChat.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuChat_ItemClicked);
             // 
             // twitchToolStripMenuItem
             // 
             this.twitchToolStripMenuItem.Name = "twitchToolStripMenuItem";
-            this.twitchToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.twitchToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.twitchToolStripMenuItem.Text = "Twitch.tv";
             // 
             // sc2TvruToolStripMenuItem
             // 
             this.sc2TvruToolStripMenuItem.Name = "sc2TvruToolStripMenuItem";
-            this.sc2TvruToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.sc2TvruToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.sc2TvruToolStripMenuItem.Text = "Sc2tv.ru";
             // 
             // empiretvToolStripMenuItem
             // 
             this.empiretvToolStripMenuItem.Name = "empiretvToolStripMenuItem";
-            this.empiretvToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.empiretvToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.empiretvToolStripMenuItem.Text = "Empire.tv";
             // 
             // gohatvToolStripMenuItem
             // 
             this.gohatvToolStripMenuItem.Name = "gohatvToolStripMenuItem";
-            this.gohatvToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.gohatvToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.gohatvToolStripMenuItem.Text = "Goha.tv";
             // 
             // allToolStripMenuItem
             // 
             this.allToolStripMenuItem.Name = "allToolStripMenuItem";
-            this.allToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.allToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.allToolStripMenuItem.Text = "All";
             // 
             // panel1
@@ -255,7 +256,7 @@
             this.contextSceneSwitch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.asdfToolStripMenuItem});
             this.contextSceneSwitch.Name = "contextSceneSwitch";
-            this.contextSceneSwitch.Size = new System.Drawing.Size(124, 26);
+            this.contextSceneSwitch.Size = new System.Drawing.Size(129, 26);
             this.contextSceneSwitch.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextSceneSwitch_Closing);
             this.contextSceneSwitch.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextSceneSwitch_ItemClicked);
             // 
@@ -263,7 +264,7 @@
             // 
             this.asdfToolStripMenuItem.CheckOnClick = true;
             this.asdfToolStripMenuItem.Name = "asdfToolStripMenuItem";
-            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.asdfToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.asdfToolStripMenuItem.Text = "No scenes";
             // 
             // checkBox1
@@ -348,7 +349,7 @@
             this.panelMessages.Location = new System.Drawing.Point(4, 0);
             this.panelMessages.Margin = new System.Windows.Forms.Padding(0);
             this.panelMessages.Name = "panelMessages";
-            this.panelMessages.Size = new System.Drawing.Size(696, 456);
+            this.panelMessages.Size = new System.Drawing.Size(700, 456);
             this.panelMessages.TabIndex = 36;
             // 
             // counterYoutube
@@ -494,6 +495,8 @@
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("PersonalMessageFont", global::Ubiquitous.Properties.Settings.Default, "globalPersonalMessageFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("PersonalMessageColor", global::Ubiquitous.Properties.Settings.Default, "personalMessageColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("MouseTransparent", global::Ubiquitous.Properties.Settings.Default, "globalMouseTransparent", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("TimestampFont", global::Ubiquitous.Properties.Settings.Default, "appearTimestampFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textMessages.DataBindings.Add(new System.Windows.Forms.Binding("TimestampColor", global::Ubiquitous.Properties.Settings.Default, "appearTimestampColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textMessages.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textMessages.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
             this.textMessages.HighlightColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
@@ -512,13 +515,15 @@
             this.textMessages.SaveToImageFileName = global::Ubiquitous.Properties.Settings.Default.globalChatImageFilename;
             this.textMessages.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.textMessages.SelectionAlignment = SC2TV.RTFControl.ExRichTextBox.TextAlign.Left;
-            this.textMessages.Size = new System.Drawing.Size(694, 454);
+            this.textMessages.Size = new System.Drawing.Size(698, 454);
             this.textMessages.SlowScroll = global::Ubiquitous.Properties.Settings.Default.globalSmoothScroll;
             this.textMessages.TabIndex = 23;
             this.textMessages.Text = "";
             this.textMessages.TextColor = global::Ubiquitous.Properties.Settings.Default.globalChatTextColor;
             this.textMessages.TimeColor = global::Ubiquitous.Properties.Settings.Default.globalTimestampForeground;
             this.textMessages.TimeStamp = false;
+            this.textMessages.TimestampColor = global::Ubiquitous.Properties.Settings.Default.appearTimestampColor;
+            this.textMessages.TimestampFont = global::Ubiquitous.Properties.Settings.Default.appearTimestampFont;
             this.textMessages.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textMessages_LinkClicked);
             this.textMessages.SelectionChanged += new System.EventHandler(this.textMessages_SelectionChanged);
             this.textMessages.SizeChanged += new System.EventHandler(this.textMessages_SizeChanged);
@@ -594,14 +599,27 @@
             // 
             this.panelRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelRight.Controls.Add(this.comboBoxProfiles);
             this.panelRight.Controls.Add(this.groupBox1);
             this.panelRight.Controls.Add(this.groupBox2);
             this.panelRight.Controls.Add(this.buttonSettings);
             this.panelRight.Controls.Add(this.button1);
-            this.panelRight.Location = new System.Drawing.Point(700, 0);
+            this.panelRight.Location = new System.Drawing.Point(703, 0);
             this.panelRight.Name = "panelRight";
-            this.panelRight.Size = new System.Drawing.Size(112, 456);
+            this.panelRight.Size = new System.Drawing.Size(109, 456);
             this.panelRight.TabIndex = 37;
+            // 
+            // comboBoxProfiles
+            // 
+            this.comboBoxProfiles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxProfiles.DropDownWidth = 200;
+            this.comboBoxProfiles.FormattingEnabled = true;
+            this.comboBoxProfiles.Location = new System.Drawing.Point(4, 36);
+            this.comboBoxProfiles.Name = "comboBoxProfiles";
+            this.comboBoxProfiles.Size = new System.Drawing.Size(101, 21);
+            this.comboBoxProfiles.TabIndex = 26;
+            this.comboBoxProfiles.SelectedIndexChanged += new System.EventHandler(this.comboBoxProfiles_SelectedIndexChanged);
+            this.comboBoxProfiles.SelectionChangeCommitted += new System.EventHandler(this.comboBoxProfiles_SelectionChangeCommitted);
             // 
             // groupBox1
             // 
@@ -626,13 +644,26 @@
             this.groupBox1.Controls.Add(this.chatStatusBattlelog);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(8, 156);
+            this.groupBox1.Location = new System.Drawing.Point(4, 187);
             this.groupBox1.MinimumSize = new System.Drawing.Size(101, 33);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(101, 244);
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Login status:";
+            // 
+            // chatStatusOBS
+            // 
+            this.chatStatusOBS.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "obsRemoteEnable", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.chatStatusOBS.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chatStatusOBS.Label = "OBS remote";
+            this.chatStatusOBS.Location = new System.Drawing.Point(3, 226);
+            this.chatStatusOBS.Name = "chatStatusOBS";
+            this.chatStatusOBS.On = false;
+            this.chatStatusOBS.Size = new System.Drawing.Size(95, 15);
+            this.chatStatusOBS.TabIndex = 14;
+            this.chatStatusOBS.Visible = global::Ubiquitous.Properties.Settings.Default.obsRemoteEnable;
+            this.chatStatusOBS.Click += new System.EventHandler(this.chatStatusOBS_Click);
             // 
             // chatStatusJetSet
             // 
@@ -831,9 +862,9 @@
             this.groupBox2.Controls.Add(this.pictureStream);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(8, 32);
+            this.groupBox2.Location = new System.Drawing.Point(4, 63);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(101, 118);
+            this.groupBox2.Size = new System.Drawing.Size(102, 118);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Stream";
@@ -945,7 +976,7 @@
             this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.buttonSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSettings.Location = new System.Drawing.Point(8, 3);
+            this.buttonSettings.Location = new System.Drawing.Point(5, 3);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(56, 23);
             this.buttonSettings.TabIndex = 1;
@@ -960,7 +991,7 @@
             this.button1.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", global::Ubiquitous.Properties.Settings.Default, "globalDebug", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.button1.Enabled = global::Ubiquitous.Properties.Settings.Default.globalDebug;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(70, 3);
+            this.button1.Location = new System.Drawing.Point(67, 3);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(38, 23);
             this.button1.TabIndex = 2;
@@ -970,11 +1001,10 @@
             // 
             // panelBottom
             // 
-            this.panelBottom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.panelBottom.Controls.Add(this.buttonFullscreen);
             this.panelBottom.Controls.Add(this.textCommand);
             this.panelBottom.Controls.Add(this.pictureCurrentChat);
+            this.panelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panelBottom.Location = new System.Drawing.Point(0, 457);
             this.panelBottom.Name = "panelBottom";
             this.panelBottom.Size = new System.Drawing.Size(815, 25);
@@ -1043,19 +1073,6 @@
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // chatStatusOBS
-            // 
-            this.chatStatusOBS.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "obsRemoteEnable", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.chatStatusOBS.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chatStatusOBS.Label = "OBS remote";
-            this.chatStatusOBS.Location = new System.Drawing.Point(3, 226);
-            this.chatStatusOBS.Name = "chatStatusOBS";
-            this.chatStatusOBS.On = false;
-            this.chatStatusOBS.Size = new System.Drawing.Size(95, 15);
-            this.chatStatusOBS.TabIndex = 14;
-            this.chatStatusOBS.Visible = global::Ubiquitous.Properties.Settings.Default.obsRemoteEnable;
-            this.chatStatusOBS.Click += new System.EventHandler(this.chatStatusOBS_Click);
-            // 
             // MainForm
             // 
             this.AcceptButton = this.buttonInvisible;
@@ -1070,7 +1087,7 @@
             this.ForeColor = System.Drawing.Color.White;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Location = global::Ubiquitous.Properties.Settings.Default.mainFormPosition;
-            this.MinimumSize = new System.Drawing.Size(10, 27);
+            this.MinimumSize = new System.Drawing.Size(16, 36);
             this.Name = "MainForm";
             this.StartPosition = global::Ubiquitous.Properties.Settings.Default.mainformStartPos;
             this.Text = "Ubiquitous - MultiChat";
@@ -1176,6 +1193,7 @@
         private System.Windows.Forms.PictureBox pictureCurrentChat;
         private ChatStatus chatStatusJetSet;
         private ChatStatus chatStatusOBS;
+        private ComboBoxWithId comboBoxProfiles;
     }
 }
 

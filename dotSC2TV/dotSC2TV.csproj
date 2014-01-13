@@ -90,6 +90,10 @@
       <Project>{1A54B385-3797-403B-B51E-EEE089C13B08}</Project>
       <Name>dotInterfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\dotHtmlParser\dotHtmlParser.csproj">
+      <Project>{F82F6D2B-8435-4661-9377-DF36761F226D}</Project>
+      <Name>dotHtmlParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotJson\Src\Newtonsoft.Json\dotJSON.csproj">
       <Project>{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}</Project>
       <Name>dotJSON</Name>

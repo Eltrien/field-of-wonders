@@ -25,7 +25,11 @@ namespace dotGoodgame
         private const string channelUrl = @"http://www." + domain + "/channel/{0}";
         private const string loginUrl = @"http://" + domain + "/ajax/login/";
         private const string editUlr = @"http://" + domain + "/channel/{0}/edit/";
+        private const string urlTitleUpdate = @"http://" + domain + "/ajax/channel/update_title/";
+        private const string urlSearchGame = @"http://" + domain + "/ajax/games/?q={0}&limit=10";
         private const string statsUrl = @"http://goodgame.ru/api/getchannelstatus?id={0}&fmt=json";
+        private const string reTitle = @"<title>([^<]*)</title>";
+        private const string reGame = @"StreamTitleEdit[^,]*,[^,]*,[^,]*,([^,]*),[^']*'([^']*)'";
         private const int maxServerNum = 0x1e3;
         private const int pollInterval = 20000;
         private const int disconnectCheckInterval = 21000;
@@ -39,6 +43,7 @@ namespace dotGoodgame
         private bool _loadHistory;
         private object loginLock = new object();
         private object statsLock = new object();
+        private object queryGameLock = new object();
         private object messageLock = new object();
         private int viewers;
         private CookieAwareWebClient loginWC, statsWC, chatWC;
@@ -73,7 +78,7 @@ namespace dotGoodgame
             _password = password;
             viewers = 0;
             FlashViewers = "0";
-            
+            GameList = new List<KeyValuePair<string, string>>();
             statsDownloader = new Timer(new TimerCallback(statsDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
             restartTimer = new Timer(restartTimer_Tick, null, Timeout.Infinite, Timeout.Infinite);
 
@@ -462,7 +467,7 @@ namespace dotGoodgame
 
         public string Game
         {
-            get;
+            get;           
             set;
         }
 
@@ -480,12 +485,136 @@ namespace dotGoodgame
 
         public void GetDescription()
         {
-            
-        }
+            var result = HttpGet(String.Format(channelUrl, _user.ToLower()));
+            if (!String.IsNullOrEmpty(result))
+            {
+                ShortDescription = Re.GetSubString(result, reTitle, 1);
+                Game = Re.GetSubString(result, reGame, 2);
+                if (!String.IsNullOrEmpty(Game))
+                    Game = Game.Trim();
+                
+                GameId = Re.GetSubString(result, reGame, 1);
+                if (!String.IsNullOrEmpty(GameId))
+                    GameId = GameId.Trim();
 
+
+            }
+        }
+        public String GameId
+        {
+            get;
+            set;
+        }
         public void SetDescription()
         {
+            SearchGame(Game);
+            if (GameList.Count == 1)
+                GameId = GameList[0].Key;
+            else
+                GameId = "0";
             
+            var param = String.Format("objType=7&objId={0}&title={1}&gameId={2}", _chatId, HttpUtility.UrlEncode(ShortDescription), GameId);
+            XHttpPost(urlTitleUpdate, param);
+        }
+        public void SearchGame(String name)
+        {
+            lock (queryGameLock)
+            {
+                GameList.Clear();
+
+                var content = XHttpGet(String.Format(urlSearchGame, HttpUtility.UrlEncode(name)));
+                Debug.Print("Goodgame games starting from {0}: {1}", name, content);
+
+                if (String.IsNullOrEmpty(content))
+                    return;
+
+                try
+                {
+                    JArray games = JArray.Parse(content);
+                    if (games.Count <= 0)
+                        return;
+
+                    foreach (JArray game in games)
+                    {
+                        GameList.Add(new KeyValuePair<String, String>(game[2].ToString(), game[0].ToString()));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.Print("Goodgame queryGameList error: {0}", e.Message);
+                }
+     
+            }
+        }
+        public List<KeyValuePair<string, string>> GameList
+        {
+            get;
+            set;
+        }
+
+        private String HttpGet(String url)
+        {
+            lock (loginLock)
+            {
+                loginWC.ContentType = ContentType.UrlEncodedUTF8;
+                //loginWC.Headers["X-Requested-With"] = "XMLHttpRequest";
+                try
+                {
+                    var result = loginWC.DownloadString(url);
+                    if (!String.IsNullOrEmpty(result))
+                        return result;
+                    else
+                        Debug.Print("Goodgame: httpget - empty string fetched from {0}", url);
+                }
+                catch (Exception e)
+                {
+                    Debug.Print("Goodgame error fetching {0}: {1}", url, e.Message);
+                }
+            }
+            return String.Empty;
+        }
+        private String XHttpGet(String url)
+        {
+            lock (loginLock)
+            {
+                loginWC.ContentType = ContentType.UrlEncodedUTF8;
+                loginWC.Headers["X-Requested-With"] = "XMLHttpRequest";
+                try
+                {
+                    var result = loginWC.DownloadString(url);
+                    if (!String.IsNullOrEmpty(result))
+                        return result;
+                    else
+                        Debug.Print("Goodgame: xhttpget - empty string fetched from {0}", url);
+                }
+                catch (Exception e)
+                {
+                    Debug.Print("Goodgame error fetching {0}: {1}", url, e.Message);
+                }
+            }
+            return String.Empty;
+        }
+        private String XHttpPost(String url, String param)
+        {
+            lock (loginLock)
+            {
+                loginWC.ContentType = ContentType.UrlEncodedUTF8;
+                loginWC.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+                try
+                {
+                    var result = loginWC.UploadString(url, param);
+                    if (!String.IsNullOrEmpty(result))
+                        return result;
+                    else
+                        Debug.Print("Goodgame: xhttppost fetched empty string from {0}", url);
+                }
+                catch (Exception e)
+                {
+                    Debug.Print("Goodgame error fetching {0}: {1}", url, e.Message);
+                }
+            }
+            return String.Empty;
         }
     }
 }

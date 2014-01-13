@@ -35,27 +35,42 @@ namespace Ubiquitous
 
         delegate void AddComboBoxItem_(ComboBoxItem obj);
         delegate void ClearComboBox();
-        delegate void SetComboDataSource(BindingSource source,string displayMember, string valueMember);
+        delegate void SetComboDataSource(BindingSource source,string displayMember, string valueMember, bool dropdown);
         public ComboBoxWithId()
         {
         }
-        public void SetDataSource(BindingSource source, string displayMember = "", string valueMember = "")
+        public void SetDataSource(BindingSource source, string displayMember = "", string valueMember = "", bool dropdown = false)
         {
             if (this.InvokeRequired)
             {
                 SetComboDataSource dlgt = new SetComboDataSource(SetDataSource);
-                Invoke(dlgt, new object[] { source,displayMember,ValueMember });
+                Invoke(dlgt, new object[] { source,displayMember,ValueMember, dropdown });
             }
             else
             {
-                if (source == null)
-                    this.DataSource = null;
-                else
-                    this.DataSource = source.DataSource;
+                try
+                {
+                    var text = this.Text;
+                    if (source == null)
+                        this.DataSource = null;
+                    else
+                        this.DataSource = source.DataSource;
 
-                this.DisplayMember = displayMember;
-                this.ValueMember = ValueMember;
+                    if( !String.IsNullOrEmpty( displayMember ))
+                        this.DisplayMember = displayMember;
 
+                    if( !String.IsNullOrEmpty( valueMember))
+                        this.ValueMember = ValueMember;
+
+                    //this.SelectedItem = null;
+                    
+                    //if (this.Text != text)
+                     //   this.Text = text;
+
+                    //this.SelectionStart = this.Text.Length;
+                    //this.DroppedDown = dropdown;
+                }
+                catch { }
             }
         }
         public void Clear()

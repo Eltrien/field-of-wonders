@@ -14,6 +14,7 @@ using System.Configuration;
 using System.Xml.Serialization;
 using dot.Json;
 using dot.Json.Linq;
+using dotHtmlParser;
 
 namespace dotCybergame
 {
@@ -32,8 +33,9 @@ namespace dotCybergame
 
         private const string loginUrl = "http://" + domain + "/login.php";
         private const string oldLoginUrl = "http://" + domain + "/v1/cabinet_login.php";
-        private const string cabinetUrl = "http://" + domain + "/cabinet.php";
+        private const string cabinetUrl = "http://" + domain + "/my_profile_edit/";
         private const string sendMessageUrl = "http://" + domain + "/v1/wp-admin/admin-ajax.php";
+        private const string cabinetUpdateUrl = @"http://" + domain + "/my_profile_edit/?mode=async&rand={0}";
 
         private const string reKName = @"kname[^""]+""([^""]+)""";
         private const string reKHash = @"khash[^""]+""([^""]+)""";
@@ -47,25 +49,23 @@ namespace dotCybergame
 
         #endregion     
         #region Private properties
-        private string lastTimestamp;
-        private string chatUpdateNonce;
         private string khash,kname;
         private Timer statsDownloader;
-        private Timer chatDownloader;
         private CookieAwareWebClient loginWC;
         private CookieAwareWebClient chatWC;
         private CookieAwareWebClient statsWC;
         private Channel currentChannelStats;
         private string _user;
         private string _password;
+        private string _channelId;
         private object chatLock = new object();
         private object messageLock = new object();
         private object loginLock = new object();
         private object statsLock = new object();
         private object restartLock = new object();
-        private int nickInUseTries = 0;
+
         private bool stopped = true;
-        private bool restarting = false;
+
 
         #endregion
         #region Events
@@ -103,6 +103,7 @@ namespace dotCybergame
             loginWC.Headers["User-Agent"] = userAgent;
             isLoggedIn = false;
             
+            GameList = new List<KeyValuePair<string, string>>();
             statsDownloader = new Timer(new TimerCallback(statsDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
 
         }
@@ -182,10 +183,11 @@ namespace dotCybergame
 
 
                     statsWC.Cookies = chatWC.Cookies;
+                    loginWC.Cookies = chatWC.Cookies;
 
-                    Debug.Print("Cybergame: authorization...");
+                    Debug.Print("Cybergame: connecting web socket");
                     Domain = domain;
-                    Port = "9999";
+                    Port = "8080";
                     Path = String.Format("/{0}/{1}/websocket", random_number(), random_string());
                     Cookies = statsWC.CookiesStrings;
                     Connect();
@@ -228,7 +230,7 @@ namespace dotCybergame
                         foreach (String strCmd in commands)
                         {
 
-                            JObject cmd = JObject.Parse(strCmd);
+                            JToken cmd = JToken.Parse(strCmd);
                             switch ((String)cmd["command"])
                             {
                                    
@@ -245,11 +247,18 @@ namespace dotCybergame
                                     break;
                                 case "chatMessage":
                                     {
-                                        String msg = (String)cmd["message"];
+
                                         if( OnChatMessage != null )
                                         {
-                                            String user = Re.GetSubString(msg, @"([^:]+):\s", 1);
-                                            var chatMessage = new Message() { message = msg, alias = user };
+                                            JToken objMsg = JToken.Parse(cmd["message"].ToString());
+
+                                            if (objMsg == null)
+                                                return;
+
+                                            String user = objMsg["from"].ToString();
+                                            String text = objMsg["text"].ToString();
+
+                                            var chatMessage = new Message() { message = text, alias = user };
                                             OnChatMessage(this, new MessageReceivedEventArgs(chatMessage));
                                         }
                                     }
@@ -393,7 +402,53 @@ namespace dotCybergame
 
             return builder.ToString();
         }
-
+        private String XHttpPost(String url, String param)
+        {
+            lock (loginLock)
+            {
+                loginWC.ContentType = ContentType.UrlEncodedUTF8;
+                loginWC.Headers["X-Requested-With"] = "XMLHttpRequest";
+                try
+                {
+                    var result = loginWC.UploadString(url,param);
+                    if (!String.IsNullOrEmpty(result))
+                        return result;
+                    else
+                        Debug.Print("Cybergame: xhttppost - empty string fetched from {0}", url);
+                }
+                catch (Exception e)
+                {
+                    Debug.Print("Cybergame error posting to {0}: {1}", url, e.Message);
+                }
+            }
+            return String.Empty;
+        }
+        private String HttpGet(String url)
+        {
+            lock (loginLock)
+            {
+                loginWC.ContentType = ContentType.UrlEncodedUTF8;
+                //loginWC.Headers["X-Requested-With"] = "XMLHttpRequest";
+                try
+                {
+                    var result = loginWC.DownloadString(url);
+                    if (!String.IsNullOrEmpty(result))
+                        return result;
+                    else
+                        Debug.Print("Cybergame: httpget - empty string fetched from {0}", url);
+                }
+                catch (Exception e)
+                {
+                    Debug.Print("Cybergame error fetching {0}: {1}", url, e.Message);
+                }
+            }
+            return String.Empty;
+        }
+        private List<KeyValuePair<String, String>> ChannelFormParams
+        {
+            get;
+            set;
+        }
         #endregion
         #region Public properties
         public string Viewers
@@ -406,11 +461,55 @@ namespace dotCybergame
 #region IChatDescription
         public void SetDescription()
         {
+            if (ChannelFormParams == null)
+                return;
+
+            String param = "a=save_profile&channel_game={0}&channel_desc={1}&channel={2}&display_name={3}&channel_name={4}";
+            var displayName = ChannelFormParams.Where(k => k.Key.StartsWith("display_name_", StringComparison.CurrentCultureIgnoreCase)).Select(v => v.Value).FirstOrDefault();
+            var channelName = ChannelFormParams.Where(k => k.Key.StartsWith("channel_name_", StringComparison.CurrentCultureIgnoreCase)).Select(v => v.Value).FirstOrDefault();
+            if (String.IsNullOrEmpty(displayName))
+                displayName = kname;
+            
+            GameId = GameList.Where(v => v.Value == Game).Select(g => g.Key).FirstOrDefault();
+
+            var result = XHttpPost(cabinetUpdateUrl, String.Format(param, GameId,HttpUtility.UrlEncode(ShortDescription),_channelId,HttpUtility.UrlEncode(displayName),HttpUtility.UrlEncode(channelName)));
         }
+
         public void GetDescription()
         {
+            if (!isLoggedIn)
+                return;
+
+            var result = HttpGet(cabinetUrl);
+            if (!String.IsNullOrEmpty(result))
+            {
+                ShortDescription = HtmlParser.GetInnerText(@"//textarea[@name='channel_desc']", result);
+                GameList = HtmlParser.GetOptions(@"//select[@name='channel_game']/option",result);                
+                Game = HtmlParser.GetSiblingInnerText(@"//select/option[@selected='selected']", result);
+                _channelId = HtmlParser.GetAttribute(@"//input[@name='channel']","value", result);
+                GameId = GameList.Where(v => v.Value == Game).Select(g => g.Key).FirstOrDefault();
+                ChannelFormParams = HtmlParser.FormParams(@"", result);
+                //foreach (var p in ChannelFormParams)
+                //{
+                //    Debug.Print("Cybergame channel form param: {0} = {1}", p.Key, p.Value);
+                //}
+                if (String.IsNullOrEmpty(Game))
+                {
+                    Game = "другое";
+                    GameId = "1";
+                }
+                
+
+
+
+            }
         }
         public string Game
+        {
+            get;
+            set;
+        }
+        public string GameId
         {
             get;
             set;
@@ -426,6 +525,11 @@ namespace dotCybergame
             set;
         }
 #endregion
+        public List<KeyValuePair<String, String>> GameList
+        {
+            get;
+            set;
+        }
     }
 
     public class MessageReceivedEventArgs : EventArgs

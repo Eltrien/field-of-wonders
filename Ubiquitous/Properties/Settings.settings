@@ -506,23 +506,65 @@
     <Setting Name="appearanceFontSmooth" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="chatProfiles" Type="Ubiquitous.ChatProfiles" Scope="User">
+    <Setting Name="twitch_ShortDescription" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="twitchChannelTitle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Untitled stream</Value>
+    <Setting Name="twitch_Game" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="twitchGame" Type="System.String" Scope="User">
-      <Value Profile="(Default)">War Thunder</Value>
+    <Setting Name="sc2tv_ShortDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="sc2tvChannelTitle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Untitled stream</Value>
-    </Setting>
-    <Setting Name="sc2tvDescription" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Untitled stream</Value>
+    <Setting Name="sc2tv_LongDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="globalDefaultChat" Type="System.String" Scope="User">
       <Value Profile="(Default)">All</Value>
+    </Setting>
+    <Setting Name="sc2tv_Game" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="goodgame_ShortDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="goodgame_Game" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="cybergame_ShortDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="cybergame_Game" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="goha_ShortDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="goha_Game" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="currentProfile" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="chatProfiles" Type="Ubiquitous.ChatProfiles" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="generalSuppressErrors" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="generalSuppressNotices" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="appearTimestampColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">White</Value>
+    </Setting>
+    <Setting Name="appearTimestampBack" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="appearTimestampFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Tahoma, 9.75pt</Value>
+    </Setting>
+    <Setting Name="globalShowCommandBarInCompact" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

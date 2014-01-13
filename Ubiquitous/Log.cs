@@ -120,6 +120,7 @@ namespace Ubiquitous
         }
 
 
+
         /// <summary>
         /// Writes a line to the textbox. Automaticall adds newline character
         /// </summary>
@@ -150,8 +151,7 @@ namespace Ubiquitous
                 if (!string.IsNullOrEmpty(message.Text))
                 {
                     if (tb.TimeStamp)
-                        tb.AppendTextAsRtf(DateTime.Now.GetDateTimeFormats('T')[0] + " ", tb.Font, tb.TimeColor);
-                    //tb.AppendText(DateTime.Now.GetDateTimeFormats('T')[0] + " ");
+                        tb.AppendTextAsRtf(DateTime.Now.GetDateTimeFormats('T')[0] + " ", tb.TimestampFont, tb.TimestampColor);
 
                     if (chatIcon != null)
                         tb.InsertImage(chatIcon);

@@ -1,4 +1,5 @@
-﻿using WMPLib;
+﻿
+using WMPLib;
 using System;
 using System.Threading;
 using System.Collections.Generic;
@@ -90,7 +91,9 @@ namespace Ubiquitous
             Youtube,
             GamersTV,
             JetSet,
-            All
+            All,
+            Notice,
+            Error
         }
         private class ChatUser
         {
@@ -440,13 +443,14 @@ namespace Ubiquitous
         private Log log;
         private ChannelList endpointList;
         private BindingSource endpointListBS;
+        public BindingSource profileListBS;
         private SteamAPISession.User steamAdmin;
         private List<SteamAPISession.Update> updateList;
         private SteamAPISession steamBot;
         private SteamAPISession.LoginStatus status;
         private StatusImage checkMark;
         private StatusImage streamStatus;
-        private Sc2Chat sc2tv;
+        public Sc2Chat sc2tv;
         private IrcClient twitchIrc;
         private IrcClient gohaIrc;
         private SkypeChat skype;
@@ -461,15 +465,15 @@ namespace Ubiquitous
         private BGWorker gohaBW, gohaStreamBW, steamBW, sc2BW, twitchBW, skypeBW, twitchTV, goodgameBW, battlelogBW,
                         empireBW, cyberBW, obsremoteBW, hashdBW, youtubeBW, gamerstvBW, jetsetBW;
         private EmpireTV empireTV;
-        private GohaTV gohaTVstream;
-        private Twitch twitchChannel;
+        public GohaTV gohaTVstream;
+        public Twitch twitchChannel;
         private EndPoint currentChat;
-        private Goodgame ggChat;
+        public Goodgame ggChat;
         private OBSRemote obsRemote;
         private XSplit xsplit;
         private StatusServer statusServer;
 //        private Battlelog battlelog;
-        private Cybergame cybergame;
+        public Cybergame cybergame;
         private List<ChatUser> chatUsers;
         private bool isClosing = false;
         private ToolTip viewersTooltip;
@@ -481,8 +485,8 @@ namespace Ubiquitous
         private JetSetPro jetset;
         private uint MaxViewers = 0;
         private bool twitchTriedOAuth = false;
-        private TwitchWeb twitchWeb;
-
+        public TwitchWeb twitchWeb;
+        public List<String> comboProfiles;
         IPHostEntry twitchServers = new IPHostEntry();
         IPAddress nextTwitchIP = new IPAddress(0);
         private ULastFm lastFm;
@@ -507,9 +511,31 @@ namespace Ubiquitous
 
 
             //UnprotectConfig();
-            settings = Properties.Settings.Default;
 
+            settings = Properties.Settings.Default;
+            try
+            {
+                if (String.IsNullOrEmpty(settings.currentProfile))
+                {
+                    settings.currentProfile = "Default";
+                }
+
+                if (settings.chatProfiles == null)
+                {
+                    settings.chatProfiles = new ChatProfiles();
+                    settings.chatProfiles.WriteProfile(settings.currentProfile, settings);
+                }
+                else if (!settings.chatProfiles.Profiles.Any(p => p.Name.Equals(settings.currentProfile)))
+                {
+                    settings.chatProfiles.WriteProfile(settings.currentProfile, settings);
+                }
+
+            }
+            catch { }
+
+            
             InitializeComponent();
+
 
             endpointList = new ChannelList();
             endpointListBS = new BindingSource();
@@ -564,7 +590,7 @@ namespace Ubiquitous
             sc2tv.Logon += OnSc2TvLogin;
             sc2tv.ChannelList += OnSc2TvChannelList;
             sc2tv.MessageReceived += OnSc2TvMessageReceived;
-            sc2tv.channelList = new Channels();           
+            sc2tv.channelList = new Channels();
 
             gohaIrc = new IrcClient();
             gohaIrc.Connected += OnGohaConnect;
@@ -633,7 +659,7 @@ namespace Ubiquitous
                 }
                 catch (Exception e)
                 {
-                    SendMessage(new UbiMessage("Web server error: " + e.Message, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage("Web server error: " + e.Message, EndPoint.Error));
                 }
             }
 
@@ -744,7 +770,7 @@ namespace Ubiquitous
 
         void lastFm_OnLogin(object sender, EventArgs e)
         {
-            SendMessage(new UbiMessage("Last.Fm: logged in!", EndPoint.Music, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage("Last.Fm: logged in!", EndPoint.Music, EndPoint.Notice));
         }
         private void pictureSteamBot_Click(object sender, EventArgs e)
         {
@@ -755,6 +781,9 @@ namespace Ubiquitous
         {
             //textMessages.Antialias = false;
             RefreshChatProperties();
+
+            SetupComboProfiles();
+
             uint lines = 0;
             uint.TryParse(settings.generalHistoryLines, out lines);
             textMessages.MaxLines = lines;
@@ -819,13 +848,13 @@ namespace Ubiquitous
             if (settings.twitchEnabled && twitchIrc.IsRegistered)
             {
                 ThreadPool.QueueUserWorkItem(f => SendMessageToTwitchIRC(new UbiMessage("/commercial", EndPoint.SteamAdmin, EndPoint.TwitchTV)));
-                SendMessage(new UbiMessage("TwitchTv: advertising started!", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("TwitchTv: advertising started!", EndPoint.TwitchTV, EndPoint.Notice));
             }           
 
             if (settings.cyberEnabled && cybergame.isLoggedIn)
             {
                 cybergame.StartAdvertising();
-                SendMessage(new UbiMessage("Cybergame: advertising started!", EndPoint.Cybergame, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("Cybergame: advertising started!", EndPoint.Cybergame, EndPoint.Notice));
             }
 
         }
@@ -973,27 +1002,41 @@ namespace Ubiquitous
                     break;
 
             }
+
         }
-        private void SetChannelsDescription()
+        public void CopyChannelDescriptions()
         {
+            
             if (settings.twitchEnabled && 
-                twitchIrc.IsConnected &&
-                (twitchWeb.ShortDescription != settings.twitchChannelTitle ||
-                twitchWeb.Game != settings.twitchGame))
+                twitchIrc.IsConnected )
             {
-                twitchWeb.ShortDescription = settings.twitchChannelTitle;
-                twitchWeb.Game = settings.twitchGame;
-                twitchWeb.SetDescription();
+                twitchWeb.ShortDescription = settings.twitch_ShortDescription;
+                twitchWeb.Game = settings.twitch_Game;
             }
 
-            if (settings.sc2tvEnabled && 
-                sc2tv.LoggedIn &&
-                (sc2tv.ShortDescription != settings.sc2tvChannelTitle ||
-                sc2tv.LongDescription != settings.sc2tvDescription))
+            if (settings.sc2tvEnabled &&
+                sc2tv.LoggedIn)
             {
-                sc2tv.ShortDescription = settings.sc2tvChannelTitle;
-                sc2tv.LongDescription = settings.sc2tvDescription;
-                sc2tv.SaveStreamSettings();
+                sc2tv.ShortDescription = settings.sc2tv_ShortDescription;
+                sc2tv.LongDescription = settings.sc2tv_LongDescription;
+                sc2tv.Game = settings.sc2tv_Game;
+            }
+            if (settings.goodgameEnabled &&
+                ggChat.isLoggedIn)
+            {
+                ggChat.ShortDescription = settings.goodgame_ShortDescription;
+                ggChat.Game = settings.goodgame_Game;
+            }
+
+            if (settings.cyberEnabled && cybergame.isLoggedIn)
+            {
+                cybergame.ShortDescription = settings.cybergame_ShortDescription;
+                cybergame.Game = settings.cybergame_Game;
+            }
+            if (settings.gohaEnabled && gohaTVstream.LoggedIn)
+            {
+                gohaTVstream.ShortDescription = settings.goha_ShortDescription;
+                gohaTVstream.Game = settings.goha_Game;
             }
 
 
@@ -1014,15 +1057,21 @@ namespace Ubiquitous
             SettingsDialog settingsForm = new SettingsDialog();
             settingsForm.FormClosing += new FormClosingEventHandler(settingsForm_FormClosing);
             settingsForm.EndPointList = endpointListBS;
+            settingsForm.TopMost = true;
+            var state = this.WindowState;
+            this.WindowState = FormWindowState.Minimized;
             settingsForm.ShowDialog();
+            this.WindowState = state;
+            this.Enabled = true;
             
-            ProtectConfig();
+            //ProtectConfig();
             settings.globalOnTop = lastOnTopState;
-
+            
         }
 
         void settingsForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
+        {            
+
             //ThreadPool.QueueUserWorkItem( f => SetChannelsDescription());
         }
         private void comboSc2Channels_DropDown(object sender, EventArgs e)
@@ -1076,14 +1125,12 @@ namespace Ubiquitous
 
                     if (notice)
                     {
-                        var msg = new UbiMessage(String.Format("Switching to {0}...", currentChat.ToString()), EndPoint.Bot, EndPoint.SteamAdmin);
+                        var msg = new UbiMessage(String.Format("Switching to {0}...", currentChat.ToString()), EndPoint.Bot, EndPoint.Notice);
                         if (settings.steamCurrentChatNotify && settings.steamEnabled)
                         {
                             if (!isFlood(msg))
                                 SendMessage(msg);
                         }
-
-                        log.WriteLine(new UbiMessage(String.Format("Switching to {0}...", currentChat.ToString()) ));
                     }
 
                     lastMessageSent.FromEndPoint = chatAlias.Endpoint;
@@ -1122,13 +1169,13 @@ namespace Ubiquitous
         {
             if (!settings.obsRemoteEnable)
             {
-                SendMessage(new UbiMessage("OBS isn't enabled", EndPoint.Bot, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("OBS isn't enabled", EndPoint.Bot, EndPoint.Error));
                 return Result.Failed;
             }
 
             List<Scene> scenes = obsRemote.Scenes.Where(s => s.name.ToLower().Contains(sceneMask.ToLower())).ToList();
             if( scenes.Count <= 0 )
-                SendMessage(new UbiMessage("No scenes found!", EndPoint.Bot, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("No scenes found!", EndPoint.Bot, EndPoint.Error));
 
             if (scenes.Count > 1)
             {
@@ -1141,7 +1188,7 @@ namespace Ubiquitous
                     foundScenes = foundScenes.TrimEnd(',');
 
 
-                SendMessage(new UbiMessage("Please clarify what scene:" + foundScenes, EndPoint.Bot, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("Please clarify what scene:" + foundScenes, EndPoint.Bot, EndPoint.Notice));
             }
             else
             {
@@ -1174,7 +1221,7 @@ namespace Ubiquitous
                 {
                     SendMessage(new UbiMessage(
                         String.Format("I can't replay to a message from ({0})!", lastMessageSent.FromEndPoint.ToString()),
-                        EndPoint.Bot, EndPoint.SteamAdmin)
+                        EndPoint.Bot, EndPoint.Error)
                     );
                 }
                 else
@@ -1225,6 +1272,12 @@ namespace Ubiquitous
                     lastMessageSent = message;
 
                 if (message.Text.Length <= 0)
+                    return;
+
+                if (settings.generalSuppressErrors && message.ToEndPoint == EndPoint.Error)
+                    return;
+
+                if (settings.generalSuppressNotices && message.ToEndPoint == EndPoint.Notice)
                     return;
 
                 // Execute command or write it to console
@@ -1306,7 +1359,13 @@ namespace Ubiquitous
                         ThreadPool.QueueUserWorkItem(f => SendMessageToJetSet(message));
                         break;
                     case EndPoint.Console:
-                        log.WriteLine(new UbiMessage( message.Text ));
+                        log.WriteLine(new UbiMessage(message.Text));
+                        break;
+                    case EndPoint.Notice:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToSteamAdmin(message));
+                        break;
+                    case EndPoint.Error:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToSteamAdmin(message));
                         break;
                     default:
                         log.WriteLine(new UbiMessage( "Can't send a message. Chat is readonly!"));
@@ -1409,9 +1468,13 @@ namespace Ubiquitous
             SendMessageToGoodgame(message);
             SendMessageToCybergame(message);
             SendMessageToHashd(message);
+            SendMessageToJetSet(message);
         }
         private void SendMessageToGoodgame(UbiMessage message)
         {
+            if (ggChat == null)
+                return;
+
             if ( ggChat.isLoggedIn && settings.goodgameEnabled)
             {
                 ggChat.SendMessage(message.Text);
@@ -1419,10 +1482,13 @@ namespace Ubiquitous
         }
         private void SendMessageToSc2Tv(UbiMessage message)
         {
+            if (sc2tv == null)
+                return;
+
             if (sc2tv.LoggedIn && settings.sc2tvEnabled)
             {
                 if (!sc2tv.SendMessage(message.Text))
-                    SendMessage(new UbiMessage("Sc2tv: I didn't send a message. Try again!", EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage("Sc2tv: I didn't send a message. Try again!", EndPoint.Sc2Tv, EndPoint.Error));
             }
         }
         private void SendMessageToSkype(UbiMessage message)
@@ -1453,6 +1519,9 @@ namespace Ubiquitous
         }
         private void SendMessageToTwitchIRC(UbiMessage message)
         {
+            if (twitchIrc == null)
+                return;
+
             if (!settings.twitchEnabled || twitchIrc == null)
                 return;
             
@@ -1467,6 +1536,9 @@ namespace Ubiquitous
         }
         private void SendMessageToGohaIRC(UbiMessage message)
         {
+            if (gohaIrc == null)
+                return;
+
             if (settings.gohaEnabled &&
                 gohaIrc.IsRegistered &&
                 (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
@@ -1479,6 +1551,9 @@ namespace Ubiquitous
         }
         private void SendMessageToCybergame(UbiMessage message)
         {
+            if (cybergame == null)
+                return;
+
             if (settings.cyberEnabled &&
                 cybergame.isLoggedIn &&
                 (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
@@ -1489,6 +1564,9 @@ namespace Ubiquitous
         }
         private void SendMessageToJetSet(UbiMessage message)
         {
+            if (jetset == null)
+                return;
+
             if (settings.jetsetEnable &&
                 (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
             {
@@ -1498,6 +1576,9 @@ namespace Ubiquitous
         }
         private void SendMessageToHashd(UbiMessage message)
         {
+            if (hashd == null)
+                return;
+
             if (settings.hashdEnabled &&
                 hashd.isLoggedIn &&
                 (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
@@ -1535,6 +1616,8 @@ namespace Ubiquitous
         }
         private void SendMessageToEmpireTV(UbiMessage message)
         {
+            if (empireTV == null)
+                return;
             if (settings.empireEnabled && empireTV.LoggedIn &&
                 (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
             {
@@ -1560,7 +1643,7 @@ namespace Ubiquitous
                     }
                     else
                     {
-                        SendMessage(new UbiMessage(String.Format("Goha: Live Stream Player switched on!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
+                        SendMessage(new UbiMessage(String.Format("Goha: Live Stream Player switched on!"), EndPoint.Gohatv, EndPoint.Notice));
                         streamStatus.SetOn(pictureGohaStream);
                     }
                 }
@@ -1578,7 +1661,7 @@ namespace Ubiquitous
                     }
                     else
                     {
-                        SendMessage(new UbiMessage(String.Format("Sc2Tv: Live Stream Player switched on!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                        SendMessage(new UbiMessage(String.Format("Sc2Tv: Live Stream Player switched on!"), EndPoint.Sc2Tv, EndPoint.Notice));
                         streamStatus.SetOn(pictureSc2tvStream);
                     }
                 }
@@ -1599,7 +1682,7 @@ namespace Ubiquitous
                     }
                     else
                     {
-                        SendMessage(new UbiMessage(String.Format("Goha: Live Stream Player switched off!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
+                        SendMessage(new UbiMessage(String.Format("Goha: Live Stream Player switched off!"), EndPoint.Gohatv, EndPoint.Notice));
                         streamStatus.SetOff(pictureGohaStream);
                     }
                 }
@@ -1616,7 +1699,7 @@ namespace Ubiquitous
                     }
                     else
                     {
-                        SendMessage(new UbiMessage(String.Format("Sc2Tv: Live Stream Player switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                        SendMessage(new UbiMessage(String.Format("Sc2Tv: Live Stream Player switched off!"), EndPoint.Sc2Tv, EndPoint.Notice));
                         streamStatus.SetOff(pictureSc2tvStream);
                     }
                 }
@@ -1631,17 +1714,20 @@ namespace Ubiquitous
         {
             if (isClosing)
                 return;
+           
 
             //var profiles = new ChatProfiles();
             //profiles.Profiles = new List<ChatProfile>();
 
             //profiles.Profiles.Add(new ChatProfile() { Topic = "Test", ChatName = "Chat name", Game = "test", LongDescription = "test2", ShortDescription = "test3"});
             //settings.chatProfiles = profiles;
+
+
             isClosing = true;
 
             forceCloseTimer.Change(5000, Timeout.Infinite);
             currentChat = EndPoint.Console;
-            SendMessage(new UbiMessage(String.Format("Leaving chats..."), EndPoint.Console, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage(String.Format("Leaving chats..."), EndPoint.Console, EndPoint.Notice));
 
             if( settings.globalDebug && debugForm != null)
                 debugForm.Hide();
@@ -1662,6 +1748,7 @@ namespace Ubiquitous
                 settings.youtubeLastTime = youtube.LastTime;
             }
 
+            settings.chatProfiles.WriteProfile(settings.currentProfile, settings);
             
             settings.Save();
             #endregion
@@ -1709,7 +1796,7 @@ namespace Ubiquitous
                 {
 
                     twitchIrc.Quit();
-                    SendMessage(new UbiMessage(String.Format("TwitchTV: disconnected!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage(String.Format("TwitchTV: disconnected!"), EndPoint.TwitchTV, EndPoint.Notice));
                     chatStatusTwitch.On = false;
                 }
             }
@@ -1721,7 +1808,7 @@ namespace Ubiquitous
                 if (gohaIrc.IsRegistered)
                 {
                     gohaIrc.Disconnect(); //.Quit();
-                    SendMessage(new UbiMessage(String.Format("GohaTV: disconnected."), EndPoint.Gohatv, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage(String.Format("GohaTV: disconnected."), EndPoint.Gohatv, EndPoint.Notice));
                     chatStatusGoha.On = false;
                 }
             }
@@ -1732,7 +1819,7 @@ namespace Ubiquitous
                 return;
 
             ggChat.Stop();
-            SendMessage(new UbiMessage(String.Format("Goodgame: disconnected."), EndPoint.Goodgame, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage(String.Format("Goodgame: disconnected."), EndPoint.Goodgame, EndPoint.Notice));
             chatStatusGoodgame.On = false;
         }
         private void StopSteamBot()
@@ -1742,7 +1829,7 @@ namespace Ubiquitous
 
             bWorkerSteamPoll.CancelAsync();
             while (bWorkerSteamPoll.CancellationPending) Thread.Sleep(10);
-            SendMessage(new UbiMessage(String.Format("Steam: disconnected."), EndPoint.Steam, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage(String.Format("Steam: disconnected."), EndPoint.Steam, EndPoint.Notice));
             chatStatusSteamBot.On = false;
         }
         private void StopSc2Chat()
@@ -1750,7 +1837,7 @@ namespace Ubiquitous
             if (settings.sc2tvEnabled)
             {
                 sc2tv.Stop();
-                SendMessage(new UbiMessage(String.Format("Sc2tv: disconnected."), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage(String.Format("Sc2tv: disconnected."), EndPoint.Sc2Tv, EndPoint.Notice));
                 chatStatusSc2tv.On = false;
             }  
         }
@@ -1829,18 +1916,18 @@ namespace Ubiquitous
             {
                 if (prevLiveStatus)
                 {
-                    SendMessage(new UbiMessage(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage(String.Format("Sc2Tv: Stream switched off!"), EndPoint.Sc2Tv, EndPoint.Notice));
                     streamStatus.SetOff(pictureSc2tvStream);
                 }
                 else
                 {
                     streamStatus.SetOn(pictureSc2tvStream);
-                    SendMessage(new UbiMessage(String.Format("Sc2Tv: Stream switched on!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage(String.Format("Sc2Tv: Stream switched on!"), EndPoint.Sc2Tv, EndPoint.Notice));
                 }
             }
             else
             {
-                SendMessage(new UbiMessage(String.Format("Sc2Tv: Stream wasn't switched! Please try again!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage(String.Format("Sc2Tv: Stream wasn't switched! Please try again!"), EndPoint.Sc2Tv, EndPoint.Error));
             }
 
         }
@@ -1865,11 +1952,12 @@ namespace Ubiquitous
             {
                 Size = settings.globalFullSize;
                 settings.isFullscreenMode = false;
+                panelBottom.Visible = true;
                 panelMessages.Dock = DockStyle.None;
                 panelMessages.Anchor = (AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom);
                 panelMessages.Height = panelBottom.Top - 2;
                 panelMessages.Width = panelRight.Left - 2;
-
+                
                 textMessages.ScrollToEnd();
                 button1.Show();
             }
@@ -1878,6 +1966,8 @@ namespace Ubiquitous
                 Size = settings.globalCompactSize;
                 settings.isFullscreenMode = true;
                 panelMessages.Dock = DockStyle.Fill;
+                if (!settings.globalShowCommandBarInCompact)
+                    panelBottom.Visible = false;
                 button1.Hide();
                 textMessages.ScrollToEnd();
             }
@@ -2280,6 +2370,7 @@ namespace Ubiquitous
             });
             settings.gmtLastdate = gamerstv.LastDate;
         }
+
         #endregion
         #region Youtube
         private void ConnectYoutube()
@@ -2332,7 +2423,7 @@ namespace Ubiquitous
 
             if (!hashd.Login())
             {
-                SendMessage(new UbiMessage("Hashd: login failed!", EndPoint.Hashd, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("Hashd: login failed!", EndPoint.Hashd, EndPoint.Error));
             }
             else
             {
@@ -2357,7 +2448,7 @@ namespace Ubiquitous
         void hashd_OnLogin(object sender, EventArgs e)
         {
             chatStatusHashd.On = true;
-            SendMessage(new UbiMessage("Hashd: logged in!", EndPoint.Hashd, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage("Hashd: logged in!", EndPoint.Hashd, EndPoint.Notice));
         }
 
         void hashd_Offline(object sender, EventArgs e)
@@ -2390,15 +2481,23 @@ namespace Ubiquitous
 
             if (!cybergame.Login())
             {
-                SendMessage(new UbiMessage("Cybergame: login failed!", EndPoint.Cybergame, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("Cybergame: login failed!", EndPoint.Cybergame, EndPoint.Error));
             }
         }
 
         void cybergame_OnLogin(object sender, EventArgs e)
         {
             chatStatusCybergame.On = true;
-            SendMessage(new UbiMessage("Cybergame: logged in!", EndPoint.Cybergame, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage("Cybergame: logged in!", EndPoint.Cybergame, EndPoint.Notice));
+
+            cybergame.GetDescription();
+
+            if (String.IsNullOrEmpty(settings.cybergame_ShortDescription))
+                settings.cybergame_ShortDescription = cybergame.ShortDescription;
+            if (String.IsNullOrEmpty(settings.cybergame_Game))
+                settings.cybergame_Game = cybergame.Game;
         }
+
         void cybergame_OnMessage(object sender, MessageReceivedEventArgs e)
         {
             SendMessage(new UbiMessage( String.Format("{0}",e.Message.message), EndPoint.Cybergame, EndPoint.SteamAdmin ) 
@@ -2436,7 +2535,7 @@ namespace Ubiquitous
             empireTV.OnNewMessage += OnEmpireMessage;
 
             if( !empireTV.Login(settings.empireUser, settings.empirePassword) )
-                SendMessage(new UbiMessage("EmpireTV: login failed!", EndPoint.Empiretv, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("EmpireTV: login failed!", EndPoint.Empiretv, EndPoint.Error));
         }
         private void OnEmpireLogin(object sender, EventArgs e)
         {
@@ -2484,6 +2583,13 @@ namespace Ubiquitous
                  result = gohaTVstream.SwitchStream();
             }
             chatStatusGohaWeb.On = true;
+
+            gohaTVstream.GetDescription();
+            if (String.IsNullOrEmpty(settings.goha_ShortDescription))
+                settings.goha_ShortDescription = gohaTVstream.ShortDescription;
+            if (String.IsNullOrEmpty(settings.goha_Game))
+                settings.goha_Game = gohaTVstream.Game;
+
                 
         }
         private void OnGohaStreamLive(object sender, EventArgs e)
@@ -2534,7 +2640,7 @@ namespace Ubiquitous
                 return;
 
             Debug.Print("OnGoLive event");
-            SendMessage(new UbiMessage(String.Format("Twitch: STREAM ONLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage(String.Format("Twitch: STREAM ONLINE!"), EndPoint.TwitchTV, EndPoint.Notice));
             if (settings.globalEnableSounds)
             {
                 try
@@ -2567,7 +2673,7 @@ namespace Ubiquitous
                     {
                         if (!streamIsOnline)
                         {
-                            SendMessage(new UbiMessage(String.Format("Goha: Stream switched on!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                            SendMessage(new UbiMessage(String.Format("Goha: Stream switched on!"), EndPoint.TwitchTV, EndPoint.Notice));
                             gohaTVstream.SwitchStream();
                         }
                     }
@@ -2582,7 +2688,7 @@ namespace Ubiquitous
                         sc2tv.setLiveStatus(true);
                         if (sc2tv.ChannelIsLive)
                         {
-                            SendMessage(new UbiMessage(String.Format("Sc2Tv: Stream switched on (Twitch stream went online)!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                            SendMessage(new UbiMessage(String.Format("Sc2Tv: Stream switched on (Twitch stream went online)!"), EndPoint.Sc2Tv, EndPoint.Notice));
                             streamStatus.SetOn(pictureSc2tvStream);
                         }
                         else
@@ -2602,7 +2708,7 @@ namespace Ubiquitous
                 return;
 
             Debug.Print("OnGoOffline event");
-            SendMessage(new UbiMessage(String.Format("Twitch: STREAM OFFLINE!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage(String.Format("Twitch: STREAM OFFLINE!"), EndPoint.TwitchTV, EndPoint.Notice));
             if (settings.globalEnableSounds)
             {
                 try
@@ -2633,7 +2739,7 @@ namespace Ubiquitous
                     {
                         if (streamIsOnline)
                         {
-                            SendMessage(new UbiMessage(String.Format("Goha: Stream switched off!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                            SendMessage(new UbiMessage(String.Format("Goha: Stream switched off!"), EndPoint.TwitchTV, EndPoint.Notice));
                             gohaTVstream.SwitchStream();
                         }
                     }
@@ -2648,7 +2754,7 @@ namespace Ubiquitous
                         sc2tv.setLiveStatus(false);
                         if (!sc2tv.ChannelIsLive)
                         {
-                            SendMessage(new UbiMessage(String.Format("Sc2Tv: Stream switched off (Twitch stream went offline)!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                            SendMessage(new UbiMessage(String.Format("Sc2Tv: Stream switched off (Twitch stream went offline)!"), EndPoint.Sc2Tv, EndPoint.Notice));
                             streamStatus.SetOff(pictureSc2tvStream);
                         }
                         else
@@ -2716,7 +2822,7 @@ namespace Ubiquitous
                 }
                 catch
                 {
-                    SendMessage(new UbiMessage("Twitch: error resolving twitch hostname. Using harcoded list of IPs", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage("Twitch: error resolving twitch hostname. Using harcoded list of IPs", EndPoint.TwitchTV, EndPoint.Error));
                     twitchServers = new IPHostEntry()
                     {
                         AddressList = new IPAddress[] {
@@ -2738,7 +2844,7 @@ namespace Ubiquitous
                         tmpNextServer = twitchServers.AddressList.FirstOrDefault();
 
                     if (nextTwitchIP.Address != 0)
-                        SendMessage(new UbiMessage("Twitch: cycling to the next server " + tmpNextServer.ToString(), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                        SendMessage(new UbiMessage("Twitch: cycling to the next server " + tmpNextServer.ToString(), EndPoint.TwitchTV, EndPoint.Error));
 
                     nextTwitchIP = tmpNextServer;
 
@@ -2751,8 +2857,10 @@ namespace Ubiquitous
                         {
                             settings.twitchOAuthKey = twitchWeb.ChatOAuthKey;
                             twitchWeb.GetDescription();
-                            settings.twitchChannelTitle = twitchWeb.ShortDescription;
-                            settings.twitchGame = twitchWeb.Game;
+                            if( String.IsNullOrEmpty( settings.twitch_ShortDescription ) )
+                                settings.twitch_ShortDescription = twitchWeb.ShortDescription;
+                            if( String.IsNullOrEmpty( settings.twitch_Game ))
+                                settings.twitch_Game = twitchWeb.Game;
                         }
                     }
                     else
@@ -2772,7 +2880,7 @@ namespace Ubiquitous
 
                         if (!connectedEvent.Wait(60000))
                         {
-                            SendMessage(new UbiMessage("Twitch: connection timeout!", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                            SendMessage(new UbiMessage("Twitch: connection timeout!", EndPoint.TwitchTV, EndPoint.Error));
                             return;
                         }
                     }
@@ -2784,7 +2892,7 @@ namespace Ubiquitous
         {
             lock (lockTwitchConnect)
             {
-                SendMessage(new UbiMessage("Twitch: error settings description", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("Twitch: error setting description", EndPoint.TwitchTV, EndPoint.Error));
             }
         }
 
@@ -2792,7 +2900,7 @@ namespace Ubiquitous
         {
             lock (lockTwitchConnect)
             {
-                SendMessage(new UbiMessage(String.Format("Twitch IRC error: {0}", e.Error.Message), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage(String.Format("Twitch IRC error: {0}", e.Error.Message), EndPoint.TwitchTV, EndPoint.Error));
             }
         }
 
@@ -2814,7 +2922,7 @@ namespace Ubiquitous
                             return;
                         }
                     }
-                    SendMessage(new UbiMessage("Twitch login failed! Check settings!", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage("Twitch login failed! Check settings!", EndPoint.TwitchTV, EndPoint.Error));
                 }
                 else if (settings.twitchDebugMessages)
                 {
@@ -2839,7 +2947,7 @@ namespace Ubiquitous
                 }
                 else
                 {
-                    SendMessage(new UbiMessage("Twitch bot is disconnecting", EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage("Twitch bot is disconnecting", EndPoint.TwitchTV, EndPoint.Notice));
                     twitchIrc.Disconnect();
                 }
             }
@@ -2859,7 +2967,7 @@ namespace Ubiquitous
                 e.Channel.UserLeft += OnTwitchChannelLeft;
                 e.Channel.MessageReceived += OnTwitchMessageReceived;
                 chatStatusTwitch.On = true;
-                SendMessage(new UbiMessage(String.Format("Twitch IRC: logged in!"), EndPoint.TwitchTV, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage(String.Format("Twitch IRC: logged in!"), EndPoint.TwitchTV, EndPoint.Notice));
                 twitchIrc.PongReceived += new EventHandler<IrcPingOrPongReceivedEventArgs>(twitchIrc_PongReceived);
                 twitchPing.Change(0, 30000);
 
@@ -2899,7 +3007,7 @@ namespace Ubiquitous
         private void OnTwitchChannelLeftLocal(object sender, IrcChannelEventArgs e)
         {            
             SendMessage(new UbiMessage(String.Format("Twitch: bot left!"), EndPoint.TwitchTV,
-                EndPoint.SteamAdmin));
+                EndPoint.Notice));
         }
         private void OnTwitchMessageReceivedLocal(object sender, IrcMessageEventArgs e)
         {
@@ -3005,8 +3113,8 @@ namespace Ubiquitous
             Debug.Print("OnSc2TvLogin event");
             if (sc2tv.LoggedIn)
             {
-                sc2tv.updateStreamList();
-                sc2tv.updateSmiles();
+                ThreadPool.QueueUserWorkItem( f=> sc2tv.updateStreamList());
+                ThreadPool.QueueUserWorkItem( f=>sc2tv.updateSmiles());
                 UInt32.TryParse(sc2tv.GetStreamID(), out sc2ChannelId);
                 settings.Sc2tvId = sc2ChannelId.ToString();
                 sc2tv.ChannelId = sc2ChannelId;
@@ -3018,15 +3126,21 @@ namespace Ubiquitous
                         streamStatus.SetOn(pictureSc2tvStream);
                     else
                         streamStatus.SetOff(pictureSc2tvStream);
-                    var currentVal = sc2tv.channelList.getById(sc2ChannelId);
-                    if(currentVal != null)
-                        SetComboValue(comboSc2Channels, currentVal);
+                    
+                    //var currentVal = sc2tv.channelList.getById(sc2ChannelId);
+                    //if(currentVal != null)
+                    //    SetComboValue(comboSc2Channels, currentVal);
                 }
-                SendMessage(new UbiMessage(String.Format("Sc2tv: logged in!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
-                chatStatusSc2tv.On = true;
+                if (String.IsNullOrEmpty(settings.sc2tv_ShortDescription))
+                    settings.sc2tv_ShortDescription = sc2tv.ShortDescription;
+                if (String.IsNullOrEmpty(settings.sc2tv_LongDescription))
+                    settings.sc2tv_LongDescription = sc2tv.LongDescription;
+                if (String.IsNullOrEmpty(settings.sc2tv_Game))
+                    settings.sc2tv_Game = sc2tv.Game;
 
-                settings.sc2tvChannelTitle = sc2tv.ShortDescription;
-                settings.sc2tvDescription = sc2tv.LongDescription;
+
+                SendMessage(new UbiMessage(String.Format("Sc2tv: logged in!"), EndPoint.Sc2Tv, EndPoint.Notice));
+                chatStatusSc2tv.On = true;
 
                 if (obsRemote != null && settings.obsRemoteEnable && obsRemote.Status.streaming)
                 {
@@ -3036,7 +3150,7 @@ namespace Ubiquitous
             }
             else
             {
-                SendMessage(new UbiMessage(String.Format("Sc2tv: login failed!"), EndPoint.Sc2Tv, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage(String.Format("Sc2tv: login failed!"), EndPoint.Sc2Tv, EndPoint.Error));
             }
         }
         private void OnSc2TvChannelList(object sender, Sc2Chat.Sc2Event e)
@@ -3093,7 +3207,7 @@ namespace Ubiquitous
             try
             {
                 var channel = (dotSC2TV.Channel)comboSc2Channels.SelectedValue;
-                SendMessage(new UbiMessage(String.Format("Switching sc2tv channel to: {0}", channel.Title), EndPoint.Console, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage(String.Format("Switching sc2tv channel to: {0}", channel.Title), EndPoint.Console, EndPoint.Notice));
                 sc2tv.ChannelId = channel.Id;
             }
             catch (Exception ex)
@@ -3153,12 +3267,12 @@ namespace Ubiquitous
 
             if (status == SteamAPISession.LoginStatus.LoginSuccessful)
             {
-                SendMessage(new UbiMessage(String.Format("Steam: logged in!"), EndPoint.Steam, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage(String.Format("Steam: logged in!"), EndPoint.Steam, EndPoint.Notice));
                 settings.SteamBotAccessToken = steamBot.accessToken;
             }
             else
             {
-                SendMessage(new UbiMessage(String.Format("Steam: login failed"), EndPoint.Steam, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage(String.Format("Steam: login failed"), EndPoint.Steam, EndPoint.Error));
             }
             settings.Save();
         }
@@ -3171,7 +3285,7 @@ namespace Ubiquitous
         private void OnSteamTyping(object sender, SteamAPISession.SteamEvent e)
         {
             if( settings.steamCurrentChatNotify )
-                SendMessage( new UbiMessage(String.Format("Replying to {0}", currentChat.ToString() ), EndPoint.Steam, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage(String.Format("Replying to {0}", currentChat.ToString()), EndPoint.Steam, EndPoint.Notice));
         }
         private void OnSteamLogin(object sender, SteamAPISession.SteamEvent e)
         {
@@ -3210,8 +3324,8 @@ namespace Ubiquitous
 
             }
             else
-                SendMessage(new UbiMessage(String.Format("Can't find {0} in your friends! Check settings or add that account into friend list for bot!", 
-                    settings.SteamAdmin), EndPoint.Steam, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage(String.Format("Can't find {0} in your friends! Check settings or add that account into friend list for bot!",
+                    settings.SteamAdmin), EndPoint.Steam, EndPoint.Error));
 
             if( !bWorkerSteamPoll.IsBusy )
                 bWorkerSteamPoll.RunWorkerAsync();
@@ -3277,7 +3391,7 @@ namespace Ubiquitous
                 }
             }
             catch {
-                SendMessage(new UbiMessage("Skype: attach to process failed!", EndPoint.Skype, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("Skype: attach to process failed!", EndPoint.Skype, EndPoint.Error));
             }
         }
         private void OnGroupMessageReceived(object sender, ChatMessageEventArgs e)
@@ -3320,17 +3434,22 @@ namespace Ubiquitous
             if (ggChat.Login())
             {
                 ggChat.Start();
+                ggChat.GetDescription();
+                if (String.IsNullOrEmpty(settings.goodgame_ShortDescription))
+                    settings.goodgame_ShortDescription = ggChat.ShortDescription;
+                if (String.IsNullOrEmpty(settings.goodgame_Game))
+                    settings.goodgame_Game = ggChat.Game;
             }
             else
             {
-                SendMessage(new UbiMessage(String.Format("Goodgame: login failed!"), EndPoint.Goodgame, EndPoint.SteamAdmin));  
+                SendMessage(new UbiMessage(String.Format("Goodgame: login failed!"), EndPoint.Goodgame, EndPoint.Error));  
             }
 
         }
 
         void ggChat_OnLogin(object sender, EventArgs e)
         {
-            SendMessage(new UbiMessage(String.Format("Goodgame: logged in!"), EndPoint.Goodgame, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage(String.Format("Goodgame: logged in!"), EndPoint.Goodgame, EndPoint.Notice));
             chatStatusGoodgame.On = true;
         }
 
@@ -3352,7 +3471,7 @@ namespace Ubiquitous
         }
         private void OnGGError(object sender, Goodgame.TextEventArgs e)
         {
-            SendMessage(new UbiMessage(String.Format("Goodgame error: {0}", e.Text), EndPoint.Goodgame, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage(String.Format("Goodgame error: {0}", e.Text), EndPoint.Goodgame, EndPoint.Error));
         }
         #endregion
 
@@ -3372,7 +3491,7 @@ namespace Ubiquitous
             catch { }
             SendMessage(new UbiMessage(
                 String.Format("Frame drops detected! {0} frame(s) dropped so far", framesDropped),
-                EndPoint.Bot, EndPoint.SteamAdmin)
+                EndPoint.Bot, EndPoint.Error)
             );
         }
         public void OnXSplitStatusRefresh(object sender, EventArgs e)
@@ -3449,7 +3568,7 @@ namespace Ubiquitous
 
                 if (!connectedEvent.Wait(10000))
                 {
-                    SendMessage(new UbiMessage("Goha: connection timeout!", EndPoint.Gohatv, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage("Goha: connection timeout!", EndPoint.Gohatv, EndPoint.Error));
                     return;
                 }
 
@@ -3457,8 +3576,8 @@ namespace Ubiquitous
         }
 
         void gohaIrc_Error(object sender, IrcErrorEventArgs e)
-        {            
-            SendMessage(new UbiMessage(String.Format("Goha IRC error: {0}",e.Error.Message), EndPoint.Gohatv, EndPoint.SteamAdmin));
+        {
+            SendMessage(new UbiMessage(String.Format("Goha IRC error: {0}", e.Error.Message), EndPoint.Gohatv, EndPoint.Error));
             gohaBW = new BGWorker(ConnectGohaIRC, null);
         }
 
@@ -3477,12 +3596,12 @@ namespace Ubiquitous
             {
                 if (e.RawContent.Contains("Invalid password for"))
                 {
-                    SendMessage(new UbiMessage("Goha login failed! Check settings!", EndPoint.Gohatv, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage("Goha login failed! Check settings!", EndPoint.Gohatv, EndPoint.Error));
 
                 }
                 else if (e.RawContent.Contains("You are now identified"))
                 {
-                    SendMessage(new UbiMessage(String.Format("Goha IRC: logged in!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage(String.Format("Goha IRC: logged in!"), EndPoint.Gohatv, EndPoint.Notice));
                     chatStatusGoha.On = true;
 
                 }
@@ -3511,7 +3630,7 @@ namespace Ubiquitous
                 }
                 else if (e.RawContent.Contains("has now been verified."))
                 {
-                    SendMessage(new UbiMessage(String.Format("Goha IRC: email verified!"), EndPoint.Gohatv, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage(String.Format("Goha IRC: email verified!"), EndPoint.Gohatv, EndPoint.Notice));
                 }
             }
             
@@ -3717,12 +3836,12 @@ namespace Ubiquitous
                 }
                 else
                 {
-                    SendMessage(new UbiMessage("No connection to OBS plugin!", EndPoint.Bot, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage("No connection to OBS plugin!", EndPoint.Bot, EndPoint.Error));
                 }
             }
             else if( !settings.obsRemoteEnable )
             {
-                SendMessage(new UbiMessage("OBS control is not enabled. Check your settings!", EndPoint.Bot, EndPoint.SteamAdmin));
+                SendMessage(new UbiMessage("OBS control is not enabled. Check your settings!", EndPoint.Bot, EndPoint.Error));
             }
         }
         void obsRemote_OnSceneSet(object sender, OBSMessageEventArgs e)
@@ -3739,7 +3858,7 @@ namespace Ubiquitous
                 if (item.Text == sceneName)
                 {
                     SetCheckedToolTip(item, true);
-                    SendMessage(new UbiMessage("Scene set to " + sceneName, EndPoint.Bot, EndPoint.SteamAdmin));
+                    SendMessage(new UbiMessage("Scene set to " + sceneName, EndPoint.Bot, EndPoint.Notice));
                 }
                 else
                 {
@@ -3799,7 +3918,7 @@ namespace Ubiquitous
         }
         void obsRemote_OnError(object sender, EventArgs e)
         {
-            if (!settings.obsRemoteEnable)
+            if (!settings.obsRemoteEnable )
                 return;
             chatStatusOBS.On = false;
             Thread.Sleep(3000);
@@ -3811,7 +3930,7 @@ namespace Ubiquitous
                 return;
 
             buttonStreamStartStop.Image = Properties.Resources.play;
-            SendMessage(new UbiMessage("OBS doesn't streaming. Switching players off!", EndPoint.Bot, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage("OBS doesn't streaming. Switching players off!", EndPoint.Bot, EndPoint.Notice));
             ThreadPool.QueueUserWorkItem( f => SwitchPlayersOff(true,true));
         }
         void obsRemote_OnLive(object sender, EventArgs e)
@@ -3819,7 +3938,7 @@ namespace Ubiquitous
             if (!settings.obsRemoteEnable)
                 return;
             buttonStreamStartStop.Image = Properties.Resources.stop;
-            SendMessage(new UbiMessage("OBS is streaming. Switching players on!", EndPoint.Bot, EndPoint.SteamAdmin));
+            SendMessage(new UbiMessage("OBS is streaming. Switching players on!", EndPoint.Bot, EndPoint.Notice));
             ThreadPool.QueueUserWorkItem( f => SwitchPlayersOn(true,true) );
         }
         #endregion
@@ -3961,6 +4080,98 @@ namespace Ubiquitous
                     }
                 }
             }
+        }
+        private void SetupComboProfiles()
+        {
+            if (comboProfiles == null)
+            {
+                comboProfiles = new List<String>();
+            }
+            comboProfiles.Clear();
+            comboProfiles.Add("<Edit...>");
+            comboProfiles.Add("<New...>");
+            comboProfiles.Add("<Delete...>");
+            settings.chatProfiles.Profiles.ForEach(p => comboProfiles.Add(p.Name));
+
+            if (profileListBS == null)
+            {
+
+                profileListBS = new BindingSource();
+                profileListBS.DataSource = comboProfiles;
+            }
+            comboBoxProfiles.SetDataSource(null);
+            comboBoxProfiles.SetDataSource(profileListBS);
+            //comboBoxProfiles.SetDataSource(null);
+            
+            comboBoxProfiles.SelectedItem = settings.currentProfile;
+        }
+        private void comboBoxProfiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBoxProfiles_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            var combo = sender as ComboBoxWithId;
+            String selectedText = combo.SelectedItem.ToString();
+            Debug.Print("Profile: {0}",selectedText);
+            if (selectedText.Equals("<Edit...>", StringComparison.CurrentCultureIgnoreCase))
+            {
+                showProfileEditForm();
+            }
+            else if (selectedText.Equals("<Delete...>", StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (MessageBox.Show("Delete " + settings.currentProfile + " ?", "Please confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    var curProfile = settings.chatProfiles.Profiles.FirstOrDefault(p => p.Name.Equals(settings.currentProfile, StringComparison.CurrentCultureIgnoreCase));
+                    settings.chatProfiles.Profiles.Remove(curProfile);
+                    SetupComboProfiles();
+                }
+            }
+            else if (selectedText.Equals("<New...>", StringComparison.CurrentCultureIgnoreCase))
+            {
+                var curProfile = settings.chatProfiles.Profiles.FirstOrDefault(p => p.Name.Equals(settings.currentProfile, StringComparison.CurrentCultureIgnoreCase));
+                if (curProfile == null)
+                    return;
+
+                settings.currentProfile = settings.chatProfiles.CreateNew(curProfile);
+                SetupComboProfiles();
+                showProfileEditForm();
+
+            }
+            else
+            {
+                if (settings.chatProfiles.Profiles.Any(p => p.Name.Equals(selectedText, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    settings.chatProfiles.WriteProfile(settings.currentProfile, settings);
+
+                    settings.currentProfile = selectedText;
+                    object param = settings;
+                    settings.chatProfiles.ReadProfile(selectedText, ref param);
+                    showProfileEditForm();
+                }
+            }
+            
+            comboBoxProfiles.SelectedItem = settings.currentProfile;
+        }
+
+        private void showProfileEditForm()
+        {
+            var lastOnTopState = this.TopMost;
+            settings.globalOnTop = false;
+            var descrForm = new Forms.Descriptions(this, settings);
+            descrForm.TopMost = true;
+            var state = this.WindowState;
+            this.WindowState = FormWindowState.Minimized;
+            descrForm.ShowDialog();
+            this.WindowState = state;
+            settings.globalOnTop = lastOnTopState;
+            SetupComboProfiles();
+            settings.chatProfiles.WriteProfile(settings.currentProfile, settings);
+
+            //String selectedText = comboBoxProfiles.SelectedItem.ToString();
+            //ChatProfile cp = settings.chatProfiles.Profiles.FirstOrDefault(p => p.Name.Equals(selectedText, StringComparison.CurrentCultureIgnoreCase));
+            //cp.Name = settings.currentProfile;
         }
 
 

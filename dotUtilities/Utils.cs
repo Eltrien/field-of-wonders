@@ -5,6 +5,8 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace dotUtilities
 {
@@ -15,6 +17,7 @@ namespace dotUtilities
         private const int HTTRANSPARENT = -1;
         #endregion
 
+        public delegate void ControlChangeCallback(Control ctrl, Action action);
         public delegate void SetPropCallback(Control ctrl, string propName, object value);
         public delegate void SetPropCallback2(UserControl ctrl, string propName, object value);
 
@@ -55,7 +58,28 @@ namespace dotUtilities
                 t.InvokeMember(propName, BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.Public, null, ctrl, new object[] { value });
             }
         }
+        private static Regex _regexUnicode = new Regex(@"\\u(?<Value>[a-zA-Z0-9]{4})", RegexOptions.Compiled);
+        public static string UnescapeUnicode(string value)
+        {
+            return _regexUnicode.Replace(
+                value,
+                m => ((char)int.Parse(m.Groups["Value"].Value, NumberStyles.HexNumber)).ToString()
+            );
+        }
 
 
+        public static void ControlChange<TControl>(this TControl ctrl, Action action) where TControl : Control
+        {
+            if (ctrl.InvokeRequired)
+            {
+                var d = new ControlChangeCallback(ControlChange);
+                ctrl.Invoke(d, new object[] {ctrl, action});
+            }
+            else
+            {
+                action();
+            }
+        }
     }
+
 }

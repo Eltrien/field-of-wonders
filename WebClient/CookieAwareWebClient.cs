@@ -41,6 +41,7 @@ namespace dotWebClient
             ServicePointManager.DefaultConnectionLimit = 5;
             ServicePointManager.Expect100Continue = false;
             ServicePointManager.UseNagleAlgorithm = false;
+            
             contentTypes = new Dictionary<ContentType, string>();
             contentTypes.Add(ContentType.UrlEncodedUTF8, "application/x-www-form-urlencoded; charset=UTF-8");
             contentTypes.Add(ContentType.UrlEncoded, "application/x-www-form-urlencoded");
@@ -115,7 +116,7 @@ namespace dotWebClient
         protected override WebRequest GetWebRequest(Uri address)
         {
             WebRequest request = base.GetWebRequest(address);
-
+            
             HttpWebRequest webRequest = request as HttpWebRequest;
             if (webRequest != null)
             {
@@ -130,6 +131,7 @@ namespace dotWebClient
                 webRequest.CookieContainer = m_container;
                 webRequest.UserAgent = userAgent;
                 webRequest.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+                webRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
             }
             return request;
         }

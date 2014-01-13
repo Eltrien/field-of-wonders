@@ -22,9 +22,6 @@ namespace Ubiquitous
         {            
             settings = Properties.Settings.Default;
             InitializeComponent();
-
-            //comboSc2Channels.SetDataSource(null);
-            //comboSc2Channels.SetDataSource(channelsSC2, "Title", "Id");
             
         }
         public BindingSource EndPointList
@@ -32,27 +29,10 @@ namespace Ubiquitous
             get;
             set;
         }
-        private void ComboSetupProfiles()
-        {
-
-            //comboProfileLanguages.DataBindings.Add("Text", settings.languages, "Name");
-
-        }
-
-        private void settingsTree1_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void SettingsDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
             ValidateChildren();
             settings.Save();
-        }
-
-        private void settingsPage9_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -79,6 +59,7 @@ namespace Ubiquitous
             textCounterFont.Text = settings.globalCounterFont.ToString();
             textPersonalMsgFont.Text = settings.globalPersonalMessageFont.ToString();
             twitchMeFont.Text = settings.twitchMeFont.ToString();
+            textTimestampFont.Text = settings.appearTimestampFont.ToString();
 
             buttonBackColor.BackColor = settings.globalChatBackground;
             buttonForeColor.BackColor = settings.globalChatTextColor;
@@ -88,6 +69,8 @@ namespace Ubiquitous
             buttonPersonalMsgBack.BackColor = settings.globalPersonalMessageBack;
             buttonTwitchMeForecolor.BackColor = settings.twitchMeForeColor;
             buttonTwitchMeBackcolor.BackColor = settings.twitchMeBackcolor;
+            buttonTimestampBack.BackColor = settings.appearTimestampBack;
+            buttonTimestampColor.BackColor = settings.appearTimestampColor;
 
             comboDefaultChat.SetDataSource(null);
             comboDefaultChat.SetDataSource(EndPointList, "Title", "EndPoint");
@@ -113,7 +96,11 @@ namespace Ubiquitous
             settings.globalChatFont = fontDialog.Font;
             textFontName.Text = settings.globalChatFont.ToString();
         }
-
+        void fontTimestamp_Apply(object sender, EventArgs e)
+        {
+            settings.appearTimestampFont = fontDialog.Font;
+            textTimestampFont.Text = settings.appearTimestampFont.ToString();
+        }
         private void buttonForeColor_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
@@ -135,11 +122,6 @@ namespace Ubiquitous
                 settings.globalChatBackground = colorDialog.Color;
                 buttonBackColor.BackColor = colorDialog.Color;
             }
-        }
-
-        private void label31_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void buttonTimeColor_Click(object sender, EventArgs e)
@@ -352,14 +334,41 @@ namespace Ubiquitous
             }
         }
 
-        private void label63_Click(object sender, EventArgs e)
+        private void buttonTimestampFont_Click(object sender, EventArgs e)
         {
+            fontDialog = new FontDialog();
+            fontDialog.Font = settings.appearTimestampFont;
+            fontDialog.ShowColor = false;
+            fontDialog.ShowApply = true;
+            fontDialog.ShowEffects = true;
+            fontDialog.Apply += new EventHandler(fontTimestamp_Apply);
 
+            fontDialog.ShowDialog();
+
+            settings.twitchMeFont = fontDialog.Font;
+            twitchMeFont.Text = settings.twitchMeFont.ToString();
         }
 
-        private void label68_Click(object sender, EventArgs e)
+        private void buttonTimestampBack_Click(object sender, EventArgs e)
         {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.appearTimestampBack = colorDialog.Color;
+                buttonTimestampFont.BackColor = colorDialog.Color;
+            }
+        }
 
+        private void buttonTimestampColor_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                settings.appearTimestampColor = colorDialog.Color;
+                buttonTimestampFont.BackColor = colorDialog.Color;
+            }
         }
 
     }

@@ -310,7 +310,16 @@ namespace SC2TV.RTFControl {
             else
                 base.WndProc(ref m);
         }*/
-        
+        public Font TimestampFont
+        {
+            get;
+            set;
+        }
+        public Color TimestampColor
+        {
+            get;
+            set;
+        }
         public string RTF
         {
             get { return Rtf; }
@@ -1189,7 +1198,8 @@ namespace SC2TV.RTFControl {
 		/// <returns></returns>
         /// 
 		private string GetFontTable(Font _font) {
-
+            if (_font == null)
+                return String.Empty;
 			StringBuilder _fontTable = new StringBuilder();
 
 			// Append table control string
