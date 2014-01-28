@@ -168,7 +168,11 @@ namespace dotGohaTV
             var result = string.Empty;
             lock (wcLock)
             {
-                result = wc.DownloadString(String.Format(finalAuth, userid));
+                try
+                {
+                    result = wc.DownloadString(String.Format(finalAuth, userid));
+                }
+                catch { }
             }
             if (String.IsNullOrEmpty(result))
                 return;
@@ -191,12 +195,16 @@ namespace dotGohaTV
             GetStreamStatus();
             lock (wcLock)
             {
-                if (StreamStatus == On)
-                    wc.postFormDataLowLevel(String.Format(switchUrl, uid, userid),
-                                 HttpUtility.UrlEncode(@"startstop=stop&data[start][epoch-stop]=" + ts + "&data[start][stop]=&data[start][comment]=&data[startstop][epoch-start]=&data[startstop][start]=&data[startstop][epoch-stop]=&data[startstop][stop]=" + ts + "&data[startstop][comment]=&streamProvider=default&referrer=http://www.goha.tv/#!/my/stream").Replace(@"%3d", @"=").Replace(@"%26", "&"));
-                else
-                    wc.postFormDataLowLevel(String.Format(switchUrl, uid, userid),
-                                  HttpUtility.UrlEncode(@"startstop=start&data[start][epoch-stop]=&data[start][stop]=&data[start][comment]=&data[startstop][epoch-start]=&data[startstop][start]=&data[startstop][epoch-stop]=&data[startstop][stop]=&data[startstop][comment]=&streamProvider=default&referrer=http://www.goha.tv/#!/my/stream").Replace(@"%3d", @"=").Replace(@"%26", "&"));
+                try
+                {
+                    if (StreamStatus == On)
+                        wc.postFormDataLowLevel(String.Format(switchUrl, uid, userid),
+                                     HttpUtility.UrlEncode(@"startstop=stop&data[start][epoch-stop]=" + ts + "&data[start][stop]=&data[start][comment]=&data[startstop][epoch-start]=&data[startstop][start]=&data[startstop][epoch-stop]=&data[startstop][stop]=" + ts + "&data[startstop][comment]=&streamProvider=default&referrer=http://www.goha.tv/#!/my/stream").Replace(@"%3d", @"=").Replace(@"%26", "&"));
+                    else
+                        wc.postFormDataLowLevel(String.Format(switchUrl, uid, userid),
+                                      HttpUtility.UrlEncode(@"startstop=start&data[start][epoch-stop]=&data[start][stop]=&data[start][comment]=&data[startstop][epoch-start]=&data[startstop][start]=&data[startstop][epoch-stop]=&data[startstop][stop]=&data[startstop][comment]=&streamProvider=default&referrer=http://www.goha.tv/#!/my/stream").Replace(@"%3d", @"=").Replace(@"%26", "&"));
+                }
+                catch { }
             }
             GetStreamStatus();
 

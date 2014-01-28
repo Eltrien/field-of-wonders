@@ -75,6 +75,25 @@ namespace dotWebSocket
         public virtual void OnConnect()
         {
         }
+        public int PingInterval
+        {
+            set
+            {
+                if (socket != null)
+                {
+                    if (value <= 0)
+                    {
+                        socket.AutoSendPingInterval = 0;
+                        socket.EnableAutoSendPing = false;
+                    }
+                    else
+                    {
+                        socket.AutoSendPingInterval = value;
+                        socket.EnableAutoSendPing = true;
+                    }
+                }
+            }
+        }
         public void Send(string message)
         {
             socket.Send(message);
@@ -82,7 +101,6 @@ namespace dotWebSocket
         void socket_Opened(object sender, EventArgs e)
         {
             OnConnect();
-            
         }
 
         public virtual void OnMessage(String message)

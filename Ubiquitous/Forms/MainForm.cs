@@ -1007,33 +1007,33 @@ namespace Ubiquitous
         public void CopyChannelDescriptions()
         {
             
-            if (settings.twitchEnabled && 
+            if (twitchWeb != null && settings.twitchEnabled && 
                 twitchIrc.IsConnected )
             {
                 twitchWeb.ShortDescription = settings.twitch_ShortDescription;
                 twitchWeb.Game = settings.twitch_Game;
             }
 
-            if (settings.sc2tvEnabled &&
+            if (sc2tv != null && settings.sc2tvEnabled &&
                 sc2tv.LoggedIn)
             {
                 sc2tv.ShortDescription = settings.sc2tv_ShortDescription;
                 sc2tv.LongDescription = settings.sc2tv_LongDescription;
                 sc2tv.Game = settings.sc2tv_Game;
             }
-            if (settings.goodgameEnabled &&
+            if (ggChat != null && settings.goodgameEnabled &&
                 ggChat.isLoggedIn)
             {
                 ggChat.ShortDescription = settings.goodgame_ShortDescription;
                 ggChat.Game = settings.goodgame_Game;
             }
 
-            if (settings.cyberEnabled && cybergame.isLoggedIn)
+            if (cybergame != null && settings.cyberEnabled && cybergame.isLoggedIn)
             {
                 cybergame.ShortDescription = settings.cybergame_ShortDescription;
                 cybergame.Game = settings.cybergame_Game;
             }
-            if (settings.gohaEnabled && gohaTVstream.LoggedIn)
+            if (gohaTVstream != null && settings.gohaEnabled && gohaTVstream.LoggedIn)
             {
                 gohaTVstream.ShortDescription = settings.goha_ShortDescription;
                 gohaTVstream.Game = settings.goha_Game;
@@ -1052,28 +1052,23 @@ namespace Ubiquitous
         }
         private void buttonSettings_Click_1(object sender, EventArgs e)
         {
+
             var lastOnTopState = this.TopMost;
             settings.globalOnTop = false;
             SettingsDialog settingsForm = new SettingsDialog();
-            settingsForm.FormClosing += new FormClosingEventHandler(settingsForm_FormClosing);
             settingsForm.EndPointList = endpointListBS;
             settingsForm.TopMost = true;
-            var state = this.WindowState;
-            this.WindowState = FormWindowState.Minimized;
+            //var state = this.WindowState;
+            //this.WindowState = FormWindowState.Minimized;
             settingsForm.ShowDialog();
-            this.WindowState = state;
+            //this.WindowState = state;
             this.Enabled = true;
             
-            //ProtectConfig();
+            ProtectConfig();
             settings.globalOnTop = lastOnTopState;
             
         }
 
-        void settingsForm_FormClosing(object sender, FormClosingEventArgs e)
-        {            
-
-            //ThreadPool.QueueUserWorkItem( f => SetChannelsDescription());
-        }
         private void comboSc2Channels_DropDown(object sender, EventArgs e)
         {
             if( settings.sc2tvEnabled )
@@ -1461,14 +1456,21 @@ namespace Ubiquitous
         }
         private void SendToAll(UbiMessage message)
         {
-            SendMessageToEmpireTV(message);
-            SendMessageToGohaIRC(message);
-            SendMessageToTwitchIRC(message);
-            SendMessageToSc2Tv(message);
-            SendMessageToGoodgame(message);
-            SendMessageToCybergame(message);
-            SendMessageToHashd(message);
-            SendMessageToJetSet(message);
+            try
+            {
+                SendMessageToEmpireTV(message);
+                SendMessageToGohaIRC(message);
+                SendMessageToTwitchIRC(message);
+                SendMessageToSc2Tv(message);
+                SendMessageToGoodgame(message);
+                SendMessageToCybergame(message);
+                SendMessageToHashd(message);
+                SendMessageToJetSet(message);
+            }
+            catch(Exception e )
+            {
+                Debug.Print("Error sending a message to all {0} {1}", e.Message, e.StackTrace);
+            }
         }
         private void SendMessageToGoodgame(UbiMessage message)
         {
@@ -1519,9 +1521,6 @@ namespace Ubiquitous
         }
         private void SendMessageToTwitchIRC(UbiMessage message)
         {
-            if (twitchIrc == null)
-                return;
-
             if (!settings.twitchEnabled || twitchIrc == null)
                 return;
             
@@ -1536,11 +1535,10 @@ namespace Ubiquitous
         }
         private void SendMessageToGohaIRC(UbiMessage message)
         {
-            if (gohaIrc == null)
+            if (gohaIrc == null || !gohaIrc.IsRegistered)
                 return;
 
             if (settings.gohaEnabled &&
-                gohaIrc.IsRegistered &&
                 (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
             {
                 var channelName = "#" + settings.GohaIRCChannel;
@@ -1551,11 +1549,10 @@ namespace Ubiquitous
         }
         private void SendMessageToCybergame(UbiMessage message)
         {
-            if (cybergame == null)
+            if (cybergame == null || !cybergame.isLoggedIn )
                 return;
 
-            if (settings.cyberEnabled &&
-                cybergame.isLoggedIn &&
+            if (settings.cyberEnabled &&                
                 (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
             {
                 cybergame.SendMessage(message.Text);
@@ -1564,7 +1561,7 @@ namespace Ubiquitous
         }
         private void SendMessageToJetSet(UbiMessage message)
         {
-            if (jetset == null)
+            if (jetset == null || !jetset.IsLoggedIn)
                 return;
 
             if (settings.jetsetEnable &&
@@ -1712,52 +1709,53 @@ namespace Ubiquitous
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (isClosing)
-                return;
-           
-
-            //var profiles = new ChatProfiles();
-            //profiles.Profiles = new List<ChatProfile>();
-
-            //profiles.Profiles.Add(new ChatProfile() { Topic = "Test", ChatName = "Chat name", Game = "test", LongDescription = "test2", ShortDescription = "test3"});
-            //settings.chatProfiles = profiles;
-
-
-            isClosing = true;
-
-            forceCloseTimer.Change(5000, Timeout.Infinite);
-            currentChat = EndPoint.Console;
-            SendMessage(new UbiMessage(String.Format("Leaving chats..."), EndPoint.Console, EndPoint.Notice));
-
-            if( settings.globalDebug && debugForm != null)
-                debugForm.Hide();
-
-            #region Save settings
-            if (this.WindowState != FormWindowState.Minimized)
-            {
-                settings.mainformWidth = Size.Width;
-                settings.mainformHeight = Size.Height;
-            }
-
-            if (settings.sc2tvEnabled)
-            {
-                settings.sc2LastMsgId = sc2tv.LastMessageId;
-            }
-            if (settings.youtubeEnable)
-            {
-                settings.youtubeLastTime = youtube.LastTime;
-            }
-
-            settings.chatProfiles.WriteProfile(settings.currentProfile, settings);
-            
-            settings.Save();
-            #endregion
-
-            //this.Visible = false;
-            e.Cancel = true;
-            timerEverySecond.Enabled = false;
             try
             {
+                if (isClosing)
+                    return;
+           
+
+                //var profiles = new ChatProfiles();
+                //profiles.Profiles = new List<ChatProfile>();
+
+                //profiles.Profiles.Add(new ChatProfile() { Topic = "Test", ChatName = "Chat name", Game = "test", LongDescription = "test2", ShortDescription = "test3"});
+                //settings.chatProfiles = profiles;
+
+
+                isClosing = true;
+
+                forceCloseTimer.Change(5000, Timeout.Infinite);
+                currentChat = EndPoint.Console;
+                SendMessage(new UbiMessage(String.Format("Leaving chats..."), EndPoint.Console, EndPoint.Notice));
+
+                if( settings.globalDebug && debugForm != null)
+                    debugForm.Hide();
+
+                #region Save settings
+                if (this.WindowState != FormWindowState.Minimized)
+                {
+                    settings.mainformWidth = Size.Width;
+                    settings.mainformHeight = Size.Height;
+                }
+
+                if (settings.sc2tvEnabled)
+                {
+                    settings.sc2LastMsgId = sc2tv.LastMessageId;
+                }
+                if (settings.youtubeEnable)
+                {
+                    settings.youtubeLastTime = youtube.LastTime;
+                }
+
+                settings.chatProfiles.WriteProfile(settings.currentProfile, settings);
+            
+                settings.Save();
+                #endregion
+
+                //this.Visible = false;
+                e.Cancel = true;
+                timerEverySecond.Enabled = false;
+
 
                 SwitchPlayersOff( true, true );
 
@@ -2141,7 +2139,10 @@ namespace Ubiquitous
         }
         private void timerEverySecond_Tick(object sender, EventArgs e)
         {
-
+            if (settings == null)
+                return;
+            try
+            {
                 UpdateStyles();
                 UInt32 twitchViewers = 0, cybergameViewers = 0, hashdViewers = 0, youtubeViewers = 0, goodgameViewers = 0;
                 if (twitchChannel != null)
@@ -2152,10 +2153,10 @@ namespace Ubiquitous
 
                 if (hashd != null)
                     UInt32.TryParse(hashd.Viewers, out hashdViewers);
-    
+
                 if (youtube != null)
                     youtubeViewers = youtube.Viewers;
-            
+
 
                 if (ggChat != null && ggChat.isLoggedIn)
                 {
@@ -2194,7 +2195,7 @@ namespace Ubiquitous
                     counterYoutube.Counter = youtubeViewers.ToString();
                 if (ggChat != null && counterGoodgame.Visible)
                     counterGoodgame.Counter = goodgameViewers.ToString();
-                
+
                 if (viewersText != labelViewers.Text)
                 {
                     labelViewers.Text = viewersText;
@@ -2214,10 +2215,10 @@ namespace Ubiquitous
 
                 if (settings.webEnable && webChat != null)
                 {
-                    if( settings.obsRemoteEnable && obsRemote != null )
+                    if (settings.obsRemoteEnable && obsRemote != null)
                     {
                         //webChat.MicOn = obsRemote.Status.
-                        webChat.ObsBitrate = (obsRemote.Status.bitrate*8/1024).ToString();
+                        webChat.ObsBitrate = (obsRemote.Status.bitrate * 8 / 1024).ToString();
                         webChat.ObsFrameDrops = obsRemote.Status.framesDropped.ToString();
                         webChat.MicOn = !obsRemote.MicMuted;
 
@@ -2226,7 +2227,7 @@ namespace Ubiquitous
                 }
                 if (settings.obsRemoteEnable && !checkBoxBorder.Checked)
                 {
-                    if (obsRemote != null )
+                    if (obsRemote != null)
                     {
                         try
                         {
@@ -2237,11 +2238,17 @@ namespace Ubiquitous
                                 obsRemote.Status.framesDropped);
                             this.Text = formTitle + stats;
                         }
-                        catch (Exception ex) {
+                        catch (Exception ex)
+                        {
                             Debug.Print(ex.Message + " " + ex.StackTrace);
                         }
                     }
                 }
+            }
+            catch (Exception ex )
+            {
+                Debug.Print("Timer everysecond exception {0} {1}", ex.Message, ex.StackTrace);
+            }
 
         }
         private void trackBarTransparency_MouseMove(object sender, MouseEventArgs e)
@@ -2276,7 +2283,7 @@ namespace Ubiquitous
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
-            if (settings.globalDebug && debugForm != null)
+            if (settings != null && settings.globalDebug && debugForm != null)
                 debugForm.Show();
         }
         private void textMessages_SelectionChanged(object sender, EventArgs e)
@@ -3950,9 +3957,17 @@ namespace Ubiquitous
         }
         public static void ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-            var errorMsg = e.Exception.Message + "\n\nStack Trace:\n" + e.Exception.StackTrace;
-            Debug.Print(errorMsg);
+            var wc = new WebClient();
+            var msg = "Error: " + e.Exception.Source + " " + e.Exception.Message + "\n\nStack Trace:\n" + e.Exception.StackTrace;
+
+            wc.Headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8";
+            wc.UploadString("http://xedocproject.com/crashlog/index.php", String.Format(
+                "p={0}&e={1}", "Ubiquitous", HttpUtility.UrlEncode(msg)));
+
+            //System.IO.File.WriteAllText(@"C:\UbiquitousCrashLog.txt", msg);
+            Debug.Print(msg);
         }
+
         private void pictureBoxMoveTools_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -4161,10 +4176,10 @@ namespace Ubiquitous
             settings.globalOnTop = false;
             var descrForm = new Forms.Descriptions(this, settings);
             descrForm.TopMost = true;
-            var state = this.WindowState;
-            this.WindowState = FormWindowState.Minimized;
+            //var state = this.WindowState;
+            //this.WindowState = FormWindowState.Minimized;
             descrForm.ShowDialog();
-            this.WindowState = state;
+            //this.WindowState = state;
             settings.globalOnTop = lastOnTopState;
             SetupComboProfiles();
             settings.chatProfiles.WriteProfile(settings.currentProfile, settings);

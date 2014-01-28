@@ -140,9 +140,9 @@ namespace dotIRC
         public void SendMessage(IIrcMessageTarget target, string text)
         {
             if (target == null)
-                throw new ArgumentNullException("target");
+                return;
             if (text == null)
-                throw new ArgumentNullException("text");
+                return;
 
             SendMessage(new[] { target }, text);
         }
@@ -156,9 +156,9 @@ namespace dotIRC
         public void SendMessage(IEnumerable<IIrcMessageTarget> targets, string text)
         {
             if (targets == null)
-                throw new ArgumentNullException("targets");
+                return;
             if (text == null)
-                throw new ArgumentNullException("text");
+                return;
 
             SendMessage(targets.Select(t => t.Name), text);
         }
@@ -168,9 +168,9 @@ namespace dotIRC
         public void SendMessage(string target, string text)
         {
             if (target == null)
-                throw new ArgumentNullException("target");
+                return;
             if (text == null)
-                throw new ArgumentNullException("text");
+                return;
 
             SendMessage(new[] { target }, text);
         }
@@ -186,9 +186,9 @@ namespace dotIRC
         public void SendMessage(IEnumerable<string> targets, string text, Encoding encoding = null)
         {
             if (targets == null)
-                throw new ArgumentNullException("targets");
+                return;
             if (text == null)
-                throw new ArgumentNullException("text");
+                return;
 
             this.Client.SendPrivateMessage(targets, text.ChangeEncoding(this.Client.TextEncoding, encoding));
         }
@@ -198,9 +198,9 @@ namespace dotIRC
         public void SendNotice(IIrcMessageTarget target, string text)
         {
             if (target == null)
-                throw new ArgumentNullException("target");
+                return;
             if (text == null)
-                throw new ArgumentNullException("text");
+                return;
 
             SendNotice(new[] { target }, text);
         }

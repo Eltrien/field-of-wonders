@@ -63,6 +63,12 @@ namespace dotWebClient
             set;
 
         }
+        public String URL
+        {
+            get;
+            set;
+        }
+
         public List<KeyValuePair<string, string>> CookiesStrings
         {
             get
@@ -115,6 +121,7 @@ namespace dotWebClient
         }
         protected override WebRequest GetWebRequest(Uri address)
         {
+            URL = address.ToString();
             WebRequest request = base.GetWebRequest(address);
             
             HttpWebRequest webRequest = request as HttpWebRequest;

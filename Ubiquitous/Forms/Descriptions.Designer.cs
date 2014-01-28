@@ -31,34 +31,34 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.webAutocompleteGoha = new Ubiquitous.Controls.WebAutocomplete();
             this.label11 = new System.Windows.Forms.Label();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBoxCybergame = new System.Windows.Forms.GroupBox();
-            this.webAutocompleteCybergame = new Ubiquitous.Controls.WebAutocomplete();
             this.label7 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBoxGoodgame = new System.Windows.Forms.GroupBox();
-            this.textWebSourceGGGame = new Ubiquitous.Controls.WebAutocomplete();
             this.label8 = new System.Windows.Forms.Label();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBoxSc2tv = new System.Windows.Forms.GroupBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.textWebSourceSc2tvGame = new Ubiquitous.Controls.WebAutocomplete();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBoxTwitch = new System.Windows.Forms.GroupBox();
-            this.textWebSourceTwitchGame = new Ubiquitous.Controls.WebAutocomplete();
             this.label3 = new System.Windows.Forms.Label();
             this.textTwitchDescription = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonUpdateWeb = new System.Windows.Forms.Button();
             this.textBoxProfile = new System.Windows.Forms.TextBox();
+            this.webAutocompleteGoha = new Ubiquitous.Controls.WebAutocomplete();
+            this.webAutocompleteCybergame = new Ubiquitous.Controls.WebAutocomplete();
+            this.textWebSourceGGGame = new Ubiquitous.Controls.WebAutocomplete();
+            this.textWebSourceSc2tvGame = new Ubiquitous.Controls.WebAutocomplete();
+            this.textWebSourceTwitchGame = new Ubiquitous.Controls.WebAutocomplete();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBoxCybergame.SuspendLayout();
@@ -109,21 +109,6 @@
             this.groupBox1.Text = "Goha";
             this.groupBox1.Visible = global::Ubiquitous.Properties.Settings.Default.gohaEnabled;
             // 
-            // webAutocompleteGoha
-            // 
-            this.webAutocompleteGoha.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.webAutocompleteGoha.Autocompletedata = null;
-            this.webAutocompleteGoha.AutoSize = true;
-            this.webAutocompleteGoha.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.webAutocompleteGoha.CurrentText = global::Ubiquitous.Properties.Settings.Default.goha_Game;
-            this.webAutocompleteGoha.DataBindings.Add(new System.Windows.Forms.Binding("CurrentText", global::Ubiquitous.Properties.Settings.Default, "goha_Game", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.webAutocompleteGoha.Location = new System.Drawing.Point(81, 106);
-            this.webAutocompleteGoha.Margin = new System.Windows.Forms.Padding(0);
-            this.webAutocompleteGoha.Name = "webAutocompleteGoha";
-            this.webAutocompleteGoha.Size = new System.Drawing.Size(212, 23);
-            this.webAutocompleteGoha.TabIndex = 3;
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -170,21 +155,6 @@
             this.groupBoxCybergame.Text = "Cybergame";
             this.groupBoxCybergame.Visible = global::Ubiquitous.Properties.Settings.Default.cyberEnabled;
             // 
-            // webAutocompleteCybergame
-            // 
-            this.webAutocompleteCybergame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.webAutocompleteCybergame.Autocompletedata = null;
-            this.webAutocompleteCybergame.AutoSize = true;
-            this.webAutocompleteCybergame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.webAutocompleteCybergame.CurrentText = global::Ubiquitous.Properties.Settings.Default.cybergame_Game;
-            this.webAutocompleteCybergame.DataBindings.Add(new System.Windows.Forms.Binding("CurrentText", global::Ubiquitous.Properties.Settings.Default, "cybergame_Game", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.webAutocompleteCybergame.Location = new System.Drawing.Point(81, 106);
-            this.webAutocompleteCybergame.Margin = new System.Windows.Forms.Padding(0);
-            this.webAutocompleteCybergame.Name = "webAutocompleteCybergame";
-            this.webAutocompleteCybergame.Size = new System.Drawing.Size(212, 23);
-            this.webAutocompleteCybergame.TabIndex = 3;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -230,22 +200,6 @@
             this.groupBoxGoodgame.TabStop = false;
             this.groupBoxGoodgame.Text = "Goodgame";
             this.groupBoxGoodgame.Visible = global::Ubiquitous.Properties.Settings.Default.goodgameEnabled;
-            // 
-            // textWebSourceGGGame
-            // 
-            this.textWebSourceGGGame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textWebSourceGGGame.Autocompletedata = null;
-            this.textWebSourceGGGame.AutoSize = true;
-            this.textWebSourceGGGame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.textWebSourceGGGame.CurrentText = global::Ubiquitous.Properties.Settings.Default.goodgame_Game;
-            this.textWebSourceGGGame.DataBindings.Add(new System.Windows.Forms.Binding("CurrentText", global::Ubiquitous.Properties.Settings.Default, "goodgame_Game", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textWebSourceGGGame.Location = new System.Drawing.Point(81, 55);
-            this.textWebSourceGGGame.Margin = new System.Windows.Forms.Padding(0);
-            this.textWebSourceGGGame.Name = "textWebSourceGGGame";
-            this.textWebSourceGGGame.Size = new System.Drawing.Size(212, 23);
-            this.textWebSourceGGGame.TabIndex = 3;
-            this.textWebSourceGGGame.OnTyping += new System.EventHandler<Ubiquitous.EventArgsString>(this.textWebSourceGGGame_OnTyping);
             // 
             // label8
             // 
@@ -316,22 +270,6 @@
             this.label6.TabIndex = 4;
             this.label6.Text = "Description:";
             // 
-            // textWebSourceSc2tvGame
-            // 
-            this.textWebSourceSc2tvGame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textWebSourceSc2tvGame.Autocompletedata = null;
-            this.textWebSourceSc2tvGame.AutoSize = true;
-            this.textWebSourceSc2tvGame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.textWebSourceSc2tvGame.CurrentText = global::Ubiquitous.Properties.Settings.Default.sc2tv_Game;
-            this.textWebSourceSc2tvGame.DataBindings.Add(new System.Windows.Forms.Binding("CurrentText", global::Ubiquitous.Properties.Settings.Default, "sc2tv_Game", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textWebSourceSc2tvGame.Location = new System.Drawing.Point(81, 149);
-            this.textWebSourceSc2tvGame.Margin = new System.Windows.Forms.Padding(0);
-            this.textWebSourceSc2tvGame.Name = "textWebSourceSc2tvGame";
-            this.textWebSourceSc2tvGame.Size = new System.Drawing.Size(212, 23);
-            this.textWebSourceSc2tvGame.TabIndex = 3;
-            this.textWebSourceSc2tvGame.OnTyping += new System.EventHandler<Ubiquitous.EventArgsString>(this.textWebSourceSc2tvGame_OnTyping);
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -376,22 +314,6 @@
             this.groupBoxTwitch.TabStop = false;
             this.groupBoxTwitch.Text = "Twitch.tv";
             this.groupBoxTwitch.Visible = global::Ubiquitous.Properties.Settings.Default.twitchEnabled;
-            // 
-            // textWebSourceTwitchGame
-            // 
-            this.textWebSourceTwitchGame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textWebSourceTwitchGame.Autocompletedata = null;
-            this.textWebSourceTwitchGame.AutoSize = true;
-            this.textWebSourceTwitchGame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.textWebSourceTwitchGame.CurrentText = global::Ubiquitous.Properties.Settings.Default.twitch_Game;
-            this.textWebSourceTwitchGame.DataBindings.Add(new System.Windows.Forms.Binding("CurrentText", global::Ubiquitous.Properties.Settings.Default, "twitch_Game", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textWebSourceTwitchGame.Location = new System.Drawing.Point(81, 49);
-            this.textWebSourceTwitchGame.Margin = new System.Windows.Forms.Padding(0);
-            this.textWebSourceTwitchGame.Name = "textWebSourceTwitchGame";
-            this.textWebSourceTwitchGame.Size = new System.Drawing.Size(212, 23);
-            this.textWebSourceTwitchGame.TabIndex = 3;
-            this.textWebSourceTwitchGame.OnTyping += new System.EventHandler<Ubiquitous.EventArgsString>(this.textWebSourceTwitchGame_OnTyping);
             // 
             // label3
             // 
@@ -439,6 +361,84 @@
             this.textBoxProfile.Size = new System.Drawing.Size(174, 20);
             this.textBoxProfile.TabIndex = 6;
             // 
+            // webAutocompleteGoha
+            // 
+            this.webAutocompleteGoha.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.webAutocompleteGoha.Autocompletedata = null;
+            this.webAutocompleteGoha.AutoSize = true;
+            this.webAutocompleteGoha.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.webAutocompleteGoha.CurrentText = global::Ubiquitous.Properties.Settings.Default.goha_Game;
+            this.webAutocompleteGoha.DataBindings.Add(new System.Windows.Forms.Binding("CurrentText", global::Ubiquitous.Properties.Settings.Default, "goha_Game", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.webAutocompleteGoha.Location = new System.Drawing.Point(81, 106);
+            this.webAutocompleteGoha.Margin = new System.Windows.Forms.Padding(0);
+            this.webAutocompleteGoha.Name = "webAutocompleteGoha";
+            this.webAutocompleteGoha.Size = new System.Drawing.Size(212, 23);
+            this.webAutocompleteGoha.TabIndex = 3;
+            // 
+            // webAutocompleteCybergame
+            // 
+            this.webAutocompleteCybergame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.webAutocompleteCybergame.Autocompletedata = null;
+            this.webAutocompleteCybergame.AutoSize = true;
+            this.webAutocompleteCybergame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.webAutocompleteCybergame.CurrentText = global::Ubiquitous.Properties.Settings.Default.cybergame_Game;
+            this.webAutocompleteCybergame.DataBindings.Add(new System.Windows.Forms.Binding("CurrentText", global::Ubiquitous.Properties.Settings.Default, "cybergame_Game", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.webAutocompleteCybergame.Location = new System.Drawing.Point(81, 106);
+            this.webAutocompleteCybergame.Margin = new System.Windows.Forms.Padding(0);
+            this.webAutocompleteCybergame.Name = "webAutocompleteCybergame";
+            this.webAutocompleteCybergame.Size = new System.Drawing.Size(212, 23);
+            this.webAutocompleteCybergame.TabIndex = 3;
+            // 
+            // textWebSourceGGGame
+            // 
+            this.textWebSourceGGGame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textWebSourceGGGame.Autocompletedata = null;
+            this.textWebSourceGGGame.AutoSize = true;
+            this.textWebSourceGGGame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.textWebSourceGGGame.CurrentText = global::Ubiquitous.Properties.Settings.Default.goodgame_Game;
+            this.textWebSourceGGGame.DataBindings.Add(new System.Windows.Forms.Binding("CurrentText", global::Ubiquitous.Properties.Settings.Default, "goodgame_Game", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textWebSourceGGGame.Location = new System.Drawing.Point(81, 55);
+            this.textWebSourceGGGame.Margin = new System.Windows.Forms.Padding(0);
+            this.textWebSourceGGGame.Name = "textWebSourceGGGame";
+            this.textWebSourceGGGame.Size = new System.Drawing.Size(212, 23);
+            this.textWebSourceGGGame.TabIndex = 3;
+            this.textWebSourceGGGame.OnTyping += new System.EventHandler<Ubiquitous.EventArgsString>(this.textWebSourceGGGame_OnTyping);
+            // 
+            // textWebSourceSc2tvGame
+            // 
+            this.textWebSourceSc2tvGame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textWebSourceSc2tvGame.Autocompletedata = null;
+            this.textWebSourceSc2tvGame.AutoSize = true;
+            this.textWebSourceSc2tvGame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.textWebSourceSc2tvGame.CurrentText = global::Ubiquitous.Properties.Settings.Default.sc2tv_Game;
+            this.textWebSourceSc2tvGame.DataBindings.Add(new System.Windows.Forms.Binding("CurrentText", global::Ubiquitous.Properties.Settings.Default, "sc2tv_Game", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textWebSourceSc2tvGame.Location = new System.Drawing.Point(81, 149);
+            this.textWebSourceSc2tvGame.Margin = new System.Windows.Forms.Padding(0);
+            this.textWebSourceSc2tvGame.Name = "textWebSourceSc2tvGame";
+            this.textWebSourceSc2tvGame.Size = new System.Drawing.Size(212, 23);
+            this.textWebSourceSc2tvGame.TabIndex = 3;
+            this.textWebSourceSc2tvGame.OnTyping += new System.EventHandler<Ubiquitous.EventArgsString>(this.textWebSourceSc2tvGame_OnTyping);
+            // 
+            // textWebSourceTwitchGame
+            // 
+            this.textWebSourceTwitchGame.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textWebSourceTwitchGame.Autocompletedata = null;
+            this.textWebSourceTwitchGame.AutoSize = true;
+            this.textWebSourceTwitchGame.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.textWebSourceTwitchGame.CurrentText = global::Ubiquitous.Properties.Settings.Default.twitch_Game;
+            this.textWebSourceTwitchGame.DataBindings.Add(new System.Windows.Forms.Binding("CurrentText", global::Ubiquitous.Properties.Settings.Default, "twitch_Game", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textWebSourceTwitchGame.Location = new System.Drawing.Point(81, 49);
+            this.textWebSourceTwitchGame.Margin = new System.Windows.Forms.Padding(0);
+            this.textWebSourceTwitchGame.Name = "textWebSourceTwitchGame";
+            this.textWebSourceTwitchGame.Size = new System.Drawing.Size(212, 23);
+            this.textWebSourceTwitchGame.TabIndex = 3;
+            this.textWebSourceTwitchGame.OnTyping += new System.EventHandler<Ubiquitous.EventArgsString>(this.textWebSourceTwitchGame_OnTyping);
+            // 
             // Descriptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -449,7 +449,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Name = "Descriptions";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Profile properties";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Descriptions_FormClosing);
             this.panel1.ResumeLayout(false);

@@ -22,6 +22,7 @@ namespace dotJetSetPro
         private const int PING_PERIOD = 25000;
         private const String domain = @"jetset.pro";
         private const String baseUrl = @"http://" + domain;
+        private const String socketDomain = "cloud.jetset.pro";
         private const String loginUrl = baseUrl + "/api/users/login";
         private const String chatJsUrl = baseUrl + "/static/js/chat.js{0}";
         private const String reRoomId = @"^.*?/chat/channel/(\d+)?/.*$";
@@ -144,11 +145,11 @@ namespace dotJetSetPro
                     
                     loginWC.CookiesStrings.ForEach(pair => { Debug.Print("{0}: {1}", pair.Key, pair.Value); });
 
-                    var sessionid = loginWC.DownloadString(baseUrl + ":443/socket.io/1/?t=" + TimeUtils.UnixTimestamp());
+                    var sessionid = loginWC.DownloadString( "http://" + socketDomain + ":8080/socket.io/1/?t=" + TimeUtils.UnixTimestamp());
                     sessionid = Re.GetSubString(sessionid, reSessId, 1);
 
-                    Domain = domain;
-                    Port = "443";
+                    Domain = socketDomain;
+                    Port = "8080";
                     Path = "/socket.io/1/websocket/" + sessionid;
                     Cookies = loginWC.CookiesStrings;
                     Connect();
@@ -156,7 +157,7 @@ namespace dotJetSetPro
                 }
                 catch (Exception e)
                 {
-                    Debug.Print("JetSet: login exception " + e.Message + " " + e.StackTrace.ToString());
+                    Debug.Print("JetSet: login exception {0} {1} {2} ", loginWC.URL, e.Message, e.StackTrace.ToString());
                 }
 
                 return true;

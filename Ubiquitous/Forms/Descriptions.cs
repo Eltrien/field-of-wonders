@@ -141,7 +141,9 @@ namespace Ubiquitous.Forms
             int i = 1;
 
             String newName = textBoxProfile.Text;
-            ChatProfile curProfile = _settings.chatProfiles.Profiles.First(p => p.Name.Equals(_settings.currentProfile));
+            ChatProfile curProfile = _settings.chatProfiles.Profiles.FirstOrDefault(p => p.Name.Equals(_settings.currentProfile));
+            if (curProfile == null)
+                return;
 
             while (_settings.chatProfiles.Profiles.Any(p => !curProfile.Equals(p) && p.Name.Equals(newName, StringComparison.CurrentCultureIgnoreCase) ))
             {

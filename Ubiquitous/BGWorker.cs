@@ -23,7 +23,8 @@ namespace Ubiquitous
 
             _startFunc = startFunc;
             _completeFunc = completeFunc;
-            bw = new BackgroundWorker();           
+            bw = new BackgroundWorker();
+            bw.WorkerSupportsCancellation = true;
             bw.DoWork += DoWork;
             bw.RunWorkerCompleted += Complete;
             bw.RunWorkerAsync();

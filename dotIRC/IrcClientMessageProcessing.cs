@@ -336,14 +336,10 @@ namespace dotIRC
         {
             //Debug.Assert(message.Parameters[0] == this.localUser.NickName);
 
-            Debug.Assert(message.Parameters[1] != null);
-            this.ServerName = message.Parameters[1];
-            Debug.Assert(message.Parameters[2] != null);
-            this.ServerVersion = message.Parameters[2];
-            Debug.Assert(message.Parameters[3] != null);
-            this.ServerAvailableUserModes = message.Parameters[3];
-            Debug.Assert(message.Parameters[4] != null);
-            this.ServerAvailableChannelModes = message.Parameters[4];
+            this.ServerName = message.Parameters[1] ?? "";
+            this.ServerVersion = message.Parameters[2] ?? "";
+            this.ServerAvailableUserModes = message.Parameters[3] ?? "";
+            this.ServerAvailableChannelModes = message.Parameters[4] ?? "";
 
             // All initial information about client has now been received.
             OnClientInfoReceived(new EventArgs());

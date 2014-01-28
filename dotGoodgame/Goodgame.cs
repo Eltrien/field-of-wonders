@@ -24,10 +24,13 @@ namespace dotGoodgame
         private const string chatUrl = "http://www." + domain + "/chat/{0}/";
         private const string channelUrl = @"http://www." + domain + "/channel/{0}";
         private const string loginUrl = @"http://" + domain + "/ajax/login/";
+        private const string userUrl = @"http://" + domain + "/user/{0}/";
         private const string editUlr = @"http://" + domain + "/channel/{0}/edit/";
         private const string urlTitleUpdate = @"http://" + domain + "/ajax/channel/update_title/";
         private const string urlSearchGame = @"http://" + domain + "/ajax/games/?q={0}&limit=10";
         private const string statsUrl = @"http://goodgame.ru/api/getchannelstatus?id={0}&fmt=json";
+        private const string reChannelUrl = @"goodgame.ru/channel/([^/]+)/""";
+
         private const string reTitle = @"<title>([^<]*)</title>";
         private const string reGame = @"StreamTitleEdit[^,]*,[^,]*,[^,]*,([^,]*),[^']*'([^']*)'";
         private const int maxServerNum = 0x1e3;
@@ -133,18 +136,8 @@ namespace dotGoodgame
         }
         public String URLUser
         {
-            get
-            {
-                if (String.IsNullOrEmpty(_user))
-                    return String.Empty;
-
-                var result = _user;
-                foreach (var c in urlReplace)
-                {
-                    result = result.Replace(c, "").ToLower();
-                }
-                return result;
-            }
+            get;
+            set;
         }
         public bool Login()
         {
@@ -162,7 +155,7 @@ namespace dotGoodgame
                         return false;
                     }
 
-                    var result = loginWC.DownloadString(String.Format(chatUrl, URLUser));
+                    String result = loginWC.DownloadString(@"http://" + domain);
 
                     string loginParams = "login=" + _user + "&password=" + _password + "&remember=1";
                     loginWC.setCookie("fixed", "1", domain);
@@ -171,16 +164,22 @@ namespace dotGoodgame
                     loginWC.ContentType = ContentType.UrlEncoded;
                     loginWC.Headers["X-Requested-With"] = "XMLHttpRequest";
 
-                    loginWC.UploadString(loginUrl, loginParams);
+                    result = loginWC.UploadString(loginUrl, loginParams);
+
+                    int.TryParse(loginWC.CookieValue("uid", "http://" + domain), out _userId);
+
+                    result = loginWC.DownloadString(String.Format(userUrl, _userId));
+
+                    URLUser = Re.GetSubString(result, reChannelUrl, 1);
 
                     result = loginWC.DownloadString(String.Format(chatUrl, URLUser));
+
                     if (String.IsNullOrEmpty(result))
                     {
                         Debug.Print("Goodgame: Could not fetch " + String.Format(chatUrl, URLUser));
                         return false;
                     }
-                
-                    int.TryParse(loginWC.CookieValue("uid", "http://" + domain), out _userId);
+
                     int.TryParse(Re.GetSubString(result, @"channelId: (\d+?),", 1), out _chatId);
                     _channel = _chatId.ToString();
                     _userToken = Re.GetSubString(result, @"token: '(.*?)',", 1);
@@ -402,20 +401,25 @@ namespace dotGoodgame
 
         private void DownloadStats(string channel)
         {
-            if (String.IsNullOrEmpty(_user))
-                return;
-
-            lock (statsLock)
+            try
             {
-                GetWSCounters();
-                GetFlashCounters();
 
+                if (String.IsNullOrEmpty(_user))
+                    return;
+
+                lock (statsLock)
+                {
+                    GetWSCounters();
+                    GetFlashCounters();
+
+                }
+                if (socket == null || !socket.Handshaked)
+                {
+                    Started = false;
+                    Start();
+                }
             }
-            if (socket == null || !socket.Handshaked)
-            {
-                Started = false;
-                Start();
-            }
+            catch { }
         }
         private string random_number()
         {

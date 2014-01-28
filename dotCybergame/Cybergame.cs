@@ -107,7 +107,6 @@ namespace dotCybergame
             statsDownloader = new Timer(new TimerCallback(statsDownloader_Tick), null, Timeout.Infinite, Timeout.Infinite);
 
         }
-
         private void statsDownloader_Tick(object o)
         {
             DownloadStats(_user);
@@ -196,7 +195,7 @@ namespace dotCybergame
                 }
                 catch (Exception e)
                 {
-                    Debug.Print(String.Format("Cybergame: login exception {0}", e.Message));
+                    Debug.Print(String.Format("Cybergame: login exception {0} {1} {2}", chatWC.URL, e.Message, e.StackTrace));
                     return false;
                 }
             }

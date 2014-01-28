@@ -22,3 +22,4 @@ C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotBattlelog\websocket.net.client2\
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotBattlelog\websocket.net.client2\bin\net40\Debug\WebSocket4Net.pdb
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotBattlelog\websocket.net.client2\WebSocket4Net\obj\Debug\WebSocket4Net.dll
 C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotBattlelog\websocket.net.client2\WebSocket4Net\obj\Debug\WebSocket4Net.pdb
+C:\Users\meshkov\Documents\GitHub\Ubiquitous\dotBattlelog\websocket.net.client2\WebSocket4Net\obj\Debug\WebSocket4Net.csprojResolveAssemblyReference.cache
