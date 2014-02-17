@@ -961,7 +961,7 @@ namespace Ubiquitous.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("CenterScreen")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Manual")]
         public global::System.Windows.Forms.FormStartPosition mainformStartPos {
             get {
                 return ((global::System.Windows.Forms.FormStartPosition)(this["mainformStartPos"]));
@@ -2275,6 +2275,102 @@ namespace Ubiquitous.Properties {
             }
             set {
                 this["globalShowCommandBarInCompact"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool hitboxEnable {
+            get {
+                return ((bool)(this["hitboxEnable"]));
+            }
+            set {
+                this["hitboxEnable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("@hbx")]
+        public string hitboxAlias {
+            get {
+                return ((string)(this["hitboxAlias"]));
+            }
+            set {
+                this["hitboxAlias"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string hitboxUser {
+            get {
+                return ((string)(this["hitboxUser"]));
+            }
+            set {
+                this["hitboxUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string hitboxPassword {
+            get {
+                return ((string)(this["hitboxPassword"]));
+            }
+            set {
+                this["hitboxPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool globalCounterHitbox {
+            get {
+                return ((bool)(this["globalCounterHitbox"]));
+            }
+            set {
+                this["globalCounterHitbox"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("119, 148, 38")]
+        public global::System.Drawing.Color hitboxNickColor {
+            get {
+                return ((global::System.Drawing.Color)(this["hitboxNickColor"]));
+            }
+            set {
+                this["hitboxNickColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long hitboxLastTimeStamp {
+            get {
+                return ((long)(this["hitboxLastTimeStamp"]));
+            }
+            set {
+                this["hitboxLastTimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 121")]
+        public global::System.Drawing.Point globalCounterPosHitbox {
+            get {
+                return ((global::System.Drawing.Point)(this["globalCounterPosHitbox"]));
+            }
+            set {
+                this["globalCounterPosHitbox"] = value;
             }
         }
     }

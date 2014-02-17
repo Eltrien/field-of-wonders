@@ -38,6 +38,7 @@ using dotGamersTv;
 using dotJetSetPro;
 using System.IO;
 using dotInterfaces;
+using dotHitboxTv;
 
 namespace Ubiquitous
 {
@@ -91,6 +92,7 @@ namespace Ubiquitous
             Youtube,
             GamersTV,
             JetSet,
+            HitBox,
             All,
             Notice,
             Error
@@ -375,6 +377,8 @@ namespace Ubiquitous
                             return "gamerstvicon.png";
                         case EndPoint.JetSet:
                             return "jetset.png";
+                        case EndPoint.HitBox:
+                            return "hitbox.png";
                         default:
                             return "adminicon.png";
 
@@ -423,6 +427,8 @@ namespace Ubiquitous
                             return ChatIcon.GamersTv;
                         case EndPoint.JetSet:
                             return ChatIcon.JetSet;
+                        case EndPoint.HitBox:
+                            return ChatIcon.HitBox;
                         default:
                             return ChatIcon.Default;
                     }
@@ -463,7 +469,7 @@ namespace Ubiquitous
         private uint sc2ChannelId = 0;
         private bool streamIsOnline = false;
         private BGWorker gohaBW, gohaStreamBW, steamBW, sc2BW, twitchBW, skypeBW, twitchTV, goodgameBW, battlelogBW,
-                        empireBW, cyberBW, obsremoteBW, hashdBW, youtubeBW, gamerstvBW, jetsetBW;
+                        empireBW, cyberBW, obsremoteBW, hashdBW, youtubeBW, gamerstvBW, jetsetBW, hitboxBW;
         private EmpireTV empireTV;
         public GohaTV gohaTVstream;
         public Twitch twitchChannel;
@@ -490,7 +496,7 @@ namespace Ubiquitous
         IPHostEntry twitchServers = new IPHostEntry();
         IPAddress nextTwitchIP = new IPAddress(0);
         private ULastFm lastFm;
-
+        private HitBox hitbox;
         private WebChat webChat;
         private object lockTwitchConnect = new object();
         private object lockTwitchMessage = new object();
@@ -576,6 +582,7 @@ namespace Ubiquitous
             chatAliases.Add(new ChatAlias(settings.youtubeAlias, EndPoint.Youtube, ChatIcon.Youtube));
             chatAliases.Add(new ChatAlias(settings.gmtvAlias, EndPoint.GamersTV, ChatIcon.GamersTv));
             chatAliases.Add(new ChatAlias(settings.jetsetAlias, EndPoint.JetSet, ChatIcon.JetSet));
+            chatAliases.Add(new ChatAlias(settings.hitboxAlias, EndPoint.HitBox, ChatIcon.HitBox));
             chatAliases.Add(new ChatAlias("@all", EndPoint.All, ChatIcon.Default));
 
             var switchTo = chatAliases.FirstOrDefault( c => c.Endpoint == currentChat );
@@ -605,6 +612,7 @@ namespace Ubiquitous
             statusServer = new StatusServer();
             //battlelog = new Battlelog();
 
+            
             steamBW = new BGWorker(ConnectSteamBot, null);
             sc2BW = new BGWorker(ConnectSc2tv, null);
             
@@ -617,6 +625,7 @@ namespace Ubiquitous
             youtubeBW = new BGWorker(ConnectYoutube, null);
             gamerstvBW = new BGWorker(ConnectGamersTV, null );
             jetsetBW = new BGWorker(ConnectJetSet, null);
+            hitboxBW = new BGWorker(ConnectHitBox, null);
  
             goodgameBW = new BGWorker(ConnectGoodgame, null);
 //            battlelogBW = new BGWorker(ConnectBattlelog, null);
@@ -844,14 +853,15 @@ namespace Ubiquitous
         }
         private void button1_Click(object sender, EventArgs e)
         {
+
             //Advertising
-            if (settings.twitchEnabled && twitchIrc.IsRegistered)
+            if (twitchIrc != null && settings.twitchEnabled && twitchIrc.IsRegistered)
             {
                 ThreadPool.QueueUserWorkItem(f => SendMessageToTwitchIRC(new UbiMessage("/commercial", EndPoint.SteamAdmin, EndPoint.TwitchTV)));
                 SendMessage(new UbiMessage("TwitchTv: advertising started!", EndPoint.TwitchTV, EndPoint.Notice));
             }           
 
-            if (settings.cyberEnabled && cybergame.isLoggedIn)
+            if (cybergame != null && settings.cyberEnabled && cybergame.isLoggedIn)
             {
                 cybergame.StartAdvertising();
                 SendMessage(new UbiMessage("Cybergame: advertising started!", EndPoint.Cybergame, EndPoint.Notice));
@@ -1007,7 +1017,7 @@ namespace Ubiquitous
         public void CopyChannelDescriptions()
         {
             
-            if (twitchWeb != null && settings.twitchEnabled && 
+            if (twitchIrc != null && twitchWeb != null && settings.twitchEnabled && 
                 twitchIrc.IsConnected )
             {
                 twitchWeb.ShortDescription = settings.twitch_ShortDescription;
@@ -1353,6 +1363,9 @@ namespace Ubiquitous
                     case EndPoint.JetSet:
                         ThreadPool.QueueUserWorkItem(f => SendMessageToJetSet(message));
                         break;
+                    case EndPoint.HitBox:
+                        ThreadPool.QueueUserWorkItem(f => SendMessageToHitBox(message));
+                        break;
                     case EndPoint.Console:
                         log.WriteLine(new UbiMessage(message.Text));
                         break;
@@ -1466,6 +1479,7 @@ namespace Ubiquitous
                 SendMessageToCybergame(message);
                 SendMessageToHashd(message);
                 SendMessageToJetSet(message);
+                SendMessageToHitBox(message);
             }
             catch(Exception e )
             {
@@ -1559,6 +1573,19 @@ namespace Ubiquitous
             }
 
         }
+        private void SendMessageToHitBox(UbiMessage message)
+        {
+            if (hitbox == null || !hitbox.IsLoggedIn)
+                return;
+
+            if (settings.hitboxEnable &&
+                (message.FromEndPoint == EndPoint.Console || message.FromEndPoint == EndPoint.SteamAdmin))
+            {
+                hitbox.SendMessage(message.Text);
+            }
+
+        }
+
         private void SendMessageToJetSet(UbiMessage message)
         {
             if (jetset == null || !jetset.IsLoggedIn)
@@ -1779,6 +1806,8 @@ namespace Ubiquitous
                     gamerstv.Stop();
                 if (jetset != null)
                     jetset.Stop();
+                if (hitbox != null)
+                    hitbox.Stop();
                 
             }
             catch (Exception ex)
@@ -2144,10 +2173,10 @@ namespace Ubiquitous
             try
             {
                 UpdateStyles();
-                UInt32 twitchViewers = 0, cybergameViewers = 0, hashdViewers = 0, youtubeViewers = 0, goodgameViewers = 0;
+                UInt32 twitchViewers = 0, cybergameViewers = 0, hashdViewers = 0, youtubeViewers = 0, goodgameViewers = 0, hitboxViewers = 0;
                 if (twitchChannel != null)
                     UInt32.TryParse(twitchChannel.Viewers, out twitchViewers);
-
+                
                 if (cybergame != null)
                     UInt32.TryParse(cybergame.Viewers, out cybergameViewers);
 
@@ -2156,6 +2185,9 @@ namespace Ubiquitous
 
                 if (youtube != null)
                     youtubeViewers = youtube.Viewers;
+
+                if (hitbox != null)
+                    hitboxViewers = hitbox.Viewers;
 
 
                 if (ggChat != null && ggChat.isLoggedIn)
@@ -2171,14 +2203,15 @@ namespace Ubiquitous
                         nonGGCount += hashdViewers;
                     if (ggChat.ServiceNames.Contains("youtube.com"))
                         nonGGCount += youtubeViewers;
-
+                    if (ggChat.ServiceNames.Contains("hitbox.tv"))
+                        nonGGCount += hitboxViewers;
                     if (goodgameViewers >= nonGGCount)
                         goodgameViewers -= nonGGCount;
                     else
                         goodgameViewers = 0;
                 }
 
-                var totalViewers = cybergameViewers + twitchViewers + hashdViewers + youtubeViewers + goodgameViewers;
+                var totalViewers = cybergameViewers + twitchViewers + hashdViewers + youtubeViewers + goodgameViewers + hitboxViewers;
 
                 if (MaxViewers < totalViewers)
                     MaxViewers = totalViewers;
@@ -2195,6 +2228,8 @@ namespace Ubiquitous
                     counterYoutube.Counter = youtubeViewers.ToString();
                 if (ggChat != null && counterGoodgame.Visible)
                     counterGoodgame.Counter = goodgameViewers.ToString();
+                if (counterHitBox.Visible)
+                    counterHitBox.Counter = hitboxViewers.ToString();
 
                 if (viewersText != labelViewers.Text)
                 {
@@ -2305,6 +2340,52 @@ namespace Ubiquitous
 
         }
         #endregion
+        #region HitBox
+        private void ConnectHitBox()
+        {
+            if (isClosing)
+                return;
+            if (!settings.hitboxEnable)
+                return;
+
+            hitbox = new HitBox(settings.hitboxUser, settings.hitboxPassword);
+            hitbox.LastTimeStamp = settings.hitboxLastTimeStamp;
+            hitbox.OnMessageReceived += new EventHandler<HitBoxMessage>(hitbox_OnMessageReceived);
+            hitbox.OnLogin += new EventHandler<EventArgs>(hitbox_OnLogin);
+
+            hitbox.Start();
+            if (!hitbox.Login())
+            {
+                SendMessage(new UbiMessage("Hitbox: login failed!", EndPoint.HitBox, EndPoint.Error));
+            }
+            else
+            {
+                SendMessage(new UbiMessage("Hitbox: logged in!", EndPoint.HitBox, EndPoint.Error));
+            }
+
+        }
+
+        void hitbox_OnLogin(object sender, EventArgs e)
+        {
+            chatStatusHitBox.On = true;
+        }
+
+        void hitbox_OnMessageReceived(object sender, HitBoxMessage e)
+        {
+            if (!settings.hitboxEnable)
+                return;
+
+            SendMessage(new UbiMessage(String.Format("{0}", e.Text), EndPoint.HitBox, EndPoint.SteamAdmin)
+            {
+                FromName = e.User,
+                NickColor = settings.hitboxNickColor,
+                TextOnly = false
+            });
+            settings.hitboxLastTimeStamp = hitbox.LastTimeStamp;
+        }
+
+        #endregion
+
         #region JetSet
         private void ConnectJetSet()
         {

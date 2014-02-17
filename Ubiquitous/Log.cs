@@ -27,6 +27,7 @@ namespace Ubiquitous
         Youtube,
         GamersTv,
         JetSet,
+        HitBox,
         Hashd
     }
     /// <summary>
@@ -114,6 +115,8 @@ namespace Ubiquitous
                     return Properties.Resources.gamerstvicon;
                 case ChatIcon.JetSet:
                     return Properties.Resources.jetset;
+                case ChatIcon.HitBox:
+                    return Properties.Resources.hitbox;
                 default:
                     return null;
             }

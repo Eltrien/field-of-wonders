@@ -82,15 +82,15 @@ namespace Ubiquitous.Forms
 
         private void textWebSourceTwitchGame_OnTyping(object sender, EventArgsString e)
         {
-            if (twitchWeb == null || twitchCol == null )
+            if (twitchWeb == null || twitchCol == null || twitchWeb.GameList == null )
                 return;
 
-            if (!twitchWeb.Game.Any())
+            if (!twitchWeb.GameList.Any())
                 return;
 
             Debug.Print(e.Text);
             var filter = twitchWeb.GameList.Where( v => v.Value.Equals( e.Text, StringComparison.CurrentCultureIgnoreCase ));
-            if (filter.Any())
+            if (filter != null && filter.Any())
             {
                 textWebSourceTwitchGame.CurrentText = filter.FirstOrDefault().Value;
                 return;

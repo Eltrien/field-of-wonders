@@ -604,6 +604,7 @@ namespace dotGoodgame
             {
                 loginWC.ContentType = ContentType.UrlEncodedUTF8;
                 loginWC.Headers["X-Requested-With"] = "XMLHttpRequest";
+                loginWC.Headers["Origin"] = "http://goodgame.ru";
 
                 try
                 {

@@ -49,6 +49,7 @@
             this.buttonCommercial = new System.Windows.Forms.Button();
             this.checkBoxOnTop = new System.Windows.Forms.CheckBox();
             this.panelMessages = new System.Windows.Forms.Panel();
+            this.counterHitBox = new Ubiquitous.CounterPanel();
             this.counterYoutube = new Ubiquitous.CounterPanel();
             this.counterGoodgame = new Ubiquitous.CounterPanel();
             this.counterCybergame = new Ubiquitous.CounterPanel();
@@ -64,6 +65,7 @@
             this.panelRight = new System.Windows.Forms.Panel();
             this.comboBoxProfiles = new Ubiquitous.ComboBoxWithId();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chatStatusHitBox = new Ubiquitous.ChatStatus();
             this.chatStatusOBS = new Ubiquitous.ChatStatus();
             this.chatStatusJetSet = new Ubiquitous.ChatStatus();
             this.chatStatusGamerTv = new Ubiquitous.ChatStatus();
@@ -338,6 +340,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.panelMessages.BackColor = global::Ubiquitous.Properties.Settings.Default.globalToolBoxBack;
             this.panelMessages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMessages.Controls.Add(this.counterHitBox);
             this.panelMessages.Controls.Add(this.counterYoutube);
             this.panelMessages.Controls.Add(this.counterGoodgame);
             this.panelMessages.Controls.Add(this.counterCybergame);
@@ -351,6 +354,27 @@
             this.panelMessages.Name = "panelMessages";
             this.panelMessages.Size = new System.Drawing.Size(700, 456);
             this.panelMessages.TabIndex = 36;
+            // 
+            // counterHitBox
+            // 
+            this.counterHitBox.BackColor = global::Ubiquitous.Properties.Settings.Default.globalCounterBackColor;
+            this.counterHitBox.Counter = "0";
+            this.counterHitBox.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHitBox.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", global::Ubiquitous.Properties.Settings.Default, "globalCounterTextColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHitBox.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Ubiquitous.Properties.Settings.Default, "globalCounterFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHitBox.DataBindings.Add(new System.Windows.Forms.Binding("MouseTransparent", global::Ubiquitous.Properties.Settings.Default, "globalMouseTransparent", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHitBox.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "globalCounterHitbox", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHitBox.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Ubiquitous.Properties.Settings.Default, "globalCounterPosHitbox", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.counterHitBox.Font = global::Ubiquitous.Properties.Settings.Default.globalCounterFont;
+            this.counterHitBox.ForeColor = global::Ubiquitous.Properties.Settings.Default.globalCounterTextColor;
+            this.counterHitBox.Image = global::Ubiquitous.Properties.Resources.hitbox;
+            this.counterHitBox.Location = global::Ubiquitous.Properties.Settings.Default.globalCounterPosHitbox;
+            this.counterHitBox.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.counterHitBox.MouseTransparent = global::Ubiquitous.Properties.Settings.Default.globalMouseTransparent;
+            this.counterHitBox.Name = "counterHitBox";
+            this.counterHitBox.Size = new System.Drawing.Size(45, 17);
+            this.counterHitBox.TabIndex = 29;
+            this.counterHitBox.Visible = global::Ubiquitous.Properties.Settings.Default.globalCounterHitbox;
             // 
             // counterYoutube
             // 
@@ -627,6 +651,7 @@
             this.groupBox1.AutoSize = true;
             this.groupBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.groupBox1.Controls.Add(this.chatStatusHitBox);
             this.groupBox1.Controls.Add(this.chatStatusOBS);
             this.groupBox1.Controls.Add(this.chatStatusJetSet);
             this.groupBox1.Controls.Add(this.chatStatusGamerTv);
@@ -647,10 +672,22 @@
             this.groupBox1.Location = new System.Drawing.Point(4, 187);
             this.groupBox1.MinimumSize = new System.Drawing.Size(101, 33);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(101, 244);
+            this.groupBox1.Size = new System.Drawing.Size(101, 259);
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Login status:";
+            // 
+            // chatStatusHitBox
+            // 
+            this.chatStatusHitBox.DataBindings.Add(new System.Windows.Forms.Binding("Visible", global::Ubiquitous.Properties.Settings.Default, "hitboxEnable", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.chatStatusHitBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chatStatusHitBox.Label = "HitBox";
+            this.chatStatusHitBox.Location = new System.Drawing.Point(3, 241);
+            this.chatStatusHitBox.Name = "chatStatusHitBox";
+            this.chatStatusHitBox.On = false;
+            this.chatStatusHitBox.Size = new System.Drawing.Size(95, 15);
+            this.chatStatusHitBox.TabIndex = 15;
+            this.chatStatusHitBox.Visible = global::Ubiquitous.Properties.Settings.Default.hitboxEnable;
             // 
             // chatStatusOBS
             // 
@@ -1194,6 +1231,8 @@
         private ChatStatus chatStatusJetSet;
         private ChatStatus chatStatusOBS;
         private ComboBoxWithId comboBoxProfiles;
+        private ChatStatus chatStatusHitBox;
+        private CounterPanel counterHitBox;
     }
 }
 

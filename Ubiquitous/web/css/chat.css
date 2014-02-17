@@ -83,6 +83,9 @@ li.GamersTV {
 li.JetSet {
     list-style-image: url('/images/jetset.png');
 }
+li.HitBox {
+    list-style-image: url('/images/hitbox.png');
+}
 h3 {
 	margin-top:1px;
 	padding:0px;

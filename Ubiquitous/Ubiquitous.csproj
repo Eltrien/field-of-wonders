@@ -33,7 +33,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>1.0.6.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.7.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -308,6 +308,10 @@
       <Project>{A4CD22CB-D696-471F-AB36-9A928393FD20}</Project>
       <Name>dotHashd</Name>
     </ProjectReference>
+    <ProjectReference Include="..\dotHitboxTv\dotHitboxTv.csproj">
+      <Project>{E9CF9A0C-BC58-4DB6-8F4E-A953BFBD096E}</Project>
+      <Name>dotHitboxTv</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dotIRC\dotIRC.csproj">
       <Project>{47D551DA-96ED-4EF6-96BF-4832059D4700}</Project>
       <Name>dotIRC</Name>
@@ -473,12 +477,16 @@
     <None Include="Resources\gamerstvicon.bmp" />
     <None Include="Resources\gamerstvicon.png" />
     <None Include="Resources\jetset.png" />
+    <None Include="Resources\hitbox.png" />
     <Content Include="Resources\music.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="web\images\gamerstvicon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="web\images\hitbox.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="web\images\jetset.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

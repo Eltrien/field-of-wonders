@@ -64,7 +64,8 @@ namespace dotJetSetPro
         }
         public void Stop()
         {
-            timerKeepAlive.Change(Timeout.Infinite, Timeout.Infinite);
+            if( timerKeepAlive != null )
+                timerKeepAlive.Change(Timeout.Infinite, Timeout.Infinite);
         }
         public bool Login()
         {

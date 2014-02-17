@@ -237,7 +237,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="mainformStartPos" Type="System.Windows.Forms.FormStartPosition" Scope="User">
-      <Value Profile="(Default)">CenterScreen</Value>
+      <Value Profile="(Default)">Manual</Value>
     </Setting>
     <Setting Name="mainformWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">740</Value>
@@ -565,6 +565,30 @@
     </Setting>
     <Setting Name="globalShowCommandBarInCompact" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="hitboxEnable" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="hitboxAlias" Type="System.String" Scope="User">
+      <Value Profile="(Default)">@hbx</Value>
+    </Setting>
+    <Setting Name="hitboxUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="hitboxPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="globalCounterHitbox" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="hitboxNickColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">119, 148, 38</Value>
+    </Setting>
+    <Setting Name="hitboxLastTimeStamp" Type="System.Int64" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="globalCounterPosHitbox" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 121</Value>
     </Setting>
   </Settings>
 </SettingsFile>

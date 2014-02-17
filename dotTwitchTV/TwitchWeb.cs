@@ -18,7 +18,8 @@ namespace dotTwitchTV
     public class TwitchWeb : IChatDescription, IChatGameQuery
     {
         private const string loginPopupUrl = "http://ru.twitch.tv/user/login_popup";
-        private const string urlEditPage = @"http://www.twitch.tv/{0}/edit";
+        private const string urlEditPage = @"http://www.twitch.tv/{0}/update";
+        private const string urlGetDesc = @"http://api.twitch.tv/api/channels/{0}/ember?on_site=1";
         private const string domain = "twitch.tv";
         private const string editParams = @"title={0}&meta_game={1}";
         private const string loginUrl = "https://secure.twitch.tv/user/login";
@@ -147,12 +148,27 @@ namespace dotTwitchTV
         }
         public void GetDescription()
         {
-            var content = HtmlGet(String.Format(urlEditPage, User.ToLower()),String.Empty);
-            csrf_token = GetCSRFToken(content);
+            var content = HtmlGet(String.Format(urlGetDesc, User.ToLower()), String.Empty);
+            //{"mature":null,"abuse_reported":null,"status":"[RU/EN] Simulator Battles - War Thunder ","display_name":"Xedoc","game":"War Thunder",
+            //"delay":0,"_id":7795079,"name":"xedoc","created_at":"2009-08-17T17:17:39Z","updated_at":"2014-02-01T07:16:58Z","primary_team_name":"highcorporation","primary_team_display_name":"Xtreme Gamers ®","logo":"http://static-cdn.jtvnw.net/jtv_user_pictures/xedoc-profile_image-382090dbfd835270-300x300.png","banner":null,"video_banner":"http://static-cdn.jtvnw.net/jtv_user_pictures/xedoc-channel_offline_image-a989fd994abe6bb0-640x360.png","background":null,"profile_banner":null,"profile_banner_background_color":null,"url":"http://www.twitch.tv/xedoc","views":241873,"followers":1193,"show_chat":true,"show_videos":true}
+            if (String.IsNullOrEmpty(content))
+                return;
 
-            ShortDescription = Re.GetSubString(content, reDescription, 1);
-            LongDescription = ShortDescription;
-            Game = Re.GetSubString(content, reGame, 1);
+            JToken ember = JToken.Parse(content);
+            if (ember == null)
+                return;
+
+            var desc = ember["status"].Value<String>();
+            var game = ember["game"].Value<String>();
+
+            if (!String.IsNullOrEmpty(desc))
+            {
+                ShortDescription = desc;
+                LongDescription = ShortDescription;
+            }
+
+            if( !String.IsNullOrEmpty(game))
+                Game = game;
 
 
         }
