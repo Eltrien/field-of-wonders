@@ -163,8 +163,12 @@ namespace dotWebClient
         }
         public string CookieValue(string name, string url)
         {
+            var coll = m_container.GetCookies(new Uri(url));
+            if (coll == null || coll[name] == null)
+                return String.Empty;
             Debug.Print(name + " " + url);
-            return m_container.GetCookies(new Uri(url))[name].Value;
+            
+            return coll[name].Value;
         }
         public string XMLHttpRequest(string url, string data)
         {

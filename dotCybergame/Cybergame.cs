@@ -186,7 +186,7 @@ namespace dotCybergame
 
                     Debug.Print("Cybergame: connecting web socket");
                     Domain = domain;
-                    Port = "8080";
+                    Port = "9090";
                     Path = String.Format("/{0}/{1}/websocket", random_number(), random_string());
                     Cookies = statsWC.CookiesStrings;
                     Connect();
@@ -233,9 +233,9 @@ namespace dotCybergame
                             switch ((String)cmd["command"])
                             {
                                    
-                                case "auth":
+                                case "setUI":
                                     {
-                                        if (!((String)cmd["message"]["message"]).Contains(@"Your nick isn't registered"))
+                                        if (cmd["message"]["write"].ToString().Equals("true",StringComparison.CurrentCultureIgnoreCase))
                                         {
                                             isLoggedIn = true;
                                             if (OnLogin != null)
@@ -307,7 +307,7 @@ namespace dotCybergame
 
         public bool SendMessage(string message)
         {
-            String template = @"[""{{\""command\"":\""chatMessage\"",\""message\"":\""{{\\\""message\\\"":\\\""{0}\\\""}}\""}}""]";
+            String template = @"[""{{\""command\"":\""sendChatMessage\"",\""message\"":\""{{\\\""message\\\"":\\\""{0}\\\""}}\""}}""]";
             Send(String.Format(template, message));
             return true;
         }
