@@ -64,18 +64,6 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SuperSocket.ClientEngine.Common">
-      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="SuperSocket.ClientEngine.Core">
-      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="SuperSocket.ClientEngine.Protocol">
-      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Protocol.dll</HintPath>
-    </Reference>
-    <Reference Include="SuperSocket.ClientEngine.Proxy">
-      <HintPath>..\dotBattlelog\bin\Debug\SuperSocket.ClientEngine.Proxy.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
@@ -87,6 +75,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebSocket4Net">
+      <HintPath>..\packages\WebSocket4Net.0.10\lib\net40\WebSocket4Net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hashd.cs" />
@@ -94,10 +85,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dotBattlelog\websocket.net.client2\WebSocket4Net\WebSocket4Net.csproj">
-      <Project>{6920447F-76B1-4739-822E-9CE3A2882718}</Project>
-      <Name>WebSocket4Net</Name>
-    </ProjectReference>
     <ProjectReference Include="..\dotJson\Src\Newtonsoft.Json\dotJSON.csproj">
       <Project>{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}</Project>
       <Name>dotJSON</Name>
@@ -110,6 +97,9 @@
       <Project>{E7DD099E-384E-4EDB-B217-D4850ACE32BC}</Project>
       <Name>dotWebClient</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

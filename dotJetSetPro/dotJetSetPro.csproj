@@ -76,10 +76,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dotBattlelog\websocket.net.client2\WebSocket4Net\WebSocket4Net.csproj">
-      <Project>{6920447F-76B1-4739-822E-9CE3A2882718}</Project>
-      <Name>WebSocket4Net</Name>
-    </ProjectReference>
     <ProjectReference Include="..\dotJson\Src\Newtonsoft.Json\dotJSON.csproj">
       <Project>{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}</Project>
       <Name>dotJSON</Name>

@@ -2859,6 +2859,33 @@ namespace Ubiquitous
         #endregion
 
         #region Twitch IRC methods and events
+        private bool PortIsOpen( IPAddress ipa, int portno )
+        {
+            try
+            {
+                System.Net.Sockets.Socket sock =
+                    new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork,
+                                                  System.Net.Sockets.SocketType.Stream,
+                                                  System.Net.Sockets.ProtocolType.Tcp);
+                sock.Connect(ipa, portno);
+                if (sock.Connected == true) // Port is in use and connection is successful
+                {
+                    sock.Close();
+                    return true;
+                }
+                else
+                {
+                    sock.Close();
+                    return false;
+                }
+                
+
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+            }
+            return false;
+        }
         private void ConnectTwitchIRC()
         {
             lock (lockTwitchConnect)
@@ -2924,8 +2951,17 @@ namespace Ubiquitous
                 using (var connectedEvent = new ManualResetEventSlim(false))
                 {
                     twitchIrc.Connected += (sender2, e2) => connectedEvent.Set();
-
-                    var tmpNextServer = twitchServers.AddressList.SkipWhile(p => p.ToString() == nextTwitchIP.ToString()).FirstOrDefault();
+                    var rand = new Random();
+                    var tmpNextServer = twitchServers.AddressList.ElementAt(rand.Next(twitchServers.AddressList.Count()));
+                    foreach( var server in twitchServers.AddressList )
+                    {
+                        if( !PortIsOpen( tmpNextServer, 6667 ))
+                        {
+                            rand = new Random();
+                            tmpNextServer = twitchServers.AddressList.ElementAt(rand.Next(twitchServers.AddressList.Count()));
+                        }                            
+                    }
+                    // twitchServers.AddressList.SkipWhile(p => p.ToString() == nextTwitchIP.ToString()).FirstOrDefault();
 
 
                     if (tmpNextServer == null)
@@ -2958,7 +2994,7 @@ namespace Ubiquitous
 
                     if (!String.IsNullOrEmpty(settings.twitchOAuthKey))
                     {
-                        twitchIrc.Connect(nextTwitchIP, false, new IrcUserRegistrationInfo()
+                        twitchIrc.Connect(nextTwitchIP, 6667, false, new IrcUserRegistrationInfo()
                         {
                             NickName = settings.TwitchUser.ToLower(),
                             UserName = settings.TwitchUser.ToLower(),
@@ -2966,9 +3002,11 @@ namespace Ubiquitous
                             Password = settings.twitchOAuthKey
                         });
 
-                        if (!connectedEvent.Wait(60000))
+                        if (!connectedEvent.Wait(25000))
                         {
                             SendMessage(new UbiMessage("Twitch: connection timeout!", EndPoint.TwitchTV, EndPoint.Error));
+                            twitchBW.Stop();
+                            twitchBW = new BGWorker(ConnectTwitchIRC, null);
                             return;
                         }
                     }

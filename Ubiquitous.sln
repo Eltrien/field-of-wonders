@@ -1,9 +1,10 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ubiquitous", "Ubiquitous\Ubiquitous.csproj", "{D4C8BFB0-B1A6-44B3-B8A1-3D98BDC3BDF5}"
 	ProjectSection(ProjectDependencies) = postProject
-		{6920447F-76B1-4739-822E-9CE3A2882718} = {6920447F-76B1-4739-822E-9CE3A2882718}
 		{0863F18A-8282-40AF-980B-20C5A33787F7} = {0863F18A-8282-40AF-980B-20C5A33787F7}
 		{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D} = {A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}
 	EndProjectSection
@@ -23,8 +24,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotSkype", "dotSkype\dotSkype.csproj", "{DD0ADA1E-4D46-476A-9F33-9C1BA3B72EB6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotXSplit", "dotXSplit\dotXSplit\dotXSplit.csproj", "{75B0D174-732F-4A64-82FB-21016CD8DAA7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocket4Net", "dotBattlelog\websocket.net.client2\WebSocket4Net\WebSocket4Net.csproj", "{6920447F-76B1-4739-822E-9CE3A2882718}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mycontrol", "mycontrol\mycontrol\mycontrol.csproj", "{3E26D5F2-9EFF-4F76-9711-79E611F61ACB}"
 EndProject
@@ -67,7 +66,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotPhpSerialize", "dotPhpSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotInterfaces", "ClassLibrary1\dotInterfaces.csproj", "{1A54B385-3797-403B-B51E-EEE089C13B08}"
 	ProjectSection(ProjectDependencies) = postProject
-		{6920447F-76B1-4739-822E-9CE3A2882718} = {6920447F-76B1-4739-822E-9CE3A2882718}
 		{01E0BDDF-E95B-4BF0-88EB-42A4410F9F8A} = {01E0BDDF-E95B-4BF0-88EB-42A4410F9F8A}
 	EndProjectSection
 EndProject
@@ -193,18 +191,6 @@ Global
 		{75B0D174-732F-4A64-82FB-21016CD8DAA7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{75B0D174-732F-4A64-82FB-21016CD8DAA7}.Release|x86.ActiveCfg = Release|Any CPU
 		{75B0D174-732F-4A64-82FB-21016CD8DAA7}.Release|x86.Build.0 = Release|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Debug|x86.Build.0 = Debug|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Release|x86.ActiveCfg = Release|Any CPU
-		{6920447F-76B1-4739-822E-9CE3A2882718}.Release|x86.Build.0 = Release|Any CPU
 		{3E26D5F2-9EFF-4F76-9711-79E611F61ACB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E26D5F2-9EFF-4F76-9711-79E611F61ACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E26D5F2-9EFF-4F76-9711-79E611F61ACB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
