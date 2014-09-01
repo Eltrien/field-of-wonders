@@ -25,11 +25,17 @@ namespace dotHitboxTv
         private const String apiUrl = @"http://api." + domain + @"/media/live/{0}";
         private const String socketDomain = "chat.hitbox.tv";
         private const String homeUrl = baseUrl;
+        private const String chatServersUrl = "https://www." + domain + "/api/chat/servers?redis=true";
+        private const String socketPath = "/socket.io/1/websocket/{0}";
+        private const String socketHashPath = "/socket.io/1/?t={0}";
+        private const String socketMessageContainer = @"5:::{{""name"":""message"",""args"":[{0}]}}";
+        private const String socketMessageContainerRe = @".*args"":\[""(.*?)""\]}$";
         private String _user, _password;
         private string userId;
         private string hash1;
         private string token;
         private Timer timerStats;
+        private Timer timerPing;
         public event EventHandler<HitBoxMessage> OnMessageReceived;
         public event EventHandler<EventArgs> OnLogin;
 
@@ -55,6 +61,8 @@ namespace dotHitboxTv
         {
             if( timerStats != null )
                 timerStats.Change(Timeout.Infinite, Timeout.Infinite);
+
+            timerPing.Change(Timeout.Infinite, Timeout.Infinite);
         }
         public UInt32 Viewers
         {
@@ -89,6 +97,8 @@ namespace dotHitboxTv
                     {
                         Debug.Print("Hitbox: Stats download error {0} {1}", String.Format(apiUrl,_user), e.InnerException.Message);
                     }
+
+
                 }
             }
         }
@@ -142,9 +152,16 @@ namespace dotHitboxTv
                     hash1 = loginObj["user_password"].ToString();
                     token = loginObj["authToken"].ToString();
 
-                    Domain = socketDomain;
-                    Port = "8000";
-                    Path = "/chat";
+                    var servers = loginWC.DownloadString(chatServersUrl);
+                    var server = JToken.Parse(servers).First()["server_ip"].ToString();
+
+                    var socketInfoUrl = String.Format("http://" + server + socketHashPath, TimeUtils.UnixTimestamp());
+                    var socketInfo = loginWC.DownloadString(socketInfoUrl);
+                    var socketHash = socketInfo.Split(':')[0];
+
+                    Domain = server;
+                    Port = "80";
+                    Path = String.Format(socketPath, socketHash);
                     Cookies = loginWC.CookiesStrings;
                     Connect();
                     IsLoggedIn = true;
@@ -172,6 +189,8 @@ namespace dotHitboxTv
             {
                 if (message.Contains(@"chatMsg"))
                 {
+                    message = Re.GetSubString(message, socketMessageContainerRe, 1);
+                    message = message.Replace(@"\""", @"""");
                     JObject msgObj = JObject.Parse(message);
                     if (msgObj == null)
                         return;
@@ -190,7 +209,9 @@ namespace dotHitboxTv
         public void SendMessage(string message)
         {
             String cmd = @"{{""method"":""chatMsg"",""params"":{{""channel"":""{0}"",""name"":""{1}"",""nameColor"":""8000FF"",""text"":""{2}""}}}}";
-            Send(String.Format(cmd, _user, _user, message));
+            cmd = String.Format(cmd, _user, _user, message);
+            cmd = String.Format(socketMessageContainer, cmd);
+            Send(cmd);
         }
         private void ReceiveMessage( JObject msg )
         {
@@ -216,6 +237,9 @@ namespace dotHitboxTv
             var command = String.Format(
                             @"{{""method"":""joinChannel"",""params"":{{""channel"":""{0}"",""name"":""{1}"",""token"":""{2}"",""isAdmin"":true}}}}"
                             , _user, _user, token);
+
+            command = String.Format(socketMessageContainer, command);
+
             Send(command);
         }
         public override void OnConnect()
@@ -224,8 +248,13 @@ namespace dotHitboxTv
             Debug.Print("HitBox connected to websocket");
             SendChatLogin();
             PingInterval = PING_PERIOD;
+            timerPing = new Timer( pingCallback, null, PING_PERIOD, PING_PERIOD);
         }
 
+        private void pingCallback( object sender )
+        {
+            Send(@"2::");
+        }
     }
     public class HitBoxMessage : EventArgs
     {

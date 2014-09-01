@@ -43,7 +43,7 @@ namespace dotSC2TV
         private const string smilesImagesUrl = "http://chat.sc2tv.ru/img/{0}";
         private const string sendMessageUrl = "http://chat.sc2tv.ru/gate.php";
         private const string chatTokenUrl = "http://chat.sc2tv.ru/gate.php?task=GetUserInfo&ref=http://sc2tv.ru/";
-        private const string urlUserStream = "http://sc2tv.ru/node/add/userstream";
+        private const string urlUserStream = "http://sc2tv.ru/node/add/stream-channel";
 
 
         private const string reHiddenFormId = @".*hidden.*form_build_id.*id=""(.*?)"".*$";

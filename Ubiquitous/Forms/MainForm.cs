@@ -2701,7 +2701,7 @@ namespace Ubiquitous
                 !settings.twitchEnabled)
                 return;
           
-            twitchChannel = new Twitch(settings.TwitchUser.ToLower());
+            twitchChannel = new Twitch(settings.twitchChannel.ToLower().Replace("#",""));
             twitchChannel.Live += OnGoLive;
             twitchChannel.Offline += OnGoOffline;
             twitchChannel.Start();

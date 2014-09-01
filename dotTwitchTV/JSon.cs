@@ -13,6 +13,26 @@ namespace dotTwitchTV
     #region "Twitch json classes"
     
     [DataContract]
+    public class ChannelInformation
+    {
+        public ChannelInformation()
+        {
+            Stream = new Stream { Viewers = 0 };
+        }
+        [DataMember(Name="_links")]
+        public object Links { get; set; }
+        [DataMember(Name="stream")]
+        public Stream Stream { get; set; }
+    }
+
+    [DataContract]
+    public class Stream
+    {
+        [DataMember(Name="viewers")]
+        public int Viewers { get; set; }
+    }
+
+    [DataContract]
     public class Channel
     {
         [DataMember(Name = "embed_count")]

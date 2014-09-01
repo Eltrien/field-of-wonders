@@ -1664,8 +1664,8 @@ namespace dotIRC
 
             if (value.Length == 0 || value.Any(c => IsInvalidMessageChar(c) || c == ' ') || value[0] == ':')
             {
-                throw new ArgumentException(string.Format(
-                    Properties.Resources.MessageInvalidMiddleParameter, value), "value");
+                //throw new ArgumentException(string.Format(
+                //    Properties.Resources.MessageInvalidMiddleParameter, value), "value");
             }
 
             return value;

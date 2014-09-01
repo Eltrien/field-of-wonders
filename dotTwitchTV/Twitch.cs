@@ -17,7 +17,7 @@ namespace dotTwitchTV
     {
         #region Constants
         private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
-        private const string channelJsonUrl = "http://api.justin.tv/api/stream/list.json?channel={0}&t={1}";
+        private const string channelJsonUrl = "http://api.twitch.tv/kraken/streams/{0}?on_site=1&t={1}";
         private const int pollInterval = 20000;
         #endregion
 
@@ -26,7 +26,7 @@ namespace dotTwitchTV
         private Timer statsDownloader;
         private CookieAwareWebClient statsWC;
         private object statsLock = new object();
-        private Channel currentChannelStats;
+        private ChannelInformation currentChannelStats;
         private string currentChannelName;
         #endregion
         #region Events
@@ -85,6 +85,7 @@ namespace dotTwitchTV
                 {
                     statsWC.Headers["Cache-Control"] = "no-cache";
                     var url = String.Format(channelJsonUrl, channel, TimeUtils.UnixTimestamp());
+                    var test = statsWC.DownloadString(url);
                     using (var stream = statsWC.downloadURL(url))
                     {                        
                         if (statsWC.LastWebError == "ProtocolError")
@@ -98,7 +99,8 @@ namespace dotTwitchTV
                         }
                         else
                         {
-                            currentChannelStats = ParseJson<List<Channel>>.ReadObject(stream).FirstOrDefault();
+                            if( stream.CanRead )
+                                currentChannelStats = ParseJson<ChannelInformation>.ReadObject(stream);
 
                         }
 
@@ -122,12 +124,12 @@ namespace dotTwitchTV
         #region Public properties
         public string Viewers
         {
-            get { return !isAlive() ? "0" : currentChannelStats.viewers; }
+            get { return !isAlive() ? "0" : currentChannelStats.Stream.Viewers.ToString(); }
             set { }
         }
         public string Bitrate
         {
-            get { return !isAlive() ? "0" : currentChannelStats.videoBitrate; }
+            get { return "0"; }
             set { }
         }
         #endregion
